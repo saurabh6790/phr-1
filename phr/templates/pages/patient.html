@@ -1,0 +1,40 @@
+{% block style %}
+{% include "templates/includes/dashboard.css" %}
+{% include "templates/includes/theme.css" %}
+{% endblock %}
+{% block con_left %}
+<div class="list-group-side" id="profile" style="height:auto;margin-top:5%">
+   <a href="#" class="list-group-item-side active">PHR Home</a>
+   <a href="" class="list-group-item-side" id='profile'>My Profile</a>
+</div>
+<div class="list-group-side" id="linkedphr">
+  <a href="" class="list-group-item-side active">Linked PHR's</a>
+  <p>No Linked PHR's</p>
+</div>
+<div class="list-group-side" id="hp">
+  <a href="" class="list-group-item-side active">My Providers</a>
+  <p>No Providers</p>
+</div>
+<div class="list-group-side" id="mhr">
+  <a href="" class="list-group-item-side active">My Health Records</a>
+  <a href="" class="list-group-item-side">Events</a>
+  <a href="" class="list-group-item-side">Visits</a>
+  <a href="" class="list-group-item-side">Meditations</a>
+  <a href="" class="list-group-item-side">Disease Management</a>
+  <a href="" class="list-group-item-side">Apointments</a>
+  <a href="" class="list-group-item-side">Messages</a>
+</div>
+{% endblock %}
+{% block content %}
+<div id="main-con">
+
+</div>
+{% endblock %}
+{% block con_right %}
+<div class="list-group-side" style="margin-top:5%">
+  <a href="" class="list-group-item-side active">Emergency details</a>
+</div>
+<div class="list-group-side">
+  <a href="" class="list-group-item-side active">To Do List's</a>
+</div>
+{% endblock %}
