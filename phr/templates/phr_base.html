@@ -42,13 +42,6 @@ Built on Frappe.io. Free and Open Source Framework for the Web. https://frappe.i
 </head>
 <body>
 	<div id="wrap">
-		{%- block banner -%}
-		{% include "templates/includes/banner_extension.html" ignore missing %}
-			{% if banner_html -%}
-			<header class="container">{{ banner_html or "" }}</header>
-			{%- endif %}
-		{%- endblock -%}
-
 		{%- block navbar -%}{% include "templates/includes/navbar.html" %}{%- endblock -%}
 		<!--<header class="page-header">
 			<div class="container">
