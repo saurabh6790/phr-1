@@ -1,8 +1,4 @@
-{% block style %}
-{% include "templates/includes/dashboard.css" %}
-{% include "templates/includes/theme.css" %}
-{% endblock %}
-{% block content_full %}
+{% block content %}
 {%- macro properties(field) %}name="{{ field.fieldname }}" id="{{ field.fieldname }}" {% if field.placeholder %}placeholder="{{ field.placeholder }}"{% endif %} data-label="{{ field.label }}" data-fieldtype="{{ field.fieldtype }}" {{ field.reqd and "required" or "" }} {{ field.read_only and "disabled" or "" }}{% endmacro -%}
 
 {%- macro value(field) -%}{% if doc %}{{ doc.get(field.fieldname) or "" }}{% else %}{{ getCookie(field.options) or "" }}{% endif %}{%- endmacro -%}

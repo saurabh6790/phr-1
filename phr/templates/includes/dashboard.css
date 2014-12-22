@@ -3,6 +3,33 @@
 
 
 .navbar{background-color:#020202}
+.navbar-brand {
+  float: left;
+  height: 15px;
+  padding: 8px 15px;
+  font-size: 20px;
+  font-color:#FFFFFF;
+  line-height: 20px;
+}
+.navbar {
+position: static!important;
+margin: 0!important;
+}
+.navbar-default {
+border: 0px;
+}
+.navbar {
+box-shadow: none;
+border-radius: 0px;
+margin-bottom: 0px;
+padding-top: 1px;
+padding-bottom: 1px;
+height:10px;
+}
+.navbar-brand:hover,
+.navbar-brand:focus {
+  text-decoration: none;
+}
 
 ul,ol{padding:0;margin:0 0 10px 30px;}
 ul ul,ul ol,ol ol,ol ul{margin-bottom:0;display: inline}

@@ -1,0 +1,68 @@
+{% block title %} {{_("Verify Mobile")}} {% endblock %}
+
+{% block header %}{% endblock %}
+{% block breadcrumbs %}{% endblock %}
+
+{% block content_full %}
+<div class="container">
+	<div class="row" style="margin-top: 40px; margin-bottom: 20px">
+		<div class="col-sm-offset-3 col-sm-6">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<h4><i class="icon-key"></i> {{_("Verify Mobile")}}</h4>
+				</div>
+				<div class="panel-body">
+					<div class="form-group">
+						<input id="code" type="text"
+							class="form-control" placeholder='"' + {{_("New Password")}} + '"'>
+					</div>
+					<div class="form-group">
+						<button type="submit" id="update"
+							class="btn btn-primary">{{_("Verify")}}</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script>
+
+$(document).ready(function() {
+	
+	$("#code").on("keypress", function(e) {
+		if(e.which===13) $("#update").click();
+	})
+	
+	$("#update").click(function() {
+		var id=get_url_arg("id") || "";
+		var args = {
+			id:id,
+			code: $("#code").val()
+		}
+				
+		if(!args.code) {
+			frappe.msgprint("Please Enter Verification code")
+			return;
+		}
+		
+		frappe.call({
+			type: "POST",
+			method: "phr.phr.verifier.verify_mobile",
+			btn: $("#update"),
+			args: args,
+			callback: function(r) {
+				if(r.message) {
+					$("input").val("");
+					var dialog = frappe.msgprint(r.message);
+					dialog.on("hide.bs.modal", function() {
+						window.location.href = "update_password?id="+id;
+					});
+				}
+			}
+		})
+	})
+});
+
+</script>
+{% endblock %}
