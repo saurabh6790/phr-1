@@ -17,6 +17,20 @@
    "precision": ""
   }, 
   {
+   "fieldname": "email", 
+   "fieldtype": "Data", 
+   "label": "Email", 
+   "permlevel": 0, 
+   "precision": ""
+  }, 
+  {
+   "fieldname": "hash", 
+   "fieldtype": "Data", 
+   "label": "hash", 
+   "permlevel": 0, 
+   "precision": ""
+  }, 
+  {
    "allow_on_submit": 0, 
    "fieldname": "verification_link", 
    "fieldtype": "Data", 
@@ -76,7 +90,7 @@
   {
    "allow_on_submit": 0, 
    "fieldname": "mflag", 
-   "fieldtype": "Data", 
+   "fieldtype": "Check", 
    "hidden": 0, 
    "ignore_user_permissions": 0, 
    "in_filter": 0, 
@@ -95,7 +109,7 @@
   {
    "allow_on_submit": 0, 
    "fieldname": "pwdflag", 
-   "fieldtype": "Data", 
+   "fieldtype": "Check", 
    "hidden": 0, 
    "ignore_user_permissions": 0, 
    "in_filter": 0, 
@@ -127,7 +141,7 @@
  "is_submittable": 0, 
  "issingle": 0, 
  "istable": 0, 
- "modified": "2014-12-13 20:56:31.455051", 
+ "modified": "2014-12-18 19:19:41.604655", 
  "modified_by": "Administrator", 
  "module": "phr", 
  "name": "Verification Details", 

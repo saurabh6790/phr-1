@@ -42,6 +42,7 @@ def create_profile_in_db(id,args,response):
 		"profile_id":id,
 		"first_name": args["person_firstname"],
 		"enabled": 1,
+		"contact":args["phone"],
 		"new_password": random_string(10),
 		"user_type": "Website User",
 		"access_type":"Patient"

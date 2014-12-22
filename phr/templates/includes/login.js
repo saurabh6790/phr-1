@@ -114,14 +114,19 @@ login.login_handlers = (function() {
 			if(data.message=="Logged In") {
 				window.location.href = get_url_arg("redirect-to") || "/desk";
 			} else if(data.message=="No App") {
+				var url='';
+				if (data.mob_v_req && data.mob_v_req=='Yes'){
+					url='/verify_mobile?id='+frappe.get_cookie("profile_id")
+				}
 				if(localStorage) {
 					var last_visited =
 						localStorage.getItem("last_visited")
 							|| get_url_arg("redirect-to")
-							|| "/index";
+							|| url || "/index";
 					localStorage.removeItem("last_visited");
 					window.location.href = last_visited;
 				} else {
+					go_to_url= url || "/index"
 					window.location.href = "/index";
 				}
 			} else if(["#signup", "#forgot"].indexOf(window.location.hash)!==-1) {

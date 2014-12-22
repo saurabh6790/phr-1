@@ -32,7 +32,10 @@ Built on Frappe.io. Free and Open Source Framework for the Web. https://frappe.i
 		{%- block style %}
 			<style data-html-block="style">
 			{%- if style is defined -%}{{ style }}{%- endif -%}
+			{% include "templates/includes/dashboard.css" %}
+			{% include "templates/includes/theme.css" %}
 			</style>
+			
 		{%- endblock -%}
 
 		{%- for link in web_include_js %}
@@ -69,21 +72,15 @@ Built on Frappe.io. Free and Open Source Framework for the Web. https://frappe.i
 		<div class="container page-container" id="page-{{ name or page_name }}">
 			<div class="row">
 				<div class="col-md-12" data-html-block="content">
-					{%- if con_left and con_right is defined -%}
 					<div class="col-md-2" style="padding:0">
-						{%- block con_left -%}{{ con_left or "" }}{%- endblock -%}
+						{%- block con_left -%}{% include "templates/includes/left_sidebar.html" %}{%- endblock -%}
           			</div>
           			<div class="col-md-8">
           				{%- block content -%}{{ content or "" }}{%- endblock -%}
           			</div>
           			<div class="col-md-2" style="padding:0">
-          				{%- block con_right -%}{{ con_right or "" }}{%- endblock -%}
+          				{%- block con_right -%}{% include "templates/includes/right_sidebar.html" %}{%- endblock -%}
           			<div>
-          			{%- else -%}	
-          			<div class="col-md-12">
-          				{%- block content_full -%}{{ content_full or "" }}{%- endblock -%}
-          			</div>
-          			{%- endif -%}
 				</div>
 			</div>
 		</div>

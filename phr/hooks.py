@@ -18,7 +18,7 @@ base_template="templates/phr_base.html"
 # app_include_js = "/assets/phr/js/phr.js"
 
 # include js, css files in header of web template
-web_include_css = "templates/includes/dashboard.css"
+#
 # web_include_js = "/assets/phr/js/phr.js"
 
 # Home Pages
