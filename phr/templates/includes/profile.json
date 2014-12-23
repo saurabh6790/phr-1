@@ -1,0 +1,18 @@
+{
+  "data":[
+  {
+   "fieldname": "customer_section", 
+   "fieldtype": "Section Break", 
+   "label": "Customer", 
+  }, 
+  {
+   "fieldname": "column_break0", 
+   "fieldtype": "Column Break", 
+  }, 
+  {
+   "fieldname": "naming_series", 
+   "fieldtype": "Select", 
+   "label": "Series", 
+  } 
+  ]
+}
