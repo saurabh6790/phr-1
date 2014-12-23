@@ -19,7 +19,7 @@ base_template="templates/phr_base.html"
 
 # include js, css files in header of web template
 #
-web_include_js = ["/assets/phr/pdfjs/build/pdf.js", "/assets/phr/pdfjs/web/viewer.js"]
+web_include_js = ["/assets/phr/pdfjs/build/pdf.js", "/assets/phr/pdfjs/web/viewer.js", "/assets/js/frappe-web.min.js"]
 
 # Home Pages
 # ----------
