@@ -72,15 +72,19 @@ Built on Frappe.io. Free and Open Source Framework for the Web. https://frappe.i
 		<div class="container page-container" id="page-{{ name or page_name }}">
 			<div class="row">
 				<div class="col-md-12" data-html-block="content">
+					{% if content is defined %}
 					<div class="col-md-2" style="padding:0">
-						{%- block con_left -%}{% include "templates/includes/left_sidebar.html" %}{%- endblock -%}
+						{%- block con_left -%}{% include "templates/includes/left_sidebar.html" %}{{ con_left or "" }}{%- endblock -%}
           			</div>
           			<div class="col-md-8">
           				{%- block content -%}{{ content or "" }}{%- endblock -%}
           			</div>
           			<div class="col-md-2" style="padding:0">
-          				{%- block con_right -%}{% include "templates/includes/right_sidebar.html" %}{%- endblock -%}
+          				{%- block con_right -%}{% include "templates/includes/right_sidebar.html" %}{{ con_right or "" }}{%- endblock -%}
           			<div>
+          			{% else %}
+          			{%- block content_full -%}{{ content_full or "" }}{%- endblock -%}
+          			{% endif %}
 				</div>
 			</div>
 		</div>

@@ -1,0 +1,19 @@
+{
+   "data":[
+   {
+   	"fieldname": "person_firstname", 
+   "fieldtype": "data", 
+   "label": "Item Name"
+	},
+	{
+   	"fieldname": "person_lastname", 
+   "fieldtype": "data", 
+   "label": "Item Code"
+	},
+	{
+   	"fieldname": "gender", 
+   "fieldtype": "data", 
+   "label": "Description"
+	}
+	]
+}
