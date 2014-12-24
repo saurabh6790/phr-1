@@ -8,6 +8,9 @@ import requests
 import os
 
 
+"""
+	read json for paticular to get the fields also get values if available 
+"""	
 @frappe.whitelist(allow_guest=True)
 def get_data_to_render(data=None):
 	data = eval(data)
@@ -18,8 +21,10 @@ def get_data_to_render(data=None):
 		json_data = get_json_data(data)	
 	
 	if json_data:
-		data=json_data['data']
+		fields=json_data['fields']
+		tab=json_data['tab']
 		values=get_values()
+
 	return data,values
 	
 def get_json_data(file_name):
@@ -27,6 +32,12 @@ def get_json_data(file_name):
 		json_data = json.loads(json_data.read())
 
 	return json_data
+
+
+"""
+	get data generic method from all db's 
+	return plain dictionary 
+"""	
 
 def get_values():
 	values={"person_firstname": "Amit" ,"person_lastname":"Shukla" ,"gender":"Male" }
