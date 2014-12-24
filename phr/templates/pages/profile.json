@@ -2,8 +2,8 @@
    "tab":1,
    "fields":[
    {
-      "fieldname": "profile", 
-      "fieldtype": "Section Break", 
+      "fieldname": "basic_info", 
+      "fieldtype": "section", 
       "label": "Profile" 
    },
    {
@@ -26,7 +26,7 @@
       "fieldtype": "select", 
       "label": "Gender"
    },
-	{
+  	{
    	"fieldname": "str_date_of_birth", 
       "fieldtype": "data", 
       "label": "DOB"
@@ -40,6 +40,11 @@
       "fieldname": "mobile", 
       "fieldtype": "data", 
       "label": "Mobile No"
+   },
+   {
+      "fieldname": "", 
+      "fieldtype": "column_break", 
+      "label": ""
    },
    {
       "fieldname": "phone", 
@@ -76,6 +81,11 @@
       "fieldtype": "data", 
       "label": "Height"
    },
+        {
+      "fieldname": "", 
+      "fieldtype": "column_break", 
+      "label": ""
+   },
    {
       "fieldname": "weight", 
       "fieldtype": "data", 
@@ -86,6 +96,7 @@
       "fieldtype": "select", 
       "label": "Diet Type"
    },
+ 
    {
       "fieldname": "current_address", 
       "fieldtype": "data", 
@@ -105,6 +116,11 @@
       "fieldname": "state_current", 
       "fieldtype": "data", 
       "label": "State"
+   },
+   {
+      "fieldname": "", 
+      "fieldtype": "column_break", 
+      "label": ""
    },
    {
       "fieldname": "country_current", 
@@ -139,7 +155,7 @@
    },
    {
       "fieldname": "password", 
-      "fieldtype": "Section Break", 
+      "fieldtype": "section", 
       "label": "Update Password" 
    },
    {
@@ -159,7 +175,7 @@
    },
    {
       "fieldname": "manage_phr", 
-      "fieldtype": "Section Break", 
+      "fieldtype": "section", 
       "label": "Manage PHR" 
    },
    {
