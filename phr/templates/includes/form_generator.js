@@ -1,3 +1,6 @@
+frappe.provide("templates/includes");
+{% include "templates/includes/utils.js" %}
+
 var RenderFormFields = function(){
 	this.wrapper = ""
 }
@@ -17,14 +20,24 @@ $.extend(RenderFormFields.prototype,{
 		})
 	},
 	render_fields:function(fields, values){
-		h="";
-		for (i=0;i<fields.length;i++){
-			// console.log(fields[i]["fieldtype"])
-			if (fields[i]["fieldtype"]=="data"){
-				 h+='<input type="text" value="'+values[fields[i]["fieldname"]]+'"">'
-			}	
-		}
-		$(this.wrapper).append(h)
-		// msgprint(__("Permanently Submit {0}?", ["test"]))
+		var me = this;
+		$.each(fields,function(indx, meta){
+			me[meta['fieldtype'] + "_field_renderer"].call(me, meta)
+		})
+	},
+	data_field_renderer: function(field_meta){
+		$(repl_str('<div class="input-group">\
+						%(label)s: <input type="text" class="form-control" placeholder="%(label)s"\
+						aria-describedby="basic-addon2">\
+					</div>', field_meta)).appendTo($(this.wrapper))
+	},
+	select_field_renderer: function(field_meta){
+
+	},
+	section_field_renderer: function(field_meta){
+
+	},
+	table_field_renderer: function(field_meta){
+
 	}
 })
