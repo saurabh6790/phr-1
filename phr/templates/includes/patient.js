@@ -3,7 +3,7 @@ frappe.provide("templates/includes");
 {% include "templates/includes/form_generator.js" %}
 
 $(document).ready(function () {
-	// new PatientDashboard($(document).find("#main-con"))
+	new PatientDashboard($(document).find("#main-con"))
 	$('.event').click(function(){
 		new Event($(document).find("#main-con"))
 	})
@@ -26,7 +26,7 @@ var Event = inherit(RenderFormFields,{
 	init: function(wrapper){
 		this.wrapper = wrapper;
 		this.render_field();
-		RenderFormFields.prototype.init(this.wrapper, {'data':[{'fieldname':'event','fieldtype':'data','label':'Event'}, 
+		RenderFormFields.prototype.init(this.wrapper, {'fields':[{'fieldname':'event','fieldtype':'data','label':'Event'}, 
 			{'fieldname':'date','fieldtype':'data','label':'Date'}]})
 	},
 	render_field: function(){

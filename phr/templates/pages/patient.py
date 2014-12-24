@@ -13,19 +13,20 @@ import os
 """	
 @frappe.whitelist(allow_guest=True)
 def get_data_to_render(data=None):
-	data = eval(data)
+	if data:
+		data = eval(data)
 
 	if isinstance(data, dict):
 		json_data = data
-	if isinstance(data, basestring):
+	else:
 		json_data = get_json_data(data)	
 	
 	if json_data:
-		fields=json_data['fields']
-		tab=json_data['tab']
+		fields=json_data.get('fields')
+		tab=json_data.get('tab')
 		values=get_values()
 
-	return data,values
+	return fields, values, tab
 	
 def get_json_data(file_name):
 	with open(os.path.join(os.path.dirname(__file__), "profile.json"), "r") as json_data:

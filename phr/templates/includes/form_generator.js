@@ -8,7 +8,11 @@ var RenderFormFields = function(){
 $.extend(RenderFormFields.prototype,{
 	init:function(wrapper, arg){
 		this.wrapper = wrapper;
+		this.column = '';
 		this.args = arg;
+
+		$(this.wrapper).empty()
+
 		this.get_field_meta();
 	} ,
 	get_field_meta:function(){
@@ -28,12 +32,11 @@ $.extend(RenderFormFields.prototype,{
 		else !this.column && this.column_break_field_renderer()
 
 		$.each(fields,function(indx, meta){
-			meta['value']=values[meta['fieldname']] || ""
-			me[meta['fieldtype'] + "_field_renderer"].call(me, meta)
+			meta['value']=values[meta['fieldname']] || "";
+			me[meta['fieldtype'] + "_field_renderer"].call(me, meta);
 		})
 	},
 	data_field_renderer: function(field_meta){
-		!this.column && this.column_break_field_renderer();
 		$(repl_str('<div class="input-group">\
 			<div class="col-md-4">%(label)s:</div><input type="text" class="form-control" \
 			placeholder="%(label)s"\
