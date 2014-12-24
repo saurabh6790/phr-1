@@ -1,19 +1,176 @@
 {
-   "data":[
+   "tab":1,
+   "fields":[
+   {
+      "fieldname": "profile", 
+      "fieldtype": "Section Break", 
+      "label": "Profile" 
+   },
    {
    	"fieldname": "person_firstname", 
-   "fieldtype": "data", 
-   "label": "Item Name"
+      "fieldtype": "data", 
+      "label": "First Name"
 	},
+   {
+      "fieldname": "person_middlename", 
+      "fieldtype": "data", 
+      "label": "Middle Name"
+   },
 	{
    	"fieldname": "person_lastname", 
-   "fieldtype": "data", 
-   "label": "Item Code"
+      "fieldtype": "data", 
+      "label": "Last Name"
 	},
+   {
+      "fieldname": "gender", 
+      "fieldtype": "select", 
+      "label": "Gender"
+   },
 	{
-   	"fieldname": "gender", 
-   "fieldtype": "data", 
-   "label": "Description"
-	}
-	]
+   	"fieldname": "str_date_of_birth", 
+      "fieldtype": "data", 
+      "label": "DOB"
+	},
+   {
+      "fieldname": "blod_group", 
+      "fieldtype": "data", 
+      "label": "Blod Group"
+   },
+   {
+      "fieldname": "mobile", 
+      "fieldtype": "data", 
+      "label": "Mobile No"
+   },
+   {
+      "fieldname": "phone", 
+      "fieldtype": "data", 
+      "label": "Landline"
+   },
+   {
+      "fieldname": "fax", 
+      "fieldtype": "data", 
+      "label": "Fax"
+   },
+   {
+      "fieldname": "email", 
+      "fieldtype": "data", 
+      "label": "Email"
+   },
+   {
+      "fieldname": "habits", 
+      "fieldtype": "text", 
+      "label": "Habits"
+   },
+   {
+      "fieldname": "allergies", 
+      "fieldtype": "text", 
+      "label": "Allergies"
+   },
+   {
+      "fieldname": "marital_status", 
+      "fieldtype": "select", 
+      "label": "Description"
+   },
+   {
+      "fieldname": "height", 
+      "fieldtype": "data", 
+      "label": "Height"
+   },
+   {
+      "fieldname": "weight", 
+      "fieldtype": "data", 
+      "label": "weight"
+   },
+   {
+      "fieldname": "diet_type", 
+      "fieldtype": "select", 
+      "label": "Diet Type"
+   },
+   {
+      "fieldname": "current_address", 
+      "fieldtype": "data", 
+      "label": "Current Address"
+   },
+   {
+      "fieldname": "pincode_current", 
+      "fieldtype": "data", 
+      "label": "Description"
+   },
+   {
+      "fieldname": "city_current", 
+      "fieldtype": "data", 
+      "label": "City"
+   },
+   {
+      "fieldname": "state_current", 
+      "fieldtype": "data", 
+      "label": "State"
+   },
+   {
+      "fieldname": "country_current", 
+      "fieldtype": "data", 
+      "label": "Country"
+   },
+   {
+      "fieldname": "permnt_address", 
+      "fieldtype": "text", 
+      "label": "Permanent Address"
+   },
+   
+   {
+      "fieldname": "pincode_permnt", 
+      "fieldtype": "data", 
+      "label": "Per. Pincode"
+   },
+   {
+      "fieldname": "city_permnt", 
+      "fieldtype": "data", 
+      "label": "Per. City"
+   },
+   {
+      "fieldname": "state_permnt", 
+      "fieldtype": "data", 
+      "label": "Per. State"
+   },
+   {
+      "fieldname": "country_permnt", 
+      "fieldtype": "data", 
+      "label": "Per. Country"
+   },
+   {
+      "fieldname": "password", 
+      "fieldtype": "Section Break", 
+      "label": "Update Password" 
+   },
+   {
+      "fieldname": "old_password", 
+      "fieldtype": "data", 
+      "label": "Old Password"
+   },
+   {
+      "fieldname": "new_password", 
+      "fieldtype": "data", 
+      "label": "New Password"
+   },
+   {
+      "fieldname": "cnf_new_password", 
+      "fieldtype": "data", 
+      "label": "Confirm Password"
+   },
+   {
+      "fieldname": "manage_phr", 
+      "fieldtype": "Section Break", 
+      "label": "Manage PHR" 
+   },
+   {
+      "fieldname": "create_new", 
+      "fieldtype": "button", 
+      "label": "Create New"
+   },
+   {
+      "fieldname": "update_phr", 
+      "fieldtype": "button", 
+      "label": "Update Existing"
+   }
+   ]
 }
