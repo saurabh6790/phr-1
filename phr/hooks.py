@@ -16,10 +16,11 @@ base_template="templates/phr_base.html"
 # include js, css files in header of desk.html
 #app_include_css = "templates/includes/dashboard.css"
 # app_include_js = "/assets/phr/js/phr.js"
+app_include_js = "assets/js/frappe.min.js"
 
 # include js, css files in header of web template
 #
-# web_include_js = "/assets/phr/js/phr.js"
+web_include_js = ["/assets/phr/pdfjs/build/pdf.js", "/assets/phr/pdfjs/web/viewer.js", "assets/js/frappe-web.min.js", "website_script.js"]
 
 # Home Pages
 # ----------
