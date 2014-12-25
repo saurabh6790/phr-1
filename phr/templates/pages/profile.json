@@ -18,17 +18,18 @@
    },
 	{
    	"fieldname": "person_lastname", 
-      "fieldtype": "data", 
+      "fieldtype": "link", 
       "label": "Last Name"
 	},
    {
       "fieldname": "gender", 
       "fieldtype": "select", 
-      "label": "Gender"
+      "label": "Gender",
+      "options":["", "Male", "Female"]
    },
   	{
    	"fieldname": "str_date_of_birth", 
-      "fieldtype": "data", 
+      "fieldtype": "date", 
       "label": "DOB"
 	},
    {
@@ -40,11 +41,6 @@
       "fieldname": "mobile", 
       "fieldtype": "data", 
       "label": "Mobile No"
-   },
-   {
-      "fieldname": "", 
-      "fieldtype": "column_break", 
-      "label": ""
    },
    {
       "fieldname": "phone", 
@@ -74,7 +70,8 @@
    {
       "fieldname": "marital_status", 
       "fieldtype": "select", 
-      "label": "Description"
+      "label": "Description",
+      "options": ["","Married","Single"] 
    },
    {
       "fieldname": "height", 
@@ -94,12 +91,13 @@
    {
       "fieldname": "diet_type", 
       "fieldtype": "select", 
-      "label": "Diet Type"
+      "label": "Diet Type",
+      "options":["","Heavy","Lite"]
    },
  
    {
       "fieldname": "current_address", 
-      "fieldtype": "data", 
+      "fieldtype": "text", 
       "label": "Current Address"
    },
    {
