@@ -28,7 +28,7 @@
    },
   	{
    	"fieldname": "str_date_of_birth", 
-      "fieldtype": "data", 
+      "fieldtype": "date", 
       "label": "DOB"
 	},
    {

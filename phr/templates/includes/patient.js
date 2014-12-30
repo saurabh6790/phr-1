@@ -2,8 +2,10 @@ frappe.provide("templates/includes");
 {% include "templates/includes/inherit.js" %}
 {% include "templates/includes/form_generator.js" %}
 
+
 $(document).ready(function () {
 	new PatientDashboard($(document).find("#main-con"))
+
 })
 
 var PatientDashboard = inherit(RenderFormFields, {
