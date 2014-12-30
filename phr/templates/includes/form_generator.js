@@ -16,9 +16,21 @@ $.extend(RenderFormFields.prototype,{
 		this.args = arg;
 
 		$(this.wrapper).empty()
-
+		this.render_top()
 		this.get_field_meta();
-	} ,
+		console.log($(this.wrapper))
+	},
+	render_top:function(){
+		$('<div class="top-bar" style="height:80px;">\
+			<button type="button" class="btn btn-primary" style	="vertical-align:bottom;">Home</button>\
+      		<button type="button" class="btn btn-primary " style="margin:0px auto;">Health Marketplace</button>\
+		</div>\
+		<div class="form-controller"></div>').appendTo($(this.wrapper))
+
+		//reinitialization of wrapper to form-controller
+		this.wrapper = $('.form-controller')
+
+	},
 	get_field_meta:function(){
 		var me = this;
 		frappe.call({
@@ -78,16 +90,31 @@ $.extend(RenderFormFields.prototype,{
 	},
 	link_field_renderer: function(field_meta){
 		var me = this;
-		console.log(frappe.ui)
-		// frappe.ui.form.make_control({
-		// 		df: {
-		// 		    "fieldtype": 'Link',
-		// 			"fieldname": 'event',
-		// 			"options": 'Event',
-		// 			"label": 'event'
-		// 			},
-		// 		parent: $(me.column),
-		// 	}).make_input();
+		$input = $(repl_str('<div class="form-horizontal frappe-control" style="max-width: 600px;margin-top:10px;">\
+						<div class="form-group row" style="margin: 0px">\
+							<label class="control-label small col-xs-4" style="padding-right: 0px;">%(label)s</label>\
+							<div class="col-xs-8">\
+								<div class="control-input">\
+									<input type="text" class="form-control autocomplete" \
+										placeholder="%(label)s" name="%(fieldname)s" value="%(value)s" \
+										aria-describedby="basic-addon2">\
+								</div>\
+							</div>\
+						</div>\
+				</div>', field_meta)).appendTo($(this.column))
+
+		// $($input.find('.autocomplete')).autocomplete({
+		// 	source: field_meta['options'],
+		// });
+
+		$($input.find('.autocomplete')).autocomplete({
+        source: function(request, response){
+            var matcher = new RegExp( $.ui.autocomplete.escapeRegex( request.term ), "i" );
+            response( $.grep( field_meta['options'], function( value ) {
+            return matcher.test(value['constructor']) || matcher.test(value.model) || matcher.test(value.type);
+        }));
+        }
+    });
 	},
 	text_field_renderer: function(field_meta){
 		$(repl_str('<div class="form-horizontal frappe-control" style="max-width: 600px;margin-top:10px;">\
@@ -128,18 +155,49 @@ $.extend(RenderFormFields.prototype,{
 					})
 	},
 	table_field_renderer:function(field_meta){
+		var me = this;
+		$input = $(repl_str('<div class="panel panel-primary" style="height:100%;margin-top:10px;">\
+				<div class="panel-heading">%(label)s<span style="float:right">\
+						<i class="icon-remove"></i></span></div>\
+				<div class="panel-body" style="padding:1px;height:180px;overflow:hidden;overflow:auto">\
+					<table class="table table-striped" style="padding=0px;" >\
+						<thead><tr></tr></thead>\
+						<tbody></tbody>\
+					</table>\
+				</div>\
+			</div>',field_meta)).appendTo($(this.column))
+
+		$.each(field_meta['options'],function(i, val){
+			(i==0) ? me.render_table_heads(val, $input) : me.render_table_body(val, $input)
+		})
 
 	},
+	render_table_heads:function(val, input_area){
+		$.each(val,function(i, d){
+			$("<th>").html(d)
+				.appendTo($(input_area).find("thead tr"));
+		})
+	},
+	render_table_body:function(val, input_area){
+		var row = $("<tr>").appendTo($(input_area).find("tbody"));
+		$.each(val,function(i, d){
+			$("<td>").html(d)
+				.appendTo(row);
+		})
+	},
 	tab_field_renderer: function(){
-		$('<div role="tabpanel"><ul class="nav nav-tabs tab-ui" role="tablist"></ul>\
-			<div class="tab-content tab-div"></div></div>').appendTo($(this.wrapper))
+		$('<div role="tabpanel">\
+				<ul class="nav nav-tabs tab-ui" role="tablist"></ul>\
+				<div class="tab-content tab-div"></div>\
+			</div>').appendTo($(this.wrapper))
 
 	},
 	section_field_renderer: function(field_meta){
 		$(repl_str('<li role="presentation">\
-			<a href="#%(fieldname)s" aria-controls="%(fieldname)s"\
-			role="tab"\
-			data-toggle="tab">%(label)s</a></li>',field_meta)).appendTo($(".tab-ui"))
+						<a href="#%(fieldname)s" aria-controls="%(fieldname)s"\
+							role="tab" data-toggle="tab">%(label)s</a>\
+					</li>',field_meta)).appendTo($(".tab-ui"))
+
 		$(repl_str('<div role="tabpanel" class="tab-pane " id="%(fieldname)s">\
 			</div>',field_meta)).appendTo($(".tab-div"))
 
