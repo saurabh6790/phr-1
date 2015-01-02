@@ -45,3 +45,9 @@ def get_values():
 	return 	values
 
 	
+@frappe.whitelist(allow_guest=True)
+def get_master_details(doctype):
+	import itertools 
+
+	ret = frappe.db.sql("select event_name from `tab%s` order by creation desc "%doctype,as_list=1)
+	return list(itertools.chain(*ret))

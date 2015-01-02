@@ -14,21 +14,44 @@ $.extend(RenderFormFields.prototype,{
 		this.wrapper = wrapper;
 		this.column = '';
 		this.args = arg;
-
+		this.wrapper = $('.field-area')
 		$(this.wrapper).empty()
 		this.render_top()
 		this.get_field_meta();
 		console.log($(this.wrapper))
 	},
 	render_top:function(){
-		$('<div class="top-bar" style="height:80px;">\
-			<button type="button" class="btn btn-primary" style	="vertical-align:bottom;">Home</button>\
-      		<button type="button" class="btn btn-primary " style="margin:0px auto;">Health Marketplace</button>\
-		</div>\
-		<div class="form-controller"></div>').appendTo($(this.wrapper))
+		// $('<div class="top-bar" style="height:80px;">\
+		// 	<button type="button" class="btn btn-primary" style	="vertical-align:bottom;">Home</button>\
+  //     		<button type="button" class="btn btn-primary " style="margin:0px auto;">Health Marketplace</button>\
+		// </div>\
+		// <div class="form-controller"></div>').appendTo($(this.wrapper))
 
-		//reinitialization of wrapper to form-controller
-		this.wrapper = $('.form-controller')
+		// //reinitialization of wrapper to form-controller
+		
+
+		// $('	<div class="sub-top-bar" style="padding-top:2%;padding-bottom:2%;background-color:#ECECEC; border-top: 1px solid #006DEA; border-bottom: 1px solid #006DEA;">\
+		// 		<div class="breadcrumbs" style="width:50%;display:inline-block;">\
+		// 			<ol class="breadcrumb">\
+		// 			</ol>\
+		// 		</div>\
+		// 	</div>\
+		// ').appendTo($('.form-controller'))
+
+		$('<div class="controller" style="width:45%;display:inline-block;text-align:right;">\
+				<button class="btn btn-primary">\
+					<i class="icon-save"></i> Save \
+				</button>\
+			</div>')
+			.appendTo($('.sub-top-bar'))
+			.click(function(){
+				var res = {};
+				$("form input, form textarea").each(function(i, obj) {
+					res[obj.name] = $(obj).val();
+				})
+
+				console.log(res)
+			})
 
 	},
 	get_field_meta:function(){
@@ -90,7 +113,7 @@ $.extend(RenderFormFields.prototype,{
 	},
 	link_field_renderer: function(field_meta){
 		var me = this;
-		$input = $(repl_str('<div class="form-horizontal frappe-control" style="max-width: 600px;margin-top:10px;">\
+		var $input = $(repl_str('<div class="form-horizontal frappe-control" style="max-width: 600px;margin-top:10px;">\
 						<div class="form-group row" style="margin: 0px">\
 							<label class="control-label small col-xs-4" style="padding-right: 0px;">%(label)s</label>\
 							<div class="col-xs-8">\
@@ -103,18 +126,26 @@ $.extend(RenderFormFields.prototype,{
 						</div>\
 				</div>', field_meta)).appendTo($(this.column))
 
-		// $($input.find('.autocomplete')).autocomplete({
-		// 	source: field_meta['options'],
-		// });
+		frappe.call({
+			method:'phr.templates.pages.patient.get_master_details',
+			args:{'doctype': field_meta['options']},
+			callback: function(r){
+				console.log([r.message, $($input.find('.autocomplete'))])
+				$($input.find('.autocomplete')).autocomplete({
+					source: r.message,
+				});
+			}
+		})
+		
 
-		$($input.find('.autocomplete')).autocomplete({
-        source: function(request, response){
-            var matcher = new RegExp( $.ui.autocomplete.escapeRegex( request.term ), "i" );
-            response( $.grep( field_meta['options'], function( value ) {
-            return matcher.test(value['constructor']) || matcher.test(value.model) || matcher.test(value.type);
-        }));
-        }
-    });
+		// $($input.find('.autocomplete')).autocomplete({
+  //       source: function(request, response){
+  //           var matcher = new RegExp( $.ui.autocomplete.escapeRegex( request.term ), "i" );
+  //           response( $.grep( field_meta['options'], function( value ) {
+  //           return matcher.test(value['constructor']) || matcher.test(value.model) || matcher.test(value.type);
+  //       }));
+  //       }
+    // });
 	},
 	text_field_renderer: function(field_meta){
 		$(repl_str('<div class="form-horizontal frappe-control" style="max-width: 600px;margin-top:10px;">\
@@ -157,8 +188,7 @@ $.extend(RenderFormFields.prototype,{
 	table_field_renderer:function(field_meta){
 		var me = this;
 		$input = $(repl_str('<div class="panel panel-primary" style="height:100%;margin-top:10px;">\
-				<div class="panel-heading">%(label)s<span style="float:right">\
-						<i class="icon-remove"></i></span></div>\
+				<div class="panel-heading">%(label)s</div>\
 				<div class="panel-body" style="padding:1px;height:180px;overflow:hidden;overflow:auto">\
 					<table class="table table-striped" style="padding=0px;" >\
 						<thead><tr></tr></thead>\
@@ -216,5 +246,13 @@ $.extend(RenderFormFields.prototype,{
 		$(this.wrapper).find(".form-column").removeClass()
 			.addClass("form-column")
 			.addClass("col-md-" + colspan);
+    },
+    section_break_field_renderer: function(){
+    	console.log(['section', this.wrapper])
+    	$('<div class="row">Test</div>')
+    		.appendTo($(this.wrapper))
+    		.css("border-top", "1px solid #eee")
+    		.css("padding-top", "15px")
+    		
     }
 })

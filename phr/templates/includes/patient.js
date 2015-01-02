@@ -5,11 +5,11 @@ frappe.provide("templates/includes");
 
 $(document).ready(function () {
 	$("#profile").unbind("click").click(function(){
-		new PatientDashboard($(document).find("#main-con"))
+		PatientDashboard.prototype.init($(document).find("#main-con"))
 	})
 	$('.event').unbind("click").click(function(){
 		console.log("Test")
-		new Event($(document).find("#main-con"))
+		Event.prototype.init($(document).find("#main-con"))
 	})
 })
 
@@ -21,18 +21,7 @@ var PatientDashboard = inherit(RenderFormFields, {
 		this.render_field()
 	},
 	render_field: function(){
-		$('.form-controller').append("<div><h1>YESSSSS</h1></div>")
-		$('<button type="button" class="btn btn-default" aria-label="Left Align">SAve</button>')
-		.appendTo($('.form-controller'))	
-		.click(function(){
-			var res = {};
-			$("form input, form textarea").each(function(i, obj) {
-				res[obj.name] = $(obj).val();
-			})
-
-			console.log(res)
-			// console.log($('form').serialize())
-		})
+		
 	}
 
 })
@@ -47,6 +36,7 @@ var Event = inherit(ListView,{
 						{'fieldname':'event','fieldtype':'link','label':'Event','options':['Dengue','Headache','Chest Pain']},
 						{'fieldname':'description','fieldtype':'text','label':'Description'},
 						{'fieldname':'provider_type','fieldtype':'select','label':'Healthcare Provider', 'options':['Doc', 'Hospital', 'Lab']},
+						{'fieldname':'','fieldtype':'column_break','label':''},
 						{'fieldname':'provider_name','fieldtype':'data','label':'Provider Name'},
 						{'fieldname':'number','fieldtype':'data','label':'Contact Number'},
 						{'fieldname':'email_id','fieldtype':'data','label':'Email Id'}
