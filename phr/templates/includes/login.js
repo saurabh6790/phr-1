@@ -122,11 +122,12 @@ login.login_handlers = (function() {
 					var last_visited =
 						localStorage.getItem("last_visited")
 							|| get_url_arg("redirect-to")
+							|| data.access_link
 							|| url || "/index";
 					localStorage.removeItem("last_visited");
 					window.location.href = last_visited;
 				} else {
-					go_to_url= url || "/index"
+					go_to_url= url || data.access_link || "/index"
 					window.location.href = "/index";
 				}
 			} else if(["#signup", "#forgot"].indexOf(window.location.hash)!==-1) {

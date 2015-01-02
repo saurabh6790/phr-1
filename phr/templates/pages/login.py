@@ -28,7 +28,6 @@ def create_profile(first_name,middle_name,last_name,email_id,contact):
 		args={"person_firstname":first_name,"person_lastname":last_name,"email":email_id,"phone":contact}
 		profile_res=create_profile_in_solr(args)
 		response=json.loads(profile_res)
-		print response
 		if response['returncode']==101:
 			create_profile_in_db(response['entityid'],args,response)
 

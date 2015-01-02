@@ -152,39 +152,14 @@
       "label": "Per. Country"
    },
    {
-      "fieldname": "password", 
+      "fieldname": "notification", 
       "fieldtype": "section", 
-      "label": "Update Password" 
+      "label": "Manage Notifications" 
    },
    {
-      "fieldname": "old_password", 
-      "fieldtype": "data", 
-      "label": "Old Password"
-   },
-   {
-      "fieldname": "new_password", 
-      "fieldtype": "data", 
-      "label": "New Password"
-   },
-   {
-      "fieldname": "cnf_new_password", 
-      "fieldtype": "data", 
-      "label": "Confirm Password"
-   },
-   {
-      "fieldname": "manage_phr", 
+      "fieldname": "dashboard", 
       "fieldtype": "section", 
-      "label": "Manage PHR" 
-   },
-   {
-      "fieldname": "create_new", 
-      "fieldtype": "button", 
-      "label": "Create New"
-   },
-   {
-      "fieldname": "update_phr", 
-      "fieldtype": "button", 
-      "label": "Update Existing"
+      "label": "Manage Dashboard" 
    }
    ]
 }
