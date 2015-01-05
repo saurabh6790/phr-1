@@ -80,7 +80,7 @@
    },
         {
       "fieldname": "", 
-      "fieldtype": "column_break", 
+      "fieldtype": "section_break", 
       "label": ""
    },
    {
