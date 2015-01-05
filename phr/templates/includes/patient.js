@@ -3,25 +3,36 @@ frappe.provide("templates/includes");
 // {% include "templates/includes/form_generator.js" %}
 {% include "templates/includes/list_view.js" %}
 
+
 $(document).ready(function () {
 	$("#profile").unbind("click").click(function(){
-		PatientDashboard.prototype.init($(document).find("#main-con"))
+		PatientDashboard.prototype.init($(document).find("#main-con"),"profile")
 	})
 	$('.event').unbind("click").click(function(){
-		console.log("Test")
 		Event.prototype.init($(document).find("#main-con"))
+	})
+	$(".create_linkphr").unbind("click").click(function(){
+		PatientDashboard.prototype.init($(document).find("#main-con"),"linked_patient")
 	})
 })
 
 var PatientDashboard = inherit(RenderFormFields, {
-	init: function(wrapper){
+	init: function(wrapper,cmd){
 		this.wrapper = wrapper;
-		this.render_field();
-		RenderFormFields.prototype.init(this.wrapper)
+		this.args=cmd
+		RenderFormFields.prototype.init(this.wrapper,this.args)
 		this.render_field()
 	},
 	render_field: function(){
-		
+		$('<button type="button" class="btn btn-default" aria-label="Left Align">Save</button>')
+		.appendTo($('.form-controller'))	
+		.click(function(){
+			var res = {};
+			$(".tab-pane.active form input, .tab-pane.active form textarea, .tab-pane.active form select").each(function(i, obj) {
+				res[obj.name] = $(obj).val();
+			})
+
+		})
 	}
 
 })
@@ -29,7 +40,6 @@ var PatientDashboard = inherit(RenderFormFields, {
 
 var Event = inherit(ListView,{
 	init: function(wrapper){
-		console.log('t1')
 		this.wrapper = wrapper;
 		// this.render_field();
 		ListView.prototype.init(this.wrapper, {'fields':[

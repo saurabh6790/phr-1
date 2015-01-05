@@ -24,6 +24,7 @@ $.extend(RenderFormFields.prototype,{
 		//initiate rendering
 		this.render_top()
 		this.get_field_meta();
+
 	},
 	render_top:function(){
 		console.log('render_top')
@@ -102,10 +103,15 @@ $.extend(RenderFormFields.prototype,{
 				</div>', field_meta)).appendTo($(this.column))
 		
 		$.each(field_meta['options'],function(i, val){
-				$('<option>', { 
+				$option=$('<option>', { 
 					'value': val,
 					'text' : val 
 				}).appendTo($($input.find('select')))
+				if (field_meta['value']==val){
+				 $option.attr('selected','selected')
+				}
+				$option.appendTo($($input.find('select')))
+				
 			
 		})
 

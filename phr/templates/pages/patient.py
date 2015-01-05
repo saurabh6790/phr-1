@@ -30,7 +30,8 @@ def get_data_to_render(data=None):
 	return fields, values, tab
 	
 def get_json_data(file_name):
-	with open(os.path.join(os.path.dirname(__file__), "profile.json"), "r") as json_data:
+	fn=file_name+'.json'
+	with open(os.path.join(os.path.dirname(__file__), fn), "r") as json_data:
 		json_data = json.loads(json_data.read())
 
 	return json_data
@@ -42,7 +43,7 @@ def get_json_data(file_name):
 """	
 
 def get_values():
-	values={"person_firstname": "Amit" ,"person_lastname":"Shukla" ,"gender":"Male" }
+	values={"person_firstname": "Amit" ,"person_lastname":"Shukla" ,"gender":"Male","marital_status":"Married" }
 	return 	values
 
 	
