@@ -2,6 +2,7 @@
  "allow_copy": 0, 
  "allow_import": 0, 
  "allow_rename": 0, 
+ "autoname": "field:event_name", 
  "creation": "2014-12-13 19:27:40.172154", 
  "custom": 0, 
  "docstatus": 0, 
@@ -45,6 +46,13 @@
    "reqd": 0, 
    "search_index": 0, 
    "set_only_once": 0
+  }, 
+  {
+   "fieldname": "description", 
+   "fieldtype": "Small Text", 
+   "label": "Description", 
+   "permlevel": 0, 
+   "precision": ""
   }
  ], 
  "hide_heading": 0, 
@@ -54,7 +62,7 @@
  "is_submittable": 0, 
  "issingle": 0, 
  "istable": 0, 
- "modified": "2014-12-13 19:27:40.172154", 
+ "modified": "2014-12-30 17:15:32.416666", 
  "modified_by": "Administrator", 
  "module": "phr", 
  "name": "Events", 

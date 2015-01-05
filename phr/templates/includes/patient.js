@@ -46,6 +46,7 @@ var Event = inherit(ListView,{
 						{'fieldname':'event','fieldtype':'link','label':'Event','options':['Dengue','Headache','Chest Pain']},
 						{'fieldname':'description','fieldtype':'text','label':'Description'},
 						{'fieldname':'provider_type','fieldtype':'select','label':'Healthcare Provider', 'options':['Doc', 'Hospital', 'Lab']},
+						{'fieldname':'','fieldtype':'column_break','label':''},
 						{'fieldname':'provider_name','fieldtype':'data','label':'Provider Name'},
 						{'fieldname':'number','fieldtype':'data','label':'Contact Number'},
 						{'fieldname':'email_id','fieldtype':'data','label':'Email Id'}

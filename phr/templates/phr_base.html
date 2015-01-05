@@ -77,7 +77,19 @@ Built on Frappe.io. Free and Open Source Framework for the Web. https://frappe.i
 						{%- block con_left -%}{% include "templates/includes/left_sidebar.html" %}{{ con_left or "" }}{%- endblock -%}
           			</div>
           			<div class="col-md-8">
-          				{%- block content -%}{{ content or "" }}{%- endblock -%}
+          				<div class="top-bar" style="height:80px;">
+							<button type="button" class="btn btn-primary" style	="vertical-align:bottom;">Home</button>
+      						<button type="button" class="btn btn-primary " style="margin:0px auto;">Health Marketplace</button>
+						</div>
+						<div class="form-controller">
+								<div class="sub-top-bar" style="padding-top:2%;padding-bottom:2%;background-color:#ECECEC; border-top: 1px solid #006DEA; border-bottom: 1px solid #006DEA;">
+									<div class="breadcrumbs" style="width:50%;display:inline-block;">
+										<ol class="breadcrumb">
+										</ol>
+									</div>
+								</div>
+						</div>
+						<div class="field-area"></div>
           			</div>
           			<div class="col-md-2" style="padding:0">
           				{%- block con_right -%}{% include "templates/includes/right_sidebar.html" %}{{ con_right or "" }}{%- endblock -%}
