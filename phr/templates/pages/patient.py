@@ -13,6 +13,7 @@ import os
 """	
 @frappe.whitelist(allow_guest=True)
 def get_data_to_render(data=None):
+	frappe.errprint([data, 'py'])
 	if data:
 		data = eval(data)
 
