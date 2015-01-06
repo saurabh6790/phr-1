@@ -27,6 +27,7 @@ $.extend(RenderFormFields.prototype,{
 
 	},
 	render_top:function(){
+		console.log('render_top')
 		$('.controller').remove();
 
 		$('<div class="controller" style="width:45%;display:inline-block;text-align:right;">\
@@ -45,19 +46,29 @@ $.extend(RenderFormFields.prototype,{
 	},
 	get_field_meta:function(){
 		var me = this;
-		frappe.call({
-			method:'phr.templates.pages.patient.get_data_to_render',
-			args:{'data': me.args},
-			callback: function(r){
+		var arg = '';
+		
+		if(me.args){
+			arg = "data="+JSON.stringify(me.args)
+		}
+
+		$.ajax({
+			method: "GET",
+			url: "/api/method/phr.templates.pages.patient.get_data_to_render",
+			data: arg,
+			async: false,
+			success: function(r) {
+				console.log([r.message, 'message'])
 				me.render_fields(r.message[0], r.message[1],r.message[2])
 			}
-		})
+		});
 	},
 	render_fields:function(fields, values, tab){
 		var me = this;
 		if(tab==1) me.tab_field_renderer()
 		// console.log([fields, this.column])
 		$.each(fields,function(indx, meta){
+			console.log(['meta', meta])
 			!me.section && me.section_break_field_renderer()
 			!me.column && me.column_break_field_renderer()
 			meta['value']=values[meta['fieldname']] || "";
@@ -250,9 +261,9 @@ $.extend(RenderFormFields.prototype,{
 			.addClass("col-md-" + colspan);
     },
     section_break_field_renderer: function(){
-    	console.log(['section', this.wrapper])
+    	// console.log(['section', this.wrapper])
 
-    	this.section = $('<div class="row"></div>')
+    	this.section = $('<div class="row sec"></div>')
     		.appendTo($(this.wrapper))
     		.css("border-top", "1px solid #eee")
     		.css("padding-top", "15px")

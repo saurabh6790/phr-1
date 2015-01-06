@@ -30,12 +30,16 @@ var ListView = inherit(RenderFormFields,{
 				</button>\
 			</div>')
 			.appendTo($('.sub-top-bar'))
-			.click(function(){
+			.bind('click',function(){
+				console.log("in ListView js")
 				me.new_form()
+				me.status=1
+				return me.status
 			})
 	},
 	new_form:function(){
 		var me = this;
+		console.log("in form body")
 		RenderFormFields.prototype.init(this.wrapper, {'fields':me.args['fields']})
 	}
 })

@@ -41,7 +41,7 @@ var PatientDashboard = inherit(RenderFormFields, {
 var Event = inherit(ListView,{
 	init: function(wrapper){
 		this.wrapper = wrapper;
-		this.render_field();
+		// this.render_field();
 		ListView.prototype.init(this.wrapper, {'fields':[
 						{'fieldname':'event','fieldtype':'link','label':'Event','options':['Dengue','Headache','Chest Pain']},
 						{'fieldname':'description','fieldtype':'text','label':'Description'},
@@ -51,9 +51,31 @@ var Event = inherit(ListView,{
 						{'fieldname':'number','fieldtype':'data','label':'Contact Number'},
 						{'fieldname':'email_id','fieldtype':'data','label':'Email Id'}
 					]})
-		// this.render_field()
+		this.render_spans()
 	},
-	render_field: function(){
+	render_spans: function(){
+		var me = this;
+		console.log('1')
+		console.log()
+		$('.controller').bind('click',function(event) {
+			console.log('in event js')
+			// console.log(['field-area',$('.field-area')])
+			console.log(me.status)
+				if(me.status == 1){
+						console.log($('.sec'))
+						// console.log($('div.field-area:last'))
+					    $('<div class="event_section1" style = "margin:10%; 10%;">\
+					    		<div class="btn btn-success" style = "margin:5%; 5%;height:80px;text-align: center !important;"> Consultancy </div>\
+					    		<div class="btn btn-success" style = "margin:5%; 5%;height:80px;text-align: center !important;"> Event Snaps </div>\
+					    		<div class="btn btn-success" style = "margin:5%; 5%;height:80px;text-align: center !important;"> Lab Reports </div>\
+					    	</div>\
+					    	<div class="event_section2" style="margin:10%; 10%;">\
+					    		<div class="btn btn-success" style = "margin:5%; 5%;height:80px;text-align: center !important;"> Prescription </div>\
+					    		<div class="btn btn-success" style = "margin:5%; 5%;height:80px;text-align: center !important;"> Cost of Care </div>\
+					    	</div>').appendTo($('.field-area'))			
+			}
+		})
+		
 		// $('<button type="button" class="btn btn-default" aria-label="Left Align">')
 		// .appendTo($(this.wrapper))	
 		// .click(function(){
