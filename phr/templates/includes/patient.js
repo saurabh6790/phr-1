@@ -24,7 +24,7 @@ var PatientDashboard = inherit(RenderFormFields, {
 		this.render_field()
 	},
 	render_field: function(){
-		$('<button type="button" class="btn btn-default" aria-label="Left Align">Save</button>')
+		/*$('<button type="button" class="btn btn-default" aria-label="Left Align">Save</button>')
 		.appendTo($('.form-controller'))	
 		.click(function(){
 			var res = {};
@@ -32,7 +32,7 @@ var PatientDashboard = inherit(RenderFormFields, {
 				res[obj.name] = $(obj).val();
 			})
 
-		})
+		})*/
 	}
 
 })
