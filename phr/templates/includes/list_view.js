@@ -22,9 +22,10 @@ var ListView = inherit(RenderFormFields,{
 
 		console.log($('.sub-top-bar.btn'))
 
-		$('.controller').remove();
+		$('.new_controller').remove();
+		$('.save_controller').remove();
 
-		$('<div class="controller" style="width:45%;display:inline-block;text-align:right;">\
+		$('<div class="new_controller" style="width:45%;display:inline-block;text-align:right;">\
 				<button class="btn btn-primary">\
 					<i class="icon-plus"></i> New \
 				</button>\

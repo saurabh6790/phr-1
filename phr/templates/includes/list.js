@@ -22,6 +22,7 @@ function render_image_viewer(){
 }
 
 function thumbnail(pdfURL,elementID){
+    console.log([pdfURL, 'test_pdf'])
     PDFJS.workerSrc="/assets/phr/pdfjs/build/pdf.worker.js";
     PDFJS.getDocument(pdfURL).then(function(pdf){
         pdf.getPage(1).then(function(page) {  //1 is the page number we want to retrieve
@@ -47,7 +48,7 @@ function thumbnail(pdfURL,elementID){
         ctx.fillRect(0,0,canvas.width,canvas.height);
         var img = canvas.toDataURL();
         console.log(img)
-        $("#"+elementID).html('<img src="'+img+'"/>');
+        $(elementID).html('<img src="'+img+'"/>');
     });
 })
 

@@ -27,10 +27,11 @@ $.extend(RenderFormFields.prototype,{
 
 	},
 	render_top:function(){
-		console.log('render_top')
-		$('.controller').remove();
+		var me = this;
+		$('.new_controller').remove();
+		$('.save_controller').remove();
 
-		$('<div class="controller" style="width:45%;display:inline-block;text-align:right;">\
+		$('<div class="save_controller" style="width:45%;display:inline-block;text-align:right;">\
 				<button class="btn btn-primary">\
 					<i class="icon-save"></i> Save \
 				</button>\
@@ -58,7 +59,6 @@ $.extend(RenderFormFields.prototype,{
 			data: arg,
 			async: false,
 			success: function(r) {
-				console.log([r.message, 'message'])
 				me.render_fields(r.message[0], r.message[1],r.message[2])
 			}
 		});
@@ -66,9 +66,7 @@ $.extend(RenderFormFields.prototype,{
 	render_fields:function(fields, values, tab){
 		var me = this;
 		if(tab==1) me.tab_field_renderer()
-		// console.log([fields, this.column])
 		$.each(fields,function(indx, meta){
-			console.log(['meta', meta])
 			!me.section && me.section_break_field_renderer()
 			!me.column && me.column_break_field_renderer()
 			meta['value']=values[meta['fieldname']] || "";
@@ -136,7 +134,6 @@ $.extend(RenderFormFields.prototype,{
 				method:'phr.templates.pages.patient.get_master_details',
 				args:{'doctype': field_meta['options']},
 				callback: function(r){
-					console.log([r.message, $($input.find('.autocomplete'))])
 					$($input.find('.autocomplete')).autocomplete({
 						source: r.message,
 					});
@@ -261,8 +258,6 @@ $.extend(RenderFormFields.prototype,{
 			.addClass("col-md-" + colspan);
     },
     section_break_field_renderer: function(){
-    	// console.log(['section', this.wrapper])
-
     	this.section = $('<div class="row sec"></div>')
     		.appendTo($(this.wrapper))
     		.css("border-top", "1px solid #eee")

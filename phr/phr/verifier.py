@@ -20,12 +20,13 @@ def verify_email(id,key):
 def verify_mobile(id,code):
 	mob_code=frappe.db.get_value('Verification Details',{"name":id},"mobile_verification_code")
 	if mob_code!=code:
-		frappe.msgprint("Please Enter valid code")
+		# frappe.msgprint("Please Enter valid code")
+		return {"returncode" : 404, "message_summary":"Please Enter valid code"}
 	else:
 		vd=frappe.get_doc('Verification Details',id)
 		vd.mflag=1
 		vd.save(ignore_permissions=True)
-		return "Mobile Number Verified"		
+		return {"returncode" : 100, "message_summary":"Mobile Number Verified"}
 
 @frappe.whitelist(allow_guest=True)
 def update_password(new_password, id=None, old_password=None):

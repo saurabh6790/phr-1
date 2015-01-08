@@ -21,15 +21,18 @@ def create_profile(first_name,middle_name,last_name,email_id,contact):
 	user = frappe.db.get("User", {"email": email_id})
 	if user:
 		if user.disabled:
-			return _("Registered but disabled.")
+			return {"returncode" : 410, "message_summary":"Registered but disabled."}
 		else:
-			return _("Already Registered")
+			return {"returncode" : 409, "message_summary" : "Already Registered"}
 	else:
 		args={"person_firstname":first_name,"person_lastname":last_name,"email":email_id,"phone":contact}
 		profile_res=create_profile_in_solr(args)
 		response=json.loads(profile_res)
 		if response['returncode']==101:
 			create_profile_in_db(response['entityid'],args,response)
+			return response
+		else:
+			return response
 
 
 
