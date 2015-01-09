@@ -10,13 +10,15 @@ var RenderFormFields = function(){
 }
 
 $.extend(RenderFormFields.prototype,{
-	init:function(wrapper, arg){
+	init:function(wrapper, arg, entityid){
 		//initializing
 		this.section = '';
 		this.column = '';
 		this.args = arg;
+		this.entityid=entityid;
 		this.wrapper = $('.field-area')
 		this.result_set = {}
+		console.log(this.entityid)
 
 		//crear rendering area
 		$(this.wrapper).empty()
@@ -27,38 +29,32 @@ $.extend(RenderFormFields.prototype,{
 
 	},
 	render_top:function(){
-		console.log('render_top')
 		$('.controller').remove();
-
+		var me=this
 		$('<div class="controller" style="width:45%;display:inline-block;text-align:right;">\
 				<button class="btn btn-primary">\
 					<i class="icon-save"></i> Save \
 				</button>\
-			</div>')
-			.appendTo($('.sub-top-bar'))
-			.click(function(){
-				me.result_set = {}
-				$("form input, form textarea").each(function(i, obj) {
-					me.result_set[obj.name] = $(obj).val();
-				})
-			})
+			</div>').appendTo($('.sub-top-bar')).addClass(me.args)
+			
 
 	},
 	get_field_meta:function(){
 		var me = this;
-		var arg = '';
+		var arg = {};
 		
 		if(me.args){
-			arg = "data="+JSON.stringify(me.args)
+			arg['data'] = JSON.stringify(me.args)
 		}
-
+		if(me.entityid){
+			arg['entityid'] = JSON.stringify(me.entityid)	
+		}
 		$.ajax({
 			method: "GET",
 			url: "/api/method/phr.templates.pages.patient.get_data_to_render",
 			data: arg,
 			async: false,
 			success: function(r) {
-				console.log([r.message, 'message'])
 				me.render_fields(r.message[0], r.message[1],r.message[2])
 			}
 		});
@@ -68,7 +64,6 @@ $.extend(RenderFormFields.prototype,{
 		if(tab==1) me.tab_field_renderer()
 		// console.log([fields, this.column])
 		$.each(fields,function(indx, meta){
-			console.log(['meta', meta])
 			!me.section && me.section_break_field_renderer()
 			!me.column && me.column_break_field_renderer()
 			meta['value']=values[meta['fieldname']] || "";
@@ -136,7 +131,6 @@ $.extend(RenderFormFields.prototype,{
 				method:'phr.templates.pages.patient.get_master_details',
 				args:{'doctype': field_meta['options']},
 				callback: function(r){
-					console.log([r.message, $($input.find('.autocomplete'))])
 					$($input.find('.autocomplete')).autocomplete({
 						source: r.message,
 					});
@@ -261,9 +255,7 @@ $.extend(RenderFormFields.prototype,{
 			.addClass("col-md-" + colspan);
     },
     section_break_field_renderer: function(){
-    	// console.log(['section', this.wrapper])
-
-    	this.section = $('<div class="row sec"></div>')
+    	this.section = $('<div class="row sec" style="padding:2%""></div>')
     		.appendTo($(this.wrapper))
     		.css("border-top", "1px solid #eee")
     		.css("padding-top", "15px")

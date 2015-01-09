@@ -6,7 +6,7 @@ from frappe.auth import _update_password
 from frappe.core.doctype.notification_count.notification_count import clear_notifications
 import frappe.permissions
 import json
-
+from frappe import _
 #STANDARD_USERS = ("Guest", "Administrator")
 
 
@@ -19,19 +19,20 @@ def create_profile(first_name,middle_name,last_name,email_id,contact):
 		4.Complete Registration 
 	"""
 	user = frappe.db.get("User", {"email": email_id})
+	print user
 	if user:
 		if user.disabled:
 			return _("Registered but disabled.")
 		else:
 			return _("Already Registered")
 	else:
-		args={"person_firstname":first_name,"person_lastname":last_name,"email":email_id,"phone":contact}
+		args={'person_firstname':first_name,'person_lastname':last_name,'email':email_id,'mobile':contact,'received_from':'Desktop'}
 		profile_res=create_profile_in_solr(args)
 		response=json.loads(profile_res)
+		print response
 		if response['returncode']==101:
-			create_profile_in_db(response['entityid'],args,response)
-
-
+			res=create_profile_in_db(response['entityid'],args,response)
+			return res
 
 def create_profile_in_db(id,args,response):
 	from frappe.utils import random_string
@@ -53,16 +54,18 @@ def create_profile_in_db(id,args,response):
 def create_profile_in_solr(args):
 	request_type="POST"
 	url="http://192.168.5.11:9090/phr/createProfile"
+	data=json.dumps(args)
 	from phr.phr.phr_api import get_response
-	response=get_response(url,args,request_type)
+	response=get_response(url,data,request_type)
 	return response.text
+
+
 
 
 @frappe.whitelist(allow_guest=True)
 def reset_password(user):
 	if user=="Administrator":
 		return _("Not allowed to reset the password of {0}").format(user)
-
 	try:
 		user = frappe.get_doc("User", user)
 		user.validate_reset_password()

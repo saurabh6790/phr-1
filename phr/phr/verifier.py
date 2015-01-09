@@ -32,7 +32,6 @@ def update_password(new_password, id=None, old_password=None):
 	# verify old password
 	if id:
 		user=frappe.db.get_value("User",{"profile_id":id})
-		print user
 		if old_password:
 			if not frappe.db.sql("""select user from __Auth where password=password(%s)
 				and user=%s""", (old_password, user)):

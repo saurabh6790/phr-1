@@ -2,11 +2,15 @@ frappe.provide("templates/includes");
 {% include "templates/includes/inherit.js" %}
 // {% include "templates/includes/form_generator.js" %}
 {% include "templates/includes/list_view.js" %}
+{% include "templates/includes/profile.js" %}
+
 
 
 $(document).ready(function () {
 	$("#profile").unbind("click").click(function(){
-		PatientDashboard.prototype.init($(document).find("#main-con"),"profile")
+		profile_id=frappe.get_cookie("profile_id")
+		console.log(profile_id)
+		PatientDashboard.prototype.init($(document).find("#main-con"),"profile",profile_id)
 	})
 	$('.event').unbind("click").click(function(){
 		Event.prototype.init($(document).find("#main-con"))
@@ -16,26 +20,6 @@ $(document).ready(function () {
 	})
 })
 
-var PatientDashboard = inherit(RenderFormFields, {
-	init: function(wrapper,cmd){
-		this.wrapper = wrapper;
-		this.args=cmd
-		RenderFormFields.prototype.init(this.wrapper,this.args)
-		this.render_field()
-	},
-	render_field: function(){
-		/*$('<button type="button" class="btn btn-default" aria-label="Left Align">Save</button>')
-		.appendTo($('.form-controller'))	
-		.click(function(){
-			var res = {};
-			$(".tab-pane.active form input, .tab-pane.active form textarea, .tab-pane.active form select").each(function(i, obj) {
-				res[obj.name] = $(obj).val();
-			})
-
-		})*/
-	}
-
-})
 
 
 var Event = inherit(ListView,{
@@ -55,16 +39,9 @@ var Event = inherit(ListView,{
 	},
 	render_spans: function(){
 		var me = this;
-		console.log('1')
-		console.log()
 		$('.controller').bind('click',function(event) {
-			console.log('in event js')
-			// console.log(['field-area',$('.field-area')])
-			console.log(me.status)
-				if(me.status == 1){
-						console.log($('.sec'))
-						// console.log($('div.field-area:last'))
-					    $('<div class="event_section1" style = "margin:10%; 10%;">\
+			if(me.status == 1){
+						$('<div class="event_section1" style = "margin:10%; 10%;">\
 					    		<div class="btn btn-success" style = "margin:5%; 5%;height:80px;text-align: center !important;"> Consultancy </div>\
 					    		<div class="btn btn-success" style = "margin:5%; 5%;height:80px;text-align: center !important;"> Event Snaps </div>\
 					    		<div class="btn btn-success" style = "margin:5%; 5%;height:80px;text-align: center !important;"> Lab Reports </div>\
