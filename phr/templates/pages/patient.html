@@ -17,17 +17,31 @@
   <p class="nohp">No Providers</p>
 </div>
 <div class="list-group-side" id="mhr">
-  <a noherf class="list-group-item-side active">My Health Records</a>
-  <a noherf class="list-group-item-side event">Events</a>
-  <a noherf class="list-group-item-side">Visits</a>
-  <a noherf class="list-group-item-side">Meditations</a>
-  <a noherf class="list-group-item-side">Disease Management</a>
-  <a noherf class="list-group-item-side">Apointments</a>
-  <a noherf class="list-group-item-side">Messages</a>
+  <div class="list-group-item-side active">My Health Records</div>
+  <div class="list-group-item-side event">Events</div>
+  <div class="list-group-item-side">Visits</div>
+  <div class="list-group-item-side">Meditations</div>
+  <div class="list-group-item-side">Disease Management</div>
+  <div class="list-group-item-side">Apointments</div>
+  <div class="list-group-item-side">Messages</div>
 </div>
 {% endblock %}
-{% block content %}
+{% block content_area %}
 <div style="padding-top:1%;">
+</div>
+<div class="top-bar" style="height:50px;">
+              <button type="button" class="btn btn-primary home" style ="vertical-align:bottom;">Home</button>
+                  <button type="button" class="btn btn-primary market" style="margin:0px auto;">Health Marketplace</button>
+            </div>
+            <div class="form-controller">
+                <div class="sub-top-bar" style="padding-top:2%;padding-bottom:2%;background-color:#ECECEC; border-top: 1px solid #006DEA; border-bottom: 1px solid #006DEA;">
+                  <div class="breadcrumbs" style="width:50%;display:inline-block;">
+                    <ol class="breadcrumb">
+                    </ol>
+                  </div>
+                </div>
+            </div>
+<div class="field-area" style="padding-top:5%"></div>
 </div>
 <div id="main-con">
 

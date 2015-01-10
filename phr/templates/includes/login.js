@@ -82,7 +82,6 @@ login.signup = function() {
 	$(".form-signup").toggle(true);
 }
 
-
 // Login
 login.call = function(args) {
 	$('.btn-primary').prop("disabled", true);

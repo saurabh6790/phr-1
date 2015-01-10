@@ -32,6 +32,7 @@
       "fieldtype": "date", 
       "label": "DOB"
 	},
+
    {
       "fieldname": "blod_group", 
       "fieldtype": "data", 
@@ -41,6 +42,11 @@
       "fieldname": "mobile", 
       "fieldtype": "data", 
       "label": "Mobile No"
+   },
+     {
+      "fieldname": "", 
+      "fieldtype": "column_break", 
+      "label": ""
    },
    {
       "fieldname": "phone", 
@@ -52,6 +58,7 @@
       "fieldtype": "data", 
       "label": "Fax"
    },
+
    {
       "fieldname": "email", 
       "fieldtype": "data", 
