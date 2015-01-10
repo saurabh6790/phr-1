@@ -15,9 +15,10 @@ $.extend(SharePhr.prototype,{
 	init:function(wrapper, args){
 		console.log('test')
 		this.wrapper = wrapper;
+		this.args = args;
 		RenderFormFields.prototype.init(this.wrapper, {'fields':args['fields'], 
 			'values': args['values']})
-
+		console.log($('.field-area'))
 		$('<div class="event_section"></div>').appendTo($('.field-area'))
 		this.render_folder_section()
 	 //  	me.bind_events()
@@ -31,6 +32,13 @@ $.extend(SharePhr.prototype,{
 		// sub_folders = ['A', 'B', 'C']
 		$('#sharetab').empty()
 
+		console.log(this.args['selected_files'])
+
+		if(this.args['selected_files']){
+			console.log($.arrayIntersect(folders, this.args['selected_files']))
+			folders = $.arrayIntersect(folders, this.args['selected_files'])
+		}
+		console.log(folders)
 		$.each(folders, function(i, folder){
 			$(repl_str('<div id = "%(id)s">\
 				<div style = "display:inline-block;margin:5%; 5%;height:80px;text-align: center !important;"> \
@@ -56,13 +64,11 @@ $.extend(SharePhr.prototype,{
 		var me = this;
 		$('#A, #B, #C').bind('click',function(){
 				// $(".breadCrumb a").last().remove();
-				$(repl_str("<a href='#' class='active'>%(id)s</a>\
+				$(repl_str("<li class=active'>%(id)s</li>\
 					",{'id':$(this).attr('id')})).appendTo('.breadcrumb');
 				$('.sharetab').empty();
 				me.sub_folder = $(this).attr('id');
-				console.log([$(this).parent().closest().attr('id'), $(this).parent().attr('id')])
 				me.folder = $(this).parent().attr('id')
-				console.log([me.sub_folder, me.folder])
 				ThumbNails.prototype.init(me.wrapper, {'folder':me.folder, 
 						'sub_folder':me.sub_folder, 'profile_id':'123456789', 'display':'initial'})
 				// me.render_uploader_and_files();

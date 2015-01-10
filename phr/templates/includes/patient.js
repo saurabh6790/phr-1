@@ -5,6 +5,7 @@ frappe.provide("frappe");
 // {% include "templates/includes/form_generator.js" %}
 {% include "templates/includes/list.js" %}
 {% include "templates/includes/event.js" %}
+{% include "templates/includes/visit.js" %}
 {% include "templates/includes/list_view.js" %}
 {% include "templates/includes/profile.js" %}
 
@@ -13,13 +14,16 @@ frappe.provide("frappe");
 
 
 $(document).ready(function () {
+	profile_id=frappe.get_cookie("profile_id")
 	$("#profile").unbind("click").click(function(){
-		profile_id=frappe.get_cookie("profile_id")
 		console.log(profile_id)
 		PatientDashboard.prototype.init($(document).find("#main-con"),"profile",profile_id)
 	})
 	$('.event').unbind("click").click(function(){
-		Event.prototype.init($(document).find("#main-con"))
+		Event.prototype.init($(document).find("#main-con"), '', profile_id)
+	})
+	$('.visit').unbind("click").click(function(){
+		Visit.prototype.init($(document).find("#main-con"))
 	})
 	$(".create_linkphr").unbind("click").click(function(){
 		PatientDashboard.prototype.init($(document).find("#main-con"),"linked_patient")

@@ -13,6 +13,8 @@ import os
 """	
 @frappe.whitelist(allow_guest=True)
 def get_data_to_render(data=None,entityid=None):
+	fields, values, tab = '', '', ''
+
 	if data:
 		data = eval(data)
 	print data

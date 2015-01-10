@@ -51,6 +51,7 @@ def upload():
 
 def save_uploaded():
 	fname, content = get_uploaded_content()
+	print mimetypes.guess_type(content)
 	if content:
 		return save_file(fname, content);
 	else:
