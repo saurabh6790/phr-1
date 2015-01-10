@@ -13,7 +13,6 @@ import os
 """	
 @frappe.whitelist(allow_guest=True)
 def get_data_to_render(data=None):
-	frappe.errprint([data, 'py'])
 	if data:
 		data = eval(data)
 
@@ -25,7 +24,7 @@ def get_data_to_render(data=None):
 	if json_data:
 		fields=json_data.get('fields')
 		tab=json_data.get('tab')
-		values=get_values()
+		values=get_values() if not json_data.get('values') else json_data.get('values')
 
 	return fields, values, tab
 	

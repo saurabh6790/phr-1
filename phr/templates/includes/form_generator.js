@@ -52,7 +52,7 @@ $.extend(RenderFormFields.prototype,{
 		if(me.args){
 			arg = "data="+JSON.stringify(me.args)
 		}
-
+		// console.log(me.args)
 		$.ajax({
 			method: "GET",
 			url: "/api/method/phr.templates.pages.patient.get_data_to_render",
@@ -64,6 +64,7 @@ $.extend(RenderFormFields.prototype,{
 		});
 	},
 	render_fields:function(fields, values, tab){
+		// console.log(fields)
 		var me = this;
 		if(tab==1) me.tab_field_renderer()
 		$.each(fields,function(indx, meta){
@@ -181,7 +182,7 @@ $.extend(RenderFormFields.prototype,{
 							<div class="col-xs-8">\
 								<div class="control-input">\
 									<input type="text" class="form-control" \
-										placeholder="%(label)s" name="%(fieldname)s" data-fieldtype="Date" >\
+										placeholder="%(label)s" name="%(fieldname)s" data-fieldtype="Date" value="%(value)s" >\
 								</div>\
 							</div>\
 						</div>\

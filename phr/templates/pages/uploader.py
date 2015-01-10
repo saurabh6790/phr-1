@@ -25,6 +25,7 @@ def upload():
 
 	file_url = frappe.form_dict.file_url
 	filename = frappe.form_dict.filename
+
 	frappe.errprint([file_url, filename])
 	if not filename and not file_url:
 		frappe.msgprint(_("Please select a file or url"),
@@ -118,13 +119,14 @@ def save_file(fname, content, decode=False):
 	content_hash = get_content_hash(content)
 	content_type = mimetypes.guess_type(fname)[0]
 	fname = get_file_name(fname, content_hash[-6:])
-
-	file_data = get_file_data_from_hash(content_hash)
-	if not file_data:
-		method = get_hook_method('write_file', fallback=save_file_on_filesystem)
-		file_data = method(fname, content, content_type=content_type)
-		file_data = copy(file_data)
-		frappe.msgprint("Attachment Successful")
+	frappe.errprint([file_size, content_hash, content_type, fname])
+	# file_data = get_file_data_from_hash(content_hash)
+	# frappe.errprint(file_data)
+	# if not file_data:
+	method = get_hook_method('write_file', fallback=save_file_on_filesystem)
+	file_data = method(fname, content, content_type=content_type)
+	file_data = copy(file_data)
+	frappe.msgprint("Attachment Successful")
 
 	# # file_data.update({
 	# # 	"doctype": "File Data",
@@ -143,14 +145,25 @@ def save_file(fname, content, decode=False):
 	# return f
 
 def get_file_data_from_hash(content_hash):
+	frappe.errprint("in get_file_data_from_hash")
 	for name in frappe.db.sql_list("select name from `tabFile Data` where content_hash=%s", content_hash):
 		b = frappe.get_doc('File Data', name)
 		return {k:b.get(k) for k in frappe.get_hooks()['write_file_keys']}
 	return False
 
 def save_file_on_filesystem(fname, content, content_type=None):
+	profile_id = frappe.form_dict.profile_id
+	folder = frappe.form_dict.folder
+	sub_folder = frappe.form_dict.sub_folder
+
+	frappe.errprint([profile_id, folder, sub_folder])
+
 	public_path = os.path.join(frappe.local.site_path, "public")
-	fpath = write_file(content, get_files_path(), fname)
+	frappe.errprint([get_files_path(), profile_id, folder, sub_folder])
+	folder_path = os.path.join(get_files_path(), profile_id, folder, sub_folder)
+
+	frappe.errprint(folder_path)
+	fpath = write_file(content, folder_path, fname)
 	path =  os.path.relpath(fpath, public_path)
 	return {
 		'file_name': os.path.basename(path),
@@ -171,7 +184,7 @@ def check_max_file_size(content):
 def write_file(content, file_path, fname):
 	"""write file to disk with a random name (to compare)"""
 	# create directory (if not exists)
-	frappe.create_folder(get_files_path())
+	frappe.create_folder(file_path)
 	# write the file
 	with open(os.path.join(file_path.encode('utf-8'), fname.encode('utf-8')), 'w+') as f:
 		f.write(content)
