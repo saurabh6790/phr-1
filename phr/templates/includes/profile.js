@@ -24,7 +24,6 @@ var PatientDashboard = inherit(RenderFormFields, {
 		})
 	},
 	get_method:function(res,cmd,me){
-		console.log(res)
 		frappe.call({
 				method:'phr.templates.pages.profile.update_profile',
 				args:{'data': res,"id":cmd},

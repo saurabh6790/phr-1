@@ -66,8 +66,7 @@ def get_data(url,data):
 	res=json.loads(response.text)
 	data=res["list"][0]
 	return data
-	# if res['returncode']==102:
-	# 	frappe.msgprint("Profile Updated Successfully")
+	
 
 """
 	get api url
