@@ -29,9 +29,11 @@ $.extend(RenderFormFields.prototype,{
 
 	},
 	render_top:function(){
-		$('.controller').remove();
-		var me=this
-		$('<div class="controller" style="width:45%;display:inline-block;text-align:right;">\
+		var me = this;
+		$('.new_controller').remove();
+		$('.save_controller').remove();
+
+		$('<div class="save_controller" style="width:45%;display:inline-block;text-align:right;">\
 				<button class="btn btn-primary">\
 					<i class="icon-save"></i> Save \
 				</button>\
@@ -60,9 +62,9 @@ $.extend(RenderFormFields.prototype,{
 		});
 	},
 	render_fields:function(fields, values, tab){
+		// console.log(fields)
 		var me = this;
 		if(tab==1) me.tab_field_renderer()
-		// console.log([fields, this.column])
 		$.each(fields,function(indx, meta){
 			!me.section && me.section_break_field_renderer()
 			!me.column && me.column_break_field_renderer()
@@ -178,7 +180,7 @@ $.extend(RenderFormFields.prototype,{
 							<div class="col-xs-8">\
 								<div class="control-input">\
 									<input type="text" class="form-control" \
-										placeholder="%(label)s" name="%(fieldname)s" data-fieldtype="Date" >\
+										placeholder="%(label)s" name="%(fieldname)s" data-fieldtype="Date" value="%(value)s" >\
 								</div>\
 							</div>\
 						</div>\

@@ -1,27 +1,29 @@
-	$(document).ready(function () {
-	// var me= this;
-	// console.log($(me.document).find("#main-con"))
-	// var $content=$(me).find("#main-con")
-	// $("#profile").click(function() {
+// 	$(document).ready(function () {
+// 	// var me= this;
+// 	// console.log($(me.document).find("#main-con"))
+// 	// var $content=$(me).find("#main-con")
+// 	// $("#profile").click(function() {
 			
- //    });
+//  //    });
 
-	render_image_viewer()
-})
+// 	render_image_viewer()
+// })
 
-function render_image_viewer(){
-	// $("#main-con").html("test image ciewer")
-	// $("#main-con").html("<div><iframe src='/files/TATA DOCOMO __ Instant Pay.pdf'>myDocument</a</div>")
-	thumbnail('/files/PatientHealthRecord-SRS.PDF', 'main-con')
-	$("#main-con").click(function(){
-		PDFView.initialize();
-		PDFView.initialBookmark = "page=1";
-		PDFView.open('/files/PatientHealthRecord-SRS.PDF');
-	})
+// function render_image_viewer(){
+// 	// $("#main-con").html("test image ciewer")
+// 	// $("#main-con").html("<div><iframe src='/files/TATA DOCOMO __ Instant Pay.pdf'>myDocument</a</div>")
+// 	thumbnail('/files/PatientHealthRecord-SRS.PDF', 'main-con')
+// 	$("#main-con").click(function(){
+// 		PDFView.initialize();
+// 		PDFView.initialBookmark = "page=1";
+// 		PDFView.open('/files/PatientHealthRecord-SRS.PDF');
+// 	})
 
-}
+// }
 
-function thumbnail(pdfURL,elementID){
+function thumbnail(pdfURL, elementID, filename, display){
+    console.log([display, elementID, filename,'123'])
+    // console.log([pdfURL, 'test_pdf'])
     PDFJS.workerSrc="/assets/phr/pdfjs/build/pdf.worker.js";
     PDFJS.getDocument(pdfURL).then(function(pdf){
         pdf.getPage(1).then(function(page) {  //1 is the page number we want to retrieve
@@ -46,8 +48,11 @@ function thumbnail(pdfURL,elementID){
         //draw background / rect on entire canvas
         ctx.fillRect(0,0,canvas.width,canvas.height);
         var img = canvas.toDataURL();
-        console.log(img)
-        $("#"+elementID).html('<img src="'+img+'"/>');
+        // console.log(img)
+        $(elementID).html('<div>\
+                            <input type="checkbox" style="display:'+display+'" value="'+filename+'">\
+                        </div><img style="height:150px;" src="'+img+'"/><br>\
+                        <label style="width: 150px;word-wrap: break-word;">'+filename+'</label>');
     });
 })
 

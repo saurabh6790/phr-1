@@ -4,7 +4,7 @@ frappe.provide("templates/includes");
 
 var ListView = inherit(RenderFormFields,{
 	init: function(wrapper, args){
-		console.log(args)
+		// console.log(args)
 		this.wrapper = wrapper;
 		this.args = args;
 
@@ -20,18 +20,19 @@ var ListView = inherit(RenderFormFields,{
 	render_top_section: function(){
 		var me = this;
 
-		console.log($('.sub-top-bar.btn'))
+		// console.log($('.sub-top-bar.btn'))
 
-		$('.controller').remove();
+		$('.new_controller').remove();
+		$('.save_controller').remove();
 
-		$('<div class="controller" style="width:45%;display:inline-block;text-align:right;">\
+		$('<div class="new_controller" style="width:45%;display:inline-block;text-align:right;">\
 				<button class="btn btn-primary">\
 					<i class="icon-plus"></i> New \
 				</button>\
 			</div>')
 			.appendTo($('.sub-top-bar'))
 			.bind('click',function(){
-				console.log("in ListView js")
+				// console.log("in ListView js")
 				me.new_form()
 				me.status=1
 				return me.status
@@ -39,7 +40,7 @@ var ListView = inherit(RenderFormFields,{
 	},
 	new_form:function(){
 		var me = this;
-		console.log("in form body")
+		// console.log("in form body")
 		RenderFormFields.prototype.init(this.wrapper, {'fields':me.args['fields']})
 	}
 })

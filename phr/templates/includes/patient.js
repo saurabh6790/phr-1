@@ -1,8 +1,14 @@
 frappe.provide("templates/includes");
+frappe.provide("frappe");
 {% include "templates/includes/inherit.js" %}
+{% include "templates/includes/utils.js" %}
 // {% include "templates/includes/form_generator.js" %}
+{% include "templates/includes/list.js" %}
+{% include "templates/includes/event.js" %}
 {% include "templates/includes/list_view.js" %}
 {% include "templates/includes/profile.js" %}
+
+
 
 
 
@@ -20,6 +26,7 @@ $(document).ready(function () {
 	})
 })
 
+/*<<<<<<< HEAD
 
 
 var Event = inherit(ListView,{
@@ -55,13 +62,26 @@ var Event = inherit(ListView,{
 		
 		// $('<button type="button" class="btn btn-default" aria-label="Left Align">')
 		// .appendTo($(this.wrapper))	
+=======
+var PatientDashboard = inherit(RenderFormFields, {
+	init: function(wrapper,cmd){
+		this.wrapper = wrapper;
+		this.args=cmd
+		RenderFormFields.prototype.init(this.wrapper,this.args)
+		this.render_field()
+	},
+	render_field: function(){
+		// $('<button type="button" class="btn btn-default" aria-label="Left Align">Save</button>')
+		// .appendTo($('.form-controller'))	
+>>>>>>> c7cf1d3d101d60adf3294bbd8cf9534dfa6558d0
 		// .click(function(){
 		// 	var res = {};
-		// 	$("form input").each(function(i, obj) {
+		// 	$(".tab-pane.active form input, .tab-pane.active form textarea, .tab-pane.active form select").each(function(i, obj) {
 		// 		res[obj.name] = $(obj).val();
 		// 	})
-		// 	console.log(res)
-		// 	// console.log($('form').serialize())
+
 		// })
 	}
+
 })
+*/
