@@ -36,7 +36,6 @@ def create_profile(first_name,middle_name,last_name,email_id,contact):
 		else:
 			return response
 
-
 def create_profile_in_db(id,args,response):
 	from frappe.utils import random_string
 	user = frappe.get_doc({
