@@ -26,13 +26,13 @@ def create_profile(first_name,middle_name,last_name,email_id,contact):
 		else:
 			return {"returncode" : 409, "message_summary" : "Already Registered"}
 	else:
-		args={'person_firstname':first_name,'person_lastname':last_name,'email':email_id,'mobile':contact,'received_from':'Desktop'}
+		args={'person_firstname':first_name,'person_lastname':last_name,'email':email_id,'mobile':contact,'received_from':'Desktop','provider':'false','gender':'Male','current_address':'gjsghjshgad','permnt_address':'hgsahgsahghs','marital_status':'married','city_current':'pune'}
 		profile_res=create_profile_in_solr(args)
 		response=json.loads(profile_res)
 		print response
 		if response['returncode']==101:
-			create_profile_in_db(response['entityid'],args,response)
-			return response
+			res=create_profile_in_db(response['entityid'],args,response)
+			return res
 		else:
 			return response
 
@@ -44,7 +44,7 @@ def create_profile_in_db(id,args,response):
 		"profile_id":id,
 		"first_name": args["person_firstname"],
 		"enabled": 1,
-		"contact":args["phone"],
+		"contact":args["mobile"],
 		"new_password": random_string(10),
 		"user_type": "Website User",
 		"access_type":"Patient"
@@ -60,9 +60,6 @@ def create_profile_in_solr(args):
 	from phr.phr.phr_api import get_response
 	response=get_response(url,data,request_type)
 	return response.text
-
-
-
 
 @frappe.whitelist(allow_guest=True)
 def reset_password(user):

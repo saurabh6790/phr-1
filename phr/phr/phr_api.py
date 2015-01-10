@@ -19,7 +19,7 @@ def get_response(url,data,request_type):
 		try:
 			response = requests.post(url, data=jsonobj, headers=headers)
 		except Exception, e:
-			raise
+			return "No Connection"
 	# elif request_type=='GET':
 	#  	response = requests.get(url,headers=headers,'GET')
 	return response

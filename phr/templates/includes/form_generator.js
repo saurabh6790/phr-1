@@ -10,12 +10,13 @@ var RenderFormFields = function(){
 }
 
 $.extend(RenderFormFields.prototype,{
-	init:function(wrapper, arg, entityid){
+	init:function(wrapper, arg, entityid,operation){
 		//initializing
 		this.section = '';
 		this.column = '';
 		this.args = arg;
 		this.entityid=entityid;
+		this.operation=operation
 		this.wrapper = $('.field-area')
 		this.result_set = {}
 		console.log(this.entityid)
@@ -37,7 +38,7 @@ $.extend(RenderFormFields.prototype,{
 				<button class="btn btn-primary">\
 					<i class="icon-save"></i> Save \
 				</button>\
-			</div>').appendTo($('.sub-top-bar')).addClass(me.args)
+			</div>').appendTo($('.sub-top-bar')).addClass(me.operation)
 			
 
 	},
@@ -73,7 +74,8 @@ $.extend(RenderFormFields.prototype,{
 		})
 	},
 	data_field_renderer: function(field_meta){
-		$(repl_str('<div class="form-horizontal frappe-control" style="max-width: 600px;margin-top:10px;">\
+		var me=this;
+		$input=$(repl_str('<div class="form-horizontal frappe-control" style="max-width: 600px;margin-top:10px;">\
 						<div class="form-group row" style="margin: 0px">\
 							<label class="control-label small col-xs-4" style="padding-right: 0px;">%(label)s</label>\
 							<div class="col-xs-8">\
@@ -85,6 +87,10 @@ $.extend(RenderFormFields.prototype,{
 							</div>\
 						</div>\
 				</div>', field_meta)).appendTo($(this.column))
+		if(field_meta['required']==1){
+			$input.find("input").prop('required',true)
+			$input.find("input").css({"border": "1px solid #999","border-color": "red" });
+		}
 	},
 	select_field_renderer: function(field_meta){
 		$input = $(repl_str('<div class="form-horizontal frappe-control" style="max-width: 600px;margin-top:10px;">\
@@ -108,9 +114,12 @@ $.extend(RenderFormFields.prototype,{
 				 $option.attr('selected','selected')
 				}
 				$option.appendTo($($input.find('select')))
-				
-			
 		})
+		if(field_meta['required']==1){
+			$input.find("select").prop('required',true)
+			$input.find("select").css({"border": "1px solid #999","border-color": "red" });
+		}
+
 
 	},
 	link_field_renderer: function(field_meta){
@@ -145,7 +154,10 @@ $.extend(RenderFormFields.prototype,{
 				source: field_meta['options'],
 			});
 		}
-
+		if(field_meta['required']==1){
+			$input.find("input").prop('required',true)
+			$input.find("input").css({"border": "1px solid #999","border-color": "red" });
+		}
 		// $($input.find('.autocomplete')).autocomplete({
   //       source: function(request, response){
   //           var matcher = new RegExp( $.ui.autocomplete.escapeRegex( request.term ), "i" );
@@ -156,7 +168,8 @@ $.extend(RenderFormFields.prototype,{
     // });
 	},
 	text_field_renderer: function(field_meta){
-		$(repl_str('<div class="form-horizontal frappe-control" style="max-width: 600px;margin-top:10px;">\
+		var me = this;
+		$input=$(repl_str('<div class="form-horizontal frappe-control" style="max-width: 600px;margin-top:10px;">\
 						<div class="form-group row" style="margin: 0px">\
 							<label class="control-label small col-xs-4" style="padding-right: 0px;">%(label)s</label>\
 							<div class="col-xs-8">\
@@ -168,6 +181,12 @@ $.extend(RenderFormFields.prototype,{
 							</div>\
 						</div>\
 				</div>', field_meta)).appendTo($(this.column))
+		if(field_meta['required']==1){
+			$input.find("textarea").prop('required',true)
+			$input.find("textarea").css({"border": "1px solid #999","border-color": "red" });
+
+
+		}
 	},
 	button_field_renderer: function(field_meta){
 
@@ -192,6 +211,10 @@ $.extend(RenderFormFields.prototype,{
 						yearRange: "-70Y:+10Y",
 						dateFormat: "dd/mm/yy",
 					})
+		if(field_meta['required']==1){
+			$input.find("input").prop('required',true);
+			$input.find("input").css({"border": "1px solid #999","border-color": "red" });
+		}
 	},
 	table_field_renderer:function(field_meta){
 		var me = this;

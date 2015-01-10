@@ -62,9 +62,13 @@ def get_data(url,data):
 	url=url
 	from phr.phr.phr_api import get_response
 	response=get_response(url,data,request_type)
-	res=json.loads(response.text)
-	data=res["list"][0]
-	return data
+	if response:
+		res=json.loads(response.text)
+		print res
+		data=res["list"][0]
+		return data
+	else:
+		return "No data"
 	
 
 """

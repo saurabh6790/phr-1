@@ -4,12 +4,13 @@
    {
       "fieldname": "basic_info", 
       "fieldtype": "section", 
-      "label": "Profile" 
+      "label": "Profile"
    },
    {
    	"fieldname": "person_firstname", 
       "fieldtype": "data", 
-      "label": "First Name"
+      "label": "First Name",
+      "required":1
 	},
    {
       "fieldname": "person_middlename", 
@@ -19,13 +20,15 @@
 	{
    	"fieldname": "person_lastname", 
       "fieldtype": "link", 
-      "label": "Last Name"
+      "label": "Last Name",
+      "required":1
 	},
    {
       "fieldname": "gender", 
       "fieldtype": "select", 
       "label": "Gender",
-      "options":["", "Male", "Female"]
+      "options":["", "Male", "Female"],
+      "required":1
    },
   	{
    	"fieldname": "str_date_of_birth", 
@@ -62,7 +65,8 @@
    {
       "fieldname": "email", 
       "fieldtype": "data", 
-      "label": "Email"
+      "label": "Email",
+      "required":1
    },
    {
       "fieldname": "habits", 
@@ -78,7 +82,8 @@
       "fieldname": "marital_status", 
       "fieldtype": "select", 
       "label": "Marital Status",
-      "options": ["","Married","Single"] 
+      "options": ["","Married","Single"],
+      "required":1 
    },
    {
       "fieldname": "height", 
@@ -105,7 +110,8 @@
    {
       "fieldname": "current_address", 
       "fieldtype": "text", 
-      "label": "Current Address"
+      "label": "Current Address",
+      "required":1
    },
    {
       "fieldname": "pincode_current", 
@@ -115,7 +121,8 @@
    {
       "fieldname": "city_current", 
       "fieldtype": "data", 
-      "label": "City"
+      "label": "City",
+      "required":1
    },
    {
       "fieldname": "state_current", 
@@ -135,7 +142,8 @@
    {
       "fieldname": "permnt_address", 
       "fieldtype": "text", 
-      "label": "Permanent Address"
+      "label": "Permanent Address",
+      "required":1
    },
    
    {
