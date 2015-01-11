@@ -1,0 +1,194 @@
+{
+   "tab":1,
+   "fields":[
+   {
+      "fieldname": "basic_info", 
+      "fieldtype": "section", 
+      "label": "Profile" 
+   },
+   {
+   	"fieldname": "person_firstname", 
+      "fieldtype": "data", 
+      "label": "First Name"
+	},
+   {
+      "fieldname": "person_middlename", 
+      "fieldtype": "data", 
+      "label": "Middle Name"
+   },
+	{
+   	"fieldname": "person_lastname", 
+      "fieldtype": "link", 
+      "label": "Last Name"
+	},
+   {
+      "fieldname": "", 
+      "fieldtype": "column_break", 
+      "label": ""
+   },
+   {
+      "fieldname": "gender", 
+      "fieldtype": "select", 
+      "label": "Gender",
+      "options":["", "Male", "Female"]
+   },
+  	{
+   	"fieldname": "str_date_of_birth", 
+      "fieldtype": "date", 
+      "label": "DOB"
+	},
+   {
+      "fieldname": "relationship", 
+      "fieldtype": "data", 
+      "label": "Relationship"
+   },
+   {
+      "fieldname": "", 
+      "fieldtype": "section_break", 
+      "label": ""
+   },
+   {
+      "fieldname": "marital_status", 
+      "fieldtype": "select", 
+      "label": "Marital Status",
+      "options": ["","Married","Single"] 
+   },
+   {
+      "fieldname": "blod_group", 
+      "fieldtype": "data", 
+      "label": "Blod Group"
+   },
+    {
+      "fieldname": "habits", 
+      "fieldtype": "text", 
+      "label": "Habits"
+   },
+   {
+      "fieldname": "", 
+      "fieldtype": "column_break", 
+      "label": ""
+   },
+   {
+      "fieldname": "allergies", 
+      "fieldtype": "text", 
+      "label": "Allergies"
+   },
+   {
+      "fieldname": "height", 
+      "fieldtype": "data", 
+      "label": "Height"
+   },
+   {
+      "fieldname": "weight", 
+      "fieldtype": "data", 
+      "label": "Weight"
+   },
+   {
+      "fieldname": "diet_type", 
+      "fieldtype": "select", 
+      "label": "Diet Type",
+      "options":["","Heavy","Lite"]
+   },
+   {
+      "fieldname": "", 
+      "fieldtype": "section_break", 
+      "label": ""
+   },
+   {
+      "fieldname": "mobile", 
+      "fieldtype": "data", 
+      "label": "Mobile No"
+   },
+   {
+      "fieldname": "phone", 
+      "fieldtype": "data", 
+      "label": "Landline"
+   },
+   {
+      "fieldname": "", 
+      "fieldtype": "column_break", 
+      "label": ""
+   },
+   {
+      "fieldname": "fax", 
+      "fieldtype": "data", 
+      "label": "Fax"
+   },
+   {
+      "fieldname": "email", 
+      "fieldtype": "data", 
+      "label": "Email"
+   },
+   {
+      "fieldname": "", 
+      "fieldtype": "section_break", 
+      "label": ""
+   }, 
+   {
+      "fieldname": "current_address", 
+      "fieldtype": "text", 
+      "label": "Current Address"
+   },
+   {
+      "fieldname": "pincode_current", 
+      "fieldtype": "data", 
+      "label": "Description"
+   },
+   {
+      "fieldname": "city_current", 
+      "fieldtype": "data", 
+      "label": "City"
+   },
+   {
+      "fieldname": "state_current", 
+      "fieldtype": "data", 
+      "label": "State"
+   },
+   {
+      "fieldname": "country_current", 
+      "fieldtype": "data", 
+      "label": "Country"
+   },
+   {
+      "fieldname": "", 
+      "fieldtype": "column_break", 
+      "label": ""
+   },
+   {
+      "fieldname": "permnt_address", 
+      "fieldtype": "text", 
+      "label": "Permanent Address"
+   },
+   
+   {
+      "fieldname": "pincode_permnt", 
+      "fieldtype": "data", 
+      "label": "Per. Pincode"
+   },
+   {
+      "fieldname": "city_permnt", 
+      "fieldtype": "data", 
+      "label": "Per. City"
+   },
+   {
+      "fieldname": "state_permnt", 
+      "fieldtype": "data", 
+      "label": "Per. State"
+   },
+   {
+      "fieldname": "country_permnt", 
+      "fieldtype": "data", 
+      "label": "Per. Country"
+   },
+   {
+      "fieldname": "notification", 
+      "fieldtype": "section", 
+      "label": "Manage Notifications" 
+   },
+   {
+      "fieldname": "dashboard", 
+      "fieldtype": "section", 
+      "label": "Manage Dashboard" 
+   }
+   ]
+}

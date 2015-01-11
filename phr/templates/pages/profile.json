@@ -1,0 +1,205 @@
+{
+   "tab":1,
+   "fields":[
+   {
+      "fieldname": "basic_info", 
+      "fieldtype": "section", 
+      "label": "Profile"
+   },
+   {
+   	"fieldname": "person_firstname", 
+      "fieldtype": "data", 
+      "label": "First Name",
+      "required":1
+	},
+   {
+      "fieldname": "person_middlename", 
+      "fieldtype": "data", 
+      "label": "Middle Name"
+   },
+	{
+   	"fieldname": "person_lastname", 
+      "fieldtype": "link", 
+      "label": "Last Name",
+      "required":1
+	},
+   {
+      "fieldname": "gender", 
+      "fieldtype": "select", 
+      "label": "Gender",
+      "options":["", "Male", "Female"],
+      "required":1
+   },
+  	{
+   	"fieldname": "str_date_of_birth", 
+      "fieldtype": "date", 
+      "label": "DOB"
+	},
+
+   {
+      "fieldname": "blod_group", 
+      "fieldtype": "data", 
+      "label": "Blod Group"
+   },
+   {
+      "fieldname": "mobile", 
+      "fieldtype": "data", 
+      "label": "Mobile No"
+   },
+     {
+      "fieldname": "", 
+      "fieldtype": "column_break", 
+      "label": ""
+   },
+   {
+      "fieldname": "phone", 
+      "fieldtype": "data", 
+      "label": "Landline"
+   },
+   {
+      "fieldname": "fax", 
+      "fieldtype": "data", 
+      "label": "Fax"
+   },
+
+   {
+      "fieldname": "email", 
+      "fieldtype": "data", 
+      "label": "Email",
+      "required":1
+   },
+   {
+      "fieldname": "habits", 
+      "fieldtype": "text", 
+      "label": "Habits"
+   },
+   {
+      "fieldname": "allergies", 
+      "fieldtype": "text", 
+      "label": "Allergies"
+   },
+   {
+      "fieldname": "marital_status", 
+      "fieldtype": "select", 
+      "label": "Marital Status",
+      "options": ["","Married","Single"],
+      "required":1 
+   },
+   {
+      "fieldname": "height", 
+      "fieldtype": "data", 
+      "label": "Height"
+   },
+   {
+      "fieldname": "", 
+      "fieldtype": "section_break", 
+      "label": ""
+   },
+   {
+      "fieldname": "weight", 
+      "fieldtype": "data", 
+      "label": "Weight"
+   },
+   {
+      "fieldname": "diet_type", 
+      "fieldtype": "select", 
+      "label": "Diet Type",
+      "options":["","Heavy","Lite"]
+   },
+ 
+   {
+      "fieldname": "current_address", 
+      "fieldtype": "text", 
+      "label": "Current Address",
+      "required":1
+   },
+   {
+      "fieldname": "pincode_current", 
+      "fieldtype": "data", 
+      "label": "Description"
+   },
+   {
+      "fieldname": "city_current", 
+      "fieldtype": "data", 
+      "label": "City",
+      "required":1
+   },
+   {
+      "fieldname": "state_current", 
+      "fieldtype": "data", 
+      "label": "State"
+   },
+   {
+      "fieldname": "", 
+      "fieldtype": "column_break", 
+      "label": ""
+   },
+   {
+      "fieldname": "country_current", 
+      "fieldtype": "data", 
+      "label": "Country"
+   },
+   {
+      "fieldname": "permnt_address", 
+      "fieldtype": "text", 
+      "label": "Permanent Address",
+      "required":1
+   },
+   
+   {
+      "fieldname": "pincode_permnt", 
+      "fieldtype": "data", 
+      "label": "Per. Pincode"
+   },
+   {
+      "fieldname": "city_permnt", 
+      "fieldtype": "data", 
+      "label": "Per. City"
+   },
+   {
+      "fieldname": "state_permnt", 
+      "fieldtype": "data", 
+      "label": "Per. State"
+   },
+   {
+      "fieldname": "country_permnt", 
+      "fieldtype": "data", 
+      "label": "Per. Country"
+   },
+   {
+      "fieldname": "password", 
+      "fieldtype": "section", 
+      "label": "Update Password" 
+   },
+   {
+      "fieldname": "old_password", 
+      "fieldtype": "data", 
+      "label": "Old Password"
+   },
+   {
+      "fieldname": "new_password", 
+      "fieldtype": "data", 
+      "label": "New Password"
+   },
+   {
+      "fieldname": "cnf_new_password", 
+      "fieldtype": "data", 
+      "label": "Confirm Password"
+   },
+   {
+      "fieldname": "manage_phr", 
+      "fieldtype": "section", 
+      "label": "Manage PHR" 
+   },
+   {
+      "fieldname": "create_new", 
+      "fieldtype": "button", 
+      "label": "Create New"
+   },
+   {
+      "fieldname": "update_phr", 
+      "fieldtype": "button", 
+      "label": "Update Existing"
+   }
+   ]
+}

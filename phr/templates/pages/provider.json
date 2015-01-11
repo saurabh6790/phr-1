@@ -1,0 +1,95 @@
+{
+	"tab":0,
+	"fields":[
+    {
+  	  "fieldname": "name", 
+      "fieldtype": "data", 
+      "label": "Name"
+	},
+    {
+      "fieldname": "mobile", 
+      "fieldtype": "data", 
+      "label": "Mobile"
+   	},
+	{
+   	"fieldname": "phone", 
+      "fieldtype": "data", 
+      "label": "Phone"
+	},
+   	{
+   	"fieldname": "str_date_of_registration", 
+      "fieldtype": "date", 
+      "label": "Date of registration"
+	},
+   {
+      "fieldname": "fax", 
+      "fieldtype": "data", 
+      "label": "Fax"
+   },
+   {
+      "fieldname": "email", 
+      "fieldtype": "data", 
+      "label": "Email"
+   },
+   {
+      "fieldname": "", 
+      "fieldtype": "section_break", 
+      "label": ""
+   },
+   {
+      "fieldname": "current_address", 
+      "fieldtype": "text", 
+      "label": "Current Address"
+   },
+   {
+      "fieldname": "pincode_current", 
+      "fieldtype": "data", 
+      "label": "Pincode"
+   },
+   {
+      "fieldname": "city_current", 
+      "fieldtype": "data", 
+      "label": "City"
+   },
+   {
+      "fieldname": "state_current", 
+      "fieldtype": "data", 
+      "label": "State"
+   },
+   {
+      "fieldname": "country_current", 
+      "fieldtype": "data", 
+      "label": "Country"
+   },
+   {
+      "fieldname": "", 
+      "fieldtype": "column_break", 
+      "label": ""
+   },
+   {
+      "fieldname": "permnt_address", 
+      "fieldtype": "text", 
+      "label": "Permanent Address"
+   },
+   {
+      "fieldname": "city_permnt", 
+      "fieldtype": "data", 
+      "label": "Per. City"
+   },
+   {
+      "fieldname": "state_permnt", 
+      "fieldtype": "data", 
+      "label": "Per. State"
+   },
+   {
+      "fieldname": "country_permnt", 
+      "fieldtype": "data", 
+      "label": "Per. Country"
+   },
+   {
+      "fieldname": "pincode_permnt", 
+      "fieldtype": "data", 
+      "label": "Per. Pincode"
+   }
+   ]
+}
