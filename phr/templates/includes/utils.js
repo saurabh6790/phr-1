@@ -5,3 +5,11 @@ function repl_str(str, args){
 	})
 	return str
 }
+
+
+$.arrayIntersect = function(a, b){
+	return $.grep(a, function(i){
+		console.log(i)
+		return $.inArray(i, b) > -1;
+	});
+};

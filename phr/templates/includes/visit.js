@@ -9,30 +9,24 @@ frappe.provide("frappe");
 {% include "templates/includes/thumbnail.js" %}
 {% include "templates/includes/share_phr.js" %}
 
-var Event = inherit(ListView,{
-	init: function(wrapper, json_file, profile_id){
+var Visit = inherit(ListView,{
+	init: function(wrapper){
+		var me = this;
 		this.wrapper = wrapper;
+		this.selected_files = [];
 
-		ListView.prototype.init(this.wrapper, {'fields':[
-						{'fieldname':'event_date','fieldtype':'date','label':'Event Date'},
-						{'fieldname':'event','fieldtype':'link','label':'Event','options':['Dengue','Headache','Chest Pain']},
-						{'fieldname':'description','fieldtype':'text','label':'Description'},
-						{'fieldname':'provider_type','fieldtype':'select','label':'Healthcare Provider', 'options':['Doc', 'Hospital', 'Lab']},
-						{'fieldname':'','fieldtype':'column_break','label':''},
-						{'fieldname':'provider_name','fieldtype':'data','label':'Provider Name'},
-						{'fieldname':'number','fieldtype':'data','label':'Contact Number'},
-						{'fieldname':'email_id','fieldtype':'data','label':'Email Id'}
-					], 'listview':[{'fieldname':'event','fieldtype':'link','label':'Event','options':'Events'},
+		ListView.prototype.init(this.wrapper, {'listview':[{'fieldname':'event','fieldtype':'link','label':'Event','options':'Events'},
 			{'fieldname':'','fieldtype':'column_break','label':''},
 			{'fieldname':'date','fieldtype':'date','label':'Date'},
 			{'fieldname':'','fieldtype':'section_break','label':''},
 			{'fieldname':'tab','fieldtype':'table','label':'T1',
-				 'options':[['','Event Date', 'Event Name', 'Provider Type', 'Provider Name', 'Consultancy', 
-				 				'Event Snaps', 'Lab Reports', 'Prescription', 'Cost of Care'],
-				 			]}],
-			'cmd':"get_event_data",
+				 'options':[['','Visit Date', 'Event Name', 'Provider Type', 'Provider Name', 'Consultancy', 
+				 				'Event Snaps', 'Lab Reports', 'Prescription', 'Cost of Care']]}], 
+			'cmd':"get_visit_data",
 			'tab_at': 4})
-		
+		console.log('t')
+		$('.new_controller').hide()
+
 		$('<tr>\
 			<td></td>\
 			<td></td>\
@@ -60,8 +54,7 @@ var Event = inherit(ListView,{
 			
 		}).appendTo($('.field-area'))
 
-
-		this.render_spans()
+		
 	},
 	render_spans: function(){
 		var me = this;
@@ -140,8 +133,8 @@ var Event = inherit(ListView,{
 			.bind('click',function(){
 				$('.breadcrumb').empty();
 
-				$(repl_str("<li><a>Event</a></li>\
-						</li><a href='#' class='active'>%(id)s</a></li>\
+				$(repl_str("<a href='#'>Event</a>\
+						<a href='#' class='active'>%(id)s</a>\
 					",{'id':$(this).attr('id')})).appendTo('.breadcrumb');
 
 				$('.event_section').empty();
@@ -173,12 +166,12 @@ var Event = inherit(ListView,{
 		var me = this;
 		$('#A, #B, #C').bind('click',function(){
 				$(".breadCrumb").last().remove();
-				$(repl_str("<li class=active'>%(id)s</li>\
+				$(repl_str("<a href='#' class='active'>%(id)s</a>\
 					",{'id':$(this).attr('id')})).appendTo('.breadcrumb');
 				$('.uploader').empty();
 				me.sub_folder = $(this).attr('id');
 				ThumbNails.prototype.init(me.wrapper, {'folder':me.folder, 
-						'sub_folder':me.sub_folder, 'profile_id':'1420875549394-645191', 'display':'none'})
+						'sub_folder':me.sub_folder, 'profile_id':'123456789', 'display':'initial'})
 				// me.render_uploader_and_files();
 			})	
 	},

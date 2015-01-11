@@ -5,17 +5,37 @@ frappe.provide("templates/includes");
 var ListView = inherit(RenderFormFields,{
 	init: function(wrapper, args){
 		// console.log(args)
+		var me = this;
 		this.wrapper = wrapper;
 		this.args = args;
+		console.log(args)
+		console.log(me.args['tab_at'])
+		if (args['cmd']){
+			this.get_data()
+		}else{
+			RenderFormFields.prototype.init(this.wrapper, {'fields': me.args['listview']})
+			me.render_top_section()
+		}
 
-		RenderFormFields.prototype.init(this.wrapper, {'fields':[{'fieldname':'event','fieldtype':'link','label':'Event','options':'Events'},
-			{'fieldname':'','fieldtype':'column_break','label':''},
-			{'fieldname':'date','fieldtype':'date','label':'Date'},
-			{'fieldname':'','fieldtype':'section_break','label':''},
-			{'fieldname':'tab','fieldtype':'table','label':'T1', 'options':[['Event Date', 'Event Name', 'Provider Type', 'Provider Name', 'Consultancy', 'Event Snaps', 'Lab Reports', 'Prescription', 'Cost of Care'],['1234569', 'Saurabh', '24']]}]})
-		
-		
-		this.render_top_section()
+	},
+	get_data:function(){
+		var me = this;
+		var arg = {}
+
+		$.ajax({
+			method: "GET",
+			url: "/api/method/phr.templates.pages.event."+me.args['cmd'],
+			data: "data="+JSON.stringify({'options':me.args['listview'][me.args['tab_at']]['options']}),
+			async: false,
+			success: function(r) {
+				// console.log(r.message.phr.visitList)
+				console.log(r)
+				me.args['listview'][me.args['tab_at']]['options'] = r.message;
+
+				RenderFormFields.prototype.init(this.wrapper, {'fields': me.args['listview']})
+				me.render_top_section()
+			}
+		});
 	},
 	render_top_section: function(){
 		var me = this;
