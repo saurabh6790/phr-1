@@ -33,8 +33,6 @@
    "fieldtype": "Small Text", 
    "label": "Description", 
    "permlevel": 0, 
-<<<<<<< HEAD
-=======
    "precision": "", 
    "print_hide": 0, 
    "read_only": 0, 
@@ -48,7 +46,6 @@
    "fieldtype": "Small Text", 
    "label": "Description", 
    "permlevel": 0, 
->>>>>>> fe3da111695f1e91a367dbfcc3b5c86ef0c21dd4
    "precision": ""
   }
  ], 
@@ -59,11 +56,7 @@
  "is_submittable": 0, 
  "issingle": 0, 
  "istable": 0, 
-<<<<<<< HEAD
- "modified": "2014-12-14 22:07:32.981583", 
-=======
  "modified": "2014-12-30 17:15:32.416666", 
->>>>>>> fe3da111695f1e91a367dbfcc3b5c86ef0c21dd4
  "modified_by": "Administrator", 
  "module": "phr", 
  "name": "Events", 
