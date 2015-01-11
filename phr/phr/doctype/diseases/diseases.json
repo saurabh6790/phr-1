@@ -2,12 +2,21 @@
  "allow_copy": 0, 
  "allow_import": 0, 
  "allow_rename": 0, 
+ "autoname": "field:diseases_name", 
  "creation": "2014-12-13 20:29:34.209654", 
  "custom": 0, 
  "docstatus": 0, 
  "doctype": "DocType", 
  "document_type": "", 
  "fields": [
+  {
+   "fieldname": "diseases_name", 
+   "fieldtype": "Data", 
+   "in_list_view": 1, 
+   "label": "Diseases Name", 
+   "permlevel": 0, 
+   "precision": ""
+  }, 
   {
    "allow_on_submit": 0, 
    "fieldname": "parameter_details", 
@@ -36,7 +45,7 @@
  "is_submittable": 0, 
  "issingle": 0, 
  "istable": 0, 
- "modified": "2014-12-13 20:29:34.209654", 
+ "modified": "2014-12-14 22:33:53.585443", 
  "modified_by": "Administrator", 
  "module": "phr", 
  "name": "Diseases", 
