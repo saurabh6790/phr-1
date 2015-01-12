@@ -175,17 +175,16 @@ $.extend(RenderFormFields.prototype,{
 							<div class="col-xs-8">\
 								<div class="control-input">\
 									<textarea type="text" class="form-control" \
-										placeholder="%(label)s" name="%(fieldname)s" value="%(value)s" \
+										placeholder="%(label)s" name="%(fieldname)s"  \
 										aria-describedby="basic-addon2"></textarea>\
 								</div>\
 							</div>\
 						</div>\
 				</div>', field_meta)).appendTo($(this.column))
+		$input.find("textarea").val(field_meta['value'])
 		if(field_meta['required']==1){
 			$input.find("textarea").prop('required',true)
 			$input.find("textarea").css({"border": "1px solid #999","border-color": "red" });
-
-
 		}
 	},
 	button_field_renderer: function(field_meta){
@@ -199,18 +198,24 @@ $.extend(RenderFormFields.prototype,{
 							<div class="col-xs-8">\
 								<div class="control-input">\
 									<input type="text" class="form-control" \
-										placeholder="%(label)s" name="%(fieldname)s" data-fieldtype="Date" value="%(value)s" >\
+										placeholder="%(label)s" name="%(fieldname)s" data-fieldtype="Date"" >\
 								</div>\
 							</div>\
 						</div>\
 				</div>', field_meta)).appendTo($(this.column))
-
 		$( $input.find('[data-fieldtype="Date"]' )).datepicker({
 						altFormat:'yy-mm-dd',
 						changeYear: true,
 						yearRange: "-70Y:+10Y",
 						dateFormat: "dd/mm/yy",
 					})
+
+			var val = field_meta['value'];
+			var date=new Date(val)
+			$input.find('input').val($.datepicker.formatDate('dd/mm/yy',date))
+			
+	
+
 		if(field_meta['required']==1){
 			$input.find("input").prop('required',true);
 			$input.find("input").css({"border": "1px solid #999","border-color": "red" });
@@ -254,13 +259,24 @@ $.extend(RenderFormFields.prototype,{
 
 	},
 	section_field_renderer: function(field_meta){
-		$(repl_str('<li role="presentation">\
+		if(field_meta['default']==1){
+			$(repl_str('<li role="presentation" class="active">\
 						<a href="#%(fieldname)s" aria-controls="%(fieldname)s"\
 							role="tab" data-toggle="tab">%(label)s</a>\
 					</li>',field_meta)).appendTo($(".tab-ui"))
-
-		$(repl_str('<div role="tabpanel" class="tab-pane " id="%(fieldname)s">\
+	
+			$(repl_str('<div role="tabpanel" class="tab-pane active" id="%(fieldname)s">\
 			</div>',field_meta)).appendTo($(".tab-div"))
+		}
+		else{
+			$(repl_str('<li role="presentation">\
+						<a href="#%(fieldname)s" aria-controls="%(fieldname)s"\
+							role="tab" data-toggle="tab">%(label)s</a>\
+					</li>',field_meta)).appendTo($(".tab-ui"))
+	
+			$(repl_str('<div role="tabpanel" class="tab-pane " id="%(fieldname)s">\
+			</div>',field_meta)).appendTo($(".tab-div"))
+		}
 
 		this.wrapper = $(repl_str("#%(fieldname)s",field_meta))
 		this.section_break_field_renderer();

@@ -26,7 +26,7 @@ def create_profile(first_name,middle_name,last_name,email_id,contact):
 		else:
 			return {"returncode" : 409, "message_summary" : "Already Registered"}
 	else:
-		args={'person_firstname':first_name,'person_lastname':last_name,'email':email_id,'mobile':contact,'received_from':'Desktop','provider':'false','gender':'Male','current_address':'gjsghjshgad','permnt_address':'hgsahgsahghs','marital_status':'married','city_current':'pune'}
+		args={'person_firstname':first_name,'person_middlename':middle_name,'person_lastname':last_name,'email':email_id,'mobile':contact,'received_from':'Desktop','provider':'false'}
 		print args
 		profile_res=create_profile_in_solr(args)
 		response=json.loads(profile_res)
@@ -57,10 +57,12 @@ def create_profile_in_db(id,args,response):
 def create_profile_in_solr(args):
 	request_type="POST"
 	url="http://192.168.5.11:9090/phr/createProfile"
+	#url="http://88.198.52.49:7974/phr/createProfile"
 	data=json.dumps(args)
 	print data
 	from phr.phr.phr_api import get_response
 	response=get_response(url,data,request_type)
+	print response
 	return response.text
 
 @frappe.whitelist(allow_guest=True)
