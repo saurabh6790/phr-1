@@ -33,6 +33,7 @@ var ListView = inherit(RenderFormFields,{
 				me.args['listview'][me.args['tab_at']]['options'] = r.message;
 
 				RenderFormFields.prototype.init(this.wrapper, {'fields': me.args['listview']})
+				// me.open_form()
 				me.render_top_section()
 			}
 		});

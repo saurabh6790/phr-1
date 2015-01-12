@@ -33,11 +33,7 @@ $.extend(ThumbNails.prototype,{
 				<h4> Uploaded Files </h4>\
 				<div id="attach"> Attach </div>\
 			</div>\
-			<button id="share_data">Share Data</button></div>',{'uploader_display':me.uploader_display})).appendTo($('.field-area'))
-		
-		$('#share_data').click(function(){
-			me.send_email();
-		})
+			',{'uploader_display':me.uploader_display})).appendTo($('.field-area'))
 		
 		this.show_attachments();
 
@@ -99,21 +95,5 @@ $.extend(ThumbNails.prototype,{
 		});
 
 	
-	},
-	send_email:function(){
-		var me = this;
-		var uniqueNames = [];
-
-		$.each(me.selected_files, function(i, el){
-			if($.inArray(el, uniqueNames) === -1) uniqueNames.push(el);
-		});
-
-		frappe.call({
-			method:"phr.templates.pages.event.send_shared_data",
-			args:{'files': uniqueNames, 'profile_id':'1420875549394-645191', 'folder':me.folder, 'sub_folder': me.sub_folder},
-			callback:function(r){
-				frappe.msgprint("mail has been sent!!!")
-			}
-		})
 	}
 })

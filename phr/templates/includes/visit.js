@@ -50,6 +50,15 @@ var Visit = inherit(ListView,{
 				});
 
 			})
+
+			$('<li><a nohref>Share Pannel</a></li>').click(function(){
+					$(this).nextAll().remove()
+					// $(this).remove()
+					$('.uploader').remove();
+					SharePhr.prototype.init(me.wrapper, {'selected_files':me.selected_files})
+					
+			}).appendTo('.breadcrumb');
+
 			SharePhr.prototype.init(me.wrapper, {'selected_files':me.selected_files})
 			
 		}).appendTo($('.field-area'))

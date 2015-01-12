@@ -22,9 +22,21 @@ $(document).ready(function () {
 		PatientDashboard.prototype.init($(document).find("#main-con"),"profile",profile_id)
 	})
 	$('.event').unbind("click").click(function(){
+		$('.breadcrumb').empty()
+		$('<li><a nohref>Event</a></li>').click(function(){
+			$('.breadcrumb li').nextAll().remove()
+			// $('.breadcrumb a:last-child').remove();
+			Event.prototype.init($(document).find("#main-con"), '', profile_id)
+		}).appendTo('.breadcrumb');
 		Event.prototype.init($(document).find("#main-con"), '', profile_id)
 	})
 	$('.visit').unbind("click").click(function(){
+		$('.breadcrumb').empty()
+		$('<li><a nohref>Visit</a></li>').click(function(){
+			$('.breadcrumb li').nextAll().remove()
+			// $('.breadcrumb a:last-child').remove();
+			Visit.prototype.init($(document).find("#main-con"), '', profile_id)
+		}).appendTo('.breadcrumb');
 		Visit.prototype.init($(document).find("#main-con"))
 	})
 	$(".create_linkphr").unbind("click").click(function(){

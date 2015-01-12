@@ -40,7 +40,7 @@ def get_attachments(profile_id, folder, sub_folder):
 	return files
 
 @frappe.whitelist(allow_guest=True)
-def send_shared_data(files, profile_id, folder, sub_folder, content_type=None):
+def send_shared_data(files, profile_id, folder, sub_folder, share_with, content_type=None):
 	from email.mime.audio import MIMEAudio
 	from email.mime.base import MIMEBase
 	from email.mime.image import MIMEImage
@@ -58,11 +58,13 @@ def send_shared_data(files, profile_id, folder, sub_folder, content_type=None):
 				"fcontent": file(fname).read()
 			})
 
-	frappe.errprint(attachments)
+	if attachments:
 
-	from frappe.utils.email_lib import sendmail
-	sendmail(['saurabh6790@gmail.com'], subject='Shared File', msg =("Please see attachment"),
-			attachments=attachments)
+		from frappe.utils.email_lib import sendmail
+		sendmail([share_with], subject='Shared File', msg =("Please see attachment"),
+				attachments=attachments)
+	else:
+		frappe.msgprint('Please select file(s) for sharing')
 
 
 
@@ -75,12 +77,12 @@ def get_visit_data(data):
 
 	options = json.loads(data).get('options')
 
-	response=get_response(url, json.dumps({"profileId":"1420875579313-928788"}), request_type)
-	res_data = json.loads(response.text)
-	print "data"
-	for visit in json.loads(res_data.get('phr')).get('visitList'):
-		options.extend([['<input type="checkbox" id = "%s">'%visit['entityid'], '15/01/2015', 
-				visit['visit_descripton'], 'DOC', visit['doctor_name']]])
+	# response=get_response(url, json.dumps({"profileId":"1420875579313-928788"}), request_type)
+	# res_data = json.loads(response.text)
+	# print "data"
+	# for visit in json.loads(res_data.get('phr')).get('visitList'):
+	# 	options.extend([['<input type="checkbox" id = "%s">'%visit['entityid'], '15/01/2015', 
+	# 			visit['visit_descripton'], 'DOC', visit['doctor_name']]])
 
 
 	return options
@@ -94,13 +96,17 @@ def get_event_data(data):
 
 	options = json.loads(data).get('options')
 
-	response=get_response(url, json.dumps({"profileId":"1420875579313-928788"}), request_type)
-	res_data = json.loads(response.text)
-	print "data"
-	for visit in json.loads(res_data.get('phr')).get('eventList'):
-		print visit
-		options.extend([['<input type="checkbox" id = "%s">'%visit['entityid'], '15/01/2015', 
-				visit['event_title']+'<br>'+visit['event_descripton'], 'DOC', 'Test Doc']])
-
+	# response=get_response(url, json.dumps({"profileId":"1420875579313-928788"}), request_type)
+	# res_data = json.loads(response.text)
+	# print "data"
+	# for visit in json.loads(res_data.get('phr')).get('eventList'):
+	# 	print visit
+	# 	options.extend([['<input type="checkbox" id = "%s">'%visit['entityid'], '15/01/2015', 
+	# 			visit['event_title']+'<br>'+visit['event_descripton'], 'DOC', 'Test Doc']])
+	
+	options.extend([['<input type="checkbox" id = "12345111222">', '<a nohref> 12345111222 </a>','15/01/2015', 
+				'Dengue', 'DOC', 'Test Doc'], ['<input type="checkbox" id = "1234588888">', '<a nohref> 1234588888 </a>','15/01/2015', 
+				'Dengue', 'DOC', 'Test Doc'], ['<input type="checkbox" id = "12345111333">', '<a nohref> 12345111333 </a>','15/01/2015', 
+				'Dengue', 'DOC', 'Test Doc']])
 
 	return options
