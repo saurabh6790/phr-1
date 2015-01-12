@@ -17,10 +17,10 @@ $.extend(SharePhr.prototype,{
 		this.wrapper = wrapper;
 		this.args = args;
 		var me = this;
-		this.selected_files = []
+		this.selected_files = args.selected_files
 		this.doc_list = args.doc_list;
 		RenderFormFields.prototype.init(this.wrapper, {'fields':args['fields'], 
-			'values': args['values']})
+			'values': args['values'], 'method': args['method']}, args['event_id'])
 
 		$('<button id="share_data">Share Data</button></div>').appendTo($('.field-area'))
 		$('<div class="event_section"></div>').appendTo($('.field-area'))

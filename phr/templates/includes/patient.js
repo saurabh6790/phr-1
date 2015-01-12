@@ -22,6 +22,7 @@ $(document).ready(function () {
 		PatientDashboard.prototype.init($(document).find("#main-con"),"profile",profile_id)
 	})
 	$('.event').unbind("click").click(function(){
+		console.log(profile_id)
 		$('.breadcrumb').empty()
 		$('<li><a nohref>Event</a></li>').click(function(){
 			$('.breadcrumb li').nextAll().remove()

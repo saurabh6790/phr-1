@@ -73,6 +73,9 @@ def get_data(url,data):
 		res=json.loads(response.text)
 		print res
 		data=res["list"][0]
+		print "===============================get data========================="
+		print data
+		print "================================================================"
 		return data
 	else:
 		return "No data"

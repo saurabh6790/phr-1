@@ -13,11 +13,12 @@ var Event = inherit(ListView,{
 	init: function(wrapper, json_file, profile_id, entity_id){
 		this.wrapper = wrapper;
 		var me = this;
+		this.selected_files = [];
 		this.profile_id = profile_id
 		ListView.prototype.init(this.wrapper, {'fields':[
-						{'fieldname':'event_date','fieldtype':'date','label':'Event Date'},
-						{'fieldname':'event','fieldtype':'link','label':'Event Name','options':['Dengue','Headache','Chest Pain']},
-						{'fieldname':'description','fieldtype':'text','label':'Description'},
+						{'fieldname':'event_date','fieldtype':'date','label':'Date'},
+						{'fieldname':'event_title','fieldtype':'link','label':'Event Name'},
+						{'fieldname':'event_descripton','fieldtype':'text','label':'Description'},
 						{'fieldname':'provider_type','fieldtype':'select','label':'Healthcare Provider', 'options':['Doc', 'Hospital', 'Lab']},
 						{'fieldname':'','fieldtype':'column_break','label':''},
 						{'fieldname':'provider_name','fieldtype':'data','label':'Provider Name'},
@@ -57,36 +58,43 @@ var Event = inherit(ListView,{
 						me.selected_files.push($(td).find('input[type="checkbox"]').attr('id'))
 					}
 				});
-
 			})
-			SharePhr.prototype.init(me.wrapper, {'selected_files':me.selected_files, 'profile_id': profile_id})
+
+			SharePhr.prototype.init(me.wrapper, {'fields':[
+				{'fieldname':'event_date','fieldtype':'date', 'label':'Date'},
+				{'fieldname':'event_title','fieldtype':'link','label':'Event Name',  'options':'Events'},
+				{'fieldname':'event_descripton','fieldtype':'text', 'label':'Description'},
+				{'fieldname':'provider_name','fieldtype':'data', 'label':'Provider Name'},
+				{'fieldname':'email_body','fieldtype':'text', 'label':'Email Body'},
+				{'fieldname':'share_with','fieldtype':'data', 'label':'Share With'}
+			], "method": 'event' ,'event_id': $(me.selected_files).last()[0], 'selected_files':me.selected_files, 'doc_list': me.doc_list, "profile_id":me.profile_id})
 			
 		}).appendTo($('.field-area'))
 		// this.open_form()
 		$("table tr td a").click(function (e) { 
-			me.open_form($(this).html())
+			me.open_form($(this).attr('id'), $(this).html())
 		})
 
 		this.render_spans()
 	},
-	open_form:function(event_id){
+	open_form:function(event_id, event_title){
 		var me = this;
 		RenderFormFields.prototype.init(me.wrapper, {'fields':[
-					{'fieldname':'event_date','fieldtype':'date','label':'Event Date'},
-					{'fieldname':'event','fieldtype':'link','label':'Event Name'},
-					{'fieldname':'description','fieldtype':'text','label':'Description'},
+					{'fieldname':'event_date','fieldtype':'date','label':'Date'},
+					{'fieldname':'event_title','fieldtype':'link','label':'Event Name'},
+					{'fieldname':'event_descripton','fieldtype':'text','label':'Description'},
 					{'fieldname':'provider_type','fieldtype':'select','label':'Healthcare Provider', 'options':['Doc', 'Hospital', 'Lab']},
 					{'fieldname':'','fieldtype':'column_break','label':''},
 					{'fieldname':'provider_name','fieldtype':'data','label':'Provider Name'},
 					{'fieldname':'number','fieldtype':'data','label':'Contact Number'},
 					{'fieldname':'email_id','fieldtype':'data','label':'Email Id'}
-				], "method": 'event',}, event_id)
+				], "method": 'event'}, event_id)
 
 		me.bind_save_event()
-		$(repl_str('<li><a nohref>%(event_id)s</a></li>',{'event_id': event_id})).click(function(){
+		$(repl_str('<li><a nohref>%(event_title)s</a></li>',{'event_title': event_title})).click(function(){
 			$(this).nextAll().remove()
 			$(this).remove()
-			me.open_form(event_id)
+			me.open_form(event_id, event_title)
 		}).appendTo('.breadcrumb');
 		$('<div class="event_section"></div>').appendTo($('.field-area'))
 		me.render_folder_section()
@@ -118,7 +126,7 @@ var Event = inherit(ListView,{
 				callback:function(r){
 					$('.breadcrumb li:last').remove()
 					if(r.message.returncode == 103){
-						me.open_form(r.message.entityid)	
+						me.open_form(r.message.entityid, r.message.event_title)	
 					}
 					else{
 						alert(r.message.message_summary)
@@ -133,8 +141,8 @@ var Event = inherit(ListView,{
 		var me = this;
 		$('.event_section').empty()
 		$('.uploader').remove()
-		$('<button class="btn btn-primary" id="share"> Share Data </button>\
-			<div class="event_section1" style = "margin:10%; 10%;">\
+		$('<button class="btn btn-primary" id="share"> Share Data </button>').appendTo($('.save_controller'))
+		$('<div class="event_section1" style = "margin:10%; 10%;">\
 			<div class="btn btn-success" id = "consultancy" \
 				style = "margin:5%; 5%;height:80px;text-align: center !important;"> \
 				<i class="icon-folder-close-alt icon-large"></i> <br> Consultancy\
@@ -185,9 +193,10 @@ var Event = inherit(ListView,{
 		console.log(['me.result_set', me.doc_list])
 		SharePhr.prototype.init(me.wrapper, {'fields':[
 				{'fieldname':'event_date','fieldtype':'date', 'label':'Date'},
-				{'fieldname':'event','fieldtype':'link','label':'Event',  'options':'Events'},
-				{'fieldname':'description','fieldtype':'text', 'label':'Description'},
+				{'fieldname':'event_title','fieldtype':'link','label':'Event Name',  'options':'Events'},
+				{'fieldname':'event_descripton','fieldtype':'text', 'label':'Description'},
 				{'fieldname':'provider_name','fieldtype':'data', 'label':'Provider Name'},
+				{'fieldname':'email_body','fieldtype':'text', 'label':'Email Body'},
 				{'fieldname':'share_with','fieldtype':'data', 'label':'Share With'}
 			], 'values': me.result_set, 'doc_list': me.doc_list, "profile_id":me.profile_id})
 	},

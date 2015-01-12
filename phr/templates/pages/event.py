@@ -15,11 +15,11 @@ def create_event(data=None):
 
 
 	event_data={
-			"event_title": data.get('event'),
+			"event_title": data.get('event_title'),
 			"profile_id": data.get('profile_id'),
-			"str_event_date": data.get('event_date'),
+			"event_date": data.get('event_date'),
 			"received_from": "Desktop",
-			"event_descripton": data.get('description')
+			"event_descripton": data.get('event_descripton')
 		}
 
 	response=get_response(url, json.dumps(event_data), request_type)
@@ -114,7 +114,7 @@ def get_event_data(data):
 	if json.loads(res_data.get('phr')).get('eventList'):
 		for visit in json.loads(res_data.get('phr')).get('eventList'):
 			print visit
-			options.extend([['<input type="checkbox" id = "%s">'%visit['entityid'], '<a nohref> %s </a>'%visit['entityid'], '15/01/2015', 
+			options.extend([['<input type="checkbox" id = "%s">'%visit['entityid'], '<a nohref id="%s"> %s </a>'%(visit['entityid'],visit['event_title']), '15/01/2015', 
 					visit['event_title']+'<br>'+visit['event_descripton'], 'DOC', 'Test Doc']])
 		
 	# options.extend([['<input type="checkbox" id = "12345111222">', '<a nohref> 12345111222 </a>','15/01/2015', 

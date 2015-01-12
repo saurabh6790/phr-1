@@ -10,7 +10,7 @@ var RenderFormFields = function(){
 }
 
 $.extend(RenderFormFields.prototype,{
-	init:function(wrapper, arg, entityid,operation){
+	init:function(wrapper, arg, entityid, operation){
 		//initializing
 		this.section = '';
 		this.column = '';
@@ -58,17 +58,19 @@ $.extend(RenderFormFields.prototype,{
 			data: arg,
 			async: false,
 			success: function(r) {
+				console.log([r.message[0], r.message[1],r.message[2]])
 				me.render_fields(r.message[0], r.message[1],r.message[2])
 			}
 		});
 	},
 	render_fields:function(fields, values, tab){
-		// console.log(fields)
+		console.log(values)
 		var me = this;
 		if(tab==1) me.tab_field_renderer()
 		$.each(fields,function(indx, meta){
 			!me.section && me.section_break_field_renderer()
 			!me.column && me.column_break_field_renderer()
+			console.log([values[meta['fieldname']], meta['fieldname']])
 			meta['value']=values[meta['fieldname']] || "";
 			me[meta['fieldtype'] + "_field_renderer"].call(me, meta);
 		})
@@ -175,12 +177,13 @@ $.extend(RenderFormFields.prototype,{
 							<div class="col-xs-8">\
 								<div class="control-input">\
 									<textarea type="text" class="form-control" \
-										placeholder="%(label)s" name="%(fieldname)s" value="%(value)s" \
+										placeholder="%(label)s" name="%(fieldname)s"\
 										aria-describedby="basic-addon2"></textarea>\
 								</div>\
 							</div>\
 						</div>\
 				</div>', field_meta)).appendTo($(this.column))
+		$input.find("textarea").val(field_meta['value'])
 		if(field_meta['required']==1){
 			$input.find("textarea").prop('required',true)
 			$input.find("textarea").css({"border": "1px solid #999","border-color": "red" });
@@ -199,11 +202,13 @@ $.extend(RenderFormFields.prototype,{
 							<div class="col-xs-8">\
 								<div class="control-input">\
 									<input type="text" class="form-control" \
-										placeholder="%(label)s" name="%(fieldname)s" data-fieldtype="Date" value="%(value)s" >\
+										placeholder="%(label)s" name="%(fieldname)s" data-fieldtype="Date" >\
 								</div>\
 							</div>\
 						</div>\
 				</div>', field_meta)).appendTo($(this.column))
+
+
 
 		$( $input.find('[data-fieldtype="Date"]' )).datepicker({
 						altFormat:'yy-mm-dd',
@@ -211,6 +216,11 @@ $.extend(RenderFormFields.prototype,{
 						yearRange: "-70Y:+10Y",
 						dateFormat: "dd/mm/yy",
 					})
+
+		var val = field_meta['value'];
+		var date=new Date(val)
+		$input.find('input').val($.datepicker.formatDate('dd/mm/yy',date))
+		
 		if(field_meta['required']==1){
 			$input.find("input").prop('required',true);
 			$input.find("input").css({"border": "1px solid #999","border-color": "red" });
