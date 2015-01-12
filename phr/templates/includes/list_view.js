@@ -8,7 +8,7 @@ var ListView = inherit(RenderFormFields,{
 		var me = this;
 		this.wrapper = wrapper;
 		this.args = args;
-		this.profile_id = args['profile_id']
+		this.profile_id=args["profile_id"]
 		if (args['cmd']){
 			this.get_data()
 		}else{
@@ -24,8 +24,7 @@ var ListView = inherit(RenderFormFields,{
 		$.ajax({
 			method: "GET",
 			url: "/api/method/phr.templates.pages.event."+me.args['cmd'],
-			data: "data="+JSON.stringify({'options':me.args['listview'][me.args['tab_at']]['options'], 
-				'profile_id': me.profile_id}),
+			data: "data="+JSON.stringify({'options':me.args['listview'][me.args['tab_at']]['options'],"profile_id":me.profile_id}),
 			async: false,
 			success: function(r) {
 				// console.log(r.message.phr.visitList)

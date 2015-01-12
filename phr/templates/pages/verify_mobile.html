@@ -54,10 +54,15 @@ $(document).ready(function() {
 			callback: function(r) {
 				if(r.message) {
 					$("input").val("");
-					var dialog = frappe.msgprint(r.message);
-					dialog.on("hide.bs.modal", function() {
-						window.location.href = "update_password?id="+id;
-					});
+					if(r.message.returncode==100){
+						var dialog = frappe.msgprint(r.message.message_summary);
+						dialog.on("hide.bs.modal", function() {
+							window.location.href = "update_password?id="+id;
+						});
+					}
+					else if(r.message.returncode==404){
+						var dialog = frappe.msgprint(r.message.message_summary);
+					}
 				}
 			}
 		})

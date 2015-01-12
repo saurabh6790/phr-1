@@ -16,7 +16,7 @@ var Event = inherit(ListView,{
 		this.profile_id = profile_id
 		ListView.prototype.init(this.wrapper, {'fields':[
 						{'fieldname':'event_date','fieldtype':'date','label':'Event Date'},
-						{'fieldname':'event','fieldtype':'link','label':'Event','options':['Dengue','Headache','Chest Pain']},
+						{'fieldname':'event','fieldtype':'link','label':'Event Name','options':['Dengue','Headache','Chest Pain']},
 						{'fieldname':'description','fieldtype':'text','label':'Description'},
 						{'fieldname':'provider_type','fieldtype':'select','label':'Healthcare Provider', 'options':['Doc', 'Hospital', 'Lab']},
 						{'fieldname':'','fieldtype':'column_break','label':''},
@@ -33,7 +33,7 @@ var Event = inherit(ListView,{
 				 			]}],
 			'cmd':"get_event_data",
 			'tab_at': 4,
-			'profile_id': profile_id})
+			'profile_id':profile_id})
 		
 		$('<tr>\
 			<td></td>\
@@ -189,7 +189,7 @@ var Event = inherit(ListView,{
 				{'fieldname':'description','fieldtype':'text', 'label':'Description'},
 				{'fieldname':'provider_name','fieldtype':'data', 'label':'Provider Name'},
 				{'fieldname':'share_with','fieldtype':'data', 'label':'Share With'}
-			], 'values': me.result_set, 'doc_list': me.doc_list})
+			], 'values': me.result_set, 'doc_list': me.doc_list, "profile_id":me.profile_id})
 	},
 	bind_events: function(){
 		var me = this;
@@ -242,7 +242,7 @@ var Event = inherit(ListView,{
 				$('.uploader').remove();
 				me.sub_folder = $(this).attr('id');
 				ThumbNails.prototype.init(me.wrapper, {'folder':me.folder, 
-						'sub_folder':me.sub_folder, 'profile_id': profile_id, 'display':'none'})
+						'sub_folder':me.sub_folder, 'profile_id': me.profile_id, 'display':'none'})
 				// me.render_uploader_and_files();
 			})	
 	},
