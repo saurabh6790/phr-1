@@ -16,7 +16,7 @@ def create_event(data=None):
 
 	event_data={
 			"event_title": data.get('event'),
-			"profile_id": "1420875579313-928788",
+			"profile_id": data.get('profile_id'),
 			"str_event_date": data.get('event_date'),
 			"received_from": "Desktop",
 			"event_descripton": data.get('description')
@@ -104,7 +104,7 @@ def get_event_data(data):
 
 	options = json.loads(data).get('options')
 
-	response=get_response(url, json.dumps({"profileId":"1420875579313-928788"}), request_type)
+	response=get_response(url, json.dumps({"profileId":data.get('profile_id')}), request_type)
 	res_data = json.loads(response.text)
 	print "data"
 	for visit in json.loads(res_data.get('phr')).get('eventList'):

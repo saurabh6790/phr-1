@@ -32,7 +32,8 @@ var Event = inherit(ListView,{
 				 				'Event Snaps', 'Lab Reports', 'Prescription', 'Cost of Care'],
 				 			]}],
 			'cmd':"get_event_data",
-			'tab_at': 4})
+			'tab_at': 4,
+			'profile_id': profile_id})
 		
 		$('<tr>\
 			<td></td>\
@@ -122,14 +123,6 @@ var Event = inherit(ListView,{
 					else{
 						alert(r.message.message_summary)
 					}
-					
-					// $(repl_str('<li><a nohref>%(event_id)s</a></li>',{'event_id': '12345678'})).click(function(){
-					// 	$('.breadcrumb li:last').remove()
-					// 	me.open_form('12345678')
-					// }).appendTo('.breadcrumb');
-					// $('<div class="event_section"></div>').appendTo($('.field-area'))
-					// me.render_folder_section()
-	  		// 		me.bind_events()
 				}
 			})
 						
