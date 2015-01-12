@@ -17,7 +17,7 @@ var Event = inherit(ListView,{
 		this.profile_id = profile_id
 		ListView.prototype.init(this.wrapper, {'fields':[
 						{'fieldname':'event_date','fieldtype':'date','label':'Date'},
-						{'fieldname':'event_title','fieldtype':'link','label':'Event Name'},
+						{'fieldname':'event_title','fieldtype':'data','label':'Event Name'},
 						{'fieldname':'event_descripton','fieldtype':'text','label':'Description'},
 						{'fieldname':'provider_type','fieldtype':'select','label':'Healthcare Provider', 'options':['Doc', 'Hospital', 'Lab']},
 						{'fieldname':'','fieldtype':'column_break','label':''},
@@ -62,7 +62,7 @@ var Event = inherit(ListView,{
 
 			SharePhr.prototype.init(me.wrapper, {'fields':[
 				{'fieldname':'event_date','fieldtype':'date', 'label':'Date'},
-				{'fieldname':'event_title','fieldtype':'link','label':'Event Name',  'options':'Events'},
+				{'fieldname':'event_title','fieldtype':'data','label':'Event Name'},
 				{'fieldname':'event_descripton','fieldtype':'text', 'label':'Description'},
 				{'fieldname':'provider_name','fieldtype':'data', 'label':'Provider Name'},
 				{'fieldname':'email_body','fieldtype':'text', 'label':'Email Body'},
@@ -81,7 +81,7 @@ var Event = inherit(ListView,{
 		var me = this;
 		RenderFormFields.prototype.init(me.wrapper, {'fields':[
 					{'fieldname':'event_date','fieldtype':'date','label':'Date'},
-					{'fieldname':'event_title','fieldtype':'link','label':'Event Name'},
+					{'fieldname':'event_title','fieldtype':'data','label':'Event Name'},
 					{'fieldname':'event_descripton','fieldtype':'text','label':'Description'},
 					{'fieldname':'provider_type','fieldtype':'select','label':'Healthcare Provider', 'options':['Doc', 'Hospital', 'Lab']},
 					{'fieldname':'','fieldtype':'column_break','label':''},
@@ -193,7 +193,7 @@ var Event = inherit(ListView,{
 		console.log(['me.result_set', me.doc_list])
 		SharePhr.prototype.init(me.wrapper, {'fields':[
 				{'fieldname':'event_date','fieldtype':'date', 'label':'Date'},
-				{'fieldname':'event_title','fieldtype':'link','label':'Event Name',  'options':'Events'},
+				{'fieldname':'event_title','fieldtype':'data','label':'Event Name'},
 				{'fieldname':'event_descripton','fieldtype':'text', 'label':'Description'},
 				{'fieldname':'provider_name','fieldtype':'data', 'label':'Provider Name'},
 				{'fieldname':'email_body','fieldtype':'text', 'label':'Email Body'},
