@@ -32,7 +32,8 @@ var Event = inherit(ListView,{
 				 				'Event Snaps', 'Lab Reports', 'Prescription', 'Cost of Care'],
 				 			]}],
 			'cmd':"get_event_data",
-			'tab_at': 4})
+			'tab_at': 4,
+			'profile_id':profile_id})
 		
 		$('<tr>\
 			<td></td>\
@@ -196,7 +197,7 @@ var Event = inherit(ListView,{
 				{'fieldname':'description','fieldtype':'text', 'label':'Description'},
 				{'fieldname':'provider_name','fieldtype':'data', 'label':'Provider Name'},
 				{'fieldname':'share_with','fieldtype':'data', 'label':'Share With'}
-			], 'values': me.result_set, 'doc_list': me.doc_list})
+			], 'values': me.result_set, 'doc_list': me.doc_list, "profile_id":me.profile_id})
 	},
 	bind_events: function(){
 		var me = this;
@@ -249,7 +250,7 @@ var Event = inherit(ListView,{
 				$('.uploader').remove();
 				me.sub_folder = $(this).attr('id');
 				ThumbNails.prototype.init(me.wrapper, {'folder':me.folder, 
-						'sub_folder':me.sub_folder, 'profile_id': profile_id, 'display':'none'})
+						'sub_folder':me.sub_folder, 'profile_id': me.profile_id, 'display':'none'})
 				// me.render_uploader_and_files();
 			})	
 	},

@@ -16,7 +16,7 @@ def create_event(data=None):
 
 	event_data={
 			"event_title": data.get('event'),
-			"profile_id": "1420875579313-928788",
+			"profile_id": data.get('profile_id'),
 			"str_event_date": data.get('event_date'),
 			"received_from": "Desktop",
 			"event_descripton": data.get('description')
@@ -103,15 +103,20 @@ def get_event_data(data):
 	from phr.phr.phr_api import get_response
 
 	options = json.loads(data).get('options')
+	data=json.loads(data)
 
-	response=get_response(url, json.dumps({"profileId":"1420875579313-928788"}), request_type)
+	response=get_response(url, json.dumps({"profileId":data.get('profile_id')}), request_type)
 	res_data = json.loads(response.text)
-	print "data"
-	for visit in json.loads(res_data.get('phr')).get('eventList'):
-		print visit
-		options.extend([['<input type="checkbox" id = "%s">'%visit['entityid'], '<a nohref> %s </a>'%visit['entityid'], '15/01/2015', 
-				visit['event_title']+'<br>'+visit['event_descripton'], 'DOC', 'Test Doc']])
-	
+	print "+======================================++++"
+	print res_data
+	print "+======================================++++"
+
+	if json.loads(res_data.get('phr')).get('eventList'):
+		for visit in json.loads(res_data.get('phr')).get('eventList'):
+			print visit
+			options.extend([['<input type="checkbox" id = "%s">'%visit['entityid'], '<a nohref> %s </a>'%visit['entityid'], '15/01/2015', 
+					visit['event_title']+'<br>'+visit['event_descripton'], 'DOC', 'Test Doc']])
+		
 	# options.extend([['<input type="checkbox" id = "12345111222">', '<a nohref> 12345111222 </a>','15/01/2015', 
 	# 			'Dengue', 'DOC', 'Test Doc'], ['<input type="checkbox" id = "1234588888">', '<a nohref> 1234588888 </a>','15/01/2015', 
 	# 			'Dengue', 'DOC', 'Test Doc'], ['<input type="checkbox" id = "12345111333">', '<a nohref> 12345111333 </a>','15/01/2015', 

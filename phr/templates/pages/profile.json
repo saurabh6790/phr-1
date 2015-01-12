@@ -39,7 +39,7 @@
    {
       "fieldname": "blod_group", 
       "fieldtype": "data", 
-      "label": "Blod Group"
+      "label": "Blood Group"
    },
    {
       "fieldname": "mobile", 
@@ -114,9 +114,16 @@
       "required":1
    },
    {
+      "fieldname": "permnt_address", 
+      "fieldtype": "text", 
+      "label": "Address Line 2",
+      "required":1
+   },
+   
+   {
       "fieldname": "pincode_current", 
       "fieldtype": "data", 
-      "label": "Description"
+      "label": "Pincode"
    },
    {
       "fieldname": "city_current", 
@@ -130,41 +137,9 @@
       "label": "State"
    },
    {
-      "fieldname": "", 
-      "fieldtype": "column_break", 
-      "label": ""
-   },
-   {
       "fieldname": "country_current", 
       "fieldtype": "data", 
       "label": "Country"
-   },
-   {
-      "fieldname": "permnt_address", 
-      "fieldtype": "text", 
-      "label": "Permanent Address",
-      "required":1
-   },
-   
-   {
-      "fieldname": "pincode_permnt", 
-      "fieldtype": "data", 
-      "label": "Per. Pincode"
-   },
-   {
-      "fieldname": "city_permnt", 
-      "fieldtype": "data", 
-      "label": "Per. City"
-   },
-   {
-      "fieldname": "state_permnt", 
-      "fieldtype": "data", 
-      "label": "Per. State"
-   },
-   {
-      "fieldname": "country_permnt", 
-      "fieldtype": "data", 
-      "label": "Per. Country"
    },
    {
       "fieldname": "password", 

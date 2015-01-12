@@ -14,6 +14,8 @@ $.extend(ThumbNails.prototype,{
 	init :function(wrapper, arg){
 		this.wrapper = wrapper;
 		this.args = arg;
+		console.log('in thumbnail')
+		console.log(arg)
 		this.doc_list = arg['doc_list']
 		this.folder = arg['folder'];
 		this.sub_folder = arg['sub_folder'];
@@ -48,6 +50,7 @@ $.extend(ThumbNails.prototype,{
 	},
 	show_attachments:function(){
 		var me = this;
+		console.log( me.args['profile_id'], me.folder, me.sub_folder )
 		frappe.call({
 			method:"phr.templates.pages.event.get_attachments",
 			args:{'profile_id': me.args['profile_id'], 'folder':me.folder, 'sub_folder': me.sub_folder},
