@@ -68,7 +68,7 @@
   {
    "allow_on_submit": 0, 
    "fieldname": "to_date_time", 
-   "fieldtype": "Data", 
+   "fieldtype": "Datetime", 
    "hidden": 0, 
    "ignore_user_permissions": 0, 
    "in_filter": 0, 
@@ -102,6 +102,14 @@
    "reqd": 0, 
    "search_index": 0, 
    "set_only_once": 0
+  }, 
+  {
+   "fieldname": "created_via", 
+   "fieldtype": "Select", 
+   "label": "Created Via", 
+   "options": "\nMobile\nWeb", 
+   "permlevel": 0, 
+   "precision": ""
   }
  ], 
  "hide_heading": 0, 
@@ -111,7 +119,7 @@
  "is_submittable": 0, 
  "issingle": 0, 
  "istable": 0, 
- "modified": "2014-12-13 19:33:22.066199", 
+ "modified": "2014-12-14 22:17:56.607701", 
  "modified_by": "Administrator", 
  "module": "phr", 
  "name": "Medication", 

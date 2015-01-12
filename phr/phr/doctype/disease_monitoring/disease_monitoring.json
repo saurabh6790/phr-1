@@ -113,7 +113,7 @@
   }, 
   {
    "fieldname": "created_via", 
-   "fieldtype": "Data", 
+   "fieldtype": "Select", 
    "label": "Created Via", 
    "options": "\nMobile\nWeb", 
    "permlevel": 0, 
