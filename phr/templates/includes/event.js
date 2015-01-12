@@ -13,6 +13,7 @@ var Event = inherit(ListView,{
 	init: function(wrapper, json_file, profile_id, entity_id){
 		this.wrapper = wrapper;
 		var me = this;
+		this.profile_id = profile_id
 		ListView.prototype.init(this.wrapper, {'fields':[
 						{'fieldname':'event_date','fieldtype':'date','label':'Event Date'},
 						{'fieldname':'event','fieldtype':'link','label':'Event','options':['Dengue','Headache','Chest Pain']},
@@ -27,13 +28,14 @@ var Event = inherit(ListView,{
 			{'fieldname':'date','fieldtype':'date','label':'Date'},
 			{'fieldname':'','fieldtype':'section_break','label':''},
 			{'fieldname':'tab','fieldtype':'table','label':'T1',
-				 'options':[['','Event Date', 'Event Name', 'Provider Type', 'Provider Name', 'Consultancy', 
+				 'options':[['','Event Id','Event Date', 'Event Name', 'Provider Type', 'Provider Name', 'Consultancy', 
 				 				'Event Snaps', 'Lab Reports', 'Prescription', 'Cost of Care'],
 				 			]}],
 			'cmd':"get_event_data",
 			'tab_at': 4})
 		
 		$('<tr>\
+			<td></td>\
 			<td></td>\
 			<td></td>\
 			<td></td>\
@@ -56,7 +58,7 @@ var Event = inherit(ListView,{
 				});
 
 			})
-			SharePhr.prototype.init(me.wrapper, {'selected_files':me.selected_files})
+			SharePhr.prototype.init(me.wrapper, {'selected_files':me.selected_files, 'profile_id': profile_id})
 			
 		}).appendTo($('.field-area'))
 		// this.open_form()
@@ -70,20 +72,20 @@ var Event = inherit(ListView,{
 		var me = this;
 		RenderFormFields.prototype.init(me.wrapper, {'fields':[
 					{'fieldname':'event_date','fieldtype':'date','label':'Event Date'},
-					{'fieldname':'event','fieldtype':'link','label':'Event','options':['Dengue','Headache','Chest Pain']},
+					{'fieldname':'event','fieldtype':'link','label':'Event Name'},
 					{'fieldname':'description','fieldtype':'text','label':'Description'},
 					{'fieldname':'provider_type','fieldtype':'select','label':'Healthcare Provider', 'options':['Doc', 'Hospital', 'Lab']},
 					{'fieldname':'','fieldtype':'column_break','label':''},
 					{'fieldname':'provider_name','fieldtype':'data','label':'Provider Name'},
 					{'fieldname':'number','fieldtype':'data','label':'Contact Number'},
 					{'fieldname':'email_id','fieldtype':'data','label':'Email Id'}
-				]}, event_id)
+				], "method": 'event',}, event_id)
 
 		me.bind_save_event()
-		$(repl_str('<li><a nohref>%(event_id)s</a></li>',{'event_id': '12345678'})).click(function(){
+		$(repl_str('<li><a nohref>%(event_id)s</a></li>',{'event_id': event_id})).click(function(){
 			$(this).nextAll().remove()
 			$(this).remove()
-			me.open_form('12345678')
+			me.open_form(event_id)
 		}).appendTo('.breadcrumb');
 		$('<div class="event_section"></div>').appendTo($('.field-area'))
 		me.render_folder_section()
@@ -102,16 +104,25 @@ var Event = inherit(ListView,{
 	bind_save_event: function(){
 		var me = this;
 		this.res = {}
+		this.result_set = {};
+		this.doc_list = [] 
 		$('.save_controller').bind('click',function(event) {
 			$("form input, form textarea, form select").each(function(i, obj) {
 				me.res[obj.name] = $(obj).val();
 			})
+			me.res['profile_id'] = me.profile_id;
 			frappe.call({
 				method:"phr.templates.pages.event.create_event",
 				args:{"data":JSON.stringify(me.res)},
 				callback:function(r){
 					$('.breadcrumb li:last').remove()
-					me.open_form('12345678')
+					if(r.message.returncode == 103){
+						me.open_form(r.message.entityid)	
+					}
+					else{
+						alert(r.message.message_summary)
+					}
+					
 					// $(repl_str('<li><a nohref>%(event_id)s</a></li>',{'event_id': '12345678'})).click(function(){
 					// 	$('.breadcrumb li:last').remove()
 					// 	me.open_form('12345678')
@@ -127,7 +138,6 @@ var Event = inherit(ListView,{
 	},
 	render_folder_section: function(){
 		var me = this;
-		this.result_set = {};
 		$('.event_section').empty()
 		$('.uploader').remove()
 		$('<button class="btn btn-primary" id="share"> Share Data </button>\
@@ -166,6 +176,11 @@ var Event = inherit(ListView,{
 					$(this).nextAll().remove()
 					// $(this).remove()
 					$('.uploader').remove();
+					$("form input, form textarea").each(function(i, obj) {
+						me.result_set[obj.name] = $(obj).val();
+
+					})
+					console.log([me.result_set, 'test'])
 					me.render_folder_section()
 					me.open_sharing_pannel()
 			}).appendTo('.breadcrumb');			
@@ -174,12 +189,14 @@ var Event = inherit(ListView,{
 	},
 	open_sharing_pannel: function(){
 		var me = this;
+		console.log(['me.result_set', me.doc_list])
 		SharePhr.prototype.init(me.wrapper, {'fields':[
 				{'fieldname':'event_date','fieldtype':'date', 'label':'Date'},
 				{'fieldname':'event','fieldtype':'link','label':'Event',  'options':'Events'},
 				{'fieldname':'description','fieldtype':'text', 'label':'Description'},
-				{'fieldname':'provider_name','fieldtype':'data', 'label':'Provider Name'}
-			], 'values': me.result_set})
+				{'fieldname':'provider_name','fieldtype':'data', 'label':'Provider Name'},
+				{'fieldname':'share_with','fieldtype':'data', 'label':'Share With'}
+			], 'values': me.result_set, 'doc_list': me.doc_list})
 	},
 	bind_events: function(){
 		var me = this;
@@ -232,7 +249,7 @@ var Event = inherit(ListView,{
 				$('.uploader').remove();
 				me.sub_folder = $(this).attr('id');
 				ThumbNails.prototype.init(me.wrapper, {'folder':me.folder, 
-						'sub_folder':me.sub_folder, 'profile_id':'1420875549394-645191', 'display':'none'})
+						'sub_folder':me.sub_folder, 'profile_id': profile_id, 'display':'none'})
 				// me.render_uploader_and_files();
 			})	
 	},

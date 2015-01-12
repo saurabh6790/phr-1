@@ -20,6 +20,7 @@ def get_data_to_render(data=None,entityid=None):
 	print data
 	if isinstance(data, dict):
 		json_data = data
+		data = data.get('method')
 	else:
 		json_data = get_json_data(data)	
 	
@@ -43,6 +44,10 @@ def get_json_data(file_name):
 	return plain dictionary 
 """	
 def get_values(data,entityid=None):
+	print "===============================================event id========================"
+	print entityid
+	print "==============================================================================="
+	
 	if entityid:
 		url=get_url(data)
 		args=get_args(entityid)
@@ -91,7 +96,12 @@ def get_base_url():
 Method to get name of method in solr database.contains dictionary or map.
 """
 def get_method(data):
-	method_dic={"profile":"searchProfile"}
+	method_dic={"profile":"searchProfile", "event":"searchEvent"}
+
+	print "=============================================================================="
+	print method_dic.get(data)
+	print "=============================================================================="
+
 	return method_dic.get(data)
 
 

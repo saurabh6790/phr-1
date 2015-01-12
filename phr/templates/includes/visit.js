@@ -15,8 +15,7 @@ var Visit = inherit(ListView,{
 		this.wrapper = wrapper;
 		this.selected_files = [];
 
-		ListView.prototype.init(this.wrapper, {'listview':[{'fieldname':'event','fieldtype':'link','label':'Event','options':'Events'},
-			{'fieldname':'','fieldtype':'column_break','label':''},
+		ListView.prototype.init(this.wrapper, {'listview':[
 			{'fieldname':'date','fieldtype':'date','label':'Date'},
 			{'fieldname':'','fieldtype':'section_break','label':''},
 			{'fieldname':'tab','fieldtype':'table','label':'T1',
@@ -74,6 +73,8 @@ var Visit = inherit(ListView,{
 	bind_save_event: function(){
 		var me = this;
 		this.res = {}
+		this.doc_list = [] 
+		
 		$('.save_controller').bind('click',function(event) {
 			$("form input, form textarea, form select").each(function(i, obj) {
 				me.res[obj.name] = $(obj).val();

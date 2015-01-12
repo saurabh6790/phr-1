@@ -50,7 +50,7 @@ $.extend(RenderFormFields.prototype,{
 			arg['data'] = JSON.stringify(me.args)
 		}
 		if(me.entityid){
-			arg['entityid'] = JSON.stringify(me.entityid)	
+			arg['entityid'] = me.entityid
 		}
 		$.ajax({
 			method: "GET",
