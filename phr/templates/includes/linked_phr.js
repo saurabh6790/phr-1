@@ -23,6 +23,7 @@ var LinkedPHR = inherit(RenderFormFields, {
 			me.res["received_from"]="Desktop"
 			console.log(me.operation)
 			if (me.operation=='create_linkphr'){
+				me.res["parent_linked"]=true
 				me.create_linkedphr(me.res,$id,me)
 			}
 			else if (me.operation=='open_linkphr') {
