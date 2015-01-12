@@ -17,21 +17,11 @@ $.extend(SharePhr.prototype,{
 		this.wrapper = wrapper;
 		this.args = args;
 		var me = this;
+		this.selected_files = []
+		this.doc_list = args.doc_list;
 		RenderFormFields.prototype.init(this.wrapper, {'fields':args['fields'], 
 			'values': args['values']})
-		console.log($('.field-area'))
-		$('<div class="form-horizontal frappe-control" style="max-width: 600px;margin-top:10px;">\
-			<div class="form-group row" style="margin: 0px">\
-			<label class="control-label small col-xs-4" style="padding-right: 0px;">Share with</label>\
-							<div class="col-xs-8">\
-								<div class="control-input">\
-									<input type="text" class="form-control" \
-										placeholder="Email Id" name="share_with" \
-										aria-describedby="basic-addon2">\
-								</div>\
-							</div>\
-				</div>\
-			</div>').appendTo($('.field-area'))
+
 		$('<button id="share_data">Share Data</button></div>').appendTo($('.field-area'))
 		$('<div class="event_section"></div>').appendTo($('.field-area'))
 		$('#share_data').click(function(){
@@ -87,7 +77,8 @@ $.extend(SharePhr.prototype,{
 				me.sub_folder = $(this).attr('id');
 				me.folder = $(this).parent().attr('id')
 				ThumbNails.prototype.init(me.wrapper, {'folder':me.folder, 
-						'sub_folder':me.sub_folder, 'profile_id':'123456789', 'display':'initial'})
+						'sub_folder':me.sub_folder, 'profile_id':me.args['profile_id'], 
+						'display':'initial', 'doc_list': me.doc_list})
 				// me.render_uploader_and_files();
 			})	
 	},
@@ -95,12 +86,20 @@ $.extend(SharePhr.prototype,{
 		var me = this;
 		var uniqueNames = [];
 
-		$.each(me.selected_files, function(i, el){
+		$.each(me.doc_list, function(i, el){
 			if($.inArray(el, uniqueNames) === -1) uniqueNames.push(el);
 		});
 		frappe.call({
 			method:"phr.templates.pages.event.send_shared_data",
-			args:{'files': uniqueNames, 'profile_id':'1420875549394-645191', 'folder':me.folder, 'sub_folder': me.sub_folder, 'share_with':$('input[name="share_with"]').val()},
+			args:{'files': uniqueNames, 
+				'profile_id':me.args['profile_id'], 
+				'folder':me.folder, 
+				'sub_folder': me.sub_folder, 
+				'share_with': $('input[name="share_with"]').val(),
+				'event_date': $('input[name="event_date"]').val(),
+				'event': $('input[name="event"]').val(),
+				'provider_name': $('input[name="provider_name"]').val()
+			},
 			callback:function(r){
 				frappe.msgprint("mail has been sent!!!")
 			}

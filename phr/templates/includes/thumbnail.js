@@ -14,7 +14,7 @@ $.extend(ThumbNails.prototype,{
 	init :function(wrapper, arg){
 		this.wrapper = wrapper;
 		this.args = arg;
-		this.selected_files = []
+		this.doc_list = arg['doc_list']
 		this.folder = arg['folder'];
 		this.sub_folder = arg['sub_folder'];
 		this.uploader_display = arg['display'] == 'initial'? 'none':'initial';
@@ -39,7 +39,7 @@ $.extend(ThumbNails.prototype,{
 
 		upload.make({
 			parent: $('#attach'),
-			args:{'profile_id':'1420875549394-645191', 'folder':me.folder, 'sub_folder': me.sub_folder},
+			args:{'profile_id': me.args['profile_id'], 'folder':me.folder, 'sub_folder': me.sub_folder},
 			callback:function(attachment, r) {
 				// console.log("in attachment callback")
 				me.render_uploader_and_files();
@@ -50,7 +50,7 @@ $.extend(ThumbNails.prototype,{
 		var me = this;
 		frappe.call({
 			method:"phr.templates.pages.event.get_attachments",
-			args:{'profile_id':'123456789', 'folder':me.folder, 'sub_folder': me.sub_folder},
+			args:{'profile_id': me.args['profile_id'], 'folder':me.folder, 'sub_folder': me.sub_folder},
 			callback:function(r){
 				me.create_attachement_renderer(r.message)
 			}
@@ -90,7 +90,7 @@ $.extend(ThumbNails.prototype,{
 
 		$("input[type=checkbox]").on( "click", function(){
 			if($(this).is(':checked')){
-				me.selected_files.push($(this).val())
+				me.doc_list.push($(this).val())
 			}
 		});
 
