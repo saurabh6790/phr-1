@@ -92,7 +92,8 @@ def get_url(data):
 
 
 def get_base_url():
-	return "http://88.198.52.49:7974/phr/"
+	return "http://192.168.5.11:9090/phr/"
+	# return "http://88.198.52.49:7974/phr/"
 
 
 """

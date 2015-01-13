@@ -22,7 +22,7 @@ $.extend(SharePhr.prototype,{
 		RenderFormFields.prototype.init(this.wrapper, {'fields':args['fields'], 
 			'values': args['values'], 'method': args['method']}, args['event_id'])
 
-		$('<button id="share_data">Share Data</button></div>').appendTo($('.field-area'))
+		$('<button id="share_data" class="btn btn-primary">Share Data</button></div>').appendTo($('.field-area'))
 		$('<div class="event_section"></div>').appendTo($('.field-area'))
 		$('#share_data').click(function(){
 			me.send_email();
@@ -89,6 +89,7 @@ $.extend(SharePhr.prototype,{
 		$.each(me.doc_list, function(i, el){
 			if($.inArray(el, uniqueNames) === -1) uniqueNames.push(el);
 		});
+		console.log([uniqueNames, me.args['profile_id'], me.folder, me.sub_folder, $('input[name="share_with"]').val(), $('input[name="event_date"]').val(), ,$('input[name="provider_name"]').val(),  $('textarea[name="email_body"]').val()])
 		frappe.call({
 			method:"phr.templates.pages.event.send_shared_data",
 			args:{'files': uniqueNames, 
@@ -97,8 +98,9 @@ $.extend(SharePhr.prototype,{
 				'sub_folder': me.sub_folder, 
 				'share_with': $('input[name="share_with"]').val(),
 				'event_date': $('input[name="event_date"]').val(),
-				'event': $('input[name="event"]').val(),
-				'provider_name': $('input[name="provider_name"]').val()
+				'event': $('input[name="event_title"]').val(),
+				'provider_name': $('input[name="provider_name"]').val(),
+				'event_body': $('textarea[name="email_body"]').val()
 			},
 			callback:function(r){
 				frappe.msgprint("mail has been sent!!!")

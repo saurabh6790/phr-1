@@ -18,7 +18,7 @@ var Event = inherit(ListView,{
 		ListView.prototype.init(this.wrapper, {'fields':[
 						{'fieldname':'event_date','fieldtype':'date','label':'Date'},
 						{'fieldname':'event_title','fieldtype':'data','label':'Event Name'},
-						{'fieldname':'event_descripton','fieldtype':'text','label':'Description'},
+						{'fieldname':'event_descripton','fieldtype':'text','label':'Description', 'options':['Dengue', 'Headache', 'Chest Pain']},
 						{'fieldname':'provider_type','fieldtype':'select','label':'Healthcare Provider', 'options':['Doc', 'Hospital', 'Lab']},
 						{'fieldname':'','fieldtype':'column_break','label':''},
 						{'fieldname':'provider_name','fieldtype':'data','label':'Provider Name'},
@@ -28,7 +28,7 @@ var Event = inherit(ListView,{
 			{'fieldname':'','fieldtype':'column_break','label':''},
 			{'fieldname':'date','fieldtype':'date','label':'Date'},
 			{'fieldname':'','fieldtype':'section_break','label':''},
-			{'fieldname':'tab','fieldtype':'table','label':'T1',
+			{'fieldname':'tab','fieldtype':'table','label':'Event Table',
 				 'options':[['','Event Id','Event Date', 'Event Name', 'Provider Type', 'Provider Name', 'Consultancy', 
 				 				'Event Snaps', 'Lab Reports', 'Prescription', 'Cost of Care'],
 				 			]}],

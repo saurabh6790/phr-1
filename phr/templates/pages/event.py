@@ -1,15 +1,15 @@
 import frappe
 import json
 import os 
-from frappe.utils import get_site_path, get_hook_method, get_files_path, get_site_base_path
+from frappe.utils import get_site_path, get_hook_method, get_files_path, get_site_base_path,cstr
 
 @frappe.whitelist(allow_guest=True)
 def create_event(data=None):
 	frappe.errprint(data)
 
 	request_type="POST"
-	# url="http://192.168.5.11:9090/phr/createEvent"
-	url="http://88.198.52.49:7974/phr/createEvent"
+	url="http://192.168.5.11:9090/phr/createEvent"
+	# url="http://88.198.52.49:7974/phr/createEvent"
 	from phr.phr.phr_api import get_response
 
 	data = json.loads(data)
@@ -49,7 +49,7 @@ def get_attachments(profile_id, folder, sub_folder):
 	return files
 
 @frappe.whitelist(allow_guest=True)
-def send_shared_data(files, profile_id, folder, sub_folder, share_with, event_date, event, provider_name, content_type=None):
+def send_shared_data(files, profile_id, folder, sub_folder, share_with, event_date, event, provider_name, event_body,content_type=None):
 	from email.mime.audio import MIMEAudio
 	from email.mime.base import MIMEBase
 	from email.mime.image import MIMEImage
@@ -57,7 +57,7 @@ def send_shared_data(files, profile_id, folder, sub_folder, share_with, event_da
 	import mimetypes
 
 	attachments = []
-
+	frappe.errprint([])
 	files = eval(files)
 	for fl in files:
 		fname = os.path.join(get_files_path(), profile_id, folder, sub_folder, fl)
@@ -68,15 +68,16 @@ def send_shared_data(files, profile_id, folder, sub_folder, share_with, event_da
 			})
 
 	if attachments:
-		msg = """
-				Please see attachment
-				Event Name is %(event)s
-				Event Date is %(event_date)s
-				Provider Name is %(provider_name)s
-			"""%{'event': event, 'event_date': event_date, 'provider_name': provider_name}
+		msg = """Event Name is %(event)s <br>
+				Event Date is %(event_date)s <br>
+				Provider Name is %(provider_name)s <br>
+				<hr>
+					%(event_body)s <br>
+					Please see attachment <br>
+			"""%{'event': event, 'event_date': event_date, 'provider_name': provider_name, 'event_body':event_body}
 		
 		from frappe.utils.email_lib import sendmail
-		sendmail([share_with], subject='Shared File', msg=msg,
+		sendmail([share_with], subject="PHR-Event Data", msg=cstr(msg),
 				attachments=attachments)
 	else:
 		frappe.msgprint('Please select file(s) for sharing')
@@ -87,8 +88,8 @@ def send_shared_data(files, profile_id, folder, sub_folder, share_with, event_da
 def get_visit_data(data):
 	frappe.errprint(data)
 	request_type="POST"
-	# url="http://192.168.5.11:9090/phr/phrdata/getprofilevisit"
-	url="http://88.198.52.49:7974/phr/phrdata/getprofilevisit"
+	url="http://192.168.5.11:9090/phr/phrdata/getprofilevisit"
+	# url="http://88.198.52.49:7974/phr/phrdata/getprofilevisit"
 	from phr.phr.phr_api import get_response
 
 	options = json.loads(data).get('options')
@@ -107,8 +108,8 @@ def get_visit_data(data):
 def get_event_data(data):
 	frappe.errprint(data)
 	request_type="POST"
-	# url="http://192.168.5.11:9090/phr/phrdata/getprofileevent"
-	url="http://88.198.52.49:7974/phr/phrdata/getprofileevent"
+	url="http://192.168.5.11:9090/phr/phrdata/getprofileevent"
+	# url="http://88.198.52.49:7974/phr/phrdata/getprofileevent"
 	from phr.phr.phr_api import get_response
 
 	options = json.loads(data).get('options')
