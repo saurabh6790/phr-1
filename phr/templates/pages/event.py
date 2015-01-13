@@ -13,14 +13,20 @@ def create_event(data=None):
 
 	data = json.loads(data)
 
-
+	print "==============================create event================================="
+	print data
+	print "==========================================================================="
 	event_data={
 			"event_title": data.get('event_title'),
 			"profile_id": data.get('profile_id'),
-			"event_date": data.get('event_date'),
+			"str_event_date": data.get('event_date'),
 			"received_from": "Desktop",
 			"event_descripton": data.get('event_descripton')
 		}
+
+	print "==============================create event 1================================="
+	print event_data
+	print "==========================================================================="
 
 	response=get_response(url, json.dumps(event_data), request_type)
 	
