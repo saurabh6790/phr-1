@@ -4,7 +4,8 @@
    {
       "fieldname": "basic_info", 
       "fieldtype": "section", 
-      "label": "Profile" 
+      "label": "Profile",
+       "default":1 
    },
    {
    	"fieldname": "person_firstname", 

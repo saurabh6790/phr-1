@@ -4,7 +4,8 @@
    {
       "fieldname": "basic_info", 
       "fieldtype": "section", 
-      "label": "Profile"
+      "label": "Profile",
+      "default":1
    },
    {
    	"fieldname": "person_firstname", 
@@ -24,6 +25,11 @@
       "required":1
 	},
    {
+      "fieldname": "", 
+      "fieldtype": "column_break", 
+      "label": ""
+   },
+   {
       "fieldname": "gender", 
       "fieldtype": "select", 
       "label": "Gender",
@@ -31,30 +37,77 @@
       "required":1
    },
   	{
-   	"fieldname": "str_date_of_birth", 
+   	"fieldname": "date_of_birth", 
       "fieldtype": "date", 
       "label": "DOB"
 	},
-
+   {
+      "fieldname": "marital_status", 
+      "fieldtype": "select", 
+      "label": "Marital Status",
+      "options": ["","Married","Single"],
+      "required":1 
+   },
+   {
+      "fieldname": "", 
+      "fieldtype": "section_break", 
+      "label": ""
+   },
    {
       "fieldname": "blod_group", 
       "fieldtype": "data", 
       "label": "Blood Group"
    },
    {
-      "fieldname": "mobile", 
-      "fieldtype": "data", 
-      "label": "Mobile No"
+      "fieldname": "habits", 
+      "fieldtype": "text", 
+      "label": "Habits"
    },
-     {
+   {
+      "fieldname": "allergies", 
+      "fieldtype": "text", 
+      "label": "Allergies"
+   },
+   {
       "fieldname": "", 
       "fieldtype": "column_break", 
       "label": ""
    },
    {
+      "fieldname": "height", 
+      "fieldtype": "data", 
+      "label": "Height"
+   },
+   {
+      "fieldname": "weight", 
+      "fieldtype": "data", 
+      "label": "Weight"
+   },
+   {
+      "fieldname": "diet_type", 
+      "fieldtype": "select", 
+      "label": "Diet Type",
+      "options":["","Heavy","Lite"]
+   },
+   {
+      "fieldname": "", 
+      "fieldtype": "section_break", 
+      "label": ""
+   },
+   {
+      "fieldname": "mobile", 
+      "fieldtype": "data", 
+      "label": "Mobile No"
+   },
+   {
       "fieldname": "phone", 
       "fieldtype": "data", 
       "label": "Landline"
+   },
+   {
+      "fieldname": "", 
+      "fieldtype": "column_break", 
+      "label": ""
    },
    {
       "fieldname": "fax", 
@@ -68,56 +121,23 @@
       "label": "Email",
       "required":1
    },
-   {
-      "fieldname": "habits", 
-      "fieldtype": "text", 
-      "label": "Habits"
-   },
-   {
-      "fieldname": "allergies", 
-      "fieldtype": "text", 
-      "label": "Allergies"
-   },
-   {
-      "fieldname": "marital_status", 
-      "fieldtype": "select", 
-      "label": "Marital Status",
-      "options": ["","Married","Single"],
-      "required":1 
-   },
-   {
-      "fieldname": "height", 
-      "fieldtype": "data", 
-      "label": "Height"
-   },
+   
    {
       "fieldname": "", 
       "fieldtype": "section_break", 
       "label": ""
    },
-   {
-      "fieldname": "weight", 
-      "fieldtype": "data", 
-      "label": "Weight"
-   },
-   {
-      "fieldname": "diet_type", 
-      "fieldtype": "select", 
-      "label": "Diet Type",
-      "options":["","Heavy","Lite"]
-   },
- 
+   
+   
    {
       "fieldname": "current_address", 
       "fieldtype": "text", 
-      "label": "Current Address",
-      "required":1
+      "label": "Address Line 1"
    },
    {
       "fieldname": "permnt_address", 
       "fieldtype": "text", 
-      "label": "Address Line 2",
-      "required":1
+      "label": "Address Line 2"
    },
    
    {
@@ -125,11 +145,15 @@
       "fieldtype": "data", 
       "label": "Pincode"
    },
+    {
+      "fieldname": "", 
+      "fieldtype": "column_break", 
+      "label": ""
+   },
    {
       "fieldname": "city_current", 
       "fieldtype": "data", 
-      "label": "City",
-      "required":1
+      "label": "City"
    },
    {
       "fieldname": "state_current", 
