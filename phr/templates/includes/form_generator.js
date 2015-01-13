@@ -230,7 +230,7 @@ $.extend(RenderFormFields.prototype,{
 		var me = this;
 		$input = $(repl_str('<div class="panel panel-primary" style="height:100%;margin-top:10px;">\
 				<div class="panel-heading">%(label)s</div>\
-				<div class="panel-body" style="padding:1px;height:180px;overflow:hidden;overflow:auto">\
+				<div class="panel-body" style="padding:1px;height: 25%;;overflow:hidden;overflow:auto">\
 					<table class="table table-striped" style="padding=0px;" >\
 						<thead><tr></tr></thead>\
 						<tbody></tbody>\

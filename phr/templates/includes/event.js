@@ -87,7 +87,8 @@ var Event = inherit(ListView,{
 					{'fieldname':'','fieldtype':'column_break','label':''},
 					{'fieldname':'provider_name','fieldtype':'data','label':'Provider Name'},
 					{'fieldname':'number','fieldtype':'data','label':'Contact Number'},
-					{'fieldname':'email_id','fieldtype':'data','label':'Email Id'}
+					{'fieldname':'email_id','fieldtype':'data','label':'Email Id'},
+					{'fieldname':'diagnosis_desc','fieldtype':'text','label':'Diagnosis'}
 				], "method": 'event'}, event_id)
 
 		me.bind_save_event()
@@ -173,7 +174,7 @@ var Event = inherit(ListView,{
 				me.result_set[obj.name] = $(obj).val();
 			})
 			
-			$('<li><a nohref>Share Pannel</a></li>').click(function(){
+			$('<li><a nohref>Share Panel</a></li>').click(function(){
 					$(this).nextAll().remove()
 					// $(this).remove()
 					$('.uploader').remove();
