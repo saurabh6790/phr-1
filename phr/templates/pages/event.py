@@ -8,7 +8,8 @@ def create_event(data=None):
 	frappe.errprint(data)
 
 	request_type="POST"
-	url="http://192.168.5.11:9090/phr/createEvent"
+	# url="http://192.168.5.11:9090/phr/createEvent"
+	url="http://88.198.52.49:7974/phr/createEvent"
 	from phr.phr.phr_api import get_response
 
 	data = json.loads(data)
@@ -86,7 +87,8 @@ def send_shared_data(files, profile_id, folder, sub_folder, share_with, event_da
 def get_visit_data(data):
 	frappe.errprint(data)
 	request_type="POST"
-	url="http://192.168.5.11:9090/phr/phrdata/getprofilevisit"
+	# url="http://192.168.5.11:9090/phr/phrdata/getprofilevisit"
+	url="http://88.198.52.49:7974/phr/phrdata/getprofilevisit"
 	from phr.phr.phr_api import get_response
 
 	options = json.loads(data).get('options')
@@ -105,7 +107,8 @@ def get_visit_data(data):
 def get_event_data(data):
 	frappe.errprint(data)
 	request_type="POST"
-	url="http://192.168.5.11:9090/phr/phrdata/getprofileevent"
+	# url="http://192.168.5.11:9090/phr/phrdata/getprofileevent"
+	url="http://88.198.52.49:7974/phr/phrdata/getprofileevent"
 	from phr.phr.phr_api import get_response
 
 	options = json.loads(data).get('options')

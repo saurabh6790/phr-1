@@ -56,8 +56,8 @@ def create_profile_in_db(id,args,response):
 
 def create_profile_in_solr(args):
 	request_type="POST"
-	url="http://192.168.5.11:9090/phr/createProfile"
-	#url="http://88.198.52.49:7974/phr/createProfile"
+	# url="http://192.168.5.11:9090/phr/createProfile"
+	url="http://88.198.52.49:7974/phr/createProfile"
 	data=json.dumps(args)
 	print data
 	from phr.phr.phr_api import get_response
