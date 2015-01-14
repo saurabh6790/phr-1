@@ -156,12 +156,13 @@ def save_file_on_filesystem(fname, content, content_type=None):
 	profile_id = frappe.form_dict.profile_id
 	folder = frappe.form_dict.folder
 	sub_folder = frappe.form_dict.sub_folder
+	event_id = frappe.form_dict.event_id
 
 	frappe.errprint([profile_id, folder, sub_folder])
 
 	public_path = os.path.join(frappe.local.site_path, "public")
 	frappe.errprint([get_files_path(), profile_id, folder, sub_folder])
-	folder_path = os.path.join(get_files_path(), profile_id, folder, sub_folder)
+	folder_path = os.path.join(get_files_path(), profile_id, event_id, folder, sub_folder)
 
 	frappe.errprint(folder_path)
 	fpath = write_file(content, folder_path, fname)

@@ -2,6 +2,11 @@
 	
 	"fields":[
 		{
+			"fieldname":"entityid", 
+			"fieldtype":"data", 
+			"label":"Event Id"
+		},
+		{
 			"fieldname":"event_date", 
 			"fieldtype":"date", 
 			"label":"Date"

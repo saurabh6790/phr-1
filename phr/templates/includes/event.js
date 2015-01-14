@@ -44,14 +44,7 @@ var Event = inherit(ListView,{
 				});
 			})
 
-			SharePhr.prototype.init(me.wrapper, {'fields':[
-				{'fieldname':'event_date','fieldtype':'date', 'label':'Date'},
-				{'fieldname':'event_title','fieldtype':'data','label':'Event Name'},
-				{'fieldname':'event_descripton','fieldtype':'text', 'label':'Description'},
-				{'fieldname':'provider_name','fieldtype':'data', 'label':'Provider Name'},
-				{'fieldname':'email_body','fieldtype':'text', 'label':'Email Body'},
-				{'fieldname':'share_with','fieldtype':'data', 'label':'Share With'}
-			], "method": 'event' ,'event_id': $(me.selected_files).last()[0], 'selected_files':me.selected_files, 'doc_list': me.doc_list, "profile_id":me.profile_id})
+			SharePhr.prototype.init(me.wrapper, {"file_name" : "share_phr", "method": 'event' ,'event_id': $(me.selected_files).last()[0], 'selected_files':me.selected_files, 'doc_list': me.doc_list, "profile_id":me.profile_id})
 			
 		}).appendTo($('.field-area'))
 		// this.open_form()
@@ -63,17 +56,7 @@ var Event = inherit(ListView,{
 	},
 	open_form:function(event_id, event_title){
 		var me = this;
-		RenderFormFields.prototype.init(me.wrapper, {'fields':[
-					{'fieldname':'event_date','fieldtype':'date','label':'Date'},
-					{'fieldname':'event_title','fieldtype':'data','label':'Event Name'},
-					{'fieldname':'event_descripton','fieldtype':'text','label':'Description'},
-					{'fieldname':'provider_type','fieldtype':'select','label':'Healthcare Provider', 'options':['Doc', 'Hospital', 'Lab']},
-					{'fieldname':'','fieldtype':'column_break','label':''},
-					{'fieldname':'provider_name','fieldtype':'data','label':'Provider Name'},
-					{'fieldname':'number','fieldtype':'data','label':'Contact Number'},
-					{'fieldname':'email_id','fieldtype':'data','label':'Email Id'},
-					{'fieldname':'diagnosis_desc','fieldtype':'text','label':'Diagnosis'}
-				], "method": 'event'}, event_id)
+		RenderFormFields.prototype.init(me.wrapper, {"file_name" : "event", "method": 'event'}, event_id)
 
 		me.bind_save_event()
 		$(repl_str('<li><a nohref>%(event_title)s</a></li>',{'event_title': event_title})).click(function(){
@@ -176,14 +159,7 @@ var Event = inherit(ListView,{
 	open_sharing_pannel: function(){
 		var me = this;
 		console.log(['me.result_set', me.doc_list])
-		SharePhr.prototype.init(me.wrapper, {'fields':[
-				{'fieldname':'event_date','fieldtype':'date', 'label':'Date'},
-				{'fieldname':'event_title','fieldtype':'data','label':'Event Name'},
-				{'fieldname':'event_descripton','fieldtype':'text', 'label':'Description'},
-				{'fieldname':'provider_name','fieldtype':'data', 'label':'Provider Name'},
-				{'fieldname':'email_body','fieldtype':'text', 'label':'Email Body'},
-				{'fieldname':'share_with','fieldtype':'data', 'label':'Share With'}
-			], 'values': me.result_set, 'doc_list': me.doc_list, "profile_id":me.profile_id})
+		SharePhr.prototype.init(me.wrapper, {"file_name" : "share_phr", 'values': me.result_set, 'doc_list': me.doc_list, "profile_id":me.profile_id})
 	},
 	bind_events: function(){
 		var me = this;

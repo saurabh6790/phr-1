@@ -36,20 +36,20 @@ def create_event(data=None):
 
 
 @frappe.whitelist(allow_guest=True)
-def get_attachments(profile_id, folder, sub_folder):
+def get_attachments(profile_id, folder, sub_folder, event_id):
 	files = []
-	path = os.path.join(get_files_path(), profile_id, folder, sub_folder)
+	path = os.path.join(get_files_path(), profile_id, event_id, folder, sub_folder)
 	if os.path.exists(path):
 		for fl in os.listdir(path):
 			frappe.errprint(fl.split('.')[-1:][0])
 			if fl.split('.')[-1:][0] in ['jpg','jpeg','pdf','png', 'PDF']:
 				files.append({'file_name': fl, 'type':fl.split('.')[-1:][0], 
-					'path': os.path.join('files', profile_id, folder, sub_folder)})
+					'path': os.path.join('files', profile_id, event_id, folder, sub_folder)})
 
 	return files
 
 @frappe.whitelist(allow_guest=True)
-def send_shared_data(files, profile_id, folder, sub_folder, share_with, event_date, event, provider_name, event_body,content_type=None):
+def send_shared_data(files, profile_id, folder, sub_folder, share_with, event_date, event, provider_name, event_body, event_id, content_type=None):
 	from email.mime.audio import MIMEAudio
 	from email.mime.base import MIMEBase
 	from email.mime.image import MIMEImage
@@ -57,10 +57,10 @@ def send_shared_data(files, profile_id, folder, sub_folder, share_with, event_da
 	import mimetypes
 
 	attachments = []
-	frappe.errprint([])
+	frappe.errprint([files])
 	files = eval(files)
 	for fl in files:
-		fname = os.path.join(get_files_path(), profile_id, folder, sub_folder, fl)
+		fname = os.path.join(get_files_path(), fl)
 
 		attachments.append({
 				"fname": fname,
