@@ -20,6 +20,7 @@ var LinkedPHR = inherit(RenderFormFields, {
 				me.res[obj.name] = $(obj).val();
 			})
 			me.res["linking_id"]=frappe.get_cookie('profile_id')
+			console.log(me.res)
 			me.res["received_from"]="Desktop"
 			console.log(me.operation)
 			if (me.operation=='create_linkphr'){
@@ -32,6 +33,7 @@ var LinkedPHR = inherit(RenderFormFields, {
 		})
 	},
 	create_linkedphr:function(res,cmd,me){
+		console.log(res)
 		frappe.call({
 				method:'phr.templates.pages.linked_phr.create_linkedphr',
 				args:{'data': res,"id":cmd},

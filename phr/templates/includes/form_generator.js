@@ -52,6 +52,8 @@ $.extend(RenderFormFields.prototype,{
 		if(me.entityid){
 			arg['entityid'] = me.entityid
 		}
+
+		console.log(arg)
 		$.ajax({
 			method: "GET",
 			url: "/api/method/phr.templates.pages.patient.get_data_to_render",

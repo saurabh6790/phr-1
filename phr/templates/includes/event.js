@@ -15,23 +15,7 @@ var Event = inherit(ListView,{
 		var me = this;
 		this.selected_files = [];
 		this.profile_id = profile_id
-		ListView.prototype.init(this.wrapper, {'fields':[
-						{'fieldname':'event_date','fieldtype':'date','label':'Date'},
-						{'fieldname':'event_title','fieldtype':'data','label':'Event Name'},
-						{'fieldname':'event_descripton','fieldtype':'text','label':'Description', 'options':['Dengue', 'Headache', 'Chest Pain']},
-						{'fieldname':'provider_type','fieldtype':'select','label':'Healthcare Provider', 'options':['Doc', 'Hospital', 'Lab']},
-						{'fieldname':'','fieldtype':'column_break','label':''},
-						{'fieldname':'provider_name','fieldtype':'data','label':'Provider Name'},
-						{'fieldname':'number','fieldtype':'data','label':'Contact Number'},
-						{'fieldname':'email_id','fieldtype':'data','label':'Email Id'}
-					], 'listview':[{'fieldname':'event','fieldtype':'link','label':'Event','options':'Events'},
-			{'fieldname':'','fieldtype':'column_break','label':''},
-			{'fieldname':'date','fieldtype':'date','label':'Date'},
-			{'fieldname':'','fieldtype':'section_break','label':''},
-			{'fieldname':'tab','fieldtype':'table','label':'Event Table',
-				 'options':[['','Event Id','Event Date', 'Event Name', 'Provider Type', 'Provider Name', 'Consultancy', 
-				 				'Event Snaps', 'Lab Reports', 'Prescription', 'Cost of Care'],
-				 			]}],
+		ListView.prototype.init(this.wrapper, {"file_name" : "event",
 			'cmd':"get_event_data",
 			'tab_at': 4,
 			'profile_id':profile_id})

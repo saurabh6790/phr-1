@@ -2,7 +2,7 @@ import frappe
 import json
 import os 
 from frappe.utils import get_site_path, get_hook_method, get_files_path, get_site_base_path,cstr
-
+from phr.templates.pages.patient import get_data_to_render
 @frappe.whitelist(allow_guest=True)
 def create_event(data=None):
 	frappe.errprint(data)
@@ -107,19 +107,31 @@ def get_visit_data(data):
 @frappe.whitelist(allow_guest=True)
 def get_event_data(data):
 	frappe.errprint(data)
+
+	fields, values, tab = get_data_to_render(data)
+
+	print fields
+
+
 	request_type="POST"
 	url="http://192.168.5.11:9090/phr/phrdata/getprofileevent"
 	# url="http://88.198.52.49:7974/phr/phrdata/getprofileevent"
 	from phr.phr.phr_api import get_response
+	pos = 0
+	for filed_dict in fields:
+		pos =+ 1
+		if 'options' in filed_dict.keys(): 
+			options = filed_dict.get('options')
+			break
+	
+	print "======pos========"
+	print pos 
+	print "======pos========"
 
-	options = json.loads(data).get('options')
 	data=json.loads(data)
 
 	response=get_response(url, json.dumps({"profileId":data.get('profile_id')}), request_type)
 	res_data = json.loads(response.text)
-	print "+======================================++++"
-	print res_data
-	print "+======================================++++"
 
 	if json.loads(res_data.get('phr')).get('eventList'):
 		for visit in json.loads(res_data.get('phr')).get('eventList'):
@@ -127,9 +139,12 @@ def get_event_data(data):
 			options.extend([['<input type="checkbox" id = "%s">'%visit['entityid'], '<a nohref id="%s"> %s </a>'%(visit['entityid'],visit['event_title']), '15/01/2015', 
 					visit['event_title']+'<br>'+visit['event_descripton'], 'DOC', 'Test Doc']])
 		
-	# options.extend([['<input type="checkbox" id = "12345111222">', '<a nohref> 12345111222 </a>','15/01/2015', 
-	# 			'Dengue', 'DOC', 'Test Doc'], ['<input type="checkbox" id = "1234588888">', '<a nohref> 1234588888 </a>','15/01/2015', 
-	# 			'Dengue', 'DOC', 'Test Doc'], ['<input type="checkbox" id = "12345111333">', '<a nohref> 12345111333 </a>','15/01/2015', 
-	# 			'Dengue', 'DOC', 'Test Doc']])
+	# # options.extend([['<input type="checkbox" id = "12345111222">', '<a nohref> 12345111222 </a>','15/01/2015', 
+	# # 			'Dengue', 'DOC', 'Test Doc'], ['<input type="checkbox" id = "1234588888">', '<a nohref> 1234588888 </a>','15/01/2015', 
+	# # 			'Dengue', 'DOC', 'Test Doc'], ['<input type="checkbox" id = "12345111333">', '<a nohref> 12345111333 </a>','15/01/2015', 
+	# # 			'Dengue', 'DOC', 'Test Doc']])
 
-	return options
+	return {
+		'options': options,
+		'listview': fields
+	}
