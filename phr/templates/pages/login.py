@@ -11,7 +11,7 @@ from frappe import _
 
 
 @frappe.whitelist(allow_guest=True)
-def create_profile(first_name,middle_name,last_name,email_id,contact):
+def create_profile(first_name,middle_name,last_name,email_id,contact,created_via):
 	"""
 		1.Create Profile in Core PHR(Solr)
 		2.When Successful Create Profile  in ERPNext
@@ -26,15 +26,17 @@ def create_profile(first_name,middle_name,last_name,email_id,contact):
 		else:
 			return {"returncode" : 409, "message_summary" : "Already Registered"}
 	else:
-		args={'person_firstname':first_name,'person_middlename':middle_name,'person_lastname':last_name,'email':email_id,'mobile':contact,'received_from':'Desktop','provider':'false'}
+		args={'person_firstname':first_name,'person_middlename':middle_name,'person_lastname':last_name,'email':email_id,'mobile':contact,'received_from':created_via,'provider':'false'}
 		print args
 		profile_res=create_profile_in_solr(args)
 		response=json.loads(profile_res)
 		print response
 		if response['returncode']==101:
 			res=create_profile_in_db(response['entityid'],args,response)
-			return res
+			print response
+			return response
 		else:
+			print response
 			return response
 
 def create_profile_in_db(id,args,response):
@@ -48,7 +50,8 @@ def create_profile_in_db(id,args,response):
 		"contact":args["mobile"],
 		"new_password": random_string(10),
 		"user_type": "Website User",
-		"access_type":"Patient"
+		"access_type":"Patient",
+		"created_via":args["received_from"]
 	})
 	user.ignore_permissions = True
 	user.insert()

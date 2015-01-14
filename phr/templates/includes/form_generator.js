@@ -211,9 +211,10 @@ $.extend(RenderFormFields.prototype,{
 					})
 
 			var val = field_meta['value'];
+			if(val){
 			var date=new Date(val)
 			$input.find('input').val($.datepicker.formatDate('dd/mm/yy',date))
-			
+			}
 	
 
 		if(field_meta['required']==1){
