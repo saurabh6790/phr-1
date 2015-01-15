@@ -10,7 +10,7 @@ var RenderFormFields = function(){
 }
 
 $.extend(RenderFormFields.prototype,{
-	init:function(wrapper, arg, entityid,operation){
+	init:function(wrapper, arg, entityid, operation){
 		//initializing
 		this.section = '';
 		this.column = '';
@@ -52,23 +52,27 @@ $.extend(RenderFormFields.prototype,{
 		if(me.entityid){
 			arg['entityid'] = me.entityid
 		}
+
+		console.log(arg)
 		$.ajax({
 			method: "GET",
 			url: "/api/method/phr.templates.pages.patient.get_data_to_render",
 			data: arg,
 			async: false,
 			success: function(r) {
+				console.log([r.message[0], r.message[1],r.message[2]])
 				me.render_fields(r.message[0], r.message[1],r.message[2])
 			}
 		});
 	},
 	render_fields:function(fields, values, tab){
-		// console.log(fields)
+		console.log(values)
 		var me = this;
 		if(tab==1) me.tab_field_renderer()
 		$.each(fields,function(indx, meta){
 			!me.section && me.section_break_field_renderer()
 			!me.column && me.column_break_field_renderer()
+			console.log([values[meta['fieldname']], meta['fieldname']])
 			meta['value']=values[meta['fieldname']] || "";
 			me[meta['fieldtype'] + "_field_renderer"].call(me, meta);
 		})
@@ -175,7 +179,7 @@ $.extend(RenderFormFields.prototype,{
 							<div class="col-xs-8">\
 								<div class="control-input">\
 									<textarea type="text" class="form-control" \
-										placeholder="%(label)s" name="%(fieldname)s"  \
+										placeholder="%(label)s" name="%(fieldname)s"\
 										aria-describedby="basic-addon2"></textarea>\
 								</div>\
 							</div>\
@@ -198,25 +202,24 @@ $.extend(RenderFormFields.prototype,{
 							<div class="col-xs-8">\
 								<div class="control-input">\
 									<input type="text" class="form-control" \
-										placeholder="%(label)s" name="%(fieldname)s" data-fieldtype="Date"" >\
+										placeholder="%(label)s" name="%(fieldname)s" data-fieldtype="Date" >\
 								</div>\
 							</div>\
 						</div>\
 				</div>', field_meta)).appendTo($(this.column))
+
 		$( $input.find('[data-fieldtype="Date"]' )).datepicker({
 						altFormat:'yy-mm-dd',
 						changeYear: true,
 						yearRange: "-70Y:+10Y",
 						dateFormat: "dd/mm/yy",
 					})
-
 			var val = field_meta['value'];
 			if(val){
 			var date=new Date(val)
 			$input.find('input').val($.datepicker.formatDate('dd/mm/yy',date))
 			}
 	
-
 		if(field_meta['required']==1){
 			$input.find("input").prop('required',true);
 			$input.find("input").css({"border": "1px solid #999","border-color": "red" });
@@ -226,7 +229,7 @@ $.extend(RenderFormFields.prototype,{
 		var me = this;
 		$input = $(repl_str('<div class="panel panel-primary" style="height:100%;margin-top:10px;">\
 				<div class="panel-heading">%(label)s</div>\
-				<div class="panel-body" style="padding:1px;height:180px;overflow:hidden;overflow:auto">\
+				<div class="panel-body" style="padding:1px;height: 25%;;overflow:hidden;overflow:auto">\
 					<table class="table table-striped" style="padding=0px;" >\
 						<thead><tr></tr></thead>\
 						<tbody></tbody>\

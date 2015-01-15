@@ -35,6 +35,18 @@ $.extend(ThumbNails.prototype,{
 				<h4> Uploaded Files </h4>\
 				<div id="attach"> Attach </div>\
 			</div>\
+			<hr><br>\
+			<h4> Description </h4>\
+			<div class="form-group row" style="margin: 0px">\
+				<label class="control-label small col-xs-4" style="padding-right: 0px;">Description</label>\
+				<div class="col-xs-8">\
+					<div class="control-input">\
+						<textarea type="text" class="form-control" \
+							placeholder="Description" name="attch_desc"\
+							aria-describedby="basic-addon2"></textarea>\
+					</div>\
+				</div>\
+			</div>\
 			',{'uploader_display':me.uploader_display})).appendTo($('.field-area'))
 		
 		this.show_attachments();
@@ -93,7 +105,7 @@ $.extend(ThumbNails.prototype,{
 
 		$("input[type=checkbox]").on( "click", function(){
 			if($(this).is(':checked')){
-				me.doc_list.push($(this).val())
+				me.doc_list.push(me$(this).val())
 			}
 		});
 

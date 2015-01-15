@@ -13,26 +13,36 @@ import os
 """	
 @frappe.whitelist(allow_guest=True)
 def get_data_to_render(data=None,entityid=None):
-	fields, values, tab = '', '', ''
+	json_data, fields, values, tab = None, None, None, None
 
 	if data:
 		data = eval(data)
+	print "======before dict check ========="
 	print data
+	print "================================="
+
 	if isinstance(data, dict):
-		json_data = data
-		data = data.get('method')
-	else:
-		json_data = get_json_data(data)	
-	
+		if not data.get('file_name'):
+			json_data = data
+			
+		else:
+			json_data = get_json_data(data.get('file_name'))	
+
+		if data.get('method'):
+				data = {"method" : data.get('method') }
+		else:
+			data = data
+				
 	if json_data:
-		fields=json_data.get('fields')
-		tab=json_data.get('tab')
-		values=get_values(data,entityid) if not json_data.get('values') else json_data.get('values')
+		fields = json_data.get(data.get('param')) if json_data.get(data.get('param')) else json_data.get('fields')
+		tab = json_data.get('tab')
+		values = get_values(data,entityid) if not json_data.get('values') else json_data.get('values')
 
 	return fields, values, tab
 	
 def get_json_data(file_name):
 	fn=file_name+'.json'
+	print os.path.join(os.path.dirname(__file__), fn)
 	with open(os.path.join(os.path.dirname(__file__), fn), "r") as json_data:
 		json_data = json.loads(json_data.read())
 
@@ -44,10 +54,7 @@ def get_json_data(file_name):
 	return plain dictionary 
 """	
 def get_values(data,entityid=None):
-	print "===============================================event id========================"
-	print entityid
-	print "==============================================================================="
-	
+	print entityid, data
 	if entityid:
 		url=get_url(data)
 		args=get_args(entityid)
@@ -90,6 +97,7 @@ def get_url(data):
 
 def get_base_url():
 	return "http://192.168.5.11:9090/phr/"
+	# return "http://88.198.52.49:7974/phr/"
 
 
 """
@@ -97,12 +105,7 @@ Method to get name of method in solr database.contains dictionary or map.
 """
 def get_method(data):
 	method_dic={"profile":"searchProfile", "event":"searchEvent"}
-
-	print "=============================================================================="
-	print method_dic.get(data)
-	print "=============================================================================="
-
-	return method_dic.get(data)
+	return method_dic.get(data.get('method'))
 
 
 	

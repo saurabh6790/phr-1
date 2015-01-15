@@ -23,6 +23,7 @@ def update_linked_profile(data,id):
 def update_profile_solr(data):
 	request_type="POST"
 	url="http://192.168.5.11:9090/phr/updateProfile"
+	# url="http://88.198.52.49:7974/phr/updateProfile"
 	from phr.phr.phr_api import get_response
 	response=get_response(url,data,request_type)
 	res=json.loads(response.text)
@@ -55,19 +56,23 @@ def create_linkedphr(data,id):
 def create_profile_solr(data):
 	request_type="POST"
 	url="http://192.168.5.11:9090/phr/createProfile"
+	# url="http://88.198.52.49:7974/phr/createProfile"
 	from phr.phr.phr_api import get_response
 	response=get_response(url,data,request_type)
 	res=json.loads(response.text)
 	print res
 	if res and res.get('returncode')==101:
 		data=json.loads(data)
-		args={"entityid":res.get('entityid'),"linking_id":data.linking_id,"relationship":data.relationship,"received_from":"Desktop"}
+		print "============================="
+		print data
+		args={"entityid":res.get('entityid'),"linking_id":data["linking_id"],"relationship":data["relationship"],"received_from":"Desktop"}
 		request_type="POST"
 		url="http://192.168.5.11:9090/phr/linkprofile"
+		# url="http://88.198.52.49:7974/phr/linkprofile"
 		from phr.phr.phr_api import get_response
 		response=get_response(url,json.dumps(args),request_type)
 		res=json.loads(response.text)
-		print res
+		return res
 
 
 	# return "Linked PHR Created Successfully"

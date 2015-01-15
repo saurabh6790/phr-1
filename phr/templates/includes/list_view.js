@@ -12,7 +12,7 @@ var ListView = inherit(RenderFormFields,{
 		if (args['cmd']){
 			this.get_data()
 		}else{
-			RenderFormFields.prototype.init(this.wrapper, {'fields': me.args['listview']})
+			RenderFormFields.prototype.init(this.wrapper, {'file_name': me.args['file_name'], 'param':'listview'})
 			me.render_top_section()
 		}
 
@@ -24,14 +24,14 @@ var ListView = inherit(RenderFormFields,{
 		$.ajax({
 			method: "GET",
 			url: "/api/method/phr.templates.pages.event."+me.args['cmd'],
-			data: "data="+JSON.stringify({'options':me.args['listview'][me.args['tab_at']]['options'],"profile_id":me.profile_id}),
+			data: "data="+JSON.stringify({'file_name':me.args['file_name'],"profile_id":me.profile_id, 'param':'listview'}),
 			async: false,
 			success: function(r) {
 				// console.log(r.message.phr.visitList)
 				console.log(r)
-				me.args['listview'][me.args['tab_at']]['options'] = r.message;
+				r.message['listview'][me.args['tab_at']]['options'] = r.message['options'];
 
-				RenderFormFields.prototype.init(this.wrapper, {'fields': me.args['listview']})
+				RenderFormFields.prototype.init(this.wrapper, {'fields': r.message['listview']})
 				// me.open_form()
 				me.render_top_section()
 			}
@@ -61,6 +61,6 @@ var ListView = inherit(RenderFormFields,{
 	new_form:function(){
 		var me = this;
 		// console.log("in form body")
-		RenderFormFields.prototype.init(this.wrapper, {'fields':me.args['fields']})
+		RenderFormFields.prototype.init(this.wrapper, {'file_name': me.args['file_name']})
 	}
 })

@@ -74,7 +74,7 @@ var Visit = inherit(ListView,{
 		var me = this;
 		this.res = {}
 		this.doc_list = [] 
-		
+
 		$('.save_controller').bind('click',function(event) {
 			$("form input, form textarea, form select").each(function(i, obj) {
 				me.res[obj.name] = $(obj).val();
