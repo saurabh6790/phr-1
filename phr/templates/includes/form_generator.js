@@ -4,6 +4,10 @@ frappe.require("assets/frappe/js/lib/jquery/jquery.ui.min.js");
 frappe.require("assets/frappe/js/lib/jquery/bootstrap_theme/jquery-ui.selected.css");
 frappe.require("assets/frappe/js/lib/jquery/bootstrap_theme/jquery-ui.css");
 frappe.provide("assets/frappe/js/lib/jquery/bootstrap_theme/images");
+frappe.require("assets/frappe/js/lib/jquery/jquery.ui.slider.min.js");
+frappe.require("assets/frappe/js/lib/jquery/jquery.ui.sliderAccess.js");
+frappe.require("assets/frappe/js/lib/jquery/jquery.ui.timepicker-addon.css");
+frappe.require("assets/frappe/js/lib/jquery/jquery.ui.timepicker-addon.js");
 
 var RenderFormFields = function(){
 	this.wrapper = ""
@@ -212,7 +216,7 @@ $.extend(RenderFormFields.prototype,{
 						altFormat:'yy-mm-dd',
 						changeYear: true,
 						yearRange: "-70Y:+10Y",
-						dateFormat: "dd/mm/yy",
+						dateFormat: "dd/mm/yy"
 					})
 			var val = field_meta['value'];
 			if(val){
@@ -220,6 +224,39 @@ $.extend(RenderFormFields.prototype,{
 			$input.find('input').val($.datepicker.formatDate('dd/mm/yy',date))
 			}
 	
+		if(field_meta['required']==1){
+			$input.find("input").prop('required',true);
+			$input.find("input").css({"border": "1px solid #999","border-color": "red" });
+		}
+	},
+	datetime_field_renderer:function(field_meta){
+		var me = this;
+		$input = $(repl_str('<div class="form-horizontal frappe-control" style="max-width: 600px;margin-top:10px;">\
+						<div class="form-group row" style="margin: 0px">\
+							<label class="control-label small col-xs-4" style="padding-right: 0px;">%(label)s</label>\
+							<div class="col-xs-8">\
+								<div class="control-input">\
+									<input type="text" class="form-control" \
+										placeholder="%(label)s" name="%(fieldname)s" data-fieldtype="Date" >\
+								</div>\
+							</div>\
+						</div>\
+				</div>', field_meta)).appendTo($(this.column))
+
+		$( $input.find('[data-fieldtype="Date"]' )).datetimepicker({
+						altFormat:'yy-mm-dd',
+						changeYear: true,
+						yearRange: "-70Y:+10Y",
+						dateFormat: "dd/mm/yy",
+						timeFormat:  "HH:mm"
+					})
+		var val = field_meta['value'];
+		
+		if(val){
+			var date=new Date(val)
+			$input.find('input').val($.datetimepicker.formatDate('dd/mm/yy',date))
+		}
+
 		if(field_meta['required']==1){
 			$input.find("input").prop('required',true);
 			$input.find("input").css({"border": "1px solid #999","border-color": "red" });
