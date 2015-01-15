@@ -45,17 +45,41 @@
 		{
 			"fieldname":"email_body",
 			"fieldtype":"text", 
-			"label":"Email Body"
+			"label":"Email Body",
+			"depends_on":"share_via:Email"
 		},
 		{
 			"fieldname":"email_id",
 			"fieldtype":"data", 
-			"label":"Email Id"
+			"label":"Email Id",
+			"depends_on":"share_via:Email"
+		},
+		{
+			"fieldname":"", 
+			"fieldtype":"column_break", 
+			"label":""
+		},	
+		{
+			"fieldname":"provider_name",
+			"fieldtype":"data", 
+			"label":"Provider Name",
+			"depends_on":"share_via:Provider Account"
+		},
+		{
+			"fieldname":"sharing_duration",
+			"fieldtype":"data", 
+			"label":"Sharing Duration",
+			"depends_on":"share_via:Provider Account"
 		},
 		{
 			"fieldname":"",
 			"fieldtype":"section_break", 
 			"label":""
+		},
+		{
+			"fieldname":"reason",
+			"fieldtype":"text", 
+			"label":"Reason For Sharing"
 		}
 	]
 }

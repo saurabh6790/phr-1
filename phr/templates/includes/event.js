@@ -64,7 +64,7 @@ var Event = inherit(ListView,{
 			$(this).remove()
 			me.open_form(event_id, event_title)
 		}).appendTo('.breadcrumb');
-		$('<div class="event_section"></div>').appendTo($('.field-area'))
+		$('<div class="event_section" style="margin-top:-10%;"></div>').appendTo($('.field-area'))
 		me.render_folder_section()
   		me.bind_events()
 

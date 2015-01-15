@@ -23,6 +23,8 @@ $.extend(RenderFormFields.prototype,{
 		this.operation=operation
 		this.wrapper = $('.field-area')
 		this.result_set = {}
+		this.visibility_dict = {}
+		this.labelled_section_count = 0;
 		console.log(this.entityid)
 
 		//crear rendering area
@@ -57,29 +59,65 @@ $.extend(RenderFormFields.prototype,{
 			arg['entityid'] = me.entityid
 		}
 
-		console.log(arg)
 		$.ajax({
 			method: "GET",
 			url: "/api/method/phr.templates.pages.patient.get_data_to_render",
 			data: arg,
 			async: false,
 			success: function(r) {
-				console.log([r.message[0], r.message[1],r.message[2]])
 				me.render_fields(r.message[0], r.message[1],r.message[2])
 			}
 		});
 	},
 	render_fields:function(fields, values, tab){
-		console.log(values)
 		var me = this;
 		if(tab==1) me.tab_field_renderer()
 		$.each(fields,function(indx, meta){
-			!me.section && me.section_break_field_renderer()
+			!me.section && !meta['fieldname'] == 'section_break' && me.section_break_field_renderer()
 			!me.column && me.column_break_field_renderer()
 			console.log([values[meta['fieldname']], meta['fieldname']])
 			meta['value']=values[meta['fieldname']] || "";
 			me[meta['fieldtype'] + "_field_renderer"].call(me, meta);
+			if(meta['depends_on']) me.depends_on(meta)
 		})
+	},
+	depends_on:function(meta){
+		parent_field = meta['depends_on'].split(':')[0]
+
+		if(this.visibility_dict[parent_field]) this.set_dict_param(parent_field, meta)
+		else{
+			this.visibility_dict[parent_field] = {}
+			this.set_dict_param(parent_field, meta)	
+		}
+		this.add_onchange_event(parent_field)
+		
+	},
+	set_dict_param:function(parent_field, meta){
+		if(!this.visibility_dict[parent_field][meta['depends_on'].split(':')[1]]){
+			this.visibility_dict[parent_field][meta['depends_on'].split(':')[1]] = []
+		} 
+		this.visibility_dict[parent_field][meta['depends_on'].split(':')[1]].push(meta['fieldname'])
+		$($('[name="'+meta['fieldname']+'"]').parents()[3]).css("display", "none");		
+	},
+	add_onchange_event:function(parent_field){
+		var me = this;
+		$('[name="'+parent_field+'"]').on('change', function(){
+			me.visibility_setter($(this).attr('name'), $(this).val(), me.visibility_dict)
+		})
+	},
+	visibility_setter:function(parent, val, dict_of_fileds){
+		$.each(dict_of_fileds[parent], function(key, filed_list){
+			$.each(filed_list, function(i,field){
+				if(key == val) $($('[name="'+field+'"]').parents()[3]).css("display", "inherit");
+				else $($('[name="'+field+'"]').parents()[3]).css("display", "none");
+			})	
+		})
+	},
+	set_description:function(area, meta){
+		if(meta['description']){
+			$('<p class="text-muted small">' + meta['description'] + '</p>')
+				.appendTo(area);	
+		}
 	},
 	data_field_renderer: function(field_meta){
 		var me=this;
@@ -99,6 +137,8 @@ $.extend(RenderFormFields.prototype,{
 			$input.find("input").prop('required',true)
 			$input.find("input").css({"border": "1px solid #999","border-color": "red" });
 		}
+
+		this.set_description($input.find('.control-input'), field_meta)
 	},
 	select_field_renderer: function(field_meta){
 		$input = $(repl_str('<div class="form-horizontal frappe-control" style="max-width: 600px;margin-top:10px;">\
@@ -128,6 +168,7 @@ $.extend(RenderFormFields.prototype,{
 			$input.find("select").css({"border": "1px solid #999","border-color": "red" });
 		}
 
+		this.set_description($input.find('.control-input'), field_meta)
 
 	},
 	link_field_renderer: function(field_meta){
@@ -166,6 +207,9 @@ $.extend(RenderFormFields.prototype,{
 			$input.find("input").prop('required',true)
 			$input.find("input").css({"border": "1px solid #999","border-color": "red" });
 		}
+
+		this.set_description($input.find('.control-input'), field_meta)
+
 		// $($input.find('.autocomplete')).autocomplete({
   //       source: function(request, response){
   //           var matcher = new RegExp( $.ui.autocomplete.escapeRegex( request.term ), "i" );
@@ -194,6 +238,8 @@ $.extend(RenderFormFields.prototype,{
 			$input.find("textarea").prop('required',true)
 			$input.find("textarea").css({"border": "1px solid #999","border-color": "red" });
 		}
+
+		this.set_description($input.find('.control-input'), field_meta)
 	},
 	button_field_renderer: function(field_meta){
 
@@ -229,6 +275,8 @@ $.extend(RenderFormFields.prototype,{
 			$input.find("input").prop('required',true);
 			$input.find("input").css({"border": "1px solid #999","border-color": "red" });
 		}
+
+		this.set_description($input.find('.control-input'), field_meta)
 	},
 	datetime_field_renderer:function(field_meta){
 		var me = this;
@@ -262,6 +310,8 @@ $.extend(RenderFormFields.prototype,{
 			$input.find("input").prop('required',true);
 			$input.find("input").css({"border": "1px solid #999","border-color": "red" });
 		}
+
+		this.set_description($input.find('.control-input'), field_meta)
 	},
 	table_field_renderer:function(field_meta){
 		var me = this;
@@ -321,7 +371,7 @@ $.extend(RenderFormFields.prototype,{
 		}
 
 		this.wrapper = $(repl_str("#%(fieldname)s",field_meta))
-		this.section_break_field_renderer();
+		this.section_break_field_renderer(field_meta);
 		this.column_break_field_renderer();
 	},
 	column_break_field_renderer: function(field_meta){
@@ -337,12 +387,25 @@ $.extend(RenderFormFields.prototype,{
 			.addClass("form-column")
 			.addClass("col-md-" + colspan);
     },
-    section_break_field_renderer: function(){
+    section_break_field_renderer: function(meta){
     	this.section = $('<div class="row sec" style="padding:2%""></div>')
     		.appendTo($(this.wrapper))
     		.css("border-top", "1px solid #eee")
     		.css("padding-top", "15px")
-
+    	
+    	if(meta){
+    		if(meta['label']){
+    			this.labelled_section_count++;
+	    		var head = $('<h4 class="col-md-12">'
+						+ (meta['options'] ? (' <i class="icon-fixed-width text-muted '+meta['options']+'"></i> ') : "")
+						+ '<span class="section-count-label">' + __(this.labelled_section_count) + "</span>. "
+						+ meta['label']
+						+ "</h4>")
+						.css({"margin":"15px 0px"})
+						.appendTo(this.section);	
+    		}	
+    	}
+    	
     	this.column = null;
     		
     }
