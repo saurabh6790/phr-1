@@ -53,7 +53,8 @@ $.extend(ThumbNails.prototype,{
 
 		upload.make({
 			parent: $('#attach'),
-			args:{'profile_id': me.args['profile_id'], 'folder':me.folder, 'sub_folder': me.sub_folder},
+			args:{'profile_id': me.args['profile_id'], 'folder':me.folder, 
+				'sub_folder': me.sub_folder, 'event_id': $('input[name="entityid"]').val()},
 			callback:function(attachment, r) {
 				// console.log("in attachment callback")
 				me.render_uploader_and_files();
@@ -65,7 +66,8 @@ $.extend(ThumbNails.prototype,{
 		console.log( me.args['profile_id'], me.folder, me.sub_folder )
 		frappe.call({
 			method:"phr.templates.pages.event.get_attachments",
-			args:{'profile_id': me.args['profile_id'], 'folder':me.folder, 'sub_folder': me.sub_folder},
+			args:{'profile_id': me.args['profile_id'], 'folder':me.folder, 
+				'sub_folder': me.sub_folder, 'event_id': $('input[name="entityid"]').val()},
 			callback:function(r){
 				me.create_attachement_renderer(r.message)
 			}
@@ -105,7 +107,7 @@ $.extend(ThumbNails.prototype,{
 
 		$("input[type=checkbox]").on( "click", function(){
 			if($(this).is(':checked')){
-				me.doc_list.push(me$(this).val())
+				me.doc_list.push( me.args['profile_id'] + '/' +  $('input[name="entityid"]').val() + '/' + me.folder + '/' +  me.sub_folder + '/' + $(this).val())
 			}
 		});
 

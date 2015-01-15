@@ -19,7 +19,7 @@ $.extend(SharePhr.prototype,{
 		var me = this;
 		this.selected_files = args.selected_files
 		this.doc_list = args.doc_list;
-		RenderFormFields.prototype.init(this.wrapper, {'fields':args['fields'], 
+		RenderFormFields.prototype.init(this.wrapper, {'file_name':args['file_name'], 
 			'values': args['values'], 'method': args['method']}, args['event_id'])
 
 		$('<button id="share_data" class="btn btn-primary">Share Data</button></div>').appendTo($('.field-area'))
@@ -27,8 +27,12 @@ $.extend(SharePhr.prototype,{
 		$('#share_data').click(function(){
 			me.send_email();
 		})
+		this.bind_controller()
 		this.render_folder_section()
 	 //  	me.bind_events()
+	},
+	bind_controller: function(){
+		//bind controllers for 
 	},
 	render_folder_section:function(){
 		var me = this;
@@ -89,18 +93,24 @@ $.extend(SharePhr.prototype,{
 		$.each(me.doc_list, function(i, el){
 			if($.inArray(el, uniqueNames) === -1) uniqueNames.push(el);
 		});
-		console.log([uniqueNames, me.args['profile_id'], me.folder, me.sub_folder, $('input[name="share_with"]').val(), $('input[name="event_date"]').val(), ,$('input[name="provider_name"]').val(),  $('textarea[name="email_body"]').val()])
+		console.log([uniqueNames, me.args['profile_id'], me.folder, 
+			me.sub_folder, $('input[name="share_with"]').val(), 
+			$('input[name="event_date"]').val(), $('input[name="event_title"]').val(),
+			$('input[name="provider_name"]').val(),  
+			$('textarea[name="email_body"]').val(),
+			$('input[name="entityid"]').val()])
 		frappe.call({
 			method:"phr.templates.pages.event.send_shared_data",
 			args:{'files': uniqueNames, 
 				'profile_id':me.args['profile_id'], 
 				'folder':me.folder, 
 				'sub_folder': me.sub_folder, 
-				'share_with': $('input[name="share_with"]').val(),
+				'share_with': $('input[name="email_id"]').val(),
 				'event_date': $('input[name="event_date"]').val(),
 				'event': $('input[name="event_title"]').val(),
 				'provider_name': $('input[name="provider_name"]').val(),
-				'event_body': $('textarea[name="email_body"]').val()
+				'event_body': $('textarea[name="email_body"]').val(),
+				'event_id': $('input[name="entityid"]').val()
 			},
 			callback:function(r){
 				frappe.msgprint("mail has been sent!!!")

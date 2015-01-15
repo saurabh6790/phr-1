@@ -28,11 +28,14 @@ def get_data_to_render(data=None,entityid=None):
 		else:
 			json_data = get_json_data(data.get('file_name'))	
 
+		if data.get('values'):
+			json_data['values'] = data.get('values')
+
 		if data.get('method'):
 				data = {"method" : data.get('method') }
 		else:
 			data = data
-				
+
 	if json_data:
 		fields = json_data.get(data.get('param')) if json_data.get(data.get('param')) else json_data.get('fields')
 		tab = json_data.get('tab')
