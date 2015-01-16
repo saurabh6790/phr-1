@@ -32,7 +32,7 @@ $.extend(SharePhr.prototype,{
 	 //  	me.bind_events()
 	},
 	bind_controller: function(){
-		//bind controllers for 
+		
 	},
 	render_folder_section:function(){
 		var me = this;
@@ -89,29 +89,26 @@ $.extend(SharePhr.prototype,{
 	send_email:function(){
 		var me = this;
 		var uniqueNames = [];
+		me.res = {}
 
 		$.each(me.doc_list, function(i, el){
 			if($.inArray(el, uniqueNames) === -1) uniqueNames.push(el);
 		});
-		console.log([uniqueNames, me.args['profile_id'], me.folder, 
-			me.sub_folder, $('input[name="share_with"]').val(), 
-			$('input[name="event_date"]').val(), $('input[name="event_title"]').val(),
-			$('input[name="provider_name"]').val(),  
-			$('textarea[name="email_body"]').val(),
-			$('input[name="entityid"]').val()])
+
+		$("form input, form textarea, form select").each(function(i, obj) {
+			me.res[obj.name] = $(obj).val();
+		})
+
+		me.res['files'] = uniqueNames;
+		me.res['profile_id'] = me.args['profile_id'];
+		me.res['folder'] = me.folder;
+		me.res['sub_folder'] = me.sub_folder;
+
+		console.log(me.res)
+
 		frappe.call({
 			method:"phr.templates.pages.event.send_shared_data",
-			args:{'files': uniqueNames, 
-				'profile_id':me.args['profile_id'], 
-				'folder':me.folder, 
-				'sub_folder': me.sub_folder, 
-				'share_with': $('input[name="email_id"]').val(),
-				'event_date': $('input[name="event_date"]').val(),
-				'event': $('input[name="event_title"]').val(),
-				'provider_name': $('input[name="provider_name"]').val(),
-				'event_body': $('textarea[name="email_body"]').val(),
-				'event_id': $('input[name="entityid"]').val()
-			},
+			args:{"data":me.res},
 			callback:function(r){
 				frappe.msgprint("mail has been sent!!!")
 			}

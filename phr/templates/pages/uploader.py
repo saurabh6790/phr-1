@@ -41,13 +41,10 @@ def upload():
 	# if dt and dn:
 	# 	comment = frappe.get_doc(dt, dn).add_comment("Attachment",
 	# 		_("Added {0}").format("<a href='{file_url}' target='_blank'>{file_name}</a>".format(**filedata.as_dict())))
-
-	# return {
-	# 	"name": filedata.name,
-	# 	"file_name": filedata.file_name,
-	# 	"file_url": filedata.file_url,
-	# 	"comment": comment.as_dict()
-	# }
+	frappe.errprint(['test',filename])
+	return {
+		"file_name": filename
+	}
 
 def save_uploaded():
 	fname, content = get_uploaded_content()

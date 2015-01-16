@@ -14,6 +14,7 @@ var Event = inherit(ListView,{
 		this.wrapper = wrapper;
 		var me = this;
 		this.selected_files = [];
+		this.dms_file_list = [];
 		this.profile_id = profile_id
 		ListView.prototype.init(this.wrapper, {"file_name" : "event",
 			'cmd':"get_event_data",
@@ -67,7 +68,6 @@ var Event = inherit(ListView,{
 		$('<div class="event_section" style="margin-top:-10%;"></div>').appendTo($('.field-area'))
 		me.render_folder_section()
   		me.bind_events()
-
 		
 	},
 	render_spans: function(){
@@ -88,22 +88,22 @@ var Event = inherit(ListView,{
 				me.res[obj.name] = $(obj).val();
 			})
 			me.res['profile_id'] = me.profile_id;
+			me.res['dms_file_list'] = me.dms_file_list;
 			frappe.call({
 				method:"phr.templates.pages.event.create_event",
 				args:{"data":JSON.stringify(me.res)},
 				callback:function(r){
 					$('.breadcrumb li:last').remove()
 					if(r.message.returncode == 103){
-						me.open_form(r.message.entityid, r.message.event_title)	
+						me.open_form(r.message.entityid, r.message.event_title);	
+						me.dms_file_list = [];
 					}
 					else{
-						alert(r.message.message_summary)
+						alert(r.message.message_summary);
 					}
 				}
-			})
-						
+			})			
 		})
-		
 	},
 	render_folder_section: function(){
 		var me = this;
@@ -212,7 +212,8 @@ var Event = inherit(ListView,{
 				$('.uploader').remove();
 				me.sub_folder = $(this).attr('id');
 				ThumbNails.prototype.init(me.wrapper, {'folder':me.folder, 
-						'sub_folder':me.sub_folder, 'profile_id': me.profile_id, 'display':'none'})
+						'sub_folder':me.sub_folder, 'profile_id': me.profile_id, 'display':'none', 
+						'dms_file_list': me.dms_file_list})
 				// me.render_uploader_and_files();
 			})	
 	},

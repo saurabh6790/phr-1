@@ -49,38 +49,42 @@ def get_attachments(profile_id, folder, sub_folder, event_id):
 	return files
 
 @frappe.whitelist(allow_guest=True)
-def send_shared_data(files, profile_id, folder, sub_folder, share_with, event_date, event, provider_name, event_body, event_id, content_type=None):
+def send_shared_data(data):
+	print "===========================share data====================="
+	print data
+	print "============================================================"
+	# files, profile_id, folder, sub_folder, share_with, event_date, event, provider_name, event_body, event_id, content_type=None
 	from email.mime.audio import MIMEAudio
 	from email.mime.base import MIMEBase
 	from email.mime.image import MIMEImage
 	from email.mime.text import MIMEText
 	import mimetypes
 
-	attachments = []
-	frappe.errprint([files])
-	files = eval(files)
-	for fl in files:
-		fname = os.path.join(get_files_path(), fl)
+	# attachments = []
+	# frappe.errprint([files])
+	# files = eval(files)
+	# for fl in files:
+	# 	fname = os.path.join(get_files_path(), fl)
 
-		attachments.append({
-				"fname": fname,
-				"fcontent": file(fname).read()
-			})
+	# 	attachments.append({
+	# 			"fname": fname,
+	# 			"fcontent": file(fname).read()
+	# 		})
 
-	if attachments:
-		msg = """Event Name is %(event)s <br>
-				Event Date is %(event_date)s <br>
-				Provider Name is %(provider_name)s <br>
-				<hr>
-					%(event_body)s <br>
-					Please see attachment <br>
-			"""%{'event': event, 'event_date': event_date, 'provider_name': provider_name, 'event_body':event_body}
+	# if attachments:
+	# 	msg = """Event Name is %(event)s <br>
+	# 			Event Date is %(event_date)s <br>
+	# 			Provider Name is %(provider_name)s <br>
+	# 			<hr>
+	# 				%(event_body)s <br>
+	# 				Please see attachment <br>
+	# 		"""%{'event': event, 'event_date': event_date, 'provider_name': provider_name, 'event_body':event_body}
 		
-		from frappe.utils.email_lib import sendmail
-		sendmail([share_with], subject="PHR-Event Data", msg=cstr(msg),
-				attachments=attachments)
-	else:
-		frappe.msgprint('Please select file(s) for sharing')
+	# 	from frappe.utils.email_lib import sendmail
+	# 	sendmail([share_with], subject="PHR-Event Data", msg=cstr(msg),
+	# 			attachments=attachments)
+	# else:
+	# 	frappe.msgprint('Please select file(s) for sharing')
 
 
 
@@ -114,7 +118,7 @@ def get_event_data(data):
 
 
 	request_type="POST"
-	url="http://192.168.5.11:9090/phr/phrdata/getprofileevent"
+	url="http://192.168.5.12:9090/phr/phrdata/getprofileevent"
 	# url="http://88.198.52.49:7974/phr/phrdata/getprofileevent"
 	from phr.phr.phr_api import get_response
 	pos = 0

@@ -56,7 +56,8 @@ $.extend(ThumbNails.prototype,{
 			args:{'profile_id': me.args['profile_id'], 'folder':me.folder, 
 				'sub_folder': me.sub_folder, 'event_id': $('input[name="entityid"]').val()},
 			callback:function(attachment, r) {
-				// console.log("in attachment callback")
+				console.log([attachment, r])
+				me.args['dms_file_list'].push( me.args['profile_id'] + '/' +  $('input[name="entityid"]').val() + '/' + me.folder + '/' +  me.sub_folder + '/' + attachment['file_name'])
 				me.render_uploader_and_files();
 			}
 		});
