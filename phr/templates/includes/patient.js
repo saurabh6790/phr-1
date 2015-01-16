@@ -10,7 +10,9 @@ frappe.provide("frappe");
 {% include "templates/includes/profile.js" %}
 {% include "templates/includes/linked_phr.js" %}
 {% include "templates/includes/provider.js" %}
-
+{% include "templates/includes/medication.js" %}
+{% include "templates/includes/appointments.js" %}
+{% include "templates/includes/messages.js" %}
 /*
   Format for method Classes
   ClassName.prototype.init(wrapper,name_of_json_file,entityid,operation_entity)
@@ -43,11 +45,51 @@ $(document).ready(function () {
 		
 		Visit.prototype.init($(document).find("#main-con"))
 	})
+	$('.medications').unbind("click").click(function(){
+		$('.breadcrumb').empty()
+		
+		$('<li><a nohref>Medications</a></li>').click(function(){
+			$('.breadcrumb li').nextAll().remove()
+			Medications.prototype.init($(document).find("#main-con"), '', profile_id)
+		}).appendTo('.breadcrumb');
+		
+		Medications.prototype.init($(document).find("#main-con"))
+	})
+	$('.dmonit').unbind("click").click(function(){
+		$('.breadcrumb').empty()
+		
+		$('<li><a nohref>Visit</a></li>').click(function(){
+			$('.breadcrumb li').nextAll().remove()
+			Visit.prototype.init($(document).find("#main-con"), '', profile_id)
+		}).appendTo('.breadcrumb');
+		
+		Visit.prototype.init($(document).find("#main-con"))
+	})
+	$('.appoint').unbind("click").click(function(){
+		$('.breadcrumb').empty()
+		
+		$('<li><a nohref>Appointments</a></li>').click(function(){
+			$('.breadcrumb li').nextAll().remove()
+			Appointments.prototype.init($(document).find("#main-con"), '', profile_id)
+		}).appendTo('.breadcrumb');
+		
+		Appointments.prototype.init($(document).find("#main-con"))
+	})
+	$('.msg').unbind("click").click(function(){
+		$('.breadcrumb').empty()
+		
+		$('<li><a nohref>Messages</a></li>').click(function(){
+			$('.breadcrumb li').nextAll().remove()
+			Messages.prototype.init($(document).find("#main-con"), '', profile_id)
+		}).appendTo('.breadcrumb');
+		
+		Messages.prototype.init($(document).find("#main-con"))
+	})
 	$(".create_linkphr").unbind("click").click(function(){
 		LinkedPHR.prototype.init($(document).find("#main-con"),
 			{"file_name" : "linked_patient"},"","create_linkphr")
 	})
-	$(".open_linkphr").unbind("click").click(function(){
+	$(".view_linkphr").unbind("click").click(function(){
 		LinkedPHR.prototype.init($(document).find("#main-con"), 
 			{"file_name" : "linked_patient"},"","open_linkphr")
 	})
@@ -55,7 +97,7 @@ $(document).ready(function () {
 		Provider.prototype.init($(document).find("#main-con"),
 			{"file_name" : "provider"})
 	})
-	$(".open_provider").unbind("click").click(function(){
+	$(".view_provider").unbind("click").click(function(){
 		Provider.prototype.init($(document).find("#main-con"), 
 			{"file_name" : "provider"})
 	})

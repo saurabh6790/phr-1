@@ -1,0 +1,19 @@
+{
+   "listview": [
+        {
+            "fieldname": "tab",
+            "fieldtype": "table",
+            "label": "Medications",
+            "options": [
+                [
+                    "",
+                    "Date",
+                    "Provider",
+                    "Reason",
+                    "Event Name and Description",
+                    "Visit Name and Description"
+                ]
+            ]
+        }
+    ]
+}

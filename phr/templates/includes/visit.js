@@ -21,7 +21,7 @@ var Visit = inherit(ListView,{
 			{'fieldname':'tab','fieldtype':'table','label':'T1',
 				 'options':[['','Visit Date', 'Event Name', 'Provider Type', 'Provider Name', 'Consultancy', 
 				 				'Event Snaps', 'Lab Reports', 'Prescription', 'Cost of Care']]}], 
-			'cmd':"get_visit_data",
+			'cmd':"visit.get_visit_data",
 			'tab_at': 4})
 		console.log('t')
 		$('.new_controller').hide()

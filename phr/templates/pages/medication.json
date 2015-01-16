@@ -1,0 +1,64 @@
+{
+    "listview": [
+        {
+            "fieldname": "medicine_name",
+            "fieldtype": "data",
+            "label": "Medicine Name"
+        },
+        {
+            "fieldname": "dosage",
+            "fieldtype": "data",
+            "label": "Dosage"
+        },
+        {
+            "fieldname": "",
+            "fieldtype": "column_break",
+            "label": ""
+        },
+        {
+            "fieldname": "from_date_time",
+            "fieldtype": "datetime",
+            "label": "From Date time"
+        },
+        {
+            "fieldname": "to_date_time",
+            "fieldtype": "datetime",
+            "label": "To Date time"
+        },
+        {
+            "fieldname": "additional_info",
+            "fieldtype": "text",
+            "label": "Additional Info"
+        },
+        {
+            "fieldname": "",
+            "fieldtype": "section_break",
+            "label": ""
+        },
+        {
+            "fieldname": "",
+            "fieldtype": "button",
+            "label": ""
+        },
+        {
+            "fieldname": "",
+            "fieldtype": "section_break",
+            "label": ""
+        },
+        {
+            "fieldname": "tab",
+            "fieldtype": "table",
+            "label": "Medications",
+            "options": [
+                [
+                    "",
+                    "Medicine Name",
+                    "Dosage",
+                    "From Date time",
+                    "To Date time",
+                    "Additional Info"
+                ]
+            ]
+        }
+    ]
+}

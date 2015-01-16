@@ -23,13 +23,13 @@ var ListView = inherit(RenderFormFields,{
 
 		$.ajax({
 			method: "GET",
-			url: "/api/method/phr.templates.pages.event."+me.args['cmd'],
+			url: "/api/method/phr.templates.pages."+me.args['cmd'],
 			data: "data="+JSON.stringify({'file_name':me.args['file_name'],"profile_id":me.profile_id, 'param':'listview'}),
 			async: false,
 			success: function(r) {
 				// console.log(r.message.phr.visitList)
 				console.log(r)
-				r.message['listview'][me.args['tab_at']]['options'] = r.message['options'];
+				//r.message['listview'][me.args['tab_at']]['options'] = r.message['options'];
 
 				RenderFormFields.prototype.init(this.wrapper, {'fields': r.message['listview']})
 				// me.open_form()

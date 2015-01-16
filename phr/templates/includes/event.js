@@ -16,7 +16,7 @@ var Event = inherit(ListView,{
 		this.selected_files = [];
 		this.profile_id = profile_id
 		ListView.prototype.init(this.wrapper, {"file_name" : "event",
-			'cmd':"get_event_data",
+			'cmd':"event.get_event_data",
 			'tab_at': 4,
 			'profile_id':profile_id})
 		

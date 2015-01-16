@@ -14,11 +14,15 @@ var PatientDashboard = inherit(RenderFormFields, {
 		var me = this;
 		$('.save_controller').bind('click',function(event) {
 			me.res = {};
+			selected=[]
 			var $id=$('.tab-pane.active').attr('id')
 			$(".tab-pane.active form input, .tab-pane.active form textarea, .tab-pane.active form select").each(function(i, obj) {
 				me.res[obj.name] = $(obj).val();
 			})
-			me.res["entityid"]=frappe.get_cookie('profile_id')
+			$(".chk:checked").each(function() {
+       			selected.push($(this).val());
+  			});	
+				me.res["entityid"]=frappe.get_cookie('profile_id')
 			me.res["received_from"]="Desktop"
 			me.get_method(me.res,$id,me)		
 		})
@@ -26,7 +30,7 @@ var PatientDashboard = inherit(RenderFormFields, {
 	get_method:function(res,cmd,me){
 		frappe.call({
 				method:'phr.templates.pages.profile.update_profile',
-				args:{'data': res,"id":cmd},
+				args:{'data': res,"id":cmd,"dashboard":selected},
 				callback: function(r) {
 					console.log(r)
 					if(r.message) {

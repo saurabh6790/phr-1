@@ -80,6 +80,24 @@ $.extend(RenderFormFields.prototype,{
 			meta['value']=values[meta['fieldname']] || "";
 			me[meta['fieldtype'] + "_field_renderer"].call(me, meta);
 		})
+	
+	},
+	check_field_renderer: function(field_meta){
+		var me=this;
+		$input=$(repl_str('<div class="form-horizontal frappe-control" style="max-width: 600px;margin-top:10px;">\
+						<div class="form-group row" style="margin: 0px">\
+								<div class="col-xs-8">\
+								<div class="control-input">\
+									<input type="checkbox" class="chk" name="%(fieldname)s" value="%(fieldname)s">\
+									%(label)s\
+								</div>\
+							</div>\
+						</div>\
+				</div>', field_meta)).appendTo($(this.column))
+		if(field_meta['required']==1){
+			$input.find("input").prop('required',true)
+			$input.find("input").css({"border": "1px solid #999","border-color": "red" });
+		}
 	},
 	data_field_renderer: function(field_meta){
 		var me=this;

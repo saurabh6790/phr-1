@@ -32,7 +32,7 @@ def get_data_to_render(data=None,entityid=None):
 			json_data['values'] = data.get('values')
 
 		if data.get('method'):
-				data = {"method" : data.get('method') }
+			data = {"method" : data.get('method') }
 		else:
 			data = data
 

@@ -190,6 +190,41 @@
       "fieldname": "dashboard", 
       "fieldtype": "section", 
       "label": "Manage Dashboard" 
-   }
+   },
+    {
+      "fieldname": "events", 
+      "fieldtype": "check", 
+      "label": "Events" 
+   },
+    {
+      "fieldname": "visits", 
+      "fieldtype": "check", 
+      "label": "Visits" 
+   },
+    {
+      "fieldname": "disease_monitoring", 
+      "fieldtype": "check", 
+      "label": "Disease Monitoring" 
+   },
+   {
+      "fieldname": "", 
+      "fieldtype": "column_break", 
+      "label": ""
+   },    
+   {
+      "fieldname": "medications", 
+      "fieldtype": "check", 
+      "label": "Medications" 
+   },
+   {
+      "fieldname":"appointments", 
+      "fieldtype":"check", 
+      "label": "Appointments" 
+   }, 
+   {
+      "fieldname":"messages", 
+      "fieldtype":"check", 
+      "label": "Messages" 
+   }   
    ]
 }

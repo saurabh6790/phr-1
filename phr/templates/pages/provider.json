@@ -6,21 +6,21 @@
       "fieldtype": "data", 
       "label": "Name"
 	},
-    {
-      "fieldname": "mobile", 
-      "fieldtype": "data", 
-      "label": "Mobile"
-   	},
-	{
-   	"fieldname": "phone", 
-      "fieldtype": "data", 
-      "label": "Phone"
-	},
-   	{
+  	{
    	"fieldname": "str_date_of_registration", 
       "fieldtype": "date", 
       "label": "Date of registration"
 	},
+   {
+      "fieldname": "mobile", 
+      "fieldtype": "data", 
+      "label": "Mobile"
+      },
+   {
+      "fieldname": "phone", 
+      "fieldtype": "data", 
+      "label": "Phone"
+   },
    {
       "fieldname": "fax", 
       "fieldtype": "data", 
