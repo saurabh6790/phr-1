@@ -73,7 +73,6 @@ $.extend(RenderFormFields.prototype,{
 		var me = this;
 		if(tab==1) me.tab_field_renderer()
 		$.each(fields,function(indx, meta){
-			console.log([meta, meta['fieldtype'], meta['fieldtype'] === 'section_break'])
 			!me.section && meta['fieldtype'] !== 'section_break' && me.section_break_field_renderer()
 			!me.column && me.column_break_field_renderer()
 			console.log([values[meta['fieldname']], meta['fieldname']])
