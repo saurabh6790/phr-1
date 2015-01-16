@@ -2,19 +2,32 @@
 	
 	"fields":[
 		{
+			"fieldname":"", 
+			"fieldtype":"section_break", 
+			"label":"Event Details",
+			"options": "icon-calendar"
+		},
+		{
 			"fieldname":"entityid", 
 			"fieldtype":"data", 
-			"label":"Event Id"
+			"label":"Event Id",
+			"description": "This is event id. Autofield"
+		},
+		{
+			"fieldname":"event_title", 
+			"fieldtype":"data", 
+			"label":"Event Name",
+			"description": "Event Name. Manual Field"
+		},
+		{
+			"fieldname":"", 
+			"fieldtype":"column_break", 
+			"label":""
 		},
 		{
 			"fieldname":"event_date", 
 			"fieldtype":"date", 
 			"label":"Date"
-		},
-		{
-			"fieldname":"event_title", 
-			"fieldtype":"data", 
-			"label":"Event Name"
 		},
 		{
 			"fieldname":"event_descripton",
@@ -23,10 +36,21 @@
 			"options":["Dengue", "Headache", "Chest Pain"]
 		},
 		{
+			"fieldname":"", 
+			"fieldtype":"section_break", 
+			"label":"Provider Info",
+			"options": "icon-user-md"
+		},
+		{
 			"fieldname":"provider_type", 
 			"fieldtype":"select","label": 
 			"Healthcare Provider", 
 			"options":["Doc", "Hospital", "Lab"]
+		},
+		{
+			"fieldname":"number", 
+			"fieldtype":"data", 
+			"label":"Contact Number"
 		},
 		{
 			"fieldname":"",
@@ -39,14 +63,15 @@
 			"label":"Provider Name" 
 		},
 		{
-			"fieldname":"number", 
-			"fieldtype":"data", 
-			"label":"Contact Number"
-		},
-		{
 			"fieldname":"email_id", 
 			"fieldtype":"data", 
 			"label":"Email Id"
+		},
+		{
+			"fieldname":"", 
+			"fieldtype":"section_break", 
+			"label":"Upload Files",
+			"options": "icon-cloud-upload"
 		}
 	], 
 	"listview":[

@@ -135,6 +135,10 @@ def get_event_data(data):
 	response=get_response(url, json.dumps({"profileId":data.get('profile_id')}), request_type)
 	res_data = json.loads(response.text)
 
+	print "=============event list======================="
+	print response.text
+	print "=============================================="
+
 	if json.loads(res_data.get('phr')).get('eventList'):
 		for visit in json.loads(res_data.get('phr')).get('eventList'):
 			print visit
