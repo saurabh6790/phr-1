@@ -95,7 +95,7 @@ $(document).ready(function () {
 	})
 	$(".create_provider").unbind("click").click(function(){
 		Provider.prototype.init($(document).find("#main-con"),
-			{"file_name" : "provider"})
+			{"file_name" : "provider"},"","create_provider")
 	})
 	$(".view_provider").unbind("click").click(function(){
 		Provider.prototype.init($(document).find("#main-con"), 

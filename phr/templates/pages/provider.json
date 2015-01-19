@@ -1,95 +1,78 @@
 {
-	"tab":0,
-	"fields":[
-    {
-  	  "fieldname": "name", 
-      "fieldtype": "data", 
-      "label": "Name"
-	},
-  	{
-   	"fieldname": "str_date_of_registration", 
-      "fieldtype": "date", 
-      "label": "Date of registration"
-	},
-   {
-      "fieldname": "mobile", 
-      "fieldtype": "data", 
-      "label": "Mobile"
-      },
-   {
-      "fieldname": "phone", 
-      "fieldtype": "data", 
-      "label": "Phone"
-   },
-   {
-      "fieldname": "fax", 
-      "fieldtype": "data", 
-      "label": "Fax"
-   },
-   {
-      "fieldname": "email", 
-      "fieldtype": "data", 
-      "label": "Email"
-   },
-   {
-      "fieldname": "", 
-      "fieldtype": "section_break", 
-      "label": ""
-   },
-   {
-      "fieldname": "current_address", 
-      "fieldtype": "text", 
-      "label": "Current Address"
-   },
-   {
-      "fieldname": "pincode_current", 
-      "fieldtype": "data", 
-      "label": "Pincode"
-   },
-   {
-      "fieldname": "city_current", 
-      "fieldtype": "data", 
-      "label": "City"
-   },
-   {
-      "fieldname": "state_current", 
-      "fieldtype": "data", 
-      "label": "State"
-   },
-   {
-      "fieldname": "country_current", 
-      "fieldtype": "data", 
-      "label": "Country"
-   },
-   {
-      "fieldname": "", 
-      "fieldtype": "column_break", 
-      "label": ""
-   },
-   {
-      "fieldname": "permnt_address", 
-      "fieldtype": "text", 
-      "label": "Permanent Address"
-   },
-   {
-      "fieldname": "city_permnt", 
-      "fieldtype": "data", 
-      "label": "Per. City"
-   },
-   {
-      "fieldname": "state_permnt", 
-      "fieldtype": "data", 
-      "label": "Per. State"
-   },
-   {
-      "fieldname": "country_permnt", 
-      "fieldtype": "data", 
-      "label": "Per. Country"
-   },
-   {
-      "fieldname": "pincode_permnt", 
-      "fieldtype": "data", 
-      "label": "Per. Pincode"
-   }
-   ]
+    "tab": 0,
+    "fields": [
+        {
+            "fieldname": "",
+            "fieldtype": "section_break",
+            "label": "Basic Info"
+        },
+        {
+            "fieldname": "name",
+            "fieldtype": "data",
+            "label": "Name"
+        },
+        {
+            "fieldname": "provider_type",
+            "fieldtype": "select",
+            "label": "Provider Type",
+            "options": [
+                "",
+                "Doctor",
+                "Hospital",
+                "Pathology Lab"
+            ]
+        },
+        {
+            "fieldname": "visiting_hours",
+            "fieldtype": "data",
+            "label": "Visiting Hours"
+        },
+        {
+            "fieldname": "",
+            "fieldtype": "column_break",
+            "label": ""
+        },
+        {
+            "fieldname": "mobile",
+            "fieldtype": "data",
+            "label": "Mobile"
+        },
+ 
+        {
+            "fieldname": "email",
+            "fieldtype": "data",
+            "label": "Email"
+        },
+        {
+            "fieldname": "",
+            "fieldtype": "section_break",
+            "label": "Address"
+        },
+        {
+            "fieldname": "address1",
+            "fieldtype": "text",
+            "label": "Address Line 1"
+        },
+        {
+            "fieldname": "",
+            "fieldtype": "column_break",
+            "label": ""
+        },
+        {
+            "fieldname": "address2",
+            "fieldtype": "text",
+            "label": "Address Line 2"
+        },
+        {
+            "fieldname": "",
+            "fieldtype": "section_break",
+            "label": ""
+        },
+        {
+            "fieldname": "comments",
+            "fieldtype": "text",
+            "label": "Comemnts"
+        }
+
+    ]
 }
