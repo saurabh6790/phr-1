@@ -260,6 +260,11 @@ $.extend(RenderFormFields.prototype,{
 		this.set_description($input.find('.control-input'), field_meta)
 	},
 	button_field_renderer: function(field_meta){
+		$('<div class="update" style="width:45%;display:inline-block;text-align:right;">\
+				<button class="btn btn-primary">\
+					Save \
+				</button>\
+			</div>').appendTo($(this.column))
 
 	},
 	date_field_renderer:function(field_meta){
@@ -314,7 +319,7 @@ $.extend(RenderFormFields.prototype,{
 						changeYear: true,
 						yearRange: "-70Y:+10Y",
 						dateFormat: "dd/mm/yy",
-						timeFormat:  "HH:mm"
+						timeFormat:  "HH:mm:ss"
 					})
 		var val = field_meta['value'];
 		

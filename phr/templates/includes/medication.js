@@ -17,33 +17,38 @@ var Medications = inherit(ListView,{
 		ListView.prototype.init($(document).find(".field-area"), {"file_name" : "medication",
 			'cmd':"medication.get_medication_data",
 			'profile_id':profile_id})
+		$('.new_controller').remove();
+		me.bind_save_event()
 
 	},
-	/*bind_save_event: function(){
+	bind_save_event: function(){
 		var me = this;
 		this.res = {}
 		this.result_set = {};
 		this.doc_list = [] 
-		$('.save_controller').bind('click',function(event) {
+		$('.update').bind('click',function(event) {
+			console.log(["me:",me.profile_id,"this:",this.profile_id])
 			$("form input, form textarea, form select").each(function(i, obj) {
 				me.res[obj.name] = $(obj).val();
 			})
 			me.res['profile_id'] = me.profile_id;
 			frappe.call({
-				method:"phr.templates.pages.event.create_event",
+				method:"phr.templates.pages.medication.make_medication_entry",
 				args:{"data":JSON.stringify(me.res)},
 				callback:function(r){
-					$('.breadcrumb li:last').remove()
-					if(r.message.returncode == 103){
-						me.open_form(r.message.entityid, r.message.event_title)	
+					if(r.message){
+						me.update_list_view()
 					}
 					else{
-						alert(r.message.message_summary)
+						
 					}
 				}
 			})
 						
 		})
 		
-	}*/
+	}
+	update_list_view:function(){
+		
+	}
 })

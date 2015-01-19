@@ -25,17 +25,17 @@ var Provider = inherit(RenderFormFields, {
 			me.res["provider"]=true
 			console.log(me.operation)
 			if (me.operation=='create_provider'){
-				me.create_linkedphr(me.res,$id,me)
+				me.create_provider(me.res,$id,me)
 			}
 			else if (me.operation=='open_linkphr') {
 				me.update_phr(me.res,$id,me)
 			};		
 		})
 	},
-	create_linkedphr:function(res,cmd,me){
+	create_provider:function(res,cmd,me){
 		frappe.call({
 				method:'phr.templates.pages.provider.create_provider',
-				args:{'data': res,"id":cmd},
+				args:{'data': res,"id":cmd,"profile_id":me.entityid},
 				callback: function(r) {
 					console.log(r)
 					if(r.message) {

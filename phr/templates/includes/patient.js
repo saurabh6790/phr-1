@@ -53,7 +53,7 @@ $(document).ready(function () {
 			Medications.prototype.init($(document).find("#main-con"), '', profile_id)
 		}).appendTo('.breadcrumb');
 		
-		Medications.prototype.init($(document).find("#main-con"))
+		Medications.prototype.init($(document).find("#main-con"),'', profile_id)
 	})
 	$('.dmonit').unbind("click").click(function(){
 		$('.breadcrumb').empty()

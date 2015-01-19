@@ -42,6 +42,11 @@
         },
         {
             "fieldname": "",
+            "fieldtype": "column_break",
+            "label": ""
+        },
+        {
+            "fieldname": "",
             "fieldtype": "section_break",
             "label": ""
         },
