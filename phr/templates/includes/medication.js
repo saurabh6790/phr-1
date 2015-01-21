@@ -32,12 +32,14 @@ var Medications = inherit(ListView,{
 				me.res[obj.name] = $(obj).val();
 			})
 			me.res['profile_id'] = me.profile_id;
+			me.res['file_name']="medication";
+			me.res['param']="listview";
 			frappe.call({
 				method:"phr.templates.pages.medication.make_medication_entry",
 				args:{"data":JSON.stringify(me.res)},
 				callback:function(r){
 					if(r.message){
-						me.update_list_view()
+						me.update_list_view(r.message)
 					}
 					else{
 						
@@ -47,8 +49,9 @@ var Medications = inherit(ListView,{
 						
 		})
 		
-	}
-	update_list_view:function(){
+	},
+	update_list_view:function(data){
+		RenderFormFields.prototype.init(this.wrapper, {'fields': data['listview']})
 		
 	}
 })

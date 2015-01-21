@@ -7,6 +7,9 @@ from frappe.core.doctype.notification_count.notification_count import clear_noti
 import frappe.permissions
 import json
 from frappe import _
+import barcode
+import time
+import os
 #STANDARD_USERS = ("Guest", "Administrator")
 
 
@@ -26,20 +29,52 @@ def create_profile(first_name,middle_name,last_name,email_id,contact,created_via
 		else:
 			return {"returncode" : 409, "message_summary" : "Already Registered"}
 	else:
-		args={'person_firstname':first_name,'person_middlename':middle_name,'person_lastname':last_name,'email':email_id,'mobile':contact,'received_from':created_via,'provider':'false'}
+		barcode=get_barcode()
+		args={'person_firstname':first_name,'person_middlename':middle_name,'person_lastname':last_name,'email':email_id,'mobile':contact,'received_from':created_via,'provider':'false',"barcode":str(barcode)}
 		print args
 		profile_res=create_profile_in_solr(args)
 		response=json.loads(profile_res)
 		print response
 		if response['returncode']==101:
-			res=create_profile_in_db(response['entityid'],args,response)
+			path=get_image_path(barcode,response['entityid'])
+			print path
+			res=create_profile_in_db(response['entityid'],args,response,path)
 			print response
 			return response
 		else:
 			print response
 			return response
 
-def create_profile_in_db(id,args,response):
+def get_barcode():
+	barcode.PROVIDED_BARCODES
+	EAN = barcode.get_barcode_class('ean13')        
+	m = str(int(round(time.time() * 1000)))
+	ean = EAN(m) 
+	return ean       
+    
+def get_image_path(ean,entityid):
+	path=get_path(entityid)
+	fullname = ean.save(path)
+	return fullname
+
+def get_path(entityid):
+	site_name = get_site_name()
+	path = os.path.abspath(os.path.join('.',site_name, 'public', 'files'))
+	directory = '/%s/%s/'%(path,entityid)
+	if not os.path.exists(directory):                
+		os.makedirs(directory)
+	
+	if directory:
+		filepath = directory+'/'+entityid
+	
+	return filepath or None
+
+
+def get_site_name():
+       return frappe.local.site_path.split('/')[1]
+
+
+def create_profile_in_db(id,args,response,path):
 	from frappe.utils import random_string
 	user = frappe.get_doc({
 		"doctype":"User",
@@ -51,6 +86,7 @@ def create_profile_in_db(id,args,response):
 		"new_password": random_string(10),
 		"user_type": "Website User",
 		"access_type":"Patient",
+		"barcode":path,
 		"created_via":args["received_from"]
 	})
 	user.ignore_permissions = True

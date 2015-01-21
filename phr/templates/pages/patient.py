@@ -14,9 +14,11 @@ import os
 @frappe.whitelist(allow_guest=True)
 def get_data_to_render(data=None,entityid=None):
 	json_data, fields, values, tab = None, None, None, None
-
+	print "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+	print data
+	print "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 	if data:
-		data = eval(data)
+		data = json.loads(data)
 	print "======before dict check ========="
 	print data
 	print "================================="
@@ -79,6 +81,7 @@ def get_data(url,data):
 	url=url
 	from phr.phr.phr_api import get_response
 	response=get_response(url,data,request_type)
+	print response
 	if response:
 		res=json.loads(response.text)
 		print res

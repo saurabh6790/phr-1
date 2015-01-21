@@ -8,7 +8,8 @@ import requests
 import os
 from frappe.auth import _update_password
 from frappe import _
-
+import binascii
+import base64
 @frappe.whitelist(allow_guest=True)
 def update_profile(data,id,dashboard=None):
 	call_mapper={
@@ -54,4 +55,70 @@ def manage_phr(data,dashboard=None):
 
 @frappe.whitelist(allow_guest=True)
 def manage_dashboard(data,dashboard=None):
-	frappe.errprint(json.loads(dashboard))
+	obj=json.loads(data)
+	dashboard_fields=json.loads(dashboard)
+	frappe.errprint(obj.get('entityid'))
+	sr = frappe.get_doc({
+		"doctype":"Shortcut",
+		"profile_id":obj.get('entityid'),
+		"created_via": "Web"
+	})
+	sr.ignore_permissions = True
+	sr.insert()
+	for d in dashboard_fields:
+		frappe.db.sql("""update `tabShortcut` set %s=1 where name='%s'"""%(d,sr.name))
+		frappe.db.commit()
+
+
+@frappe.whitelist(allow_guest=True)
+def upload_image(data,file_name=None):
+	from binascii import a2b_base64
+	import base64
+	data_index = data.index('base64') + 7
+	filedata = data[data_index:len(data)]
+	decoded_image = base64.b64decode(filedata)
+	site_name = get_site_name()
+	path = os.path.abspath(os.path.join('.',site_name, 'public', 'files'))
+	image=path+'/'+frappe.session.user+".png"
+	file_path='/files/'+frappe.session.user+".png"
+	if os.path.exists(image):
+		try:
+			os.remove(image)
+			fd = open(image, 'wb')
+			fd.write(decoded_image)
+			fd.close()
+			update_user_image(file_path)
+		except OSError, e:
+			print ("Error: %s - %s." % (e.filename,e.strerror))
+	else:
+		fd = open(image, 'wb')
+		fd.write(decoded_image)
+		fd.close()
+		update_user_image(file_path)
+
+def update_user_image(path):
+	frappe.errprint(path)
+	user=frappe.get_doc("User",frappe.session.user)
+	user.user_image=path
+	user.save(ignore_permissions=True)
+
+
+
+def get_site_name():
+	return frappe.local.site_path.split('/')[1]
+
+@frappe.whitelist(allow_guest=True)
+def get_linked_phrs(profile_id):
+	from phr.templates.pages.patient import get_base_url
+	solr_op='phrdata/searchchildphr'
+	#url=get_base_url()+solr_op
+	url="http://192.168.5.11:9090/phr/phrdata/searchchildphr"
+	request_type='POST'
+	data={"to_profile_id":"1421076971473-476287"}
+	from phr.phr.phr_api import get_response
+	response=get_response(url,json.dumps(data),request_type)
+	res=json.loads(response.text)
+	print res
+	if res['returncode']==106:
+		return res
+
