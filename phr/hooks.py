@@ -20,7 +20,10 @@ base_template="templates/phr_base.html"
 
 # include js, css files in header of web template
 #
+
 web_include_js = ["/assets/phr/confirm-bootstrap.js","/assets/phr/pdfjs/build/pdf.js", "/assets/phr/pdfjs/web/viewer.js", "assets/js/frappe-web.min.js", "website_script.js","assets/phr/jasny-bootstrap/js/jasny-bootstrap.js","assets/phr/jasny-bootstrap/js/jasny-bootstrap.min.js"]
+
+
 
 # Home Pages
 # ----------

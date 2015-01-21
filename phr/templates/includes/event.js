@@ -14,6 +14,7 @@ var Event = inherit(ListView,{
 		this.wrapper = wrapper;
 		var me = this;
 		this.selected_files = [];
+		this.dms_file_list = [];
 		this.profile_id = profile_id
 		ListView.prototype.init(this.wrapper, {"file_name" : "event",
 			'cmd':"event.get_event_data",
@@ -67,7 +68,6 @@ var Event = inherit(ListView,{
 		$('<div class="event_section" style="margin-top:-10%;"></div>').appendTo($('.field-area'))
 		me.render_folder_section()
   		me.bind_events()
-
 		
 	},
 	render_spans: function(){
@@ -88,22 +88,23 @@ var Event = inherit(ListView,{
 				me.res[obj.name] = $(obj).val();
 			})
 			me.res['profile_id'] = me.profile_id;
+			me.res['dms_file_list'] = me.dms_file_list;
+			console.log(me.res)
 			frappe.call({
-				method:"phr.templates.pages.event.create_event",
+				method:"phr.templates.pages.event.create_update_event",
 				args:{"data":JSON.stringify(me.res)},
 				callback:function(r){
 					$('.breadcrumb li:last').remove()
 					if(r.message.returncode == 103){
-						me.open_form(r.message.entityid, r.message.event_title)	
+						me.open_form(r.message.entityid, r.message.event_title);	
+						me.dms_file_list = [];
 					}
 					else{
-						alert(r.message.message_summary)
+						alert(r.message.message_summary);
 					}
 				}
-			})
-						
+			})			
 		})
-		
 	},
 	render_folder_section: function(){
 		var me = this;
@@ -111,25 +112,25 @@ var Event = inherit(ListView,{
 		$('.uploader').remove()
 		$('<button class="btn btn-primary" id="share"> Share Data </button>').appendTo($('.save_controller'))
 		$('<div class="event_section1" style = "margin:10%; 10%;">\
-			<div class="btn btn-success" id = "consultancy" \
+			<div class="btn btn-success" id = "consultancy-11" \
 				style = "margin:5%; 5%;height:80px;text-align: center !important;"> \
 				<i class="icon-folder-close-alt icon-large"></i> <br> Consultancy\
 			</div>\
-			<div class="btn btn-success" id = "event_snap" \
+			<div class="btn btn-success" id = "event_snap-12" \
 				style = "margin:5%; 5%;height:80px;text-align: center !important;"> \
 				<i class="icon-folder-close-alt icon-large"></i> <br> Event Snaps \
 			</div>\
-			<div class="btn btn-success" id = "lab_reports" \
+			<div class="btn btn-success" id = "lab_reports-13" \
 				style = "margin:5%; 5%;height:80px;text-align: center !important;"> \
 				<i class="icon-folder-close-alt icon-large"></i> <br> Lab Reports \
 			</div>\
 		</div>\
 		<div class="event_section2" style="margin:10%; 10%;">\
-			<div class="btn btn-success" id = "prescription" \
+			<div class="btn btn-success" id = "prescription-14" \
 				style = "margin:5%; 5%;height:80px;text-align: center !important;"> \
 				<i class="icon-folder-close-alt icon-large"></i>  <br> Prescription \
 			</div>\
-			<div class="btn btn-success" id = "cost_of_care" \
+			<div class="btn btn-success" id = "cost_of_care-15" \
 				style = "margin:5%; 5%;height:80px;text-align: center !important;">\
 				<i class="icon-folder-close-alt icon-large"></i>  <br> Cost of Care \
 			</div>\
@@ -163,7 +164,19 @@ var Event = inherit(ListView,{
 	},
 	bind_events: function(){
 		var me = this;
-		$('#consultancy, #event_snap, #lab_reports, #prescription, #cost_of_care')
+		me.mapper = {'consultancy-11':[{'label' : 'DOCTORS  CLINICAL NOTES', 'id':'A_51'}, 
+									{'label' : 'TEST / INVESTIGATION ADVISED', 'id': 'B_52'}, 
+									{'label' : 'REFERAL NOTE', 'id': 'C_53'}],
+					'event_snap-12':[{'label' : 'PATIENT SNAPS', 'id' : 'A_51'},
+							{'label':'CLINICAL SNAPS', 'id': 'B_52'}],
+					'lab_reports-13':[{'label': 'TEST REPORTS', 'id':'A_51'}, 
+							{'label':'TEST IMAGES', 'id':'B_52'}],
+					'prescription-14':[{'label':'PRESCRIBED MEDICATION', 'id':'A_51'},
+							{'label':'PRISCRIBED ADVICE','id':'B_52'},
+							{'label':'DISCHARGE SUMMERY', 'id': 'C_53'}],
+					'cost_of_care-15':[{'label': 'MEDICAL BILLS', 'id': 'A_51'}]
+				}
+		$('#consultancy-11, #event_snap-12, #lab_reports-13, #prescription-14, #cost_of_care-15')
 			.bind('click',function(){
 				// $('.breadcrumb').empty();
 				$(repl_str('<li><a nohref>%(event_id)s</a></li>',{'event_id': $(this).attr('id')})).click(function(){
@@ -179,40 +192,50 @@ var Event = inherit(ListView,{
 
 				$('.event_section').empty();
 				me.folder = $(this).attr('id');
-				me.render_sub_sections();
+				me.render_sub_sections(me.mapper[$(this).attr('id')]);
 			})
 	},
-	render_sub_sections: function(){
+	render_sub_sections: function(sub_folders){
 		var me = this;
 		$('.event_section').empty()
-		$('<div class="event_sub_section" style = "margin:10%; 10%;">\
-				<div class="btn btn-success" id = "A" \
-					style = "margin:5%; 5%;height:80px;text-align: center !important;"> \
-					<i class="icon-folder-close-alt icon-large"></i> <br> A\
-				</div>\
-				<div class="btn btn-success" id = "B" \
-					style = "margin:5%; 5%;height:80px;text-align: center !important;"> \
-					<i class="icon-folder-close-alt icon-large"></i> <br> B \
-				</div>\
-				<div class="btn btn-success" id = "C" \
-					style = "margin:5%; 5%;height:80px;text-align: center !important;"> \
-					<i class="icon-folder-close-alt icon-large"></i> <br> C \
-				</div>\
-			</div>\
-		').appendTo($('.event_section'));
+		// $('<div class="event_sub_section" style = "margin:10%; 10%;">\
+		// 		<div class="btn btn-success" id = "A" \
+		// 			style = "margin:5%; 5%;height:80px;text-align: center !important;"> \
+		// 			<i class="icon-folder-close-alt icon-large"></i> <br> A\
+		// 		</div>\
+		// 		<div class="btn btn-success" id = "B" \
+		// 			style = "margin:5%; 5%;height:80px;text-align: center !important;"> \
+		// 			<i class="icon-folder-close-alt icon-large"></i> <br> B \
+		// 		</div>\
+		// 		<div class="btn btn-success" id = "C" \
+		// 			style = "margin:5%; 5%;height:80px;text-align: center !important;"> \
+		// 			<i class="icon-folder-close-alt icon-large"></i> <br> C \
+		// 		</div>\
+		// 	</div>\
+		// ').appendTo($('.event_section'));
+	
+		$('<div class="event_sub_section" style = "margin:10%; 10%;"></div>').appendTo($('.event_section'));
+
+		$.each(sub_folders, function(i, sub_folder){
+			$(repl_str('<div class="btn btn-success" id = "%(id)s" \
+		 			style = "margin:5%; 5%;height:80px;text-align: center !important;"> \
+		 			<i class="icon-folder-close-alt icon-large"></i> <br> %(label)s\
+		 		</div>', sub_folder)).appendTo($('.event_sub_section'));
+		})
 		
 		me.bind_sub_section_events();
 	},
 	bind_sub_section_events: function(){
 		var me = this;
-		$('#A, #B, #C').bind('click',function(){
+		$('#A_51, #B_52, #C_53').bind('click',function(){
 				$(".breadCrumb").last().remove();
 				$(repl_str("<li class=active'>%(id)s</li>\
 					",{'id':$(this).attr('id')})).appendTo('.breadcrumb');
 				$('.uploader').remove();
 				me.sub_folder = $(this).attr('id');
 				ThumbNails.prototype.init(me.wrapper, {'folder':me.folder, 
-						'sub_folder':me.sub_folder, 'profile_id': me.profile_id, 'display':'none'})
+						'sub_folder':me.sub_folder, 'profile_id': me.profile_id, 'display':'none', 
+						'dms_file_list': me.dms_file_list})
 				// me.render_uploader_and_files();
 			})	
 	},

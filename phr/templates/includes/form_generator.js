@@ -198,11 +198,13 @@ $.extend(RenderFormFields.prototype,{
 								<div class="control-input">\
 									<input type="text" class="form-control autocomplete" \
 										placeholder="%(label)s" name="%(fieldname)s" value="%(value)s" \
-										aria-describedby="basic-addon2">\
+										aria-describedby="basic-addon2" style="width:150px;">\
 								</div>\
 							</div>\
 						</div>\
 				</div>', field_meta)).appendTo($(this.column))
+
+		frappe.require("/assets/phr/js/jquery.autocomplete.multiselect.js");
 
 		if (typeof(field_meta['options']) === String){
 			frappe.call({
@@ -211,14 +213,17 @@ $.extend(RenderFormFields.prototype,{
 				callback: function(r){
 					$($input.find('.autocomplete')).autocomplete({
 						source: r.message,
+						multiselect: true
 					});
 				}
 			})
 		}
 		
 		else{
+			console.log($input.find('.autocomplete'))
 			$($input.find('.autocomplete')).autocomplete({
 				source: field_meta['options'],
+				multiselect: true
 			});
 		}
 		if(field_meta['required']==1){

@@ -30,10 +30,15 @@
 			"label":"Date"
 		},
 		{
+			"fieldname":"event_symptoms",
+			"fieldtype":"link",
+			"label": "Event Symptoms",
+			"options":["Dengue", "Headache", "Chest Pain"]
+		},
+		{
 			"fieldname":"event_descripton",
 			"fieldtype":"text", 
-			"label":"Description", 
-			"options":["Dengue", "Headache", "Chest Pain"]
+			"label":"Description"
 		},
 		{
 			"fieldname":"", 

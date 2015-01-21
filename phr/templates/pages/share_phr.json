@@ -67,7 +67,7 @@
 		},
 		{
 			"fieldname":"sharing_duration",
-			"fieldtype":"data", 
+			"fieldtype":"date", 
 			"label":"Sharing Duration",
 			"depends_on":"share_via:Provider Account"
 		},

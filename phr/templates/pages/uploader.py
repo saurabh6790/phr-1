@@ -6,7 +6,7 @@ import frappe
 import os, base64, re
 import hashlib
 import mimetypes
-from frappe.utils import get_site_path, get_hook_method, get_files_path
+from frappe.utils import get_site_path, get_hook_method, get_files_path, get_site_base_path, get_path, get_site_name
 from frappe import _
 from frappe import conf
 from copy import copy
@@ -41,13 +41,11 @@ def upload():
 	# if dt and dn:
 	# 	comment = frappe.get_doc(dt, dn).add_comment("Attachment",
 	# 		_("Added {0}").format("<a href='{file_url}' target='_blank'>{file_name}</a>".format(**filedata.as_dict())))
-
-	# return {
-	# 	"name": filedata.name,
-	# 	"file_name": filedata.file_name,
-	# 	"file_url": filedata.file_url,
-	# 	"comment": comment.as_dict()
-	# }
+	frappe.errprint(['test',filename, get_site_base_path(), get_path(), os.getcwd(), get_site_path().split('.')])
+	return {
+		"site_path" : os.path.join(os.getcwd(), get_site_path().replace('.',"").replace('/', ""), 'public', 'files'),
+		"file_name": filename
+	}
 
 def save_uploaded():
 	fname, content = get_uploaded_content()
