@@ -17,6 +17,7 @@ frappe.provide("frappe");
 */
 $(document).ready(function () {
 	profile_id=frappe.get_cookie("profile_id")
+	console.log(profile_id)
 	$("#profile").unbind("click").click(function(){
 		console.log(profile_id)
 		PatientDashboard.prototype.init($(document).find("#main-con"),
@@ -35,7 +36,30 @@ $(document).ready(function () {
 	})
 	$('.visit').unbind("click").click(function(){
 		$('.breadcrumb').empty()
-		
+		// frappe.require("/assets/phr/js/tree.jquery.js");
+		// frappe.require("/assets/phr/jqtree.css");
+		// $('<div id="tree1"> test </div>').appendTo($(document).find(".form-controller"))
+		// var data = [
+		// 	{
+		// 		label: 'node1',
+		// 		children: [
+		// 			{ label: 'child1' },
+		// 			{ label: 'child2' }
+		// 		]
+		// 	},
+		// 	{
+		// 		label: 'node2',
+		// 		children: [
+		// 			{ label: 'child3' }
+		// 		]
+		// 	}
+		// ];	
+
+		// $(function() {
+		// 	$('#tree1').tree({
+		// 		data: data
+		// 	});
+		// });
 		$('<li><a nohref>Visit</a></li>').click(function(){
 			$('.breadcrumb li').nextAll().remove()
 			Visit.prototype.init($(document).find("#main-con"), '', profile_id)

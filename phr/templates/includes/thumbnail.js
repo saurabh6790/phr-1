@@ -47,8 +47,15 @@ $.extend(ThumbNails.prototype,{
 					</div>\
 				</div>\
 			</div>\
+			<button  id="convert_to_pdf"\
+				aria-describedby="basic-addon2"> <i class="icon-upload"></i>\
+				 Attach As Pdf </button>\
 			',{'uploader_display':me.uploader_display})).appendTo($('.field-area'))
 		
+		$('#convert_to_pdf').click(function(){
+			me.convert_txt_to_pdf($('[name="attch_desc"]').val())
+		})
+
 		this.show_attachments();
 
 		upload.make({
@@ -57,10 +64,29 @@ $.extend(ThumbNails.prototype,{
 				'sub_folder': me.sub_folder, 'event_id': $('input[name="entityid"]').val()},
 			callback:function(attachment, r) {
 				console.log([attachment, r])
-				me.args['dms_file_list'].push( me.args['profile_id'] + '/' +  $('input[name="entityid"]').val() + '/' + me.folder + '/' +  me.sub_folder + '/' + attachment['file_name'])
+				me.args['dms_file_list'].push(
+					{
+						"tag_id": me.folder.split('-')[1]+''+me.sub_folder.split('_')[1],
+						"tag_name": me.folder.split('-')[0],
+	            		"sub_tag_name": me.sub_folder.split('_')[0],
+	            		"file_id": [
+							attachment['file_name']
+						],
+	            		"file_location": [
+	            			attachment['site_path'] +'/'+ me.args['profile_id'] + '/' +  $('input[name="entityid"]').val() + '/' + me.folder + '/' +  me.sub_folder + '/' + attachment['file_name']
+						]
+				})
 				me.render_uploader_and_files();
 			}
 		});
+	},
+	convert_txt_to_pdf:function(desc){
+		frappe.require("/assets/phr/js/jspdf.js");
+		frappe.require("/assets/phr/js/libs/base64.js");
+		frappe.require("/assets/phr/js/libs/sprintf.js");
+		
+		var doc = new jsPDF();
+		console.log(this)
 	},
 	show_attachments:function(){
 		var me = this;
