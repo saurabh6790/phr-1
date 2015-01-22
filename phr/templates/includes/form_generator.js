@@ -273,7 +273,7 @@ $.extend(RenderFormFields.prototype,{
 
 	},
 	attach_field_renderer:function(field_meta){
-		$('<div class="fileinput fileinput-new" data-provides="fileinput">\
+		$('<div class="fileinput fileinput-exists" data-provides="fileinput">\
 			<div class="fileinput-new thumbnail" style="width: 200px; height: 150px;">\
 			 <img data-src="holder.js/100%x100%" alt="...">\
 			 </div>\
@@ -283,8 +283,7 @@ $.extend(RenderFormFields.prototype,{
             <input type="file" name="..."></span>\
  			 <a href="#" class="btn btn-default fileinput-exists" data-dismiss="fileinput">Remove</a>\
  			 </div>\
- 			 <div class="upload" style="padding-top:1%"><span class="btn btn-default fileinput-exists">Upload</span></div>\
-  			</div>').appendTo($(this.column))
+ 			</div>').appendTo($(this.column))
 		/*$('.fileinput').fileinput()*/
 	},
 	date_field_renderer:function(field_meta){

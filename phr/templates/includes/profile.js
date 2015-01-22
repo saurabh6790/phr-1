@@ -58,7 +58,10 @@ var PatientDashboard = inherit(RenderFormFields, {
   			});
   			console.log([object,"hiiii"])
   		});
-  		$(".upload").bind('click',function(){
+  		var image=frappe.get_cookie("user_image")
+  		console.log(image)
+  		$('<img src="'+image+'"alt="user image"><img>').appendTo($('.fileinput-preview'))
+  		$(".btn-file").bind('click',function(){
   			frappe.call({
 				method:'phr.templates.pages.profile.upload_image',
 				args:{"data":object.data,"file_name":object.filename},
@@ -107,7 +110,6 @@ var PatientDashboard = inherit(RenderFormFields, {
 		var $wrapper=$('#manage_phr').find('form')		
 		meta=JSON.parse(data.actualdata)
 		meta_dic={}
-		selected=[]
 		$.each(meta,function(i,data){
 			$input=$(repl_str('<div class="form-horizontal frappe-control" style="max-width: 600px;margin-top:10px;">\
 						<div class="form-group row" style="margin: 0px">\
@@ -119,28 +121,38 @@ var PatientDashboard = inherit(RenderFormFields, {
 							</div>\
 						</div>\
 				</div>', data.profile)).appendTo($wrapper)	
-			//meta_dic[data.profile.entityid]=data.profile.person_firstname+' '+data.profile.person_lastname
+			meta_dic[data.profile.entityid]=data.profile
 		})
 		$('<div class="update" style="width:45%;display:inline-block;text-align:right;">\
 				<button class="btn btn-primary">\
 					Delink \
 				</button>\
 			</div>').appendTo($wrapper).click(function(){
-				BootstrapDialog.confirm('Hi Apple, are you sure?', function(result){
+				selected=[]
+				BootstrapDialog.confirm('are you sure?', function(result){
            			 if(result) {
                 		$(".chk:checked").each(function() {
 							selected.push($(this).val());
   						});
-						me.delink_phr(meta,selected)
+						me.delink_phr(meta,selected,meta_dic)
             		}else {
-                		alert('Nope.');
+                			
             		}
         		});
 				
 			})
 	},
-	delink_phr:function(meta,selected){
-		console.log([meta,selected])
+	delink_phr:function(meta,selected,meta_dic){
+		var me=this;
+		frappe.call({
+			method:'phr.templates.pages.profile.delink_phr',
+			args:{'selected':selected,"data":meta_dic,"profile_id":frappe.get_cookie('profile_id')},
+			callback: function(r) {
+				if(r.message) {
+					me.render_phrs(r.message)
+				}
+			}
+		})
 	}
 	
 })

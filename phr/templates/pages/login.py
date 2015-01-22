@@ -45,18 +45,21 @@ def create_profile(first_name,middle_name,last_name,email_id,contact,created_via
 			print response
 			return response
 
+@frappe.whitelist(allow_guest=True)
 def get_barcode():
 	barcode.PROVIDED_BARCODES
 	EAN = barcode.get_barcode_class('ean13')        
 	m = str(int(round(time.time() * 1000)))
 	ean = EAN(m) 
 	return ean       
-    
+   
+@frappe.whitelist(allow_guest=True)    
 def get_image_path(ean,entityid):
 	path=get_path(entityid)
 	fullname = ean.save(path)
 	return fullname
 
+@frappe.whitelist(allow_guest=True)  
 def get_path(entityid):
 	site_name = get_site_name()
 	path = os.path.abspath(os.path.join('.',site_name, 'public', 'files'))
@@ -69,11 +72,12 @@ def get_path(entityid):
 	
 	return filepath or None
 
-
+@frappe.whitelist(allow_guest=True)  
 def get_site_name():
        return frappe.local.site_path.split('/')[1]
 
 
+@frappe.whitelist(allow_guest=True)
 def create_profile_in_db(id,args,response,path):
 	from frappe.utils import random_string
 	user = frappe.get_doc({

@@ -10,6 +10,8 @@ from frappe.auth import _update_password
 from frappe import _
 import binascii
 import base64
+from phr.templates.pages.login import create_profile_in_db,get_barcode,get_image_path
+
 @frappe.whitelist(allow_guest=True)
 def update_profile(data,id,dashboard=None):
 	call_mapper={
@@ -111,10 +113,10 @@ def get_site_name():
 def get_linked_phrs(profile_id):
 	from phr.templates.pages.patient import get_base_url
 	solr_op='phrdata/searchchildphr'
-	#url=get_base_url()+solr_op
-	url="http://192.168.5.11:9090/phr/phrdata/searchchildphr"
+	url=get_base_url()+solr_op
+	#url="http://192.168.5.11:9090/phr/phrdata/searchchildphr"
 	request_type='POST'
-	data={"to_profile_id":"1421076971473-476287"}
+	data={"to_profile_id":profile_id}
 	from phr.phr.phr_api import get_response
 	response=get_response(url,json.dumps(data),request_type)
 	res=json.loads(response.text)
@@ -122,3 +124,37 @@ def get_linked_phrs(profile_id):
 	if res['returncode']==106:
 		return res
 
+
+@frappe.whitelist(allow_guest=True)
+def delink_phr(selected,data,profile_id=None):
+	obj=json.loads(data)
+	ids=json.loads(selected)
+	for id in ids:
+		print obj[id]
+		delink_phr_solr(obj[id],id,profile_id)
+
+def delink_phr_solr(data,id,profile_id):
+	from phr.templates.pages.patient import get_base_url
+	solr_op='unlinkProfile'
+	url=get_base_url()+solr_op
+	request_type='POST'
+	barcode=get_barcode()
+	#jsonobj=json.loads(data)
+	data["recieved_from"]="Desktop"
+	#data["barcode"]=str(barcode)
+	jsonobj={"entityid":id,"linking_id":profile_id,"received_from":"Desktop"}
+	from phr.phr.phr_api import get_response
+	response=get_response(url,json.dumps(jsonobj),request_type)
+	res=json.loads(response.text)
+	print res
+	if res['returncode']==121:
+		path=get_image_path(barcode,res['entityid'])
+		print res
+		actdata=res['actualdata']		
+		dt=json.loads(actdata)
+		args={'person_firstname':dt['person_firstname'],'person_middlename':dt["person_middlename"],'person_lastname':dt["person_lastname"],'email':dt["email"],'mobile':dt["mobile"],'received_from':"Desktop",'provider':'false',"barcode":str(barcode)}
+		create_profile_in_db(res['entityid'],args,res,path)
+
+
+
+	

@@ -20,7 +20,7 @@
    },
 	{
    	"fieldname": "person_lastname", 
-      "fieldtype": "link", 
+      "fieldtype": "data", 
       "label": "Last Name",
       "required":1
 	},
