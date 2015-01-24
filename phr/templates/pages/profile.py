@@ -18,7 +18,8 @@ def update_profile(data,id,dashboard=None):
 	"basic_info":update_profile_solr,
 	"password":update_password,
 	"update_phr":manage_phr,
-	"dashboard":manage_dashboard}
+	"dashboard":manage_dashboard,
+	"notification":manage_notifications}
 	method=call_mapper.get(id)
 	response=method(data,dashboard)
 	return response
@@ -33,6 +34,7 @@ def update_profile_solr(data,dashboard=None):
 	print res
 	if res['returncode']=="102":
 		return "Profile Updated Successfully"
+
 
 @frappe.whitelist(allow_guest=True)
 def update_password(data,dashboard=None):
@@ -54,26 +56,53 @@ def update_password(data,dashboard=None):
 def manage_phr(data,dashboard=None):
 	frappe.errprint(data)
 
+@frappe.whitelist(allow_guest=True)
+def manage_notifications(data,dashboard=None):
+	obj=json.loads(data)
+	dashboard_fields=json.loads(dashboard)
+	mn=frappe.db.get_value("Notification Configuration",{"profile_id":obj.get('entityid')},"name")
+	if mn:
+		update_values_notify(dashboard_fields,mn)
+	else:
+		mn = frappe.get_doc({
+			"doctype":"Notification Configuration",
+			"profile_id":obj.get('entityid'),
+			"created_via": "Web"
+		})
+		mn.ignore_permissions = True
+		mn.insert()
+		update_values_notify(dashboard_fields,mn.name)
+	
+def update_values_notify(dashboard_fields,name):
+	for d in dashboard_fields:
+		frappe.db.sql("""update `tabNotification Configuration` set %s=1 where name='%s'"""%(d,name))
+		frappe.db.commit()
 
 @frappe.whitelist(allow_guest=True)
 def manage_dashboard(data,dashboard=None):
 	obj=json.loads(data)
 	dashboard_fields=json.loads(dashboard)
-	frappe.errprint(obj.get('entityid'))
-	sr = frappe.get_doc({
-		"doctype":"Shortcut",
-		"profile_id":obj.get('entityid'),
-		"created_via": "Web"
-	})
-	sr.ignore_permissions = True
-	sr.insert()
-	for d in dashboard_fields:
-		frappe.db.sql("""update `tabShortcut` set %s=1 where name='%s'"""%(d,sr.name))
+	sr=frappe.db.get_value("Shortcut",{"profile_id":obj.get('entityid')},"name")
+	if sr:
+		update_values(dashboard_fields,sr)
+	else:
+		sr = frappe.get_doc({
+			"doctype":"Shortcut",
+			"profile_id":obj.get('entityid'),	
+			"created_via": "Web"
+		})
+		sr.ignore_permissions = True
+		sr.insert()
+		upload_values(dashboard_fields,sr.name)
+
+def update_values(fields,name):
+	for d in fields:
+		frappe.db.sql("""update `tabShortcut` set %s=1 where name='%s'"""%(d,name))
 		frappe.db.commit()
 
-
 @frappe.whitelist(allow_guest=True)
-def upload_image(data,file_name=None):
+def upload_image(data=None,files=None):
+	frappe.errprint([data,files])
 	from binascii import a2b_base64
 	import base64
 	data_index = data.index('base64') + 7
@@ -131,7 +160,9 @@ def delink_phr(selected,data,profile_id=None):
 	ids=json.loads(selected)
 	for id in ids:
 		print obj[id]
-		delink_phr_solr(obj[id],id,profile_id)
+		ret_res=delink_phr_solr(obj[id],id,profile_id)
+		print ret_res
+	return profile_id
 
 def delink_phr_solr(data,id,profile_id):
 	from phr.templates.pages.patient import get_base_url
@@ -152,9 +183,18 @@ def delink_phr_solr(data,id,profile_id):
 		print res
 		actdata=res['actualdata']		
 		dt=json.loads(actdata)
-		args={'person_firstname':dt['person_firstname'],'person_middlename':dt["person_middlename"],'person_lastname':dt["person_lastname"],'email':dt["email"],'mobile':dt["mobile"],'received_from':"Desktop",'provider':'false',"barcode":str(barcode)}
-		create_profile_in_db(res['entityid'],args,res,path)
+		args={'person_firstname':dt['person_firstname'],'person_middlename':dt['person_middlename'],'person_lastname':dt['person_lastname'],'email':dt['email'],'mobile':dt['mobile'],'received_from':'Desktop','provider':'false','barcode':str(barcode)}
+		ret_res=create_profile_in_db(res['entityid'],args,res,path)
+		return ret_res
 
 
+@frappe.whitelist(allow_guest=True)
+def get_enabled_notification(profile_id):
+	ret=frappe.db.sql("""select linked_phr,to_do 
+		from `tabNotification Configuration` 
+		where profile_id='%s'"""%(profile_id),as_dict=1)
+	return ret
 
-	
+@frappe.whitelist(allow_guest=True)
+def get_enabled_dashboard(profile_id):
+	pass

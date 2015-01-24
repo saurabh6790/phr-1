@@ -10,34 +10,39 @@ var PatientDashboard = inherit(RenderFormFields, {
 		RenderFormFields.prototype.init(this.wrapper,this.args,this.entityid)
 		this.render_field()
 		this.get_linked_phrs(frappe.get_cookie('profile_id'))
+		this.get_enabled_notification(frappe.get_cookie('profile_id'))
+		this.get_enabled_dashboard(frappe.get_cookie('profile_id'))
 	},
 	render_field: function(){
 		var me = this;
 		$('.fileinput').fileinput()
 		$('.chk').bind('click',function(event){
-			if (($("input:checkbox:checked").length)>4){
-				alert("You Need to select any Four")
-				/*$("input:checkbox:checked").prop('checked', false);*/
-				console.log(this)
-				$(this).prop('checked', false);
-				
-			}	
+			var $id=$('.tab-pane.active').attr('id')
+			if ($id=='dashboard'){
+				if (($("input:checkbox:checked").length)>4){
+					alert("You Need to select any Four")
+					/*$("input:checkbox:checked").prop('checked', false);*/
+					console.log(this)
+					$(this).prop('checked', false);
+				}
+			}
 		})
 		$('.save_controller').bind('click',function(event) {
-			console.log($("input:checkbox:checked").length)
-			if (($("input:checkbox:checked").length)!=4){
-				alert("You Need to select any Four")
-				$("input:checkbox:checked").prop('checked', false);
-				return false
-				
-			}
+			var $id=$('.tab-pane.active').attr('id')
+			if ($id=='dashboard'){
+				if (($('#dashboard.tab-pane.active form').find("input:checkbox:checked").length)!=4){
+					alert("You Need to select any Four")
+					$("input:checkbox:checked").prop('checked', false);
+					return false
+				}
+			}	
 			me.res = {};
 			selected=[]
 			var $id=$('.tab-pane.active').attr('id')
 			$(".tab-pane.active form input, .tab-pane.active form textarea, .tab-pane.active form select").each(function(i, obj) {
 				me.res[obj.name] = $(obj).val();
 			})
-			$(".chk:checked").each(function() {
+			$(".tab-pane.active form").find(".chk:checked").each(function() {
 				selected.push($(this).val());
   			});	
 			me.res["entityid"]=frappe.get_cookie('profile_id')
@@ -45,65 +50,76 @@ var PatientDashboard = inherit(RenderFormFields, {
 			me.get_method(me.res,$id,me)		
 		})
 		var files = [];
- 		object = {};
-		$("input[type=file]").change(function(event) {
+ 		this.object = {};
+ 		$("input[type=file]").change(function(event) {
+ 			$.each(event.target.files, function(index, file) {
+				var reader = new FileReader();
+    			reader.onload = function(event) {  
+      				me.object.filename = file.name;
+      				me.object.data = event.target.result;
+      				files.push(me.object);
+    			};  
+    			reader.readAsDataURL(file);
+    			me.upload_image(me.object,files)
+    			
+  			});
+  		});
+		/*$('.btn-file').bind('click',function(){
+			object = {};
 			$.each(event.target.files, function(index, file) {
-    			var reader = new FileReader();
+				var reader = new FileReader();
     			reader.onload = function(event) {  
       				object.filename = file.name;
       				object.data = event.target.result;
       				files.push(object);
     			};  
     			reader.readAsDataURL(file);
+    			me.upload_image(object)
   			});
-  			console.log([object,"hiiii"])
-  		});
+  		})*/
   		var image=frappe.get_cookie("user_image")
-  		console.log(image)
   		$('<img src="'+image+'"alt="user image"><img>').appendTo($('.fileinput-preview'))
-  		$(".btn-file").bind('click',function(){
-  			frappe.call({
-				method:'phr.templates.pages.profile.upload_image',
-				args:{"data":object.data,"file_name":object.filename},
-				callback: function(r) {
-					console.log(r)
-					if(r.message) {
-						$("input").val("");
-						var dialog = frappe.msgprint(r.message);
-					}
+  	},
+	upload_image:function(object,files){
+		console.log(this.object)
+		/*frappe.call({
+			method:'phr.templates.pages.profile.upload_image',
+			args:{"data":,"files":files},
+			callback: function(r) {
+				console.log(r)
+				if(r.message) {
+					$("input").val("");
+					var dialog = frappe.msgprint(r.message);
 				}
-			})
-
-  		});
-  		
+			}
+		});*/
 	},
 	get_method:function(res,cmd,me){
 		frappe.call({
-				method:'phr.templates.pages.profile.update_profile',
-				args:{'data': res,"id":cmd,"dashboard":selected},
-				callback: function(r) {
-					console.log(r)
-					if(r.message) {
-						$("input").val("");
-						var dialog = frappe.msgprint(r.message);
-					}
+			method:'phr.templates.pages.profile.update_profile',
+			args:{'data': res,"id":cmd,"dashboard":selected},
+			callback: function(r) {
+				console.log(r)
+				if(r.message) {
+					$("input").val("");
+					var dialog = frappe.msgprint(r.message);
 				}
-			})
+			}
+		})
 		/*var call_mapper={"basic_info":"update_profile","password":"update_password","update_phr":"manage_phr"}
 		me[call_mapper[cmd]].call(me,res)*/
 	},
 	get_linked_phrs:function(profile_id){
-		console.log("jhsgajhgsjgsdjg")
 		var me=this;
 		frappe.call({
-				method:'phr.templates.pages.profile.get_linked_phrs',
-				args:{'profile_id':profile_id},
-				callback: function(r) {
-					if(r.message) {
-						me.render_phrs(r.message)
-					}
+			method:'phr.templates.pages.profile.get_linked_phrs',
+			args:{'profile_id':profile_id},
+			callback: function(r) {
+				if(r.message) {
+					me.render_phrs(r.message)
 				}
-			})
+			}
+		})
 	},
 	render_phrs:function(data){
 		var me=this
@@ -115,7 +131,7 @@ var PatientDashboard = inherit(RenderFormFields, {
 						<div class="form-group row" style="margin: 0px">\
 								<div class="col-xs-8">\
 								<div class="control-input">\
-									<input type="checkbox" class="chk" name="%(entityid)s" value="%(entityid)s">\
+									<input type="checkbox" class="chk_phr" name="%(entityid)s" value="%(entityid)s">\
 									%(person_firstname)s &nbsp %(person_lastname)s\
 								</div>\
 							</div>\
@@ -148,11 +164,47 @@ var PatientDashboard = inherit(RenderFormFields, {
 			method:'phr.templates.pages.profile.delink_phr',
 			args:{'selected':selected,"data":meta_dic,"profile_id":frappe.get_cookie('profile_id')},
 			callback: function(r) {
+				console.log("hiii")
+				me.get_linked_phrs(r.message)
+			}
+		})
+	},
+	get_enabled_notification:function(profile_id){
+		var me=this;
+		frappe.call({
+			method:'phr.templates.pages.profile.get_enabled_notification',
+			args:{'profile_id':profile_id},
+			callback: function(r) {
+				console.log(r.message)
+				me.render_notifications(r.message)
+				
+			}
+		})
+
+	},
+	render_notifications:function(data){
+		var me=this;
+		var $wrapper=$("#notification").find("form");		
+		//meta=JSON.parse(data);
+		meta_dic={};
+		$('#notification.tab-pane.active form').find("input:checkbox:checked").prop('checked', false);
+		$.each(data,function(i,d){
+			console.log(d)
+		})
+		
+
+		//$('')
+	},
+	get_enabled_dashboard:function(profile_id){
+				var me=this;
+		frappe.call({
+			method:'phr.templates.pages.profile.get_enabled_dashboard',
+			args:{'profile_id':profile_id},
+			callback: function(r) {
 				if(r.message) {
 					me.render_phrs(r.message)
 				}
 			}
 		})
 	}
-	
 })

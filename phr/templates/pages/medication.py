@@ -30,7 +30,7 @@ def get_medication_data(data):
 def fetch_values_from_db(data):
 	med_list=frappe.db.sql("""select * from 
 		`tabMedication` 
-		where profile_id='%s'"""%(data["profile_id"]),as_dict=1)
+		where profile_id='%s' order by creation desc"""%(data["profile_id"]),as_dict=1)
 	return med_list
 
 

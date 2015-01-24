@@ -125,61 +125,41 @@
       "fieldtype": "section_break", 
       "label": ""
    }, 
-   {
-      "fieldname": "current_address", 
+      {
+      "fieldname": "address1", 
       "fieldtype": "text", 
-      "label": "Current Address"
+      "label": "Address Line 1"
    },
    {
-      "fieldname": "pincode_current", 
+      "fieldname": "address2", 
+      "fieldtype": "text", 
+      "label": "Address Line 2"
+   },
+   
+   {
+      "fieldname": "pincode", 
       "fieldtype": "data", 
-      "label": "Description"
+      "label": "Pincode"
    },
-   {
-      "fieldname": "city_current", 
-      "fieldtype": "data", 
-      "label": "City"
-   },
-   {
-      "fieldname": "state_current", 
-      "fieldtype": "data", 
-      "label": "State"
-   },
-   {
-      "fieldname": "country_current", 
-      "fieldtype": "data", 
-      "label": "Country"
-   },
-   {
+    {
       "fieldname": "", 
       "fieldtype": "column_break", 
       "label": ""
    },
    {
-      "fieldname": "permnt_address", 
-      "fieldtype": "text", 
-      "label": "Permanent Address"
-   },
-   
-   {
-      "fieldname": "pincode_permnt", 
+      "fieldname": "city", 
       "fieldtype": "data", 
-      "label": "Per. Pincode"
+      "label": "City"
    },
    {
-      "fieldname": "city_permnt", 
+      "fieldname": "state", 
       "fieldtype": "data", 
-      "label": "Per. City"
+      "label": "State"
    },
    {
-      "fieldname": "state_permnt", 
+      "fieldname": "country", 
       "fieldtype": "data", 
-      "label": "Per. State"
-   },
-   {
-      "fieldname": "country_permnt", 
-      "fieldtype": "data", 
-      "label": "Per. Country"
+      "label": "Country"
    },
    {
       "fieldname": "notification", 
