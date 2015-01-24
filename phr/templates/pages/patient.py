@@ -39,7 +39,15 @@ def get_data_to_render(data=None,entityid=None):
 			data = data
 
 	if json_data:
+		print "----------------------------------"
+		print json_data.get(data.get('param'))
+		print "===================================="
 		fields = json_data.get(data.get('param')) if json_data.get(data.get('param')) else json_data.get('fields')
+
+		print "----------------fields--------------------"
+		print fields
+		print "------------------------------------------"
+
 		tab = json_data.get('tab')
 		values = get_values(data,entityid) if not json_data.get('values') else json_data.get('values')
 
@@ -127,6 +135,6 @@ def get_method(data):
 def get_master_details(doctype):
 	import itertools 
 
-	ret = frappe.db.sql("select event_name from `tab%s` order by creation desc "%doctype,as_list=1)
+	ret = frappe.db.sql("select name from `tab%s` order by creation desc "%doctype,as_list=1)
 	return list(itertools.chain(*ret))
 

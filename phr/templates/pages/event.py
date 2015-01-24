@@ -1,10 +1,11 @@
 import frappe
 import json
 import os 
-from frappe.utils import get_site_path, get_hook_method, get_files_path, get_site_base_path,cstr
+from frappe.utils import get_site_path, get_hook_method, get_files_path, get_site_base_path,cstr, cint
 from phr.templates.pages.patient import get_data_to_render
 
 from phr.phr.phr_api import get_response
+import datetime
 
 
 @frappe.whitelist(allow_guest=True)
@@ -57,7 +58,8 @@ def update_event(data):
 			"doctor_name": data.get("provider_name"),
 			"visit_descripton": data.get('event_descripton'),
 			"received_from": "Desktop",
-			"str_visit_date": data.get('event_date')
+			"str_visit_date": data.get('event_date'),
+			"diagnosis_desc": diagnosis
 	}
 	
 	print "===========event data=============="
@@ -135,24 +137,59 @@ def send_shared_data(data):
 
 @frappe.whitelist(allow_guest=True)
 def get_visit_data(data):
-	frappe.errprint(data)
+	print "-----------",data
 	request_type="POST"
-	url="http://192.168.5.11:9090/phr/phrdata/getprofilevisit"
+	url="http://192.168.5.12:9090/phr/phrdata/getprofilevisit"
 	# url="http://88.198.52.49:7974/phr/phrdata/getprofilevisit"
 	from phr.phr.phr_api import get_response
 
-	options = json.loads(data).get('options')
+	fields, values, tab = get_data_to_render(data)
 
-	response=get_response(url, json.dumps({"profileId":"1420875579313-928788"}), request_type)
+	pos = 0
+
+	for filed_dict in fields:
+		pos =+ 1
+		if 'options' in filed_dict.keys(): 
+			options = filed_dict.get('options')
+			break
+
+	data=json.loads(data)
+
+
+	response=get_response(url, json.dumps({"profileId":data.get('profile_id')}), request_type)
 	res_data = json.loads(response.text)
-	print "data"
-	for visit in json.loads(res_data.get('phr')).get('visitList'):
-		options.extend([['<input type="checkbox" id = "%s">'%visit['entityid'], '15/01/2015', 
-				visit['visit_descripton'], 'DOC', visit['doctor_name']]])
 
+	url="http://192.168.5.12:9090/phr-api/phrdata/getprofilevisitfilecount"
+	response=get_response(url, json.dumps({"profile_id":data.get('profile_id')}), request_type)
+	res_data1 = json.loads(response.text)
 
-	return options
-		
+	event_count_dict = {}
+	get_event_wise_count_dict(res_data1.get('FileCountData'), event_count_dict)
+	
+	if isinstance(type(res_data), dict):
+		res_data = res_data.get('phr')
+
+	else:
+		res_data = json.loads(res_data.get('phr'))	
+
+	if res_data.get('visitList'):
+		for visit in res_data.get('visitList'):
+
+			count_list = [0, 0, 0, 0, 0]
+
+			data = ['<input  type="radio" name="visit" id = "%s">'%visit['entityid'], visit['str_visit_date'], 
+					visit['visit_descripton'], 'DOC', visit['doctor_name']]
+
+			event_list_updater(visit['entityid'], event_count_dict, count_list, data)
+			
+			options.extend([data])
+	
+	return {
+		'options': options,
+		'listview': fields,
+		'page_size': 5
+	}
+
 @frappe.whitelist(allow_guest=True)
 def get_event_data(data):
 	frappe.errprint(data)
@@ -197,8 +234,11 @@ def get_event_data(data):
 		for visit in res_data.get('eventList'):
 			count_list = [0, 0, 0, 0, 0]
 
-			data = ['<input type="checkbox" id = "%s">'%visit['entityid'], '<a nohref id="%s"> %s </a>'%(visit['entityid'],visit['event_title']), '15/01/2015', 
-					visit['event_title']+'<br>'+visit['event_descripton'], 'DOC', 'Test Doc']
+			data = ['<input type="radio" name="event" id = "%s">'%visit['entityid'], 
+					'<a nohref id="%s"> %s </a>'%(visit['entityid'], 
+					visit['event_title']), 
+					datetime.datetime.fromtimestamp(cint(visit['event_date'])/1000.0).strftime('%d/%m/%Y'), 
+					visit['event_title']+'<br>'+visit['event_descripton']]
 			
 			event_list_updater(visit['entityid'], event_count_dict, count_list, data)
 			
@@ -206,7 +246,8 @@ def get_event_data(data):
 
 	return {
 		'options': options,
-		'listview': fields
+		'listview': fields,
+		'page_size': 5
 	}
 
 def get_event_wise_count_dict(count_dict, event_count_dict):
@@ -229,4 +270,36 @@ def event_list_updater(event, event_count_dict, count_list, data):
 		for folder in sorted(event_count_dict.get(event)):
 			count_list[position_mapper.get(folder)] =  event_count_dict.get(event).get(folder)
 	data.extend(count_list)
+
+
+@frappe.whitelist()
+def get_providers(filters):
+	filters = eval(filters)
+	cond = get_conditions(filters)
+	result_set = get_provider_info(cond)
 	
+	return result_set
+
+def get_conditions(filters):
+	cond = []
+
+	if filters.get('provider_type'):
+		cond.append('provider_type = "%(provider_type)s"'%filters)
+
+	if filters.get('provider_name'):
+		cond.append('provider_name like "%%%(provider_name)s%%"'%filters)
+
+	if filters.get('provider_loc'):
+		cond.append('locality like "%%%(provider_loc)s%%"'%filters)
+
+	return ' and '.join(cond)
+
+def get_provider_info(cond):
+	if cond:
+		ret = frappe.db.sql("""select name, provider_name, mobile_number, email from tabProvider where %s """%cond, as_list=1, debug=1)
+		frappe.errprint(ret)
+		return ((len(ret[0]) > 1) and ret) if ret else None
+	
+	else:
+		return none
+

@@ -8,6 +8,8 @@ frappe.provide("frappe");
 {% include "templates/includes/list_view.js" %}
 {% include "templates/includes/thumbnail.js" %}
 {% include "templates/includes/share_phr.js" %}
+{% include "templates/includes/custom_dialog.js" %}
+
 
 var Event = inherit(ListView,{
 	init: function(wrapper, json_file, profile_id, entity_id){
@@ -26,8 +28,6 @@ var Event = inherit(ListView,{
 			<td></td>\
 			<td></td>\
 			<td></td>\
-			<td></td>\
-			<td></td>\
 			<td align="center"><input type="checkbox" id="consultancy"  value="Consultancy" ></td>\
 			<td align="center"><input type="checkbox" id="event_snap"  value="Event Snap" ></td>\
 			<td align="center"><input type="checkbox" id="lab_reports"  value="Lab Reports" ></td>\
@@ -42,6 +42,9 @@ var Event = inherit(ListView,{
 				    if ($(td).find('input[type="checkbox"]').is(':checked')) {
 						me.selected_files.push($(td).find('input[type="checkbox"]').attr('id'))
 					}
+					if ($(td).find('input[name="event"]').is(':checked')) {
+						me.selected_files.push($(td).find('input[name="event"]').attr('id'))
+					}
 				});
 			})
 
@@ -52,6 +55,10 @@ var Event = inherit(ListView,{
 		$("table tr td a").click(function (e) { 
 			me.open_form($(this).attr('id'), $(this).html())
 		})
+
+		// $("#myModal").on("hide", function() {    // remove the event listeners when the dialog is dismissed
+		// 	$("#myModal a.btn").off("click");
+		// });
 
 		this.render_spans()
 	},
@@ -66,9 +73,68 @@ var Event = inherit(ListView,{
 			me.open_form(event_id, event_title)
 		}).appendTo('.breadcrumb');
 		$('<div class="event_section" style="margin-top:-10%;"></div>').appendTo($('.field-area'))
+
+		$($('[name="diagnosis"]').parents()[3]).css("display", "inherit");
+		$("#provider_name").click(function(){
+			me.dialog_oprations()
+		})
 		me.render_folder_section()
   		me.bind_events()
 		
+	},
+	dialog_oprations: function(){
+		var me = this;
+		this.filters = {}
+		d = new Dialog();
+		d.init({"file_name":"provider_search"})
+		d.show()
+		$('<button class ="btn btn-success btn-sm" > search </button>')
+			.click(function(){
+				$(".modal-body form input").each(function(i, obj) {
+					me.filters[obj.name] = $(obj).val();
+				})
+
+				me.render_result_table(me.filters)
+
+			})
+			.appendTo($('.modal-body'))
+		console.log(d)
+	},
+	render_result_table:function(filters){
+		var me = this;
+		frappe.call({
+			"method":"phr.templates.pages.event.get_providers",
+			"args":{"filters":filters},
+			callback:function(r){
+				if(r.message){
+					me.generate_table(r.message)	
+				}
+			}
+		})
+	},
+	generate_table: function(result_set){
+		var me = this;
+		this.table = $("<hr><div class='table-responsive'>\
+			<table class='table table-bordered'>\
+				<thead><tr></tr></thead>\
+				<tbody></tbody>\
+			</table>\
+		</div>").appendTo('.modal-body');
+
+		header = [["", 50], ["Provider Name", 170], ["Number", 100], ["email", 100]]
+
+		$.each(header, function(i, col) {
+			$("<th>").html(col[0]).css("width", col[1]+"px")
+				.appendTo(me.table.find("thead tr"));
+		});
+
+		$.each(result_set, function(i,d){
+			var row = $("<tr>").appendTo(me.table.find("tbody"));
+			$('<td>').html('<input type="radio" name="event" id = "'+d[0]+'">').appendTo(row)
+			$('<td>').html(d[1]).appendTo(row)
+			$('<td>').html(d[2]).appendTo(row)
+			$('<td>').html(d[3]).appendTo(row)
+		})
 	},
 	render_spans: function(){
 		var me = this;

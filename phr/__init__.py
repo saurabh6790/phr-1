@@ -15,5 +15,5 @@ def create_profile(data):
 def validate_mobile_code(data):
 	from phr.verifier import verify_mobile
 	data = json.loads(data)
-	res = verify_mobile(data.get('id'),data.get('code'))
+	res = verify_mobile(data.get('profile_id'),data.get('verification_code'))
 	return res
