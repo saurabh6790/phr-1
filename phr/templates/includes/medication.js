@@ -18,8 +18,29 @@ var Medications = inherit(ListView,{
 			'cmd':"medication.get_medication_data",
 			'profile_id':profile_id})
 		$('.new_controller').remove();
+		me.update_select_options()
 		me.bind_save_event()
 
+	},
+	update_select_options:function(){
+		frappe.call({
+		method:"phr.templates.pages.medication.get_dosage_types",
+		callback:function(r){
+			if(r.message){
+				$.each(r.message,function(i, val){
+					console.log(val[0])
+					$option=$('<option>', { 
+						'value': val[0],
+						'text' : val[0] 
+					}).appendTo($('select[name="dosage_type"]'))
+					
+				})
+			}
+			else{
+					
+				}
+			}
+		})
 	},
 	bind_save_event: function(){
 		var me = this;

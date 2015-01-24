@@ -187,11 +187,14 @@ var PatientDashboard = inherit(RenderFormFields, {
 		var $wrapper=$("#notification").find("form");		
 		//meta=JSON.parse(data);
 		meta_dic={};
+		console.log(data[0].to_do)
 		$('#notification.tab-pane.active form').find("input:checkbox:checked").prop('checked', false);
-		$.each(data,function(i,d){
-			console.log(d)
-		})
-		
+		if(data[0].linked_phr==1){
+			$('input[type="checkbox"][name="linked_phr"]').prop('checked', true);		
+		}
+		if(data[0].to_do==1){
+			$('input[type="checkbox"][name="to_do"]').prop('checked', true);		
+		}
 
 		//$('')
 	},

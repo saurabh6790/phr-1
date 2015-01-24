@@ -1,69 +1,117 @@
 {
-    "listview": [
-        {
-            "fieldname": "medicine_name",
-            "fieldtype": "data",
-            "label": "Medicine Name"
-        },
-        {
-            "fieldname": "dosage",
-            "fieldtype": "data",
-            "label": "Dosage"
-        },
-        {
-            "fieldname": "",
-            "fieldtype": "column_break",
-            "label": ""
-        },
-        {
-            "fieldname": "from_date_time",
-            "fieldtype": "datetime",
-            "label": "From Date time"
-        },
-        {
-            "fieldname": "to_date_time",
-            "fieldtype": "datetime",
-            "label": "To Date time"
-        },
-        {
-            "fieldname": "additional_info",
-            "fieldtype": "text",
-            "label": "Additional Info"
-        },
-        {
-            "fieldname": "",
-            "fieldtype": "section_break",
-            "label": ""
-        },
-        {
-            "fieldname": "",
-            "fieldtype": "button",
-            "label": ""
-        },
-        {
-            "fieldname": "",
-            "fieldtype": "column_break",
-            "label": ""
-        },
-        {
-            "fieldname": "",
-            "fieldtype": "section_break",
-            "label": ""
-        },
-        {
-            "fieldname": "tab",
-            "fieldtype": "table",
-            "label": "Medications",
-            "options": [
-                [
-                    "",
-                    "Medicine Name",
-                    "Dosage",
-                    "From Date time",
-                    "To Date time",
-                    "Additional Info"
-                ]
-            ]
-        }
+ "listview": [
+  {
+   "fieldname": "medicine_name", 
+   "fieldtype": "data", 
+   "label": "Medicine Name"
+  }, 
+  {
+   "fieldname": "dosage_type", 
+   "fieldtype": "select", 
+   "label": "Dosage Type", 
+   "options": [
+    ""
+   ]
+  }, 
+  {
+   "depends_on": "dosage_type:Weekly", 
+   "fieldname": "day", 
+   "fieldtype": "select", 
+   "label": "Day", 
+   "options": [
+    "", 
+    "Sunday", 
+    "Monday", 
+    "Tuesday", 
+    "Wednesday", 
+    "Thursday", 
+    "Friday", 
+    "Saturday"
+   ]
+  }, 
+  {
+   "depends_on": "dosage_type:Weekly", 
+   "fieldname": "time", 
+   "fieldtype": "datetime", 
+   "label": "Time"
+  }, 
+  {
+   "depends_on": "dosage_type:Daily", 
+   "fieldname": "morning", 
+   "fieldtype": "datetime", 
+   "label": "Morning", 
+   "options": [
+    "", 
+    "Monday", 
+    "tuesday"
+   ]
+  }, 
+  {
+   "depends_on": "dosage_type:Daily", 
+   "fieldname": "evening", 
+   "fieldtype": "datetime", 
+   "label": "Evening"
+  }, 
+  {
+   "depends_on": "dosage_type:Daily", 
+   "fieldname": "night", 
+   "fieldtype": "datetime", 
+   "label": "Night"
+  }, 
+  {
+   "fieldname": "", 
+   "fieldtype": "column_break", 
+   "label": ""
+  }, 
+  {
+   "fieldname": "from_date_time", 
+   "fieldtype": "datetime", 
+   "label": "From Date time"
+  }, 
+  {
+   "fieldname": "to_date_time", 
+   "fieldtype": "datetime", 
+   "label": "To Date time"
+  }, 
+  {
+   "fieldname": "additional_info", 
+   "fieldtype": "text", 
+   "label": "Additional Info"
+  }, 
+  {
+   "fieldname": "", 
+   "fieldtype": "section_break", 
+   "label": ""
+  }, 
+  {
+   "fieldname": "", 
+   "fieldtype": "button", 
+   "label": ""
+  }, 
+  {
+   "fieldname": "", 
+   "fieldtype": "column_break", 
+   "label": ""
+  }, 
+  {
+   "fieldname": "", 
+   "fieldtype": "section_break", 
+   "label": ""
+  }, 
+  {
+   "fieldname": "tab", 
+   "fieldtype": "table", 
+   "label": "Medications", 
+   "options": [
+    [
+     "", 
+     "Medicine Name", 
+     "Dosage", 
+     "From Date time", 
+     "To Date time", 
+     "Additional Info"
     ]
+   ]
+  }
+ ]
 }

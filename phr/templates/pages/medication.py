@@ -43,6 +43,12 @@ def make_medication_entry(data):
 	return response
 
 
+@frappe.whitelist(allow_guest=True)
+def get_dosage_types():
+	dt=frappe.db.sql("""select name from `tabDosage`""",as_list=1)
+	return dt
+
+
 def save_data(data):
 	print data
 	obj=json.loads(data)

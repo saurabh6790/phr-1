@@ -246,7 +246,7 @@
    {
       "fieldname":"to_do", 
       "fieldtype":"check", 
-      "label": "To DO List notifications" 
+      "label": "To Do" 
    } 
    ]
 }

@@ -45,6 +45,7 @@ def get_data_to_render(data=None,entityid=None):
 
 	return fields, values, tab
 	
+@frappe.whitelist(allow_guest=True)	
 def get_json_data(file_name):
 	fn=file_name+'.json'
 	print os.path.join(os.path.dirname(__file__), fn)
@@ -53,6 +54,9 @@ def get_json_data(file_name):
 
 	return json_data
 
+def write_json_date(file_name,data):
+	with open(os.path.join(os.path.dirname(__file__), file_name +".json"),'w+') as txtfile:
+		txtfile.write(json.dumps(data, indent=1, sort_keys=True))
 
 """
 	get data generic method from all db's 
