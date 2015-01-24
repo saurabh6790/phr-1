@@ -18,6 +18,7 @@ def verify_email(id,key):
 
 @frappe.whitelist(allow_guest=True)
 def verify_mobile(id,code):
+	print id, code
 	mob_code=frappe.db.get_value('Verification Details',{"name":id},"mobile_verification_code")
 	if mob_code!=code:
 		# frappe.msgprint("Please Enter valid code")

@@ -10,19 +10,16 @@ frappe.provide("frappe");
 {% include "templates/includes/share_phr.js" %}
 
 var Visit = inherit(ListView,{
-	init: function(wrapper){
+	init: function(wrapper, json_file, profile_id, entity_id){
 		var me = this;
 		this.wrapper = wrapper;
 		this.selected_files = [];
-
-		ListView.prototype.init(this.wrapper, {'listview':[
-			{'fieldname':'date','fieldtype':'date','label':'Date'},
-			{'fieldname':'','fieldtype':'section_break','label':''},
-			{'fieldname':'tab','fieldtype':'table','label':'T1',
-				 'options':[['','Visit Date', 'Event Name', 'Provider Type', 'Provider Name', 'Consultancy', 
-				 				'Event Snaps', 'Lab Reports', 'Prescription', 'Cost of Care']]}], 
+		console.log(['123',profile_id])
+		ListView.prototype.init(this.wrapper, {"file_name": "visit", 
 			'cmd':"get_visit_data",
-			'tab_at': 4})
+			'tab_at': 4,
+			'profile_id':profile_id})
+
 		console.log('t')
 		$('.new_controller').hide()
 
@@ -43,8 +40,11 @@ var Visit = inherit(ListView,{
 				$('.table').find('tr').each(function () {
 				var row = $(this);
 				$('td', row).map(function(index, td) {
-				    if ($(td).find('input[type="checkbox"]').is(':checked')) {
+				     if ($(td).find('input[type="checkbox"]').is(':checked')) {
 						me.selected_files.push($(td).find('input[type="checkbox"]').attr('id'))
+					}
+					if ($(td).find('input[name="visit"]').is(':checked')) {
+						me.selected_files.push($(td).find('input[name="visit"]').attr('id'))
 					}
 				});
 

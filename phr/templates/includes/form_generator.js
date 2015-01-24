@@ -14,14 +14,17 @@ var RenderFormFields = function(){
 }
 
 $.extend(RenderFormFields.prototype,{
-	init:function(wrapper, arg, entityid, operation){
+	init:function(wrapper, arg, entityid, operation, modal_wrapper){
 		//initializing
 		this.section = '';
 		this.column = '';
 		this.args = arg;
 		this.entityid=entityid;
-		this.operation=operation
-		this.wrapper = $('.field-area')
+		this.operation=operation;
+		console.log(['modal_wrapper', modal_wrapper])
+
+		if(modal_wrapper) this.wrapper = modal_wrapper.find('.modal-body');
+		else this.wrapper =  $('.field-area');
 		this.result_set = {}
 		this.visibility_dict = {}
 		this.labelled_section_count = 0;
@@ -59,6 +62,9 @@ $.extend(RenderFormFields.prototype,{
 			arg['entityid'] = me.entityid
 		}
 
+
+		console.log(['form_generator', arg])
+
 		$.ajax({
 			method: "GET",
 			url: "/api/method/phr.templates.pages.patient.get_data_to_render",
@@ -75,7 +81,7 @@ $.extend(RenderFormFields.prototype,{
 		$.each(fields,function(indx, meta){
 			!me.section && meta['fieldtype'] !== 'section_break' && me.section_break_field_renderer()
 			!me.column && me.column_break_field_renderer()
-			console.log([values[meta['fieldname']], meta['fieldname']])
+			console.log([values[meta['fieldname']], meta['fieldname'] , meta['fieldtype']])
 			meta['value']=values[meta['fieldname']] || "";
 			me[meta['fieldtype'] + "_field_renderer"].call(me, meta);
 			if(meta['depends_on']) me.depends_on(meta)
@@ -187,15 +193,14 @@ $.extend(RenderFormFields.prototype,{
 				</div>', field_meta)).appendTo($(this.column))
 
 		frappe.require("/assets/phr/js/jquery.autocomplete.multiselect.js");
-
-		if (typeof(field_meta['options']) === String){
+		if (typeof(field_meta['options']) === "string"){
 			frappe.call({
 				method:'phr.templates.pages.patient.get_master_details',
 				args:{'doctype': field_meta['options']},
 				callback: function(r){
 					$($input.find('.autocomplete')).autocomplete({
 						source: r.message,
-						multiselect: true
+						multiselect: field_meta['multiselect'] == "false" ? false:true
 					});
 				}
 			})
@@ -205,7 +210,7 @@ $.extend(RenderFormFields.prototype,{
 			console.log($input.find('.autocomplete'))
 			$($input.find('.autocomplete')).autocomplete({
 				source: field_meta['options'],
-				multiselect: true
+				multiselect: field_meta['multiselect']
 			});
 		}
 		if(field_meta['required']==1){
@@ -242,6 +247,10 @@ $.extend(RenderFormFields.prototype,{
 		if(field_meta['required']==1){
 			$input.find("textarea").prop('required',true)
 			$input.find("textarea").css({"border": "1px solid #999","border-color": "red" });
+		}
+
+		if(field_meta['display']){
+			$($('[name="'+field_meta['fieldname']+'"]').parents()[3]).css("display", field_meta['display']);
 		}
 
 		this.set_description($input.find('.control-input'), field_meta)
@@ -323,7 +332,7 @@ $.extend(RenderFormFields.prototype,{
 		$input = $(repl_str('<div class="panel panel-primary" style="height:100%;margin-top:10px;">\
 				<div class="panel-heading">%(label)s</div>\
 				<div class="panel-body" style="padding:1px;height: 25%;;overflow:hidden;overflow:auto">\
-					<table class="table table-striped" style="padding=0px;" >\
+					<table class="table table-striped" data-pagination="true"  style="padding=0px;" >\
 						<thead><tr></tr></thead>\
 						<tbody></tbody>\
 					</table>\

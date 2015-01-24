@@ -65,7 +65,7 @@ $(document).ready(function () {
 			Visit.prototype.init($(document).find("#main-con"), '', profile_id)
 		}).appendTo('.breadcrumb');
 		
-		Visit.prototype.init($(document).find("#main-con"))
+		Visit.prototype.init($(document).find("#main-con"), '', profile_id)
 	})
 	$(".create_linkphr").unbind("click").click(function(){
 		LinkedPHR.prototype.init($(document).find("#main-con"),

@@ -1,0 +1,34 @@
+{
+	"fields":[
+		{
+			"fieldname":"provider_type", 
+			"fieldtype":"link", 
+			"label":"Provider Type",
+			"options":"Provider Type",
+			"multiselect":"false",
+			"description": "Autocomplete Field"
+		},
+		{
+			"fieldname":"",
+			"fieldtype":"column_break", 
+			"label":""
+		},
+		{
+			"fieldname":"provider_name", 
+			"fieldtype":"data",
+			"label":"Provider Name",
+			"description": "Provider Name"
+		},
+		{
+			"fieldname":"",
+			"fieldtype":"column_break", 
+			"label":""
+		},
+		{
+			"fieldname":"provider_loc", 
+			"fieldtype":"data",
+			"label":"Provider Location",
+			"description": "Provider Location"
+		}
+	]
+}

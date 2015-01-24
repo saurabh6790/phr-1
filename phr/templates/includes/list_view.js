@@ -5,13 +5,16 @@ frappe.provide("templates/includes");
 var ListView = inherit(RenderFormFields,{
 	init: function(wrapper, args){
 		// console.log(args)
+		console.log("from even")
 		var me = this;
 		this.wrapper = wrapper;
 		this.args = args;
 		this.profile_id=args["profile_id"]
+		console.log(['arg exist', args['cmd'], args])
 		if (args['cmd']){
 			this.get_data()
 		}else{
+			console.log(['test'])
 			RenderFormFields.prototype.init(this.wrapper, {'file_name': me.args['file_name'], 'param':'listview'})
 			me.render_top_section()
 		}
@@ -27,20 +30,50 @@ var ListView = inherit(RenderFormFields,{
 			data: "data="+JSON.stringify({'file_name':me.args['file_name'],"profile_id":me.profile_id, 'param':'listview'}),
 			async: false,
 			success: function(r) {
-				// console.log(r.message.phr.visitList)
-				console.log(r)
-				r.message['listview'][me.args['tab_at']]['options'] = r.message['options'];
+				me.listview = r.message['listview'];
+				dataTable = r.message['options'];
 
+				r.message['listview'][me.args['tab_at']]['options'] = r.message['options'];
 				RenderFormFields.prototype.init(this.wrapper, {'fields': r.message['listview']})
-				// me.open_form()
+				
+				// me.create_pagination(r.message['options'], r.message['page_size'])
 				me.render_top_section()
 			}
 		});
 	},
+	create_pagination: function(table_data, page_size){
+		this.table_data = table_data;
+		this.page_size = page_size;
+
+		no_of_pages = (table_data.length-1) / page_size;
+
+		$('<ul class="pagination ">\
+				<li ><a nohref>&laquo;</a></li>\
+		</ul>').appendTo($('.field-area'))
+
+		for(i=1 ;i<=no_of_pages; i++){
+			$(repl_str('<li ><a nohref>%(count)s</a></li>',{'count':i})).appendTo('.pagination')
+		}
+
+		$('<li><a nohref>&raquo;</a></li>').appendTo('.pagination')
+		console.log("end of create_pagination")
+		this.page_controller()
+	},
+	page_controller : function(){
+		var me = this;
+		$('ul li a').click(function(){
+			me.render_page($(this).html())
+		})
+		console.log("end of page_controller")
+	},
+	render_page: function(page_id){
+		next = parseInt(this.page_size) * parseInt(page_id);
+		this.listview[this.args['tab_at']]['options'] = this.table_data.slice((next - parseInt(this.page_size)), next)
+		RenderFormFields.prototype.init(this.wrapper, {'fields': this.listview})
+		this.create_pagination(this.table_data, this.page_size)
+	},
 	render_top_section: function(){
 		var me = this;
-
-		// console.log($('.sub-top-bar.btn'))
 
 		$('.new_controller').remove();
 		$('.save_controller').remove();
@@ -52,15 +85,15 @@ var ListView = inherit(RenderFormFields,{
 			</div>')
 			.appendTo($('.sub-top-bar'))
 			.bind('click',function(){
-				// console.log("in ListView js")
 				me.new_form()
 				me.status=1
 				return me.status
 			})
+		console.log("end of render_top_section")
 	},
 	new_form:function(){
 		var me = this;
-		// console.log("in form body")
+		console.log('in new form')
 		RenderFormFields.prototype.init(this.wrapper, {'file_name': me.args['file_name']})
 	}
 })
