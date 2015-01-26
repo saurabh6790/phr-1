@@ -22,7 +22,7 @@ var PatientDashboard = inherit(RenderFormFields, {
 				if (($("input:checkbox:checked").length)>4){
 					alert("You Need to select any Four")
 					/*$("input:checkbox:checked").prop('checked', false);*/
-					console.log(this)
+		
 					$(this).prop('checked', false);
 				}
 			}
@@ -51,7 +51,7 @@ var PatientDashboard = inherit(RenderFormFields, {
 		})
 		var files = [];
  		this.object = {};
- 		$("input[type=file]").change(function(event) {
+ 		/*$("input[type=file]").change(function(event) {
  			$.each(event.target.files, function(index, file) {
 				var reader = new FileReader();
     			reader.onload = function(event) {  
@@ -60,11 +60,11 @@ var PatientDashboard = inherit(RenderFormFields, {
       				files.push(me.object);
     			};  
     			reader.readAsDataURL(file);
-    			me.upload_image(me.object,files)
+    			//me.upload_image(me.object,files)
     			
   			});
-  		});
-		/*$('.btn-file').bind('click',function(){
+  		});*/
+		$('.btn-file').bind('click',function(){
 			object = {};
 			$.each(event.target.files, function(index, file) {
 				var reader = new FileReader();
@@ -72,19 +72,20 @@ var PatientDashboard = inherit(RenderFormFields, {
       				object.filename = file.name;
       				object.data = event.target.result;
       				files.push(object);
+      				me.upload_image(object)
     			};  
     			reader.readAsDataURL(file);
-    			me.upload_image(object)
+    			//me.upload_image(object)
   			});
-  		})*/
+  		})
   		var image=frappe.get_cookie("user_image")
   		$('<img src="'+image+'"alt="user image"><img>').appendTo($('.fileinput-preview'))
   	},
 	upload_image:function(object,files){
 		console.log(this.object)
-		/*frappe.call({
+		frappe.call({
 			method:'phr.templates.pages.profile.upload_image',
-			args:{"data":,"files":files},
+			args:{"data":object.data},
 			callback: function(r) {
 				console.log(r)
 				if(r.message) {
@@ -92,7 +93,7 @@ var PatientDashboard = inherit(RenderFormFields, {
 					var dialog = frappe.msgprint(r.message);
 				}
 			}
-		});*/
+		});
 	},
 	get_method:function(res,cmd,me){
 		frappe.call({

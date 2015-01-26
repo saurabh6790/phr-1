@@ -27,7 +27,7 @@ def update_profile(data,id,dashboard=None):
 @frappe.whitelist(allow_guest=True)
 def update_profile_solr(data,dashboard=None):
 	request_type="POST"
-	url="http://88.198.52.49:7974/phr/updateProfile"
+	url="http://88.198.52.49:7974/phr-api/updateProfile"
 	from phr.phr.phr_api import get_response
 	response=get_response(url,data,request_type)
 	res=json.loads(response.text)
@@ -101,8 +101,8 @@ def update_values(fields,name):
 		frappe.db.commit()
 
 @frappe.whitelist(allow_guest=True)
-def upload_image(data=None,files=None):
-	frappe.errprint([data,files])
+def upload_image(data=None):
+	frappe.errprint([data])
 	from binascii import a2b_base64
 	import base64
 	data_index = data.index('base64') + 7
@@ -110,8 +110,8 @@ def upload_image(data=None,files=None):
 	decoded_image = base64.b64decode(filedata)
 	site_name = get_site_name()
 	path = os.path.abspath(os.path.join('.',site_name, 'public', 'files'))
-	image=path+'/'+frappe.session.user+".png"
-	file_path='/files/'+frappe.session.user+".png"
+	image=path+'/'+frappe.session.user+".jpg"
+	file_path='/files/'+frappe.session.user+".jpg"
 	if os.path.exists(image):
 		try:
 			os.remove(image)
