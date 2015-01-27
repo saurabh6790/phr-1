@@ -237,7 +237,8 @@ def get_event_data(data):
 	response=get_response(url, json.dumps({"profileId":data.get('profile_id')}), request_type)
 	res_data = json.loads(response.text)
 
-	url="http://192.168.5.12:9090/phr/phrdata/getprofilefilecount"
+	# url="http://192.168.5.12:9090/phr/phrdata/getprofilefilecount"
+	url = "%s/phrdata/getprofilefilecount"%get_base_url()
 	# url="http://88.198.52.49:7974/phr/phrdata/getprofilefilecount"
 	response=get_response(url, json.dumps({"profile_id":data.get('profile_id')}), request_type)
 	res_data1 = json.loads(response.text)
