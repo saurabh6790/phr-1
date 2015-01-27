@@ -24,7 +24,7 @@
 			"fieldname":"tab",
 			"fieldtype":"table",
 			"label":"Visit List",
-			"options":[
+			"rows":[
 				[
 					"","Visit Date", 
 					"Event Name", "Provider Type", 

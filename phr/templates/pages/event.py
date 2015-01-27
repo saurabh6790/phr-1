@@ -147,8 +147,8 @@ def get_visit_data(data):
 
 	for filed_dict in fields:
 		pos =+ 1
-		if 'options' in filed_dict.keys(): 
-			options = filed_dict.get('options')
+		if 'rows' in filed_dict.keys(): 
+			rows = filed_dict.get('rows')
 			break
 
 	data=json.loads(data)
@@ -180,10 +180,10 @@ def get_visit_data(data):
 
 			event_list_updater(visit['entityid'], event_count_dict, count_list, data)
 			
-			options.extend([data])
+			rows.extend([data])
 	
 	return {
-		'options': options,
+		'rows': rows,
 		'listview': fields,
 		'page_size': 5
 	}
@@ -206,8 +206,8 @@ def get_event_data(data):
 
 	for filed_dict in fields:
 		pos =+ 1
-		if 'options' in filed_dict.keys(): 
-			options = filed_dict.get('options')
+		if 'rows' in filed_dict.keys(): 
+			rows = filed_dict.get('rows')
 			break
 
 	data=json.loads(data)
@@ -240,10 +240,10 @@ def get_event_data(data):
 			
 			event_list_updater(visit['entityid'], event_count_dict, count_list, data)
 			
-			options.extend([data])
+			rows.extend([data])
 
 	return {
-		'options': options,
+		'rows': rows,
 		'listview': fields,
 		'page_size': 5
 	}

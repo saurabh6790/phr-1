@@ -31,9 +31,9 @@ var ListView = inherit(RenderFormFields,{
 			async: false,
 			success: function(r) {
 				me.listview = r.message['listview'];
-				dataTable = r.message['options'];
+				dataTable = r.message['rows'];
 
-				r.message['listview'][me.args['tab_at']]['options'] = r.message['options'];
+				r.message['listview'][me.args['tab_at']]['rows'] = r.message['rows'];
 				RenderFormFields.prototype.init(this.wrapper, {'fields': r.message['listview']})
 				
 				// me.create_pagination(r.message['options'], r.message['page_size'])
@@ -68,7 +68,7 @@ var ListView = inherit(RenderFormFields,{
 	},
 	render_page: function(page_id){
 		next = parseInt(this.page_size) * parseInt(page_id);
-		this.listview[this.args['tab_at']]['options'] = this.table_data.slice((next - parseInt(this.page_size)), next)
+		this.listview[this.args['tab_at']]['rows'] = this.table_data.slice((next - parseInt(this.page_size)), next)
 		RenderFormFields.prototype.init(this.wrapper, {'fields': this.listview})
 		this.create_pagination(this.table_data, this.page_size)
 	},

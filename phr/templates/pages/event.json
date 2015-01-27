@@ -118,7 +118,7 @@
 			"fieldname":"tab",
 			"fieldtype":"table",
 			"label":"Event Table",
-		 	"options":[
+		 	"rows":[
  				[
  					"","Event Name","Event Date", 
  					"Description", 
