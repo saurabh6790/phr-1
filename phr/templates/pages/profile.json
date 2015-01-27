@@ -20,7 +20,7 @@
    },
 	{
    	"fieldname": "person_lastname", 
-      "fieldtype": "link", 
+      "fieldtype": "data", 
       "label": "Last Name",
       "required":1
 	},
@@ -37,7 +37,7 @@
       "required":1
    },
   	{
-   	"fieldname": "date_of_birth", 
+   	"fieldname": "str_date_of_birth", 
       "fieldtype": "date", 
       "label": "DOB"
 	},
@@ -57,11 +57,6 @@
       "fieldname": "blod_group", 
       "fieldtype": "data", 
       "label": "Blood Group"
-   },
-   {
-      "fieldname": "habits", 
-      "fieldtype": "text", 
-      "label": "Habits"
    },
    {
       "fieldname": "allergies", 
@@ -87,7 +82,7 @@
       "fieldname": "diet_type", 
       "fieldtype": "select", 
       "label": "Diet Type",
-      "options":["","Heavy","Lite"]
+      "options":["","Vegetation","Non-Vegetarian"]
    },
    {
       "fieldname": "", 
@@ -127,21 +122,19 @@
       "fieldtype": "section_break", 
       "label": ""
    },
-   
-   
    {
-      "fieldname": "current_address", 
+      "fieldname": "address1", 
       "fieldtype": "text", 
       "label": "Address Line 1"
    },
    {
-      "fieldname": "permnt_address", 
+      "fieldname": "address2", 
       "fieldtype": "text", 
       "label": "Address Line 2"
    },
    
    {
-      "fieldname": "pincode_current", 
+      "fieldname": "pincode", 
       "fieldtype": "data", 
       "label": "Pincode"
    },
@@ -151,17 +144,17 @@
       "label": ""
    },
    {
-      "fieldname": "city_current", 
+      "fieldname": "city", 
       "fieldtype": "data", 
       "label": "City"
    },
    {
-      "fieldname": "state_current", 
+      "fieldname": "state", 
       "fieldtype": "data", 
       "label": "State"
    },
    {
-      "fieldname": "country_current", 
+      "fieldname": "country", 
       "fieldtype": "data", 
       "label": "Country"
    },
@@ -191,14 +184,69 @@
       "label": "Manage PHR" 
    },
    {
-      "fieldname": "create_new", 
-      "fieldtype": "button", 
-      "label": "Create New"
+      "fieldname": "dashboard", 
+      "fieldtype": "section", 
+      "label": "Manage Dashboard"
    },
    {
-      "fieldname": "update_phr", 
-      "fieldtype": "button", 
-      "label": "Update Existing"
-   }
+      "fieldname": "events", 
+      "fieldtype": "check", 
+      "label": "Events" 
+   },
+   {
+      "fieldname": "visits", 
+      "fieldtype": "check", 
+      "label": "Visits" 
+   },
+   {
+      "fieldname": "disease_monitoring", 
+      "fieldtype": "check", 
+      "label": "Disease Monitoring" 
+   },
+   {
+      "fieldname": "", 
+      "fieldtype": "column_break", 
+      "label": ""
+   },    
+   {
+      "fieldname": "medications", 
+      "fieldtype": "check", 
+      "label": "Medications" 
+   },
+   {
+      "fieldname":"appointments", 
+      "fieldtype":"check", 
+      "label": "Appointments" 
+   }, 
+   {
+      "fieldname":"messages", 
+      "fieldtype":"check", 
+      "label": "Messages" 
+   },
+   {
+      "fieldname": "image", 
+      "fieldtype": "section", 
+      "label": "Profile Image" 
+   },
+   {
+      "fieldname":"", 
+      "fieldtype":"attach", 
+      "label": "" 
+   },
+   {
+      "fieldname": "notification", 
+      "fieldtype": "section", 
+      "label": "Manage Notifications" 
+   },
+   {
+      "fieldname": "linked_phr", 
+      "fieldtype": "check", 
+      "label": "Linked PHRs" 
+   },
+   {
+      "fieldname":"to_do", 
+      "fieldtype":"check", 
+      "label": "To Do" 
+   } 
    ]
 }

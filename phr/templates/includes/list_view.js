@@ -26,7 +26,7 @@ var ListView = inherit(RenderFormFields,{
 
 		$.ajax({
 			method: "GET",
-			url: "/api/method/phr.templates.pages.event."+me.args['cmd'],
+			url: "/api/method/phr.templates.pages."+me.args['cmd'],
 			data: "data="+JSON.stringify({'file_name':me.args['file_name'],"profile_id":me.profile_id, 'param':'listview'}),
 			async: false,
 			success: function(r) {

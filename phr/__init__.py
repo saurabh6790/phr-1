@@ -5,9 +5,9 @@ import json
 def create_profile(data):
 	from templates.pages.login import create_profile
 	data = json.loads(data)
-	
+	print data
 	res = create_profile(data.get('first_name'), data.get('middle_name'), 
-			data.get('last_name'), data.get('email_id'), data.get('contact'))
+			data.get('last_name'), data.get('email'), data.get('contact'),data.get('received_from'))
 	
 	return res
 

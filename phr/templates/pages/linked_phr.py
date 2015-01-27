@@ -55,7 +55,7 @@ def create_linkedphr(data,id):
 @frappe.whitelist(allow_guest=True)
 def create_profile_solr(data):
 	request_type="POST"
-	url="http://192.168.5.11:9090/phr/createProfile"
+	url="http://192.168.5.11:9090/phr-api/createProfile"
 	# url="http://88.198.52.49:7974/phr/createProfile"
 	from phr.phr.phr_api import get_response
 	response=get_response(url,data,request_type)
@@ -63,14 +63,16 @@ def create_profile_solr(data):
 	print res
 	if res and res.get('returncode')==101:
 		data=json.loads(data)
-		args={"entityid":res.get('entityid'),"linking_id":data.linking_id,"relationship":data.relationship,"received_from":"Desktop"}
+		print "============================="
+		print data
+		args={"entityid":res.get('entityid'),"linking_id":data["linking_id"],"relationship":data["relationship"],"received_from":"Desktop"}
 		request_type="POST"
 		url="http://192.168.5.11:9090/phr/linkprofile"
 		# url="http://88.198.52.49:7974/phr/linkprofile"
 		from phr.phr.phr_api import get_response
 		response=get_response(url,json.dumps(args),request_type)
 		res=json.loads(response.text)
-		print res
+		return res
 
 
 	# return "Linked PHR Created Successfully"

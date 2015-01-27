@@ -86,6 +86,24 @@ $.extend(RenderFormFields.prototype,{
 			me[meta['fieldtype'] + "_field_renderer"].call(me, meta);
 			if(meta['depends_on']) me.depends_on(meta)
 		})
+	
+	},
+	check_field_renderer: function(field_meta){
+		var me=this;
+		$input=$(repl_str('<div class="form-horizontal frappe-control" style="max-width: 600px;margin-top:10px;">\
+						<div class="form-group row" style="margin: 0px">\
+								<div class="col-xs-8">\
+								<div class="control-input">\
+									<input type="checkbox" class="chk" name="%(fieldname)s" value="%(fieldname)s">\
+									%(label)s\
+								</div>\
+							</div>\
+						</div>\
+				</div>', field_meta)).appendTo($(this.column))
+		if(field_meta['required']==1){
+			$input.find("input").prop('required',true)
+			$input.find("input").css({"border": "1px solid #999","border-color": "red" });
+		}
 	},
 	depends_on:function(meta){
 		parent_field = meta['depends_on'].split(':')[0]
@@ -256,7 +274,26 @@ $.extend(RenderFormFields.prototype,{
 		this.set_description($input.find('.control-input'), field_meta)
 	},
 	button_field_renderer: function(field_meta){
+		$('<div class="update" style="width:45%;display:inline-block;text-align:right;">\
+				<button class="btn btn-primary">\
+					Save \
+				</button>\
+			</div>').appendTo($(this.column))
 
+	},
+	attach_field_renderer:function(field_meta){
+		$('<div class="fileinput fileinput-exists" data-provides="fileinput">\
+			<div class="fileinput-new thumbnail" style="width: 200px; height: 150px;">\
+			 <img data-src="holder.js/100%x100%" alt="...">\
+			 </div>\
+			 <div class="fileinput-preview fileinput-exists thumbnail" style="max-width: 200px; max-height: 150px;"></div>\
+            <div><span class="btn btn-default btn-file"><span class="fileinput-new">Select image</span>\
+            <span class="fileinput-exists">Change</span>\
+            <input type="file" name="..."></span>\
+ 			 <a href="#" class="btn btn-default fileinput-exists" data-dismiss="fileinput">Remove</a>\
+ 			 </div>\
+ 			</div>').appendTo($(this.column))
+		/*$('.fileinput').fileinput()*/
 	},
 	date_field_renderer:function(field_meta){
 		var me = this;
@@ -278,13 +315,12 @@ $.extend(RenderFormFields.prototype,{
 						yearRange: "-70Y:+10Y",
 						dateFormat: "dd/mm/yy"
 					})
-		var val = field_meta['value'];
-		
-		if(val){
+			var val = field_meta['value'];
+			if(val){
 			var date=new Date(val)
 			$input.find('input').val($.datepicker.formatDate('dd/mm/yy',date))
-		}
-
+			}
+	
 		if(field_meta['required']==1){
 			$input.find("input").prop('required',true);
 			$input.find("input").css({"border": "1px solid #999","border-color": "red" });
@@ -311,7 +347,7 @@ $.extend(RenderFormFields.prototype,{
 						changeYear: true,
 						yearRange: "-70Y:+10Y",
 						dateFormat: "dd/mm/yy",
-						timeFormat:  "HH:mm"
+						timeFormat:  "HH:mm:ss"
 					})
 		var val = field_meta['value'];
 		

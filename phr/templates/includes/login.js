@@ -32,6 +32,7 @@ login.bind_events = function() {
 		args.contact = ($("#signup_contact").val() || "").trim();
 		cnf_contact = ($("#signup_contact_cnf").val() || "").trim();
 		args.cmd = "phr.templates.pages.login.create_profile";
+		args.created_via="Desktop";
 		if(!args.email_id || !valid_email(args.email_id) || !valid_email(cnf_email_id)) {
 			frappe.msgprint(__("Valid email and name required"));
 			return false;
@@ -102,6 +103,7 @@ login.login_handlers = (function() {
 			if(xhr.responseJSON) {
 				data = xhr.responseJSON;
 			}
+			
 			var message = data._server_messages
 				? JSON.parse(data._server_messages).join("\n") : default_message;
 			frappe.msgprint(message);
@@ -130,6 +132,7 @@ login.login_handlers = (function() {
 					window.location.href = "/index";
 				}
 			} else if(["#signup", "#forgot"].indexOf(window.location.hash)!==-1) {
+				console.log(data.message)
 				frappe.msgprint(data.message);
 			}
 		},

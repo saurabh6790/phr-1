@@ -14,7 +14,9 @@ import os
 @frappe.whitelist(allow_guest=True)
 def get_data_to_render(data=None,entityid=None):
 	json_data, fields, values, tab = None, None, None, None
-
+	print "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+	print data
+	print "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 	if data:
 		data = json.loads(data)
 	print "======before dict check ========="
@@ -23,28 +25,16 @@ def get_data_to_render(data=None,entityid=None):
 
 	if isinstance(data, dict):
 		if not data.get('file_name'):
-			print "================not file==============="
-			print data
-			print "======================================="
 			json_data = data
-
-			print "==============method ==================="
-			print data.get('method')
-			print type(data.get('method'))
-			print isinstance(data.get('method'), unicode)
-			print "======================================="
 			
 		else:
 			json_data = get_json_data(data.get('file_name'))	
-			print "================json data==============="
-			print json_data
-			print "======================================="
 
 		if data.get('values'):
 			json_data['values'] = data.get('values')
 
 		if data.get('method'):
-				data = {"method" : data.get('method') }
+			data = {"method" : data.get('method') }
 		else:
 			data = data
 
@@ -63,6 +53,7 @@ def get_data_to_render(data=None,entityid=None):
 
 	return fields, values, tab
 	
+@frappe.whitelist(allow_guest=True)	
 def get_json_data(file_name):
 	fn=file_name+'.json'
 	print os.path.join(os.path.dirname(__file__), fn)
@@ -71,6 +62,9 @@ def get_json_data(file_name):
 
 	return json_data
 
+def write_json_date(file_name,data):
+	with open(os.path.join(os.path.dirname(__file__), file_name +".json"),'w+') as txtfile:
+		txtfile.write(json.dumps(data, indent=1, sort_keys=True))
 
 """
 	get data generic method from all db's 
@@ -99,13 +93,11 @@ def get_data(url,data):
 	url=url
 	from phr.phr.phr_api import get_response
 	response=get_response(url,data,request_type)
+	print response
 	if response:
 		res=json.loads(response.text)
 		print res
 		data=res["list"][0]
-		print "===============================get data========================="
-		print data
-		print "================================================================"
 		return data
 	else:
 		return "No data"
@@ -121,9 +113,13 @@ def get_url(data):
 	return url
 
 
+"""
+	Solr api address
+"""
+@frappe.whitelist(allow_guest=True)
 def get_base_url():
-	return "http://192.168.5.12:9090/phr/"
-	# return "http://88.198.52.49:7974/phr/"
+	#return "http://192.168.5.11:9090/phr-api/"
+	return "http://88.198.52.49:7974/phr-api/"
 
 
 """
@@ -131,11 +127,6 @@ Method to get name of method in solr database.contains dictionary or map.
 """
 def get_method(data):
 	method_dic={"profile":"searchProfile", "event":"searchEvent"}
-	print data
-	print "=============================================================================="
-	print method_dic.get(data.get('method'))
-	print "=============================================================================="
-
 	return method_dic.get(data.get('method'))
 
 

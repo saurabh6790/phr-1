@@ -3,8 +3,10 @@ import json
 import os 
 from frappe.utils import get_site_path, get_hook_method, get_files_path, get_site_base_path,cstr, cint
 from phr.templates.pages.patient import get_data_to_render
+
 from phr.phr.phr_api import get_response
 import datetime
+
 
 @frappe.whitelist(allow_guest=True)
 def create_update_event(data=None):
@@ -268,7 +270,8 @@ def event_list_updater(event, event_count_dict, count_list, data):
 		for folder in sorted(event_count_dict.get(event)):
 			count_list[position_mapper.get(folder)] =  event_count_dict.get(event).get(folder)
 	data.extend(count_list)
-	
+
+
 @frappe.whitelist()
 def get_providers(filters):
 	filters = eval(filters)
@@ -299,3 +302,4 @@ def get_provider_info(cond):
 	
 	else:
 		return none
+
