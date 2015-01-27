@@ -11,6 +11,7 @@ from frappe import _
 import binascii
 import base64
 from phr.templates.pages.login import create_profile_in_db,get_barcode,get_image_path
+from phr.templates.pages.patient import get_base_url
 
 @frappe.whitelist(allow_guest=True)
 def update_profile(data,id,dashboard=None):
@@ -27,7 +28,8 @@ def update_profile(data,id,dashboard=None):
 @frappe.whitelist(allow_guest=True)
 def update_profile_solr(data,dashboard=None):
 	request_type="POST"
-	url="http://88.198.52.49:7974/phr-api/updateProfile"
+	# url="http://88.198.52.49:7974/phr-api/updateProfile"
+	url = "%s/updateProfile"%get_base_url()
 	from phr.phr.phr_api import get_response
 	response=get_response(url,data,request_type)
 	res=json.loads(response.text)
@@ -94,7 +96,7 @@ def manage_dashboard(data,dashboard=None):
 		})
 		sr.ignore_permissions = True
 		sr.insert()
-		upload_values(dashboard_fields,sr.name)
+		update_values(dashboard_fields,sr.name)
 
 def update_values(fields,name):
 	for d in fields:

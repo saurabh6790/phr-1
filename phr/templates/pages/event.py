@@ -51,7 +51,7 @@ def update_event(data):
 	response = ''
 	request_type="POST"
 	# url="http://192.168.5.12:9090/phr-api/createupdateevent"
-	url="%s/createupdateevent"%get_base_url
+	url="%s/createupdateevent"%get_base_url()
 	# url="http://88.198.52.49:7974/phr-api/createupdateevent"
 	event_data =	{
 			"entityid":data.get('entityid'),

@@ -10,6 +10,7 @@ from frappe import _
 import barcode
 import time
 import os
+from phr.templates.pages.patient import get_base_url
 #STANDARD_USERS = ("Guest", "Administrator")
 
 
@@ -99,7 +100,8 @@ def create_profile_in_db(id,args,response,path):
 
 def create_profile_in_solr(args):
 	request_type="POST"
-	url="http://192.168.5.11:9090/phr/createProfile"
+	# url="http://192.168.5.11:9090/phr/createProfile"
+	url = "%s/createProfile"%get_base_url()
 	# url="http://88.198.52.49:7974/phr/createProfile"
 	data=json.dumps(args)
 	print data
