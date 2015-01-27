@@ -50,6 +50,7 @@ var PatientDashboard = inherit(RenderFormFields, {
 			me.get_method(me.res,$id,me)		
 		})
 		var files = [];
+
  		object = {};
  		$("input[type=file]").change(function(event) {
  			$.each(event.target.files, function(index, file) {

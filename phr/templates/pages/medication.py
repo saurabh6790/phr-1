@@ -75,7 +75,8 @@ def save_data(data):
 	return med.name
 
 def get_formatted_date(strdate=None):
-	return datetime.datetime.strptime(strdate,"%d/%m/%Y %H:%M:%S")
+	if strdate:
+		return datetime.datetime.strptime(strdate,"%d/%m/%Y %H:%M:%S")
 
 
 def get_options(obj):

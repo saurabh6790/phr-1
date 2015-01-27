@@ -23,6 +23,7 @@ var Medications = inherit(ListView,{
 
 	},
 	update_select_options:function(){
+		console.log("hiiiii")
 		frappe.call({
 		method:"phr.templates.pages.medication.get_dosage_types",
 		callback:function(r){
@@ -61,6 +62,7 @@ var Medications = inherit(ListView,{
 				callback:function(r){
 					if(r.message){
 						me.update_list_view(r.message)
+						me.update_select_options()
 					}
 					else{
 						
@@ -73,6 +75,5 @@ var Medications = inherit(ListView,{
 	},
 	update_list_view:function(data){
 		RenderFormFields.prototype.init(this.wrapper, {'fields': data['listview']})
-		
 	}
 })

@@ -97,7 +97,7 @@ $(document).ready(function () {
 			Appointments.prototype.init($(document).find("#main-con"), '', profile_id)
 		}).appendTo('.breadcrumb');
 		
-		Appointments.prototype.init($(document).find("#main-con"))
+		Appointments.prototype.init($(document).find("#main-con"),'', profile_id)
 	})
 	$('.msg').unbind("click").click(function(){
 		$('.breadcrumb').empty()
