@@ -14,51 +14,6 @@
    ]
   }, 
   {
-   "depends_on": "dosage_type:Weekly", 
-   "fieldname": "day", 
-   "fieldtype": "select", 
-   "label": "Day", 
-   "options": [
-    "", 
-    "Sunday", 
-    "Monday", 
-    "Tuesday", 
-    "Wednesday", 
-    "Thursday", 
-    "Friday", 
-    "Saturday"
-   ]
-  }, 
-  {
-   "depends_on": "dosage_type:Weekly", 
-   "fieldname": "time", 
-   "fieldtype": "datetime", 
-   "label": "Time"
-  }, 
-  {
-   "depends_on": "dosage_type:Daily", 
-   "fieldname": "morning", 
-   "fieldtype": "datetime", 
-   "label": "Morning", 
-   "options": [
-    "", 
-    "Monday", 
-    "tuesday"
-   ]
-  }, 
-  {
-   "depends_on": "dosage_type:Daily", 
-   "fieldname": "evening", 
-   "fieldtype": "datetime", 
-   "label": "Evening"
-  }, 
-  {
-   "depends_on": "dosage_type:Daily", 
-   "fieldname": "night", 
-   "fieldtype": "datetime", 
-   "label": "Night"
-  }, 
-  {
    "fieldname": "", 
    "fieldtype": "column_break", 
    "label": ""

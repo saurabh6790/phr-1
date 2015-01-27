@@ -79,6 +79,8 @@ def get_formatted_date(strdate=None):
 		return datetime.datetime.strptime(strdate,"%d/%m/%Y %H:%M:%S")
 
 
+
+
 def get_options(obj):
 	options={}
 	dt=frappe.get_doc("Dosage",obj.get('dosage_type'))
