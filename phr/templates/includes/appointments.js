@@ -15,35 +15,42 @@ var Appointments = inherit(ListView,{
 		this.profile_id = profile_id
 		//RenderFormFields.prototype.init(this.wrapper,{"file_name" : "appointments",'profile_id':profile_id},this.entityid)
 		ListView.prototype.init($(document).find(".field-area"), {"file_name" : "appointments",
-			'cmd':"medication.get_medication_data",
+			'cmd':"appointments.get_appointments",
 			'profile_id':profile_id})
+		me.bind_save_event()
 
 	},
-	/*bind_save_event: function(){
+	bind_save_event: function(){
 		var me = this;
 		this.res = {}
 		this.result_set = {};
 		this.doc_list = [] 
-		$('.save_controller').bind('click',function(event) {
+		$('.update').bind('click',function(event) {
+			console.log(["me:",me.profile_id,"this:",this.profile_id])
 			$("form input, form textarea, form select").each(function(i, obj) {
 				me.res[obj.name] = $(obj).val();
 			})
 			me.res['profile_id'] = me.profile_id;
+			me.res['file_name']="appointments";
+			me.res['param']="listview";
 			frappe.call({
-				method:"phr.templates.pages.event.create_event",
+				method:"phr.templates.pages.appointments.make_appomiments_entry",
 				args:{"data":JSON.stringify(me.res)},
 				callback:function(r){
-					$('.breadcrumb li:last').remove()
-					if(r.message.returncode == 103){
-						me.open_form(r.message.entityid, r.message.event_title)	
+					if(r.message){
+						me.update_list_view(r.message)
 					}
 					else{
-						alert(r.message.message_summary)
+						
 					}
 				}
 			})
 						
 		})
-		
-	}*/
+	},
+	update_list_view:function(data){
+		var me = this;
+		RenderFormFields.prototype.init(this.wrapper, {'fields': data['listview']})
+		me.bind_save_event()
+	}
 })

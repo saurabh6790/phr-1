@@ -152,6 +152,7 @@ def get_linked_phrs(profile_id):
 	print res
 	if res['returncode']==106:
 		return res
+		
 @frappe.whitelist(allow_guest=True)
 def delink_phr(selected,data,profile_id=None):
 	obj=json.loads(data)

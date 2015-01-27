@@ -2,7 +2,7 @@
     "listview": [
          {
             "fieldname": "from_date_time",
-            "fieldtype": "date",
+            "fieldtype": "datetime",
             "label": "Date time"
         },
         {
@@ -39,7 +39,7 @@
             "fieldname": "tab",
             "fieldtype": "table",
             "label": "Appointments",
-            "options": [
+            "rows": [
                 [
                     "",
                     "Date time",

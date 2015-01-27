@@ -19,7 +19,7 @@ var PatientDashboard = inherit(RenderFormFields, {
 		$('.chk').bind('click',function(event){
 			var $id=$('.tab-pane.active').attr('id')
 			if ($id=='dashboard'){
-				if (($("input:checkbox:checked").length)>4){
+				if (($('#dashboard.tab-pane.active form').find("input:checkbox:checked").length)>4){
 					alert("You Need to select any Four")
 					/*$("input:checkbox:checked").prop('checked', false);*/
 		
@@ -50,7 +50,7 @@ var PatientDashboard = inherit(RenderFormFields, {
 			me.get_method(me.res,$id,me)		
 		})
 		var files = [];
- 		this.object = {};
+ 		//this.object = {};
  		/*$("input[type=file]").change(function(event) {
  			$.each(event.target.files, function(index, file) {
 				var reader = new FileReader();

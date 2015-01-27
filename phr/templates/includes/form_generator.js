@@ -375,7 +375,7 @@ $.extend(RenderFormFields.prototype,{
 				</div>\
 			</div>',field_meta)).appendTo($(this.column))
 
-		$.each(field_meta['options'],function(i, val){
+		$.each(field_meta['rows'],function(i, val){
 			(i==0) ? me.render_table_heads(val, $input) : me.render_table_body(val, $input)
 		})
 

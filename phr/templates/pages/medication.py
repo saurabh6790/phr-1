@@ -14,16 +14,16 @@ def get_medication_data(data):
 	pos = 0
 	for filed_dict in fields:
 		pos =+ 1
-		if 'options' in filed_dict.keys(): 
-			options = filed_dict.get('options')
+		if 'rows' in filed_dict.keys(): 
+			rows = filed_dict.get('rows')
 			break
 	data=json.loads(data)
 	medication_list=fetch_values_from_db(data)
 	for d in medication_list:
-		options.extend([["",d.medicine_name, d.dosage,d.from_date_time,d.to_date_time,d.additional_info]])
+		rows.extend([["",d.medicine_name, d.dosage,d.from_date_time,d.to_date_time,d.additional_info]])
 
 	return {
-		'options': options,
+		'rows': rows,
 		'listview': fields
 	}
 
@@ -75,7 +75,8 @@ def save_data(data):
 	return med.name
 
 def get_formatted_date(strdate=None):
-	return datetime.datetime.strptime(strdate,"%d/%m/%Y %H:%M:%S")
+	if strdate:
+		return datetime.datetime.strptime(strdate,"%d/%m/%Y %H:%M:%S")
 
 
 def get_options(obj):
