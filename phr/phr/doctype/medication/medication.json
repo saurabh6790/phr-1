@@ -64,6 +64,13 @@
    "set_only_once": 0
   }, 
   {
+   "fieldname": "options", 
+   "fieldtype": "Data", 
+   "label": "options", 
+   "permlevel": 0, 
+   "precision": ""
+  }, 
+  {
    "allow_on_submit": 0, 
    "fieldname": "from_date_time", 
    "fieldtype": "Datetime", 
@@ -117,7 +124,7 @@
  "is_submittable": 0, 
  "issingle": 0, 
  "istable": 0, 
- "modified": "2015-01-20 21:14:36.397699", 
+ "modified": "2015-01-27 11:51:07.826656", 
  "modified_by": "Administrator", 
  "module": "phr", 
  "name": "Medication", 

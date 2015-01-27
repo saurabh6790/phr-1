@@ -32,7 +32,7 @@ var ListView = inherit(RenderFormFields,{
 			success: function(r) {
 				me.listview = r.message['listview'];
 				dataTable = r.message['options'];
-				r.message['listview'][me.args['tab_at']]['options'] = r.message['options'];
+				//r.message['listview'][me.args['tab_at']]['options'] = r.message['options'];
 				RenderFormFields.prototype.init(this.wrapper, {'fields': r.message['listview']})
 				
 				// me.create_pagination(r.message['options'], r.message['page_size'])
