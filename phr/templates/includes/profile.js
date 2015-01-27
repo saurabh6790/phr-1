@@ -19,7 +19,7 @@ var PatientDashboard = inherit(RenderFormFields, {
 		$('.chk').bind('click',function(event){
 			var $id=$('.tab-pane.active').attr('id')
 			if ($id=='dashboard'){
-				if (($("input:checkbox:checked").length)>4){
+				if (($('#dashboard.tab-pane.active form').find("input:checkbox:checked").length)>4){
 					alert("You Need to select any Four")
 					/*$("input:checkbox:checked").prop('checked', false);*/
 		
@@ -50,33 +50,22 @@ var PatientDashboard = inherit(RenderFormFields, {
 			me.get_method(me.res,$id,me)		
 		})
 		var files = [];
- 		this.object = {};
- 		/*$("input[type=file]").change(function(event) {
+ 		object = {};
+ 		$("input[type=file]").change(function(event) {
  			$.each(event.target.files, function(index, file) {
-				var reader = new FileReader();
-    			reader.onload = function(event) {  
-      				me.object.filename = file.name;
-      				me.object.data = event.target.result;
-      				files.push(me.object);
-    			};  
-    			reader.readAsDataURL(file);
-    			//me.upload_image(me.object,files)
-    			
-  			});
-  		});*/
-		$('.btn-file').bind('click',function(){
-			object = {};
-			$.each(event.target.files, function(index, file) {
 				var reader = new FileReader();
     			reader.onload = function(event) {  
       				object.filename = file.name;
       				object.data = event.target.result;
       				files.push(object);
-      				me.upload_image(object)
     			};  
     			reader.readAsDataURL(file);
-    			//me.upload_image(object)
+    			//me.upload_image(me.object,files)
+    			
   			});
+  		});
+		$('.upload').bind('click',function(){
+			me.upload_image(object)
   		})
   		var image=frappe.get_cookie("user_image")
   		$('<img src="'+image+'"alt="user image"><img>').appendTo($('.fileinput-preview'))
@@ -148,7 +137,8 @@ var PatientDashboard = inherit(RenderFormFields, {
 				selected=[]
 				BootstrapDialog.confirm('are you sure?', function(result){
            			 if(result) {
-                		$(".chk:checked").each(function() {
+                		$(".chk_phr:checked").each(function() {
+                			console.log($(this).val())
 							selected.push($(this).val());
   						});
 						me.delink_phr(meta,selected,meta_dic)

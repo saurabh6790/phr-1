@@ -211,11 +211,14 @@ $.extend(RenderFormFields.prototype,{
 				</div>', field_meta)).appendTo($(this.column))
 
 		frappe.require("/assets/phr/js/jquery.autocomplete.multiselect.js");
+		console.log(typeof(field_meta['options']))
+
 		if (typeof(field_meta['options']) === "string"){
 			frappe.call({
 				method:'phr.templates.pages.patient.get_master_details',
 				args:{'doctype': field_meta['options']},
 				callback: function(r){
+					console.log(['link',r.message])
 					$($input.find('.autocomplete')).autocomplete({
 						source: r.message,
 						multiselect: field_meta['multiselect'] == "false" ? false:true
@@ -292,6 +295,7 @@ $.extend(RenderFormFields.prototype,{
             <input type="file" name="..."></span>\
  			 <a href="#" class="btn btn-default fileinput-exists" data-dismiss="fileinput">Remove</a>\
  			 </div>\
+ 			 <div class="upload"><span class="btn btn-default fileinput-exists">Upload</span></div>\
  			</div>').appendTo($(this.column))
 		/*$('.fileinput').fileinput()*/
 	},

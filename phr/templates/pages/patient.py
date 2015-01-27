@@ -118,8 +118,8 @@ def get_url(data):
 """
 @frappe.whitelist(allow_guest=True)
 def get_base_url():
-	#return "http://192.168.5.11:9090/phr-api/"
-	return "http://88.198.52.49:7974/phr-api/"
+	return "http://192.168.5.12:9090/phr-api/"
+	# return "http://88.198.52.49:7974/phr-api/"
 
 
 """
@@ -134,7 +134,8 @@ def get_method(data):
 @frappe.whitelist(allow_guest=True)
 def get_master_details(doctype):
 	import itertools 
-
-	ret = frappe.db.sql("select name from `tab%s` order by creation desc "%doctype,as_list=1)
+	frappe.errprint(doctype)
+	ret = frappe.db.sql("select name from `tab%s` order by creation desc "%doctype,as_list=1,debug=1)
+	frappe.errprint(ret)
 	return list(itertools.chain(*ret))
 

@@ -62,6 +62,7 @@ def manage_notifications(data,dashboard=None):
 	dashboard_fields=json.loads(dashboard)
 	mn=frappe.db.get_value("Notification Configuration",{"profile_id":obj.get('entityid')},"name")
 	if mn:
+		frappe.db.sql("""update `tabNotification Configuration` set linked_phr=0,to_do=0 where name='%s'"""%(mn))
 		update_values_notify(dashboard_fields,mn)
 	else:
 		mn = frappe.get_doc({
@@ -114,6 +115,7 @@ def upload_image(data=None):
 	file_path='/files/'+frappe.session.user+".jpg"
 	if os.path.exists(image):
 		try:
+			frappe.errprint([decoded_image,"upload"])
 			os.remove(image)
 			fd = open(image, 'wb')
 			fd.write(decoded_image)
@@ -122,6 +124,7 @@ def upload_image(data=None):
 		except OSError, e:
 			print ("Error: %s - %s." % (e.filename,e.strerror))
 	else:
+		frappe.errprint([decoded_image,"upload111"])
 		fd = open(image, 'wb')
 		fd.write(decoded_image)
 		fd.close()
@@ -152,8 +155,10 @@ def get_linked_phrs(profile_id):
 	print res
 	if res['returncode']==106:
 		return res
+
 @frappe.whitelist(allow_guest=True)
 def delink_phr(selected,data,profile_id=None):
+	frappe.errprint([data,selected])
 	obj=json.loads(data)
 	ids=json.loads(selected)
 	for id in ids:

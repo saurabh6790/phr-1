@@ -102,7 +102,7 @@
    "fieldname": "tab", 
    "fieldtype": "table", 
    "label": "Medications", 
-   "options": [
+   "rows": [
     [
      "", 
      "Medicine Name", 
