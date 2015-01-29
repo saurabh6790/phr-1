@@ -24,12 +24,12 @@
 			"fieldname":"tab",
 			"fieldtype":"table",
 			"label":"Visit List",
-			"options":[
+			"rows":[
 				[
 					"","Visit Date", 
-					"Event Name", "Provider Type", 
+					"Visit Description", "Provider Type", 
 					"Provider Name", 
-					"<i class='icon-cogs' data-toggle='tooltip' data-placement='top' title='Consultation'></i>", 
+					"<i class='icon-user-md' data-toggle='tooltip' data-placement='top' title='Consultation'></i>", 
  					"<i class='icon-camera' data-toggle='tooltip' data-placement='top' title='Event Snaps'></i>", 
  					"<i class='icon-beaker' data-toggle='tooltip' data-placement='top' title='Lab Reports'></i>", 
  					"<i class='icon-file' data-toggle='tooltip' data-placement='top' title='Prescription'></i>", 

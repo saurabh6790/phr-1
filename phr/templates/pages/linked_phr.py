@@ -8,6 +8,8 @@ import requests
 import os
 from frappe.auth import _update_password
 from frappe import _
+from phr.phr.phr_api import get_response
+from phr.templates.pages.patient import get_base_url
 
 @frappe.whitelist(allow_guest=True)
 def update_linked_profile(data,id):
@@ -22,7 +24,8 @@ def update_linked_profile(data,id):
 @frappe.whitelist(allow_guest=True)
 def update_profile_solr(data):
 	request_type="POST"
-	url="http://192.168.5.11:9090/phr/updateProfile"
+	# url="http://192.168.5.11:9090/phr/updateProfile"
+	url = "%s/updateProfile"%get_base_url()
 	# url="http://88.198.52.49:7974/phr/updateProfile"
 	from phr.phr.phr_api import get_response
 	response=get_response(url,data,request_type)
@@ -55,8 +58,9 @@ def create_linkedphr(data,id):
 @frappe.whitelist(allow_guest=True)
 def create_profile_solr(data):
 	request_type="POST"
-	url="http://192.168.5.11:9090/phr-api/createProfile"
-	# url="http://88.198.52.49:7974/phr/createProfile"
+	# url="http://192.168.5.11:9090/phr-api/createProfile"
+	url="%s/createProfile"%get_base_url()
+	# url="http://88.198.52.49:7974/phr-api/createProfile"
 	from phr.phr.phr_api import get_response
 	response=get_response(url,data,request_type)
 	res=json.loads(response.text)
@@ -67,7 +71,8 @@ def create_profile_solr(data):
 		print data
 		args={"entityid":res.get('entityid'),"linking_id":data["linking_id"],"relationship":data["relationship"],"received_from":"Desktop"}
 		request_type="POST"
-		url="http://192.168.5.11:9090/phr/linkprofile"
+		# url="http://192.168.5.11:9090/phr/linkprofile"
+		url="%s/linkprofile"%get_base_url()
 		# url="http://88.198.52.49:7974/phr/linkprofile"
 		from phr.phr.phr_api import get_response
 		response=get_response(url,json.dumps(args),request_type)

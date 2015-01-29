@@ -162,9 +162,11 @@ var Event = inherit(ListView,{
 				args:{"data":JSON.stringify(me.res)},
 				callback:function(r){
 					$('.breadcrumb li:last').remove()
-					if(r.message.returncode == 103){
-						me.open_form(r.message.entityid, r.message.event_title);	
+					console.log(r.message)
+					if(r.message.returncode == 103 || r.message.returncode == 116){
+						me.open_form(r.message.entityid, $('[name="event_title"]').val());	
 						me.dms_file_list = [];
+						alert("Saved")
 					}
 					else{
 						alert(r.message.message_summary);
@@ -246,11 +248,12 @@ var Event = inherit(ListView,{
 		$('#consultancy-11, #event_snap-12, #lab_reports-13, #prescription-14, #cost_of_care-15')
 			.bind('click',function(){
 				// $('.breadcrumb').empty();
-				$(repl_str('<li><a nohref>%(event_id)s</a></li>',{'event_id': $(this).attr('id')})).click(function(){
+				$(repl_str('<li id="%(event_id)s"><a nohref>%(event_id)s</a></li>',{'event_id': $(this).attr('id')})).click(function(){
 					$(this).nextAll().remove()
 					// $(this).remove()
 					$('.uploader').remove();
-					me.render_sub_sections()
+					console.log($(this).attr('id'))
+					me.render_sub_sections(me.mapper[$(this).attr('id')])
 					// me.bind_sub_section_events()
 				}).appendTo('.breadcrumb');
 				

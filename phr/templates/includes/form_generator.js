@@ -211,11 +211,14 @@ $.extend(RenderFormFields.prototype,{
 				</div>', field_meta)).appendTo($(this.column))
 
 		frappe.require("/assets/phr/js/jquery.autocomplete.multiselect.js");
+		console.log(typeof(field_meta['options']))
+
 		if (typeof(field_meta['options']) === "string"){
 			frappe.call({
 				method:'phr.templates.pages.patient.get_master_details',
 				args:{'doctype': field_meta['options']},
 				callback: function(r){
+					console.log(['link',r.message])
 					$($input.find('.autocomplete')).autocomplete({
 						source: r.message,
 						multiselect: field_meta['multiselect'] == "false" ? false:true
@@ -292,8 +295,42 @@ $.extend(RenderFormFields.prototype,{
             <input type="file" name="..."></span>\
  			 <a href="#" class="btn btn-default fileinput-exists" data-dismiss="fileinput">Remove</a>\
  			 </div>\
+ 			 <div class="upload"><span class="btn btn-default fileinput-exists">Upload</span></div>\
  			</div>').appendTo($(this.column))
 		/*$('.fileinput').fileinput()*/
+	},
+	time_field_renderer:function(field_meta){
+		var me = this;
+		$input = $(repl_str('<div class="form-horizontal frappe-control" style="max-width: 600px;margin-top:10px;">\
+						<div class="form-group row" style="margin: 0px">\
+							<label class="control-label small col-xs-4" style="padding-right: 0px;">%(label)s</label>\
+							<div class="col-xs-8">\
+								<div class="control-input">\
+									<input type="text" class="form-control" \
+										placeholder="%(label)s" name="%(fieldname)s" data-fieldtype="time" >\
+								</div>\
+							</div>\
+						</div>\
+				</div>', field_meta)).appendTo($(this.column))
+
+		$( $input.find('[data-fieldtype="time"]' )).datetimepicker({
+						dateFormat: '',
+        				timeFormat: 'hh:mm tt',
+        				timeOnly: true
+		})
+		/*var val = field_meta['value'];
+		
+		if(val){
+			var date=new Date(val)
+			$input.find('input').val($.datetimepicker.formatDate('dd/mm/yy',date))
+		}
+*/
+		if(field_meta['required']==1){
+			$input.find("input").prop('required',true);
+			$input.find("input").css({"border": "1px solid #999","border-color": "red" });
+		}
+
+		this.set_description($input.find('.control-input'), field_meta)
 	},
 	date_field_renderer:function(field_meta){
 		var me = this;

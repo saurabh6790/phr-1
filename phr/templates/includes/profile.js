@@ -139,7 +139,8 @@ var PatientDashboard = inherit(RenderFormFields, {
 				selected=[]
 				BootstrapDialog.confirm('are you sure?', function(result){
            			 if(result) {
-                		$(".chk:checked").each(function() {
+                		$(".chk_phr:checked").each(function() {
+                			console.log($(this).val())
 							selected.push($(this).val());
   						});
 						me.delink_phr(meta,selected,meta_dic)

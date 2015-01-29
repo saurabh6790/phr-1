@@ -6,6 +6,7 @@ from phr.templates.pages.patient import get_data_to_render
 import datetime
 from phr.templates.pages.patient import get_base_url
 import time
+from phr.phr.phr_api import get_response
 
 
 @frappe.whitelist(allow_guest=True)
@@ -35,16 +36,38 @@ def get_disease_fields(name,profile_id=None):
 			fields.append(s_break)	
 			row_dic={"fieldname":"tab","fieldtype": "table","label": "Disease Monitoring","rows":rows}
 			fields.append(row_dic)
+			values=get_values(profile_id,fields,dm.event_master_id)
 			return fields, dm.event_master_id
 	else:
 		return 
 		#values=get_existing_records_from_solr(profile_id,dm.event_master_id)
 
-def get_existing_records_from_solr():
-	pass
+def get_values(profile_id,fields,event_master_id):
+	res=get_existing_records_from_solr(profile_id,event_master_id)
+	values=build_options(res,fields)
+
+def get_existing_records_from_solr(profile_id,event_master_id):
+	request_type="POST"
+	url=get_base_url()+'getdiseasemtreventvisit'
+	response=get_response(url,args,request_type)
+	res=json.loads(response.text)
+	print res
+
+def build_options(profile_id,fields):
+	pos
+	for filed_dict in fields:
+		pos =+ 1
+		if 'rows' in filed_dict.keys(): 
+			rows = filed_dict.get('rows')
+			break
+
+	for d in medication_list:
+		rows.extend([["",d.medicine_name, d.dosage,d.from_date_time,d.to_date_time,d.additional_info]])
+
+
 
 @frappe.whitelist(allow_guest=True)
-def save_dm(data,arg):
+def save_dm(data,arg,fields):
 	str_data=[]
 	for key,value in json.loads(data).items():
 		datastr=key+'='+value
@@ -59,7 +82,6 @@ def save_dm(data,arg):
 def save_data_to_solr(args):
 	request_type="POST"
 	url=get_base_url()+'updatedismonitoring'
-	from phr.phr.phr_api import get_response
 	response=get_response(url,args,request_type)
 	res=json.loads(response.text)
 	print res

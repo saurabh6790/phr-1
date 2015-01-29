@@ -62,7 +62,7 @@ var DiseaseMonitoring = inherit(RenderFormFields, {
 				console.log(r.message)
 				if (r.message){
 					RenderFormFields.prototype.init($("#main-con"), {'fields': r.message[0]})
-					me.bind_save_event(me,r.message[1],profile_id,value)
+					me.bind_save_event(me,r.message[1],profile_id,value,r.message[0])
 				}
 				else{
 					$('#main-con').empty();	
@@ -71,7 +71,7 @@ var DiseaseMonitoring = inherit(RenderFormFields, {
 		})
 
 	},
-	bind_save_event:function(me,event_id,profile_id,value){
+	bind_save_event:function(me,event_id,profile_id,value,fields){
 			$('.save_controller').bind('click',function(event) {
 				var $id=$('.tab-pane.active').attr('id')
 				me.res = {};
@@ -81,14 +81,14 @@ var DiseaseMonitoring = inherit(RenderFormFields, {
 					me.res[obj.name] = $(obj).val();
 				})
 				arg={"profile_id":profile_id,"received_from":"Desktop","event_master_id":event_id,"event_title":value}
-				me.save_dm(me.res,arg)
+				me.save_dm(me.res,arg,fields)
 			})
 
 	},
 	save_dm:function(data,arg){
 		frappe.call({
 			method:"phr.templates.pages.disease_monitoring.save_dm",
-			args:{"data":data,"arg":arg},
+			args:{"data":data,"arg":arg,"fields":fields},
 			callback:function(r){
 				/*if (r.message){
 					RenderFormFields.prototype.init($("#main-con"), {'fields': r.message[0]})

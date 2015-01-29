@@ -11,6 +11,7 @@ from frappe import _
 import binascii
 import base64
 from phr.templates.pages.login import create_profile_in_db,get_barcode,get_image_path
+from phr.templates.pages.patient import get_base_url
 
 @frappe.whitelist(allow_guest=True)
 def update_profile(data,id,dashboard=None):
@@ -27,7 +28,8 @@ def update_profile(data,id,dashboard=None):
 @frappe.whitelist(allow_guest=True)
 def update_profile_solr(data,dashboard=None):
 	request_type="POST"
-	url="http://88.198.52.49:7974/phr-api/updateProfile"
+	# url="http://88.198.52.49:7974/phr-api/updateProfile"
+	url = "%s/updateProfile"%get_base_url()
 	from phr.phr.phr_api import get_response
 	response=get_response(url,data,request_type)
 	res=json.loads(response.text)
@@ -62,6 +64,7 @@ def manage_notifications(data,dashboard=None):
 	dashboard_fields=json.loads(dashboard)
 	mn=frappe.db.get_value("Notification Configuration",{"profile_id":obj.get('entityid')},"name")
 	if mn:
+		frappe.db.sql("""update `tabNotification Configuration` set linked_phr=0,to_do=0 where name='%s'"""%(mn))
 		update_values_notify(dashboard_fields,mn)
 	else:
 		mn = frappe.get_doc({
@@ -93,7 +96,7 @@ def manage_dashboard(data,dashboard=None):
 		})
 		sr.ignore_permissions = True
 		sr.insert()
-		upload_values(dashboard_fields,sr.name)
+		update_values(dashboard_fields,sr.name)
 
 def update_values(fields,name):
 	for d in fields:
@@ -114,6 +117,7 @@ def upload_image(data=None):
 	file_path='/files/'+frappe.session.user+".jpg"
 	if os.path.exists(image):
 		try:
+			frappe.errprint([decoded_image,"upload"])
 			os.remove(image)
 			fd = open(image, 'wb')
 			fd.write(decoded_image)
@@ -122,6 +126,7 @@ def upload_image(data=None):
 		except OSError, e:
 			print ("Error: %s - %s." % (e.filename,e.strerror))
 	else:
+		frappe.errprint([decoded_image,"upload111"])
 		fd = open(image, 'wb')
 		fd.write(decoded_image)
 		fd.close()
@@ -152,9 +157,10 @@ def get_linked_phrs(profile_id):
 	print res
 	if res['returncode']==106:
 		return res
-		
+
 @frappe.whitelist(allow_guest=True)
 def delink_phr(selected,data,profile_id=None):
+	frappe.errprint([data,selected])
 	obj=json.loads(data)
 	ids=json.loads(selected)
 	for id in ids:
