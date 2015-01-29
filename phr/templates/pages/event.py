@@ -308,11 +308,11 @@ def get_conditions(filters):
 	if filters.get('provider_type'):
 		cond.append('provider_type = "%(provider_type)s"'%filters)
 
-	if filters.get('provider_name'):
-		cond.append('provider_name like "%%%(provider_name)s%%"'%filters)
+	if filters.get('name'):
+		cond.append('provider_name like "%%%(name)s%%"'%filters)
 
 	if filters.get('provider_loc'):
-		cond.append('locality like "%%%(provider_loc)s%%"'%filters)
+		cond.append('address like "%%%(provider_loc)s%%"'%filters)
 
 	return ' and '.join(cond)
 
@@ -324,4 +324,14 @@ def get_provider_info(cond):
 	
 	else:
 		return none
+@frappe.whitelist()
+def get_linked_providers(profile_id):
+	import itertools
 
+	if profile_id:
+		ret = frappe.db.sql("select name1, provider, mobile, email from  `tabProviders Linked` where patient = '%s' and status = 'Active' "%profile_id, as_dict=1)
+		
+		for r in ret:
+			r.update({'label': r['name1'], 'value': r['name1']})
+
+		return ret

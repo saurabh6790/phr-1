@@ -47,6 +47,27 @@
    "set_only_once": 0
   }, 
   {
+   "fieldname": "name1", 
+   "fieldtype": "Data", 
+   "label": "Name", 
+   "permlevel": 0, 
+   "precision": ""
+  }, 
+  {
+   "fieldname": "email", 
+   "fieldtype": "Data", 
+   "label": "Email", 
+   "permlevel": 0, 
+   "precision": ""
+  }, 
+  {
+   "fieldname": "mobile", 
+   "fieldtype": "Data", 
+   "label": "Mobile", 
+   "permlevel": 0, 
+   "precision": ""
+  }, 
+  {
    "allow_on_submit": 0, 
    "fieldname": "status", 
    "fieldtype": "Data", 
@@ -81,7 +102,7 @@
  "is_submittable": 0, 
  "issingle": 0, 
  "istable": 0, 
- "modified": "2014-12-13 21:21:05.439445", 
+ "modified": "2015-01-28 16:37:28.401506", 
  "modified_by": "Administrator", 
  "module": "phr", 
  "name": "Providers Linked", 

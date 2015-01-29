@@ -24,17 +24,19 @@ var Event = inherit(ListView,{
 			'tab_at': 4,
 			'profile_id':profile_id})
 		
-		$('<tr>\
-			<td></td>\
-			<td></td>\
-			<td></td>\
-			<td></td>\
-			<td align="center"><input type="checkbox" id="consultancy"  value="Consultancy" ></td>\
-			<td align="center"><input type="checkbox" id="event_snap"  value="Event Snap" ></td>\
-			<td align="center"><input type="checkbox" id="lab_reports"  value="Lab Reports" ></td>\
-			<td align="center"><input type="checkbox" id="prescription"  value="Prescription" ></td>\
-			<td align="center"><input type="checkbox" id="cost_of_care"  value="Cost Of Care" ></td>\
-		</tr>').insertBefore('table > thead > tr:first')
+		// $('<tr>\
+		// 	<td></td>\
+		// 	<td></td>\
+		// 	<td></td>\
+		// 	<td></td>\
+		// 	<td align="center"><input type="checkbox" id="consultancy"  value="Consultancy" ></td>\
+		// 	<td align="center"><input type="checkbox" id="event_snap"  value="Event Snap" ></td>\
+		// 	<td align="center"><input type="checkbox" id="lab_reports"  value="Lab Reports" ></td>\
+		// 	<td align="center"><input type="checkbox" id="prescription"  value="Prescription" ></td>\
+		// 	<td align="center"><input type="checkbox" id="cost_of_care"  value="Cost Of Care" ></td>\
+		// </tr>').insertBefore('table > thead > tr:first')
+
+		
 
 		$("<button class='btn btn-primary'> Share </button>").click(function(){
 				$('.table').find('tr').each(function () {
@@ -53,7 +55,7 @@ var Event = inherit(ListView,{
 			
 		}).appendTo($('.field-area'))
 		// this.open_form()
-		$("table tr td a").click(function (e) { 
+		$("table tr td a").bind('click', function (e) { 
 			me.open_form($(this).attr('id'), $(this).html())
 		})
 
@@ -62,6 +64,7 @@ var Event = inherit(ListView,{
 		// });
 
 		this.render_spans()
+		this.get_linked_providers()
 	},
 	open_form:function(event_id, event_title){
 		var me = this;
@@ -81,6 +84,7 @@ var Event = inherit(ListView,{
 		})
 		me.render_folder_section()
   		me.bind_events()
+  		this.get_linked_providers()
 		
 	},
 	dialog_oprations: function(){
@@ -94,26 +98,29 @@ var Event = inherit(ListView,{
 				$(".modal-body form input").each(function(i, obj) {
 					me.filters[obj.name] = $(obj).val();
 				})
-
-				me.render_result_table(me.filters)
+				me.render_result_table(me.filters, d)
 
 			})
 			.appendTo($('.modal-body'))
 		console.log(d)
 	},
-	render_result_table:function(filters){
+	render_result_table:function(filters, d){
 		var me = this;
 		frappe.call({
 			"method":"phr.templates.pages.event.get_providers",
 			"args":{"filters":filters},
 			callback:function(r){
 				if(r.message){
-					me.generate_table(r.message)	
+					me.generate_table(r.message, d)	
+				}
+				else{
+					d.hide()
+					me.create_provider_linking(filters, d)
 				}
 			}
 		})
 	},
-	generate_table: function(result_set){
+	generate_table: function(result_set, d){
 		var me = this;
 		this.table = $("<hr><div class='table-responsive'>\
 			<table class='table table-bordered'>\
@@ -131,10 +138,57 @@ var Event = inherit(ListView,{
 
 		$.each(result_set, function(i,d){
 			var row = $("<tr>").appendTo(me.table.find("tbody"));
-			$('<td>').html('<input type="radio" name="event" id = "'+d[0]+'">').appendTo(row)
+			$('<td>').html('<input type="radio" name="provider" id = "'+d[0]+'">').appendTo(row)
 			$('<td>').html(d[1]).appendTo(row)
 			$('<td>').html(d[2]).appendTo(row)
 			$('<td>').html(d[3]).appendTo(row)
+		})
+		me.set_provider(d)
+	},
+	set_provider:function(d){
+		$('.modal-footer .btn-primary').click(function(){
+			$('.table').find('tr').each(function () {
+				var row = $(this);
+				var $td = $('td', row);
+				if ($td.find('input[name="provider"]').is(':checked')) {
+					$('[name="provider_id"]').val($td.find('input[name="provider"]').attr('id'))
+					$('[name="provider_name"]').val($($td[1]).html())
+					$('[name="email_id"]').val($($td[2]).html())
+					$('[name="number"]').val($($td[3]).html())
+					d.hide();
+				}
+			})
+		})
+	},
+	create_provider_linking:function(filters, d){
+		var me = this;
+		d.init({"file_name":"provider", "values": filters})
+		d.show()
+		me.bind_provider_creation(d)
+	},
+	bind_provider_creation:function(d){
+		var me = this;
+		this.res = {}
+		$('.modal-footer .btn-primary').click(function(){
+			$(".modal-body form input, .modal-body form textarea, .modal-body form select").each(function(i, obj) {
+				console.log(obj)
+				me.res[obj.name] = $(obj).val();
+			})
+			console.log(me.res)
+			me.res["received_from"]="Desktop"
+			me.res["provider"]=true
+			me.create_provider(me.res, d)
+		})
+	},
+	create_provider: function(res, d){
+		frappe.call({
+			method: "phr.templates.pages.provider.create_provider",
+			args:{'data':res},
+			callback:function(r){
+				if(r.message.returncode==129){
+					d.hide()
+				}
+			}
 		})
 	},
 	render_spans: function(){
@@ -143,6 +197,25 @@ var Event = inherit(ListView,{
 			me.bind_save_event()
 			$('<li><a nohref> New Event </a></li>').appendTo('.breadcrumb');
 			// me.render_folder_section()		
+		})
+	},
+	get_linked_providers:function(){
+		var me = this;
+		frappe.call({
+			method:"phr.templates.pages.event.get_linked_providers",
+			args:{'profile_id':this.profile_id},
+			callback:function(r){
+				console.log([$('[name="provider_name"]'), r.message])
+				$('[name="provider_name"]').autocomplete({
+					source: r.message,
+					multiselect: false,
+					select: function( event, obj) {
+						$('[name="email_id"]').val(obj['item']['email'])
+						$('[name="number"]').val(obj['item']['mobile'])
+						$('[name="provider_id"]').val(obj['item']['provider'])
+					}
+				})
+			}
 		})
 	},
 	bind_save_event: function(){

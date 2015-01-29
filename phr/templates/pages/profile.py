@@ -11,7 +11,6 @@ from frappe import _
 import binascii
 import base64
 from phr.templates.pages.login import create_profile_in_db,get_barcode,get_image_path
-from phr.templates.pages.patient import get_base_url
 
 @frappe.whitelist(allow_guest=True)
 def update_profile(data,id,dashboard=None):
@@ -28,8 +27,7 @@ def update_profile(data,id,dashboard=None):
 @frappe.whitelist(allow_guest=True)
 def update_profile_solr(data,dashboard=None):
 	request_type="POST"
-	# url="http://88.198.52.49:7974/phr-api/updateProfile"
-	url = "%s/updateProfile"%get_base_url()
+	url="http://88.198.52.49:7974/phr-api/updateProfile"
 	from phr.phr.phr_api import get_response
 	response=get_response(url,data,request_type)
 	res=json.loads(response.text)
@@ -117,7 +115,6 @@ def upload_image(data=None):
 	file_path='/files/'+frappe.session.user+".jpg"
 	if os.path.exists(image):
 		try:
-			frappe.errprint([decoded_image,"upload"])
 			os.remove(image)
 			fd = open(image, 'wb')
 			fd.write(decoded_image)
@@ -126,7 +123,6 @@ def upload_image(data=None):
 		except OSError, e:
 			print ("Error: %s - %s." % (e.filename,e.strerror))
 	else:
-		frappe.errprint([decoded_image,"upload111"])
 		fd = open(image, 'wb')
 		fd.write(decoded_image)
 		fd.close()

@@ -8,6 +8,8 @@ frappe.require("assets/frappe/js/lib/jquery/jquery.ui.slider.min.js");
 frappe.require("assets/frappe/js/lib/jquery/jquery.ui.sliderAccess.js");
 frappe.require("assets/frappe/js/lib/jquery/jquery.ui.timepicker-addon.css");
 frappe.require("assets/frappe/js/lib/jquery/jquery.ui.timepicker-addon.js");
+frappe.require("assets/phr/bootstrap-table.js");
+frappe.require("assets/phr/bootstrap-table.css");
 
 var RenderFormFields = function(){
 	this.wrapper = ""
@@ -435,33 +437,47 @@ $.extend(RenderFormFields.prototype,{
 	},
 	table_field_renderer:function(field_meta){
 		var me = this;
-		$input = $(repl_str('<div class="panel panel-primary" style="height:100%;margin-top:10px;">\
-				<div class="panel-heading">%(label)s</div>\
-				<div class="panel-body" style="padding:1px;height: 25%;;overflow:hidden;overflow:auto">\
-					<table class="table table-striped" data-pagination="true"  style="padding=0px;" >\
+		$input = $(repl_str('<table class="table table-striped" data-pagination="true" data-search="true"\
+						data-height="550"  style="padding=0px;" >\
 						<thead><tr></tr></thead>\
 						<tbody></tbody>\
 					</table>\
-				</div>\
-			</div>',field_meta)).appendTo($(this.column))
+				',field_meta)).appendTo($(this.column))
+
+		this.cols = [];
+		this.data_row = [];
 
 		$.each(field_meta['rows'],function(i, val){
-			(i==0) ? me.render_table_heads(val, $input) : me.render_table_body(val, $input)
+			(i==0) ? me.render_table_heads(val, $input) : me.render_table_body(val, field_meta['rows'][0], $input)
+		})
+		
+
+		console.log([JSON.stringify(this.cols), JSON.stringify(this.data_row)])
+
+		$('table').bootstrapTable({
+			columns: me.cols,
+			data: me.data_row
 		})
 
 	},
 	render_table_heads:function(val, input_area){
+		var me = this;
 		$.each(val,function(i, d){
-			$("<th>").html(d)
-				.appendTo($(input_area).find("thead tr"));
+			// $("<th>").html(d)
+			// 	.appendTo($(input_area).find("thead tr"));
+			me.cols.push({"field": i, "title": d})
 		})
 	},
-	render_table_body:function(val, input_area){
-		var row = $("<tr>").appendTo($(input_area).find("tbody"));
+	render_table_body:function(val, cols, input_area){
+		var me = this;
+		var dict = {};
+		// var row = $("<tr>").appendTo($(input_area).find("tbody"));
 		$.each(val,function(i, d){
-			$("<td>").html(d)
-				.appendTo(row);
+			// $("<td>").html(d)
+			// 	.appendTo(row);
+			dict[i] = d; 
 		})
+		me.data_row.push(dict)
 	},
 	tab_field_renderer: function(){
 		$('<div role="tabpanel">\

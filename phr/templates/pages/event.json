@@ -76,10 +76,15 @@
 			"label":""
 		},
 		{
+			"fieldname":"provider_id", 
+			"fieldtype":"data", 
+			"label":"Provider id"
+		},
+		{
 			"fieldname":"provider_name", 
 			"fieldtype":"data", 
 			"label":"Provider Name",
-			"description": "<a id='provider_name' style='color:#17329E;'>New Provider</a>"
+			"description": "<a id='provider_name' style='color:#17329E;'>Add New Provider</a>"
 		},
 		{
 			"fieldname":"email_id", 
