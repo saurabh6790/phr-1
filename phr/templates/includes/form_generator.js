@@ -24,7 +24,7 @@ $.extend(RenderFormFields.prototype,{
 		console.log(['modal_wrapper', modal_wrapper])
 
 		if(modal_wrapper) this.wrapper = modal_wrapper.find('.modal-body');
-		else this.wrapper =  $('.field-area');
+		else this.wrapper=wrapper ? wrapper:$('.field-area') 
 		this.result_set = {}
 		this.visibility_dict = {}
 		this.labelled_section_count = 0;
@@ -32,7 +32,7 @@ $.extend(RenderFormFields.prototype,{
 
 		//crear rendering area
 		$(this.wrapper).empty()
-
+	
 		//initiate rendering
 		this.render_top()
 		this.get_field_meta();

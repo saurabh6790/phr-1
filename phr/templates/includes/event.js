@@ -14,6 +14,7 @@ frappe.provide("frappe");
 var Event = inherit(ListView,{
 	init: function(wrapper, json_file, profile_id, entity_id){
 		this.wrapper = wrapper;
+		$('#main-con').empty();
 		var me = this;
 		this.selected_files = [];
 		this.dms_file_list = [];

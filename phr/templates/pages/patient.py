@@ -62,7 +62,7 @@ def get_json_data(file_name):
 
 	return json_data
 
-def write_json_date(file_name,data):
+def write_json_data(file_name,data):
 	with open(os.path.join(os.path.dirname(__file__), file_name +".json"),'w+') as txtfile:
 		txtfile.write(json.dumps(data, indent=1, sort_keys=True))
 

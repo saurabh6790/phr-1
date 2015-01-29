@@ -13,6 +13,7 @@ var Visit = inherit(ListView,{
 	init: function(wrapper, json_file, profile_id, entity_id){
 		var me = this;
 		this.wrapper = wrapper;
+		$('#main-con').empty();
 		this.selected_files = [];
 		console.log(['123',profile_id])
 		ListView.prototype.init(this.wrapper, {"file_name": "visit", 

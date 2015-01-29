@@ -4,9 +4,6 @@
 from __future__ import unicode_literals
 import frappe
 from frappe.model.document import Document
-from phr.phr.phr_api import get_response
 
-class Events(Document):
+class EventParameters(Document):
 	pass
-
-

@@ -7,6 +7,8 @@ var PatientDashboard = inherit(RenderFormFields, {
 		this.wrapper = wrapper;
 		this.args=cmd
 		this.entityid=entityid
+		$(this.wrapper).empty()
+		$('.field-area').empty()
 		RenderFormFields.prototype.init(this.wrapper,this.args,this.entityid)
 		this.render_field()
 		this.get_linked_phrs(frappe.get_cookie('profile_id'))
@@ -50,33 +52,22 @@ var PatientDashboard = inherit(RenderFormFields, {
 			me.get_method(me.res,$id,me)		
 		})
 		var files = [];
- 		//this.object = {};
- 		/*$("input[type=file]").change(function(event) {
+ 		object = {};
+ 		$("input[type=file]").change(function(event) {
  			$.each(event.target.files, function(index, file) {
-				var reader = new FileReader();
-    			reader.onload = function(event) {  
-      				me.object.filename = file.name;
-      				me.object.data = event.target.result;
-      				files.push(me.object);
-    			};  
-    			reader.readAsDataURL(file);
-    			//me.upload_image(me.object,files)
-    			
-  			});
-  		});*/
-		$('.btn-file').bind('click',function(){
-			object = {};
-			$.each(event.target.files, function(index, file) {
 				var reader = new FileReader();
     			reader.onload = function(event) {  
       				object.filename = file.name;
       				object.data = event.target.result;
       				files.push(object);
-      				me.upload_image(object)
     			};  
     			reader.readAsDataURL(file);
-    			//me.upload_image(object)
+    			//me.upload_image(me.object,files)
+    			
   			});
+  		});
+		$('.upload').bind('click',function(){
+			me.upload_image(object)
   		})
   		var image=frappe.get_cookie("user_image")
   		$('<img src="'+image+'"alt="user image"><img>').appendTo($('.fileinput-preview'))

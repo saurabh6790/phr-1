@@ -89,3 +89,8 @@ def get_options(obj):
 		for d in dtc:
 			options[d.fieldname]=obj.get(d.fieldname)
 	return json.dumps(options)
+
+
+@frappe.whitelist(allow_guest=True)
+def get_option(obj):
+	pass

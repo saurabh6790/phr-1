@@ -62,3 +62,7 @@ def get_formatted_date(strdate=None):
 	if strdate:
 		return datetime.datetime.strptime(strdate,"%d/%m/%Y %H:%M:%S")
 
+
+@frappe.whitelist(allow_guest=True)
+def notify_appointments():
+	pass

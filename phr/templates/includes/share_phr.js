@@ -16,6 +16,8 @@ $.extend(SharePhr.prototype,{
 		console.log('test')
 		this.wrapper = wrapper;
 		this.args = args;
+		$(this.wrapper).empty()
+		$('.field-area').empty()
 		var me = this;
 		this.selected_files = args.selected_files
 		this.doc_list = args.doc_list;

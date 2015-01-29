@@ -13,6 +13,7 @@ frappe.provide("frappe");
 {% include "templates/includes/medication.js" %}
 {% include "templates/includes/appointments.js" %}
 {% include "templates/includes/messages.js" %}
+{% include "templates/includes/disease_monitoring.js" %}
 /*
   Format for method Classes
   ClassName.prototype.init(wrapper,name_of_json_file,entityid,operation_entity)
@@ -31,10 +32,10 @@ $(document).ready(function () {
 
 		$('<li><a nohref>Event</a></li>').click(function(){
 			$('.breadcrumb li').nextAll().remove()
-			Event.prototype.init($(document).find("#main-con"), '', profile_id)
+			Event.prototype.init('', '', profile_id)
 		}).appendTo('.breadcrumb');
 		
-		Event.prototype.init($(document).find("#main-con"), '', profile_id)
+		Event.prototype.init('', '', profile_id)
 	})
 	$('.visit').unbind("click").click(function(){
 		$('.breadcrumb').empty()
@@ -64,10 +65,10 @@ $(document).ready(function () {
 		// });
 		$('<li><a nohref>Visit</a></li>').click(function(){
 			$('.breadcrumb li').nextAll().remove()
-			Visit.prototype.init($(document).find("#main-con"), '', profile_id)
+			Visit.prototype.init('', '', profile_id)
 		}).appendTo('.breadcrumb');
 		
-		Visit.prototype.init($(document).find("#main-con"), '', profile_id)
+		Visit.prototype.init('', '', profile_id)
 	})
 	$('.medications').unbind("click").click(function(){
 		$('.breadcrumb').empty()
@@ -82,12 +83,12 @@ $(document).ready(function () {
 	$('.dmonit').unbind("click").click(function(){
 		$('.breadcrumb').empty()
 		
-		$('<li><a nohref>Visit</a></li>').click(function(){
+		$('<li><a nohref>Disease Monitoring</a></li>').click(function(){
 			$('.breadcrumb li').nextAll().remove()
-			Visit.prototype.init($(document).find("#main-con"), '', profile_id)
+			DiseaseMonitoring.prototype.init($(document).find("#main-con"), '', profile_id)
 		}).appendTo('.breadcrumb');
 		
-		Visit.prototype.init($(document).find("#main-con"))
+		DiseaseMonitoring.prototype.init($(document).find("#main-con"),'', profile_id)
 	})
 	$('.appoint').unbind("click").click(function(){
 		$('.breadcrumb').empty()
