@@ -7,7 +7,7 @@
             "label": "Basic Info"
         },
         {
-            "fieldname": "provider_name",
+            "fieldname": "name",
             "fieldtype": "data",
             "label": "Name"
         },
