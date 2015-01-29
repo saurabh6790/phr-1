@@ -19,6 +19,7 @@ $.extend(Dialog.prototype,{
 		this.render_filed_dict()
 	},
 	get_diloag:function(){
+		$('.modal-body').empty();
 		$dialog = $('<div id="myModal" class="modal fade">\
 				  <div class="modal-dialog modal-lg">\
 				    <div class="modal-content">\
@@ -36,8 +37,7 @@ $.extend(Dialog.prototype,{
 		return $dialog;
 	},
 	render_filed_dict:function(){
-		RenderFormFields.prototype.init('',
-			{"file_name" : this.field_list['file_name']}, '', '', this.$wrapper)
+		RenderFormFields.prototype.init('', this.field_list, '', '', this.$wrapper)
 	},
 	make_head: function() {
 		var me = this;

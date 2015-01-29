@@ -14,7 +14,7 @@
 			"label":""
 		},
 		{
-			"fieldname":"provider_name", 
+			"fieldname":"name", 
 			"fieldtype":"data",
 			"label":"Provider Name",
 			"description": "Provider Name"

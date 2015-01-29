@@ -76,6 +76,11 @@
 			"label":""
 		},
 		{
+			"fieldname":"provider_id", 
+			"fieldtype":"data", 
+			"label":"Provider id"
+		},
+		{
 			"fieldname":"provider_name", 
 			"fieldtype":"data", 
 			"label":"Provider Name",
