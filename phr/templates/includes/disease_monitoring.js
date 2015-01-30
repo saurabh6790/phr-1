@@ -59,10 +59,11 @@ var DiseaseMonitoring = inherit(RenderFormFields, {
 			method:"phr.templates.pages.disease_monitoring.get_disease_fields",
 			args:{"name":value,"profile_id":profile_id},
 			callback:function(r){
-				console.log(r.message)
+				console.log(r.message[0])
 				if (r.message){
-					RenderFormFields.prototype.init($("#main-con"), {'fields': r.message[0]})
-					me.bind_save_event(me,r.message[1],profile_id,value,r.message[0])
+					data=r.message
+					RenderFormFields.prototype.init($("#main-con"), {'fields':data["fields"]})
+					me.bind_save_event(me,data["event_master_id"],profile_id,value,data["fields"],data["field_mapper"],data["raw_fields"])
 				}
 				else{
 					$('#main-con').empty();	
@@ -71,32 +72,34 @@ var DiseaseMonitoring = inherit(RenderFormFields, {
 		})
 
 	},
-	bind_save_event:function(me,event_id,profile_id,value,fields){
+	bind_save_event:function(me,event_id,profile_id,value,fields,field_mapper,raw_fields){
 			$('.save_controller').bind('click',function(event) {
 				var $id=$('.tab-pane.active').attr('id')
 				me.res = {};
 				selected=[]
 				var $id=$('.tab-pane.active').attr('id')
-				$("form input, .tab-pane.active form textarea, .tab-pane.active form select").each(function(i, obj) {
+				$("form input,form textarea,form select").each(function(i, obj) {
 					me.res[obj.name] = $(obj).val();
 				})
 				arg={"profile_id":profile_id,"received_from":"Desktop","event_master_id":event_id,"event_title":value}
-				me.save_dm(me.res,arg,fields)
+				me.save_dm(me.res,arg,fields,field_mapper,raw_fields)
 			})
-
 	},
-	save_dm:function(data,arg){
+	save_dm:function(data,arg,fields,field_mapper,raw_fields){
 		frappe.call({
 			method:"phr.templates.pages.disease_monitoring.save_dm",
-			args:{"data":data,"arg":arg,"fields":fields},
+			args:{"data":data,"arg":arg,"fields":fields,"field_mapper":field_mapper,"raw_fields":raw_fields},
 			callback:function(r){
-				/*if (r.message){
-					RenderFormFields.prototype.init($("#main-con"), {'fields': r.message[0]})
-					me.bind_save_event(me,r.message[1],profile_id)
+				data=r.message
+				if (r.message){
+					console.log("hiii i am to re render")
+					console.log(data["fields"])
+					RenderFormFields.prototype.init($("#main-con"), {'fields':data["fields"]})
+					//me.bind_save_event(me,r.message[1],profile_id)
 				}
 				else{
-					$('#main-con').empty();	
-				}*/
+						
+				}
 			}
 		})
 	}
