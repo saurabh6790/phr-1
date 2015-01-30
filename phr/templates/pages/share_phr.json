@@ -60,6 +60,12 @@
 			"label":""
 		},	
 		{
+			"fieldname":"provider_id", 
+			"fieldtype":"data", 
+			"label":"Provider id",
+			"depends_on":"share_via:Provider Account"
+		},
+		{
 			"fieldname":"provider_name",
 			"fieldtype":"data", 
 			"label":"Provider Name",

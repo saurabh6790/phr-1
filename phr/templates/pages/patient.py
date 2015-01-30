@@ -128,7 +128,7 @@ def get_base_url():
 Method to get name of method in solr database.contains dictionary or map.
 """
 def get_method(data):
-	method_dic={"profile":"searchProfile", "event":"searchEvent"}
+	method_dic={"profile":"searchProfile", "event":"searchEvent", "visit":"searchVisit"}
 	return method_dic.get(data.get('method'))
 
 
