@@ -76,6 +76,6 @@ var Medications = inherit(ListView,{
 		
 	},
 	update_list_view:function(data){
-		RenderFormFields.prototype.init(this.wrapper, {'fields': data['listview']})
+		RenderFormFields.prototype.init($(".field-area"), {'fields': data['listview']})
 	}
 })

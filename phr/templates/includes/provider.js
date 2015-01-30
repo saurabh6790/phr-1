@@ -48,8 +48,6 @@ var Provider = inherit(RenderFormFields, {
 					}
 				}
 			})
-		/*var call_mapper={"basic_info":"update_profile","password":"update_password","update_phr":"manage_phr"}
-		me[call_mapper[cmd]].call(me,res)*/
 	},
 	update_phr:function(res,cmd,me){
 		frappe.call({
@@ -63,14 +61,11 @@ var Provider = inherit(RenderFormFields, {
 					}
 				}
 			})
-		/*var call_mapper={"basic_info":"update_profile","password":"update_password","update_phr":"manage_phr"}
-		me[call_mapper[cmd]].call(me,res)*/
 	},
 	add_profile_to_link:function(data,entityid){
 		$('#hp').find('p.nohp').remove()
 		$wrap=$('#hp')
 		dat=JSON.parse(data)
-		/*console.log(["data",data["entityid"]])*/
 		pro_data={"entityid":dat["entityid"],"fn":dat["name"]}
 		console.log(pro_data)
 		$(repl_str('<div class="list-group-item-side %(entityid)s">\

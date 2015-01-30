@@ -39,13 +39,9 @@ def make_appomiments_entry(data):
 	return response
 
 def save_data(data):
-	print data
 	obj=json.loads(data)
 	from_date=get_formatted_date(obj.get('from_date_time'))
-	print frappe.user.name
 	user=frappe.get_doc("User",frappe.user.name)
-	print "======"
-	print frappe.user
 	ap = frappe.get_doc({
 		"doctype":"Appointments",
 		"profile_id":obj.get('profile_id'),

@@ -21,7 +21,7 @@ var DiseaseMonitoring = inherit(RenderFormFields, {
 							<div class="col-xs-8">\
 								<div class="control-input">\
 									<select type="text" class="form-control" \
-										name="disease" >\
+										name="disease">\
 								</div>\
 							</div>\
 						</div>\

@@ -52,7 +52,7 @@ var Appointments = inherit(ListView,{
 	},
 	update_list_view:function(data){
 		var me = this;
-		RenderFormFields.prototype.init(this.wrapper, {'fields': data['listview']})
+		RenderFormFields.prototype.init($(".field-area"), {'fields': data['listview']})
 		me.bind_save_event()
 	}
 })
