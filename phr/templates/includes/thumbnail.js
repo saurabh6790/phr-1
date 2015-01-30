@@ -134,7 +134,10 @@ $.extend(ThumbNails.prototype,{
 
 		$("input[type=checkbox]").on( "click", function(){
 			if($(this).is(':checked')){
-				me.doc_list.push( me.args['profile_id'] + '/' +  $('input[name="entityid"]').val() + '/' + me.folder + '/' +  me.sub_folder + '/' + $(this).val())
+				file_path = $($(this).parents()[1]).find('img').attr('src')
+				// console.log(str.substring(7, str.length))
+				me.doc_list.push(file_path.substring(7, file_path.length))
+				// me.doc_list.push( me.args['profile_id'] + '/' +  $('input[name="entityid"]').val() + '/' + me.folder + '/' +  me.sub_folder + '/' + $(this).val())
 			}
 		});
 

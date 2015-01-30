@@ -1,7 +1,8 @@
 import frappe
 import json
 import os 
-from frappe.utils import getdate, date_diff, nowdate, get_site_path, get_hook_method, get_files_path, get_site_base_path,cstr, cint
+from frappe.utils import getdate, date_diff, nowdate, get_site_path, get_hook_method, get_files_path, \
+		get_site_base_path, cstr, cint
 from phr.templates.pages.patient import get_data_to_render
 from phr.phr.phr_api import get_response
 import datetime
@@ -17,8 +18,15 @@ def create_update_event(data=None):
 
 	else:
 		res = update_event(data)
+
+		print "==============res==============="
+		print res.get('visit').get('entityid')
+		print "=================================="
+
+
 		if res.get('returncode') == 116:
 			clear_dms_list(data.get('dms_file_list'))
+			copy_files_to_visit(data.get('dms_file_list'), res.get('visit').get('entityid'))
 		return res
 
 def create_event(data):
@@ -87,68 +95,134 @@ def clear_dms_list(dms_file_list):
 		print loc.get('file_location')[0]
 		os.remove(loc.get('file_location')[0])
 
+def copy_files_to_visit(dms_file_list, visit_id):
+	import os, shutil, glob
+	for loc in dms_file_list:
+		print "--------------------------file loc -------------------"
+		print loc.get('file_location')
+		
+		path_lst = loc.get('file_location')[0].split('/')
+		
+		file_path = os.path.join('/'.join(path_lst[0:len(path_lst)-1]), visit_id)
+		
+		frappe.create_folder(file_path)
+
+		for filename in glob.glob(os.path.join('/'.join(path_lst[0:len(path_lst)-1]), '*.*')):
+			print filename
+			shutil.move(filename, file_path)
+
+
+
 @frappe.whitelist(allow_guest=True)
 def get_attachments(profile_id, folder, sub_folder, event_id):
 	files = []
 	path = os.path.join(get_files_path(), profile_id, event_id, folder, sub_folder)
 	if os.path.exists(path):
-		for fl in os.listdir(path):
-			frappe.errprint(fl.split('.')[-1:][0])
-			if fl.split('.')[-1:][0] in ['jpg','jpeg','pdf','png', 'PDF']:
-				files.append({'file_name': fl, 'type':fl.split('.')[-1:][0], 
-					'path': os.path.join('files', profile_id, event_id, folder, sub_folder)})
+		for root, dirc, filenames in os.walk(path):
+			for di in dirc:
+				for fl in os.listdir(os.path.join(path,di)):
+					frappe.errprint(fl.split('.')[-1:][0])
+					if fl.split('.')[-1:][0] in ['jpg','jpeg','pdf','png', 'PDF']:
+						files.append({'file_name': fl, 'type':fl.split('.')[-1:][0], 
+							'path': os.path.join('files', profile_id, event_id, folder, sub_folder, di)})
 
 	return files
 
 @frappe.whitelist(allow_guest=True)
 def send_shared_data(data):
-	print "===========================share data====================="
-	print data
-	print "============================================================"
-	# files, profile_id, folder, sub_folder, share_with, event_date, event, provider_name, event_body, event_id, content_type=None
 	from email.mime.audio import MIMEAudio
 	from email.mime.base import MIMEBase
 	from email.mime.image import MIMEImage
 	from email.mime.text import MIMEText
 	import mimetypes
+	import datetime
 
 	data = json.loads(data)
-	print "===============***************==========="
-	print data.get('provider_name')
-	print "===============***************==========="
 
-	if data.get('email_id'):
-		pass
-		# attachments = []
+	if data.get('share_via') == 'Email':
+		attachments = []
 		# frappe.errprint([files])
-		# files = eval(files)
-		# for fl in files:
-		# 	fname = os.path.join(get_files_path(), fl)
+		files = data.get('files')
+		for fl in files:
+			fname = os.path.join(get_files_path(), fl)
 
-		# 	attachments.append({
-		# 			"fname": fname,
-		# 			"fcontent": file(fname).read()
-		# 		})
+			attachments.append({
+					"fname": fname,
+					"fcontent": file(fname).read()
+				})
 
-		# if attachments:
-		# 	msg = """Event Name is %(event)s <br>
-		# 			Event Date is %(event_date)s <br>
-		# 			Provider Name is %(provider_name)s <br>
-		# 			<hr>
-		# 				%(event_body)s <br>
-		# 				Please see attachment <br>
-		# 		"""%{'event': event, 'event_date': event_date, 'provider_name': provider_name, 'event_body':event_body}
+		if attachments:
+			msg = """Event Name is %(event)s <br>
+					Event Date is %(event_date)s <br>
+					Provider Name is %(provider_name)s <br>
+					<hr>
+						%(event_body)s <br>
+						Please see attachment <br>
+				"""%{'event': data.get('event_title'), 'event_date': data.get('event_date'), 
+					'provider_name': data.get('provider_name'), 'event_body': data.get('email_body')}
 			
-		# 	from frappe.utils.email_lib import sendmail
-		# 	sendmail([share_with], subject="PHR-Event Data", msg=cstr(msg),
-		# 			attachments=attachments)
-		# else:
-		# 	frappe.msgprint('Please select file(s) for sharing')
+			from frappe.utils.email_lib import sendmail
 
-	if data.get('provider_name'):
-		pass
+			sendmail([data.get('email_id')], subject="PHR-Event Data", msg=cstr(msg),
+					attachments=attachments)
 
+			return """Selected images has been shared with 
+				%(provider_name)s %(doc_email)s for event %(event)s """%{
+					'event': data.get('event_title'),
+					'provider_name': data.get('provider_name')}
+		else:
+			frappe.msgprint('Please select file(s) for sharing')
 
+	if data.get('share_via') == 'Provider Account':
+		if not data.get('files'):
+			event_data =	{
+					"sharelist": [
+							{
+								"to_profile_id": data.get('provider_id'),
+								"received_from":"desktop",
+								"from_profile_id": data.get('profile_id'),
+								"event_tag_id": data.get('entityid'),
+								"access_type": "RDW",
+								"str_start_date": datetime.datetime.strptime(nowdate(), '%Y-%m-%d').strftime('%d/%m/%Y'),
+								"str_end_date": data.get('sharing_duration')
+							}
+						]
+					}
+
+			request_type="POST"
+			url="%s/sharephr/sharemultipleevent"%get_base_url()
+
+			response=get_response(url, json.dumps(event_data), request_type)
+			
+			return eval(json.loads(response.text).get('sharelist'))[0].get('message_summary')
+
+		else:
+			print "-----------provider share file list-------------"
+			print data.get('files')
+			print "------------------------------------------------"
+			sharelist = []
+			for fl in data.get('files'):
+				file_details = fl.split('/')
+				sharelist.append({
+					"to_profile_id": data.get('provider_id'),
+					"received_from":"desktop",
+					"from_profile_id": data.get('profile_id'),
+					"visit_tag_id": file_details[4],
+					"tag_id": file_details[4] + '-' + cstr(file_details[2].split('-')[1]) + cstr(file_details[3].split('_')[1]) ,
+					"file_id": [file_details[5]],
+					"file_access": ['RW'],
+					"str_start_date": datetime.datetime.strptime(nowdate(), '%Y-%m-%d').strftime('%d/%m/%Y'),
+					"str_end_date": data.get('sharing_duration')
+				})
+			
+			request_type="POST"
+			url = "%s/sharephr/sharemultiplevisitfiles"%get_base_url()
+			event_data = {'sharelist': sharelist}
+			response=get_response(url, json.dumps(event_data), request_type)
+
+			print json.loads(response.text)
+
+			return eval(json.loads(response.text).get('sharelist'))[0].get('message_summary')
 
 @frappe.whitelist(allow_guest=True)
 def get_visit_data(data):
@@ -170,7 +244,6 @@ def get_visit_data(data):
 			break
 
 	data=json.loads(data)
-
 
 	response=get_response(url, json.dumps({"profileId":data.get('profile_id')}), request_type)
 	res_data = json.loads(response.text)
@@ -219,9 +292,7 @@ def get_event_data(data):
 
 
 	request_type="POST"
-	# url="http://192.168.5.12:9090/phr/phrdata/getprofileevent"
 	url="%s/phrdata/getprofileevent"%get_base_url()
-	# url="http://88.198.52.49:7974/phr/phrdata/getprofileevent"
 	from phr.phr.phr_api import get_response
 
 	pos = 0
@@ -237,9 +308,7 @@ def get_event_data(data):
 	response=get_response(url, json.dumps({"profileId":data.get('profile_id')}), request_type)
 	res_data = json.loads(response.text)
 
-	# url="http://192.168.5.12:9090/phr/phrdata/getprofilefilecount"
 	url = "%s/phrdata/getprofilefilecount"%get_base_url()
-	# url="http://88.198.52.49:7974/phr/phrdata/getprofilefilecount"
 	response=get_response(url, json.dumps({"profile_id":data.get('profile_id')}), request_type)
 	res_data1 = json.loads(response.text)
 
