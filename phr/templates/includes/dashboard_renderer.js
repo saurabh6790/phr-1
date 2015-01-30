@@ -3,19 +3,26 @@ frappe.provide("templates/includes");
 
 function render_dashboard(profile_id){
 	function render_providers(profile_id){
-		
+		frappe.call({
+			method:'phr.templates.pages.provider.get_provider_List',
+			args:{'profile_id':profile_id},
+			callback: function(r) {
+				console.log("pr",r.message)
+				if(r.message) {
+					console.log(r.message)
+					render_provider(r.message)
+				}
+			}
+		})
 	}
 	function render_linked_phr(profile_id){
 		frappe.call({
 			method:'phr.templates.pages.profile.get_linked_phrs',
 			args:{'profile_id':profile_id},
 			callback: function(r) {
-				console.log(r)
-				render_lphr(r.message)
-				/*if(r.message) {
-					$("input").val("");
-					var dialog = frappe.msgprint(r.message);
-				}*/
+				if(r.message) {
+					render_lphr(r.message)
+				}
 			}
 		})
 	
@@ -30,7 +37,16 @@ function render_dashboard(profile_id){
 		console.log("ids")
 	}
 	function render_middle_section(profile_id){
-		console.log("middle")
+		frappe.call({
+			method:'phr.templates.pages.profile.get_data_for_middle_section',
+			args:{'profile_id':profile_id},
+			callback: function(r) {
+				/*if(r.message) {
+					render_lphr(r.message)
+				}*/
+			}
+		})
+
 	}
 	function render_advertisements(profile_id){
 		console.log("adv")	
@@ -45,16 +61,24 @@ function render_dashboard(profile_id){
         render_advertisements:render_advertisements
     }
     function render_lphr(data){
-    	var me=this
-		$('#linkedphr').find('p.nophr').remove()
+    	$('#linkedphr').find('p.nophr').remove()
 		$wrap=$('#linkedphr')
-		console.log(data.actualdata)		
 		meta=JSON.parse(data.actualdata)
 		meta_dic={}
 		$.each(meta,function(i,data){
 			$(repl_str('<div class="list-group-item-side %(entityid)s">\
 			<a noherf data-name=%(entityid)s>%(person_firstname)s </a>\
 			</div>', data.profile)).appendTo($wrap)
+		})
+    }
+    function render_provider(data){
+		$('#hp').find('p.nohp').remove()
+		$wrap=$('#hp')
+		meta=data
+		$.each(meta,function(i,data){
+			$(repl_str('<div class="list-group-item-side %(entityid)s">\
+			<a noherf data-name=%(provider)s>%(name1)s </a>\
+			</div>', data)).appendTo($wrap)
 		})
     }
 }

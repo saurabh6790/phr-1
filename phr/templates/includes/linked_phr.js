@@ -79,8 +79,4 @@ var LinkedPHR = inherit(RenderFormFields, {
 			<a noherf data-name=%(entityid)s>%(fn)s</a>\
 			</div>', pro_data)).appendTo($wrap)
 	}	
-
-
-
-
 })

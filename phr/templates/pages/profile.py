@@ -134,8 +134,6 @@ def update_user_image(path):
 	user.user_image=path
 	user.save(ignore_permissions=True)
 
-
-
 def get_site_name():
 	return frappe.local.site_path.split('/')[1]
 
@@ -198,4 +196,11 @@ def get_enabled_notification(profile_id):
 
 @frappe.whitelist(allow_guest=True)
 def get_enabled_dashboard(profile_id):
-	pass
+	return frappe.db.sql("""select * from `tabShortcut` where profile_id='%s'"""%(profile_id),as_dict=1)
+
+
+@frappe.whitelist(allow_guest=True)
+def get_data_for_middle_section(profile_id):
+	db_list=get_enabled_dashboard(profile_id)
+	if db_list:
+		frappe.errprint(db_list)

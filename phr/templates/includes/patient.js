@@ -21,9 +21,10 @@ frappe.provide("frappe");
 */
 $(document).ready(function () {
 	profile_id=frappe.get_cookie("profile_id")
-	var x = new render_dashboard();
-	//x.render_providers(profile_id)
-	x.render_linked_phr(profile_id)
+	var db = new render_dashboard();
+	db.render_providers(profile_id)
+	db.render_linked_phr(profile_id)
+	db.render_middle_section(profile_id)
 	/*x.render_emer_details()
 	x.render_to_do()
 	x.bind_ids()
