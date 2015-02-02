@@ -58,7 +58,7 @@ var Visit = inherit(ListView,{
 					
 			}).appendTo('.breadcrumb');
 
-			SharePhr.prototype.init(me.wrapper, {"file_name" : "share_phr", "method": "visit", 'event_id': $(me.selected_files).last()[0], 'selected_files':me.selected_files, 'doc_list': me.doc_list, "profile_id":me.profile_id})
+			SharePhr.prototype.init(me.wrapper, {"file_name" : "share_phr_visit", "method": "visit", 'event_id': $(me.selected_files).last()[0], 'selected_files':me.selected_files, 'doc_list': me.doc_list, "profile_id":me.profile_id})
 			
 		}).appendTo($('.field-area'))
 

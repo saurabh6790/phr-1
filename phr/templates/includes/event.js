@@ -50,7 +50,7 @@ var Event = inherit(ListView,{
 				});
 			})
 
-			SharePhr.prototype.init(me.wrapper, {"file_name" : "share_phr", "method": 'event' ,'event_id': $(me.selected_files).last()[0], 'selected_files':me.selected_files, 'doc_list': me.doc_list, "profile_id":me.profile_id})
+			SharePhr.prototype.init(me.wrapper, {"file_name" : "share_phr", "method": "event", 'event_id': $(me.selected_files).last()[0], 'selected_files':me.selected_files, 'doc_list': me.doc_list, "profile_id":me.profile_id})
 			
 		}).appendTo($('.field-area'))
 		// this.open_form()
@@ -150,8 +150,8 @@ var Event = inherit(ListView,{
 				var row = $(this);
 				var $td = $('td', row);
 				if ($td.find('input[name="provider"]').is(':checked')) {
-					$('[name="provider_id"]').val($td.find('input[name="provider"]').attr('id'))
-					$('[name="provider_name"]').val($($td[1]).html())
+					$('[name="doctor_id"]').val($td.find('input[name="provider"]').attr('id'))
+					$('[name="doctor_name"]').val($($td[1]).html())
 					$('[name="email_id"]').val($($td[2]).html())
 					$('[name="number"]').val($($td[3]).html())
 					d.hide();
@@ -205,13 +205,13 @@ var Event = inherit(ListView,{
 			args:{'profile_id':this.profile_id},
 			callback:function(r){
 				console.log([$('[name="provider_name"]'), r.message])
-				$('[name="provider_name"]').autocomplete({
+				$('[name="doctor_name"]').autocomplete({
 					source: r.message,
 					multiselect: false,
 					select: function( event, obj) {
 						$('[name="email_id"]').val(obj['item']['email'])
 						$('[name="number"]').val(obj['item']['mobile'])
-						$('[name="provider_id"]').val(obj['item']['provider'])
+						$('[name="doctor_id"]').val(obj['item']['provider'])
 					}
 				})
 			}

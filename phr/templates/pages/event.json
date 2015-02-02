@@ -76,12 +76,12 @@
 			"label":""
 		},
 		{
-			"fieldname":"provider_id", 
+			"fieldname":"doctor_id", 
 			"fieldtype":"data", 
 			"label":"Provider id"
 		},
 		{
-			"fieldname":"provider_name", 
+			"fieldname":"doctor_name", 
 			"fieldtype":"data", 
 			"label":"Provider Name",
 			"description": "<a id='provider_name' style='color:#17329E;'>Add New Provider</a>"
