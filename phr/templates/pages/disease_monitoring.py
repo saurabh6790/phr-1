@@ -50,17 +50,8 @@ def get_disease_fields(name,profile_id=None):
 			row_dic={"fieldname":"tab","fieldtype": "table","label": "Disease Monitoring","rows":rows}
 			raw_fields.append(row_dic_raw)
 			fields.append(row_dic)
-			
-
-			frappe.errprint(["fields ", fields])
-			frappe.errprint(["raw_fields", raw_fields])
 
 			values=get_values(profile_id,fields,dm.event_master_id,field_mapper)
-			
-
-			frappe.errprint(["fields after values", fields])
-			frappe.errprint(["raw_fields after values", raw_fields])
-
 			return {
 				"fields":fields, 
 				"event_master_id":dm.event_master_id,
@@ -133,8 +124,8 @@ def save_dm(data,arg,fields,field_mapper,raw_fields):
 	d=json.loads(data)
 	args["data"]=str_data
 	args["str_event_date"]=time.strftime('%d/%m/%Y')
-	#args["str_diseaseMonitoring_date"]=time.strftime('%d/%m/%Y')
-	args["str_diseaseMonitoring_date"]="09/01/2015"
+	args["str_diseaseMonitoring_date"]=time.strftime('%d/%m/%Y')
+	#args["str_diseaseMonitoring_date"]="09/01/2015"
 	res=save_data_to_solr(json.dumps(args))
 	values=get_values(args['profile_id'],fields,args['event_master_id'],json.loads(field_mapper),raw_fields) 
 	return {
@@ -156,3 +147,16 @@ def save_data_to_solr(args):
 			return "true"			
 		else:
 			return "false"	
+
+@frappe.whitelist(allow_guest=True)
+def render_table_on_db(profile_id,event_master_id,name):
+	if name:
+		data=get_disease_fields(name,profile_id)
+		if data['values']:
+			frappe.errprint(data['values'][len(data['values'])-1])
+			return {
+				"res_list":data['values'][len(data['values'])-1],
+				"rtcode":1
+			}
+
+

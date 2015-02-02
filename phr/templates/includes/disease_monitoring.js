@@ -17,7 +17,7 @@ var DiseaseMonitoring = inherit(RenderFormFields, {
 		var me = this;
 		$input = $('<div class="form-horizontal frappe-control" style="max-width: 600px;margin-top:10px;margin-bottom:5px">\
 						<div class="form-group row" style="margin: 0px">\
-							<label class="control-label small col-xs-4" style="padding-right: 0px;"></label>\
+							<label class="control-label small col-xs-4" style="padding-right: 0px;">Disease</label>\
 							<div class="col-xs-8">\
 								<div class="control-input">\
 									<select type="text" class="form-control" \

@@ -102,4 +102,5 @@ function bind_events(){
 		Provider.prototype.init($(document).find("#main-con"), 
 			{"file_name" : "provider"})
 	})
+	
 }

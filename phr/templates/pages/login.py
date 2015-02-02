@@ -38,8 +38,8 @@ def create_profile(first_name,middle_name,last_name,email_id,contact,created_via
 		print response
 		if response['returncode']==101:
 			path=get_image_path(barcode,response['entityid'])
-			print path
-			res=create_profile_in_db(response['entityid'],args,response,path)
+			file_path='/files/'+response['entityid']+'/'+response['entityid']+".svg"
+			res=create_profile_in_db(response['entityid'],args,response,file_path)
 			print response
 			return response
 		else:
@@ -69,7 +69,7 @@ def get_path(entityid):
 		os.makedirs(directory)
 	
 	if directory:
-		filepath = directory+'/'+entityid
+		filepath = directory+entityid
 	
 	return filepath or None
 

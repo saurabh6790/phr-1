@@ -471,7 +471,7 @@ $.extend(RenderFormFields.prototype,{
 	render_table_body:function(val, cols, input_area){
 		var me = this;
 		var dict = {};
-		// var row = $("<tr>").appendTo($(input_area).find("tbody"));
+		// 
 		$.each(val,function(i, d){
 			// $("<td>").html(d)
 			// 	.appendTo(row);

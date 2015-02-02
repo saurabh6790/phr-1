@@ -163,17 +163,19 @@ var PatientDashboard = inherit(RenderFormFields, {
 		})
 	},
 	get_enabled_notification:function(profile_id){
+		console.log(["hiiii",profile_id])
 		var me=this;
 		frappe.call({
 			method:'phr.templates.pages.profile.get_enabled_notification',
 			args:{'profile_id':profile_id},
 			callback: function(r) {
 				console.log(r.message)
-				me.render_notifications(r.message)
+				if (r.message){
+					me.render_notifications(r.message)
+				}
 				
 			}
 		})
-
 	},
 	render_notifications:function(data){
 		var me=this;
@@ -188,17 +190,15 @@ var PatientDashboard = inherit(RenderFormFields, {
 		if(data[0].to_do==1){
 			$('input[type="checkbox"][name="to_do"]').prop('checked', true);		
 		}
-
-		//$('')
 	},
 	get_enabled_dashboard:function(profile_id){
-				var me=this;
+		var me=this;
 		frappe.call({
 			method:'phr.templates.pages.profile.get_enabled_dashboard',
 			args:{'profile_id':profile_id},
 			callback: function(r) {
 				if(r.message) {
-					me.render_phrs(r.message)
+					//me.render_phrs(r.message)
 				}
 			}
 		})
