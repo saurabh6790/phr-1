@@ -1,0 +1,60 @@
+<!-- {% block style %}
+{% include "templates/includes/dashboard.css" %}
+{% include "templates/includes/theme.css" %}
+{% endblock %} -->
+{% block con_left %}
+<script src="jQuery.jTableCheckbox.min.js"></script>
+<div class="list-group-side" id="profile" style="height:auto;margin-top:5%">
+   <a href="#" class="list-group-item-side active">PHR Home</a>
+   <a noherf class="list-group-item-side" id='profile'>My Profile</a>
+</div>
+<div class="list-group-side" id="linkedphr">
+  <div href="" class="list-group-item-side active">Linked PHR's <a noherf class="create_linkphr"><span style="float:right"><i class="icon-plus"></i></span></a></div>
+  <p class="nophr">No Linked PHR's</p>
+</div>
+<div class="list-group-side" id="hp">
+  <div href="" class="list-group-item-side active">My Healthcare Providers <a noherf class="create_provider"><span style="float:right"><i class="icon-plus"></i></span></a></div>
+  <p class="nohp">No Providers</p>
+</div>
+<div class="list-group-side" id="mhr">
+  <div class="list-group-item-side active">My Health Records</div>
+  <a noherf class="list-group-item-side event">Events</a>
+  <a noherf class="list-group-item-side visit">Visits</a>
+  <a noherf class="list-group-item-side medications">Medications</a>
+  <a noherf class="list-group-item-side dmonit">Disease Monitoring</a>
+  <a noherf class="list-group-item-side appoint">Appointments</a>
+  <a noherf class="list-group-item-side msg">Messages</a>
+</div>
+{% endblock %}
+{% block content_area %}
+<div style="padding-top:1%;">
+</div>
+<div class="top-bar" style="height:50px;">
+              <button type="button" class="btn btn-primary home" style ="vertical-align:bottom;">Home</button>
+                  <button type="button" class="btn btn-primary market" style="margin:0px auto;">Health Marketplace</button>
+            </div>
+            <div class="form-controller">
+                <div class="sub-top-bar" style="padding-top:2%;padding-bottom:2%;background-color:#ECECEC; border-top: 1px solid #006DEA; border-bottom: 1px solid #006DEA;">
+                  <div class="page-breadcrumbs" style="width:50%;display:inline-block;">
+                    <ul class="breadcrumb">
+                    </ul>
+                  </div>
+                </div>
+            </div>
+<div class="field-area" style="padding-top:5%"></div>
+</div>
+<div id="main-con">
+
+</div>
+{% endblock %}
+{% block con_right %}
+<div class="list-group-side" style="margin-top:5%">
+  <a href="" class="list-group-item-side active">Emergency details</a>
+</div>
+<div class="list-group-side">
+  <a href="" class="list-group-item-side active">To Do List's</a>
+</div>
+{% endblock %}
+{% block script %}
+{% include "templates/includes/provider_page.js" %}
+{% endblock %}

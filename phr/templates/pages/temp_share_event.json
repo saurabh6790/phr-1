@@ -1,0 +1,49 @@
+{
+	"listview":[
+		{
+			"fieldname":"from_date", 
+			"fieldtype":"date", 
+			"label":"From Date"
+		},
+		{
+			"fieldname":"",
+			"fieldtype":"column_break",
+			"label":""
+		},
+		{
+			"fieldname":"to_date",
+			"fieldtype":"date",
+			"label":"To Date"
+		},
+		{
+			"fieldname":"",
+			"fieldtype":"section_break",
+			"label":""
+		},
+		{
+			"fieldname":"tab",
+			"fieldtype":"table",
+			"label":"Event Table",
+		 	"rows":[
+ 				[
+ 					"","Event Name","Event Date", 
+ 					"Complaints", 
+ 					"<i class='icon-user-md' data-toggle='tooltip' data-placement='top' title='Consultation'></i>", 
+ 					"<i class='icon-camera' data-toggle='tooltip' data-placement='top' title='Event Snaps'></i>", 
+ 					"<i class='icon-beaker' data-toggle='tooltip' data-placement='top' title='Lab Reports'></i>", 
+ 					"<i class='icon-file' data-toggle='tooltip' data-placement='top' title='Prescription'></i>", 
+ 					"<i class='icon-credit-card' data-toggle='tooltip' data-placement='top' title='Cost of Care'></i>"
+ 				],
+ 				[
+ 					"","<a nohref id='1'>Headache </a>","15/01/2015","Pain","0","0","0","0","0"
+ 				],
+ 				[
+ 					"","<a nohref id='2'>Headache1 </a>","16/01/2015","Pain","0","0","0","0","0"
+ 				],
+ 				[
+ 					"","<a nohref id='3'>Headache2 </a>","17/01/2015","Pain","0","0","0","0","0"
+ 				]
+	 		]
+		}
+	]
+}

@@ -66,6 +66,7 @@ var Event = inherit(ListView,{
 		this.get_linked_providers()
 	},
 	open_form:function(event_id, event_title){
+		alert('test')
 		var me = this;
 		RenderFormFields.prototype.init(me.wrapper, {"file_name" : "event", "method": 'event'}, event_id)
 
