@@ -1,0 +1,34 @@
+{
+	"listview":[
+		{
+			"fieldname":"from_date", 
+			"fieldtype":"date", 
+			"label":"From Date"
+		},
+		{
+			"fieldname":"",
+			"fieldtype":"column_break",
+			"label":""
+		},
+		{
+			"fieldname":"to_date",
+			"fieldtype":"date",
+			"label":"To Date"
+		},
+		{
+			"fieldname":"",
+			"fieldtype":"section_break",
+			"label":""
+		},
+		{
+			"fieldname":"tab",
+			"fieldtype":"table",
+			"label":"Event Table",
+		 	"rows":[
+ 				[
+ 					"Event Name","Event Date", "Complaints"
+ 				]
+	 		]
+		}
+	]
+}

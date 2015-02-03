@@ -3,17 +3,12 @@
 		{
 			"fieldname":"entityid",
 			"fieldtype":"data", 
-			"label":"Event Id"
+			"label":"Visit Id"
 		},
 		{
-			"fieldname":"event_date", 
-			"fieldtype":"date", 
-			"label":"Date"
-		},
-		{
-			"fieldname":"event_title", 
+			"fieldname":"event_id",
 			"fieldtype":"data", 
-			"label":"Event Name"
+			"label":"Event Id"
 		},
 		{
 			"fieldname":"", 
@@ -21,9 +16,14 @@
 			"label":""
 		},	
 		{
-			"fieldname":"event_descripton", 
-			"fieldtype":"text", 
-			"label":"Description"
+			"fieldname":"str_visit_date", 
+			"fieldtype":"date", 
+			"label":"Date"
+		},
+		{
+			"fieldname":"visit_descripton", 
+			"fieldtype":"data", 
+			"label":"Visit Description"
 		},
 		{
 			"fieldname":"",

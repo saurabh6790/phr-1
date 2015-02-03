@@ -42,20 +42,19 @@
                 </div>
             </div>
 <div class="field-area" style="padding-top:5%"></div>
-<div id="main-con"></div>
+</div>
+<div id="main-con">
+
 </div>
 {% endblock %}
 {% block con_right %}
-<div class="list-group-side" id="ed" style="margin-top:5%">
+<div class="list-group-side" style="margin-top:5%">
   <a href="" class="list-group-item-side active">Emergency details</a>
 </div>
 <div class="list-group-side">
-  <div class="list-group-item-side active">To Do List's
-    <a noherf class="create_todo"><span style="float:right"><i class="icon-plus"></i></span></a>
-  </div>
-  <div  id ="todo"></div>
+  <a href="" class="list-group-item-side active">To Do List's</a>
 </div>
 {% endblock %}
 {% block script %}
-{% include "templates/includes/patient.js" %}
+{% include "templates/includes/provider_page.js" %}
 {% endblock %}

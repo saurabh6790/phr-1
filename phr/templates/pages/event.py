@@ -67,12 +67,12 @@ def update_event(data):
 			"event_diseasemontoring": False,
 			"event_symptoms" : ["Dengue" , "Headache" , "Chest Pain"],
 			"event_title": data.get('event_title'),
-			"profile_id": data.get('profile_id'),
+			"profile_id": data.get('doctor_id'),
 			"str_event_date": data.get('event_date'),
 			"event_descripton": data.get('event_descripton'),
 			"visit_files": data.get('dms_file_list'),
 			"doctor_id": "1421767671044-180707",
-			"doctor_name": data.get("provider_name"),
+			"doctor_name": data.get("doctor_name"),
 			"visit_descripton": data.get('event_descripton'),
 			"received_from": "Desktop",
 			"str_visit_date": data.get('event_date'),
@@ -141,7 +141,6 @@ def send_shared_data(data):
 
 	if data.get('share_via') == 'Email':
 		attachments = []
-		# frappe.errprint([files])
 		files = data.get('files')
 		for fl in files:
 			fname = os.path.join(get_files_path(), fl)
@@ -159,7 +158,7 @@ def send_shared_data(data):
 						%(event_body)s <br>
 						Please see attachment <br>
 				"""%{'event': data.get('event_title'), 'event_date': data.get('event_date'), 
-					'provider_name': data.get('provider_name'), 'event_body': data.get('email_body')}
+					'provider_name': data.get('doctor_name'), 'event_body': data.get('email_body')}
 			
 			from frappe.utils.email_lib import sendmail
 
@@ -169,7 +168,7 @@ def send_shared_data(data):
 			return """Selected images has been shared with 
 				%(provider_name)s %(doc_email)s for event %(event)s """%{
 					'event': data.get('event_title'),
-					'provider_name': data.get('provider_name')}
+					'provider_name': data.get('doctor_name')}
 		else:
 			frappe.msgprint('Please select file(s) for sharing')
 
@@ -178,7 +177,7 @@ def send_shared_data(data):
 			event_data =	{
 					"sharelist": [
 							{
-								"to_profile_id": data.get('provider_id'),
+								"to_profile_id": data.get('doctor_id'),
 								"received_from":"desktop",
 								"from_profile_id": data.get('profile_id'),
 								"event_tag_id": data.get('entityid'),
@@ -197,14 +196,11 @@ def send_shared_data(data):
 			return eval(json.loads(response.text).get('sharelist'))[0].get('message_summary')
 
 		else:
-			print "-----------provider share file list-------------"
-			print data.get('files')
-			print "------------------------------------------------"
 			sharelist = []
 			for fl in data.get('files'):
 				file_details = fl.split('/')
 				sharelist.append({
-					"to_profile_id": data.get('provider_id'),
+					"to_profile_id": data.get('doctor_id'),
 					"received_from":"desktop",
 					"from_profile_id": data.get('profile_id'),
 					"visit_tag_id": file_details[4],
@@ -219,8 +215,6 @@ def send_shared_data(data):
 			url = "%s/sharephr/sharemultiplevisitfiles"%get_base_url()
 			event_data = {'sharelist': sharelist}
 			response=get_response(url, json.dumps(event_data), request_type)
-
-			print json.loads(response.text)
 
 			return eval(json.loads(response.text).get('sharelist'))[0].get('message_summary')
 
@@ -394,7 +388,7 @@ def get_provider_info(cond):
 	else:
 		return none
 @frappe.whitelist()
-def get_linked_providers(profile_id):
+def get_linked_providers(profile_id=None):
 	import itertools
 
 	if profile_id:

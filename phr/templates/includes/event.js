@@ -51,7 +51,7 @@ var Event = inherit(ListView,{
 				});
 			})
 
-			SharePhr.prototype.init(me.wrapper, {"file_name" : "share_phr", "method": 'event' ,'event_id': $(me.selected_files).last()[0], 'selected_files':me.selected_files, 'doc_list': me.doc_list, "profile_id":me.profile_id})
+			SharePhr.prototype.init(me.wrapper, {"file_name" : "share_phr", "method": "event", 'event_id': $(me.selected_files).last()[0], 'selected_files':me.selected_files, 'doc_list': me.doc_list, "profile_id":me.profile_id})
 			
 		}).appendTo($('.field-area'))
 		// this.open_form()
@@ -67,6 +67,7 @@ var Event = inherit(ListView,{
 		this.get_linked_providers()
 	},
 	open_form:function(event_id, event_title){
+		alert('test')
 		var me = this;
 		RenderFormFields.prototype.init(me.wrapper, {"file_name" : "event", "method": 'event'}, event_id)
 
@@ -151,8 +152,8 @@ var Event = inherit(ListView,{
 				var row = $(this);
 				var $td = $('td', row);
 				if ($td.find('input[name="provider"]').is(':checked')) {
-					$('[name="provider_id"]').val($td.find('input[name="provider"]').attr('id'))
-					$('[name="provider_name"]').val($($td[1]).html())
+					$('[name="doctor_id"]').val($td.find('input[name="provider"]').attr('id'))
+					$('[name="doctor_name"]').val($($td[1]).html())
 					$('[name="email_id"]').val($($td[2]).html())
 					$('[name="number"]').val($($td[3]).html())
 					d.hide();
@@ -206,13 +207,13 @@ var Event = inherit(ListView,{
 			args:{'profile_id':this.profile_id},
 			callback:function(r){
 				console.log([$('[name="provider_name"]'), r.message])
-				$('[name="provider_name"]').autocomplete({
+				$('[name="doctor_name"]').autocomplete({
 					source: r.message,
 					multiselect: false,
 					select: function( event, obj) {
 						$('[name="email_id"]').val(obj['item']['email'])
 						$('[name="number"]').val(obj['item']['mobile'])
-						$('[name="provider_id"]').val(obj['item']['provider'])
+						$('[name="doctor_id"]').val(obj['item']['provider'])
 					}
 				})
 			}
@@ -381,98 +382,5 @@ var Event = inherit(ListView,{
 						'dms_file_list': me.dms_file_list})
 				// me.render_uploader_and_files();
 			})	
-	},
-	// render_uploader_and_files:function(){
-	// 	var me = this;
-	// 	$('.uploader').empty();
-	// 	$('<div class="uploader">\
-	// 		<h4> Uploaded Files </h4>\
-	// 		<div id="uploaded_file">\
-	// 		</div>\
-	// 		<hr><br>\
-	// 		<div>\
-	// 			<h4> Uploaded Files </h4>\
-	// 			<div id="attach"> Attach </div>\
-	// 		</div>\
-	// 		<button id="share_data">Share Data</button></div>').appendTo($('.field-area'))
-		
-	// 	$('#share_data').click(function(){
-	// 		me.get_selected_files();
-	// 	})
-
-	// 	this.show_attachments();
-
-	// 	upload.make({
-	// 		parent: $('#attach'),
-	// 		args:{'profile_id':'123456789', 'folder':me.folder, 'sub_folder': me.sub_folder},
-	// 		callback:function(attachment, r) {
-	// 			console.log("in attachment callback")
-	// 			me.render_uploader_and_files();
-	// 		}
-	// 	});
-	// },
-	// show_attachments:function(){
-	// 	var me = this;
-	// 	frappe.call({
-	// 		method:"phr.templates.pages.event.get_attachments",
-	// 		args:{'profile_id':'123456789', 'folder':me.folder, 'sub_folder': me.sub_folder},
-	// 		callback:function(r){
-	// 			me.create_attachement_renderer(r.message)
-	// 		}
-	// 	})
-	// },
-	// create_attachement_renderer: function(attachments){
-	// 	var me = this;
-	// 	this.table = $('<table></table>').appendTo('#uploaded_file');
-
-	// 	row = $('<tr>').appendTo(this.table)
-	// 	$.each(attachments, function(i, attachment){
-	// 		console.log(i)
-	// 		if((i+1)%4 == 0){
-	// 			row = $('<tr>').appendTo(me.table)
-	// 		}
-	// 		attachment['display'] = 'none'
-	// 		me.render_attachemnt(attachment, row)
-	// 	})
-	// },
-	// render_attachemnt:function(attachment, row){
-	// 	if(attachment['type'] == 'pdf' || attachment['type'] == 'PDF'){
-	// 		$td = $(repl('<td style="width:200px;\
-	// 						height:200px;padding-right:20px;vertical-align:top;">\
-	// 					',attachment)).appendTo(row)
-	// 		thumbnail("/"+attachment['path']+"/"+attachment['file_name'], $td, attachment['file_name'])
-	// 	}
-	// 	if((/\.(gif|jpg|jpeg|tiff|png)$/i).test(attachment['file_name']) ){
-	// 		$('<td style="width:200px;height:200px;padding-right:20px;vertical-align:top;">')
-	// 			.html($(repl('<div>\
-	// 					<input type="checkbox" style="display:%(display)s" value="%(file_name)s" >\
-	// 				</div>\
-	// 				<img style="height:150px;" src="/%(path)s/%(file_name)s">\
-	// 				<br><label>%(file_name)s</label>',attachment))).appendTo(row)
-	// 	}		
-	// },
-	// get_selected_files: function(){
-	// 	var me = this;
-	// 	this.selected_files = []
-	// 	$(this.table).find('tr').each(function () {
-	// 		var row = $(this);
-	// 		$('td', row).map(function(index, td) {
-	// 		    if ($(td).find('input[type="checkbox"]').is(':checked')) {
-	// 				me.selected_files.push($(td).find('input[type="checkbox"]').val())
-	// 			}
-	// 		});
-	// 	})
-	// 	this.send_email()
-	// },
-	// send_email:function(){
-	// 	var me = this;
-	// 	frappe.call({
-	// 		method:"phr.templates.pages.event.send_shared_data",
-	// 		args:{'files': me.selected_files, 'profile_id':'123456789', 'folder':me.folder, 'sub_folder': me.sub_folder},
-	// 		callback:function(r){
-	// 			frappe.msgprint("mail has been sent!!!")
-	// 		}
-	// 	})
-	// }
-
+	}
 })

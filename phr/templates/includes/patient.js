@@ -15,6 +15,7 @@ frappe.provide("frappe");
 {% include "templates/includes/messages.js" %}
 {% include "templates/includes/disease_monitoring.js" %}
 {% include "templates/includes/dashboard_renderer.js" %}
+{% include "templates/includes/todo.js" %}
 /*
   Format for method Classes
   ClassName.prototype.init(wrapper,name_of_json_file,entityid,operation_entity)
@@ -103,5 +104,9 @@ function bind_events(){
 		Provider.prototype.init($(document).find("#main-con"), 
 			{"file_name" : "provider"})
 	})
-	
+	$(".create_todo").unbind("click").click(function(){
+		ToDo.prototype.init($(document).find("#main-con"),
+			{"cmd":"make_todo"},profile_id,"")	
+	})
 }
+
