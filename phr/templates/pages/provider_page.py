@@ -19,7 +19,7 @@ def get_profile_list(data):
 
 
 	request_type="POST"
-	url="http://192.168.5.11:9090/phr-api/sharephr/getprofilelistSharedFrom"
+	url="%s/phr-api/sharephr/getprofilelistSharedFrom"%get_base_url()
 	from phr.phr.phr_api import get_response
 
 	pos = 0
@@ -55,7 +55,7 @@ def get_patient_data(data):
 	dms_files = []
 	file_dict = {}
 	request_type="POST"
-	url="http://192.168.5.11:9090/phr-api/sharephr/searchsharedeventdata"
+	url="%s/phr-api/sharephr/searchsharedeventdata"%get_base_url()
 	from phr.phr.phr_api import get_response
 
 	pos = 0
@@ -72,9 +72,8 @@ def get_patient_data(data):
 	data_dict ={"to_profile_id":data.get('profile_id'), 
 			"received_from": "desktop", "from_profile_id": data.get('other_param').get('patient_profile_id')}
 
-	print data_dict
-
 	response=get_response(url, json.dumps(data_dict), request_type)
+
 	res_data = json.loads(response.text)
 
 	if res_data.get('Jsoneventlist'):
@@ -87,43 +86,39 @@ def get_patient_data(data):
 					event['event_symptoms']]
 
 			rows.extend([data])
+			for visit_details in event_details.get('visitList'):
+				for file_deatils in visit_details.get('visit_files'):
+					for file_info in file_deatils.get('file_location'):
 
-			# print event_details.get('visitList')
+						tags = file_deatils.get('entityid').split('-')[-1:][0]
 
-			# for visit_details in event_details.get('visitList'):
-				# print "\n\n visit_details \n"
-				# print visit_details
-				# print "\n"
-				# break
+						file_dict = {"entityid": visit_details.get('entityid'),
+							"profile_id": visit_details.get('profile_id'),
+							"event_id": event.get('entityid')}
 
-				# for file_deatils in visit_details.get('visit_files'):
-				# 	print "\n\n\n\n\n\n\n iechya gavat "
-				# 	print file_deatils
-				# 	print "\n\n\n\n\n\n\n\n"
+						file_dict['tag_id'] = file_deatils.get('entityid')
+						file_dict["file_id"] = file_info.split('/')[-1:]
+						file_dict['file_location'] = [os.path.join(os.getcwd(), get_site_path().replace('.',"")
+													.replace('/', ""), 'public', 'files',
+													data_dict.get('to_profile_id'), 
+													event.get('entityid'), 
+													file_deatils.get('tag_name') + '-' + tags[:2],
+													file_deatils.get('sub_tag_name') + '_' + tags[-2:],
+													visit_details.get('entityid'))]
 
-					# for file_info in file_deatils.get('file_location'):
-					# 	tags = file_deatils.get('entityid').split('-')[-1:]
+						frappe.create_folder(file_dict['file_location'][0])
 
-					# 	file_dict = {"entityid": visit_details.get('entityid'),
-					# 		"profile_id": visit_details.get('profile_id'),
-					# 		"event_id": event.get('entityid')}
+						file_dict['file_location'] = [file_dict['file_location'][0] + '/' + file_dict["file_id"][0]]
 
-					# 	file_dict['tag_id'] = file_deatils.get('entityid')
-					# 	file_dict["file_id"] = file_info.split('/')[-1:]
-					# 	file_dict['path'] = os.path.join(os.getcwd(), get_site_path().replace('.',"")
-					# 								.replace('/', ""), 'public', 'files',
-					# 								data.get('other_param').get('patient_profile_id'), 
-					# 								event.get('entityid'), 
-					# 								visit_details.get('tag_name') + '-' + tags[:2],
-					# 								visit_details.get('sub_tag_name') + '_' + tags[-2:],
-					# 								visit_details.get('entityid'))
+						if not  os.path.exists(file_dict['file_location'][0]):
+							dms_files.append(file_dict)
 
+		request_type="POST"
+		url="%s/phr-api/dms/getvisitmultiplefile"%get_base_url()
+		from phr.phr.phr_api import get_response
 
-
-					# 	dms_files.append(file_dict)
-		print "\n\n\n --------------data--------------\n"		
-		print file_dict
-		print "\n\n\n\n"
+		param = {"filelist": dms_files}
+		response=get_response(url, json.dumps(param), request_type)
 
 	return {
 		'rows': rows,

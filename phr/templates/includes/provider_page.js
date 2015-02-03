@@ -39,6 +39,6 @@ render_shared_data = function(patient_profile_id){
 		'profile_id': frappe.get_cookie("profile_id")
 	})
 	$("table tr td a").bind('click', function (e) {
-		Event.prototype.open_form($(this).attr('id'), $(this).html())
+		Event.prototype.open_form($(this).attr('id'), $(this).html(), frappe.get_cookie("profile_id"))
 	})
 }

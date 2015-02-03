@@ -55,7 +55,7 @@ var Event = inherit(ListView,{
 		}).appendTo($('.field-area'))
 		// this.open_form()
 		$("table tr td a").bind('click', function (e) { 
-			me.open_form($(this).attr('id'), $(this).html())
+			me.open_form($(this).attr('id'), $(this).html(), me.profile_id)
 		})
 
 		// $("#myModal").on("hide", function() {    // remove the event listeners when the dialog is dismissed
@@ -65,9 +65,10 @@ var Event = inherit(ListView,{
 		this.render_spans()
 		this.get_linked_providers()
 	},
-	open_form:function(event_id, event_title){
+	open_form:function(event_id, event_title, profile_id){
 		alert('test')
 		var me = this;
+		this.profile_id = profile_id;
 		RenderFormFields.prototype.init(me.wrapper, {"file_name" : "event", "method": 'event'}, event_id)
 
 		me.bind_save_event()
