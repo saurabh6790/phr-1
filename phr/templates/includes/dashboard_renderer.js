@@ -26,7 +26,17 @@ function render_dashboard(profile_id){
 	
 	}
 	function render_emer_details(profile_id){
-		console.log("emer")
+		frappe.call({
+			method:'phr.templates.pages.profile.get_user_details',
+			args:{'profile_id':profile_id},
+			callback: function(r) {
+				if(r.message) {
+					console.log(r.message)
+					render_ed(r.message)
+				}
+			}
+		})
+		
 	}
 	function render_to_do(profile_id){
 		console.log("to_do")
@@ -61,6 +71,16 @@ function render_dashboard(profile_id){
         render_middle_section: render_middle_section,
         render_advertisements:render_advertisements
     }
+    function render_ed(data){
+    	console.log(data)
+    	$wrap=$('#ed')
+    	$('<div>Name:'+data["name"]+'<br>Contact:'+data["contact"]+'<br>\
+    	<img src="'+data["barcode"]+'"></div>').appendTo($wrap)
+/*		
+    	$wrap=$('#ed')
+    	$(repl_str('<div>Name:%(name)s<br>Contact:%(contact)s<br>\
+    	<img src=%(barcode)s></div>'),data).appendTo($wrap)
+ */   }
     function render_lphr(data){
     	$('#linkedphr').find('p.nophr').remove()
 		$wrap=$('#linkedphr')

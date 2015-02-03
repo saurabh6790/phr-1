@@ -25,6 +25,7 @@ $(document).ready(function () {
 	db.render_providers(profile_id)
 	db.render_linked_phr(profile_id)
 	db.render_middle_section(profile_id)
+	db.render_emer_details()
 	/*x.render_emer_details()
 	x.render_to_do()
 	x.bind_ids()

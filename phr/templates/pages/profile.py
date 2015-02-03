@@ -12,6 +12,7 @@ import binascii
 import base64
 from phr.templates.pages.login import create_profile_in_db,get_barcode,get_image_path
 from phr.templates.pages.patient import get_base_url
+from frappe.utils import cint, now, get_gravatar,cstr
 
 
 @frappe.whitelist(allow_guest=True)
@@ -363,3 +364,17 @@ def build_appointments_data(data):
 	appointments_dic={"fieldname":"appointments","fieldtype": "table","label": "Appointments","rows":rows}
 	return appointments_dic
 
+
+@frappe.whitelist(allow_guest=True)
+def get_user_details(profile_id=None):
+	user=frappe.get_doc("User",frappe.session.user)
+	frappe.errprint(user)
+	if user:
+		name=user.first_name+''+cstr(user.last_name)
+		contact=user.contact
+		barcode=user.barcode
+		return{
+			"name":name,
+			"contact":contact,
+			"barcode":barcode
+		}
