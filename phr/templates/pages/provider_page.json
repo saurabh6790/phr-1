@@ -1,14 +1,12 @@
 {
- "listview": [
-  {
-   "fieldname": "tab", 
-   "fieldtype": "table", 
-   "label": "",
-   "rows":[
-		["","Patient Name","Someinfo"],
-		["", "<a nohref id ='12345678'> Saurabh </a>", "Palande"],
-		["", "<a nohref id ='89892337'> Rohit </a>","Paland"]
- 	]
-  }
-  ]
+	"listview": [
+		{
+			"fieldname": "tab", 
+			"fieldtype": "table", 
+			"label": "",
+			"rows":[
+				["Patient Name"]
+			]
+		}
+	]
 }

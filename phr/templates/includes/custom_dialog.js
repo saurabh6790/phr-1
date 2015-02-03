@@ -11,7 +11,9 @@ var Dialog = function(){
 $.extend(Dialog.prototype,{
 	init: function(field_list){
 		this.field_list = field_list
+		this.title = field_list['title']
 		this.make();
+		this.make_head();
 	},
 	make:function(){
 		this.$wrapper = this.get_diloag();
@@ -24,7 +26,9 @@ $.extend(Dialog.prototype,{
 				  <div class="modal-dialog modal-lg">\
 				    <div class="modal-content">\
 				      <div class="modal-header">\
-				      	<button type="button" class="close" data-dismiss="modal">&times;</button>Hello world!</div>\
+				      	<button type="button" class="close" data-dismiss="modal">&times;</button>\
+				      	<div class="modal-title"></div>\
+				      </div>\
 				      <div class="modal-body">\
 					  </div>\
 				      <div class="modal-footer">\

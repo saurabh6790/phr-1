@@ -19,18 +19,26 @@ frappe.provide("frappe");
 */
 $(document).ready(function () {
 	profile_id=frappe.get_cookie("profile_id")
-	ListView.prototype.init(this.wrapper, {'file_name':"provider_page"})
+	ListView.prototype.init(this.wrapper, {'file_name':"provider_page",
+		'cmd':"provider_page.get_profile_list",
+		'tab_at': 0,
+		'profile_id': frappe.get_cookie("profile_id")
+	})
 
 	$("table tr td a").bind('click', function (e) { 
 		render_shared_data($(this).attr('id'))
 	})
 })
 
-render_shared_data = function(profile_id){
+render_shared_data = function(patient_profile_id){
 	alert(profile_id)
-	ListView.prototype.init(this.wrapper, {'file_name':"temp_share_event"})
+	ListView.prototype.init(this.wrapper, {'file_name':"temp_share_event",
+		'cmd':"provider_page.get_patient_data",
+		'tab_at': 4,
+		"patient_profile_id": patient_profile_id,
+		'profile_id': frappe.get_cookie("profile_id")
+	})
 	$("table tr td a").bind('click', function (e) {
-		alert("test")
-		// Event.prototype.open_form($(this).attr('id'), $(this)html())
+		Event.prototype.open_form($(this).attr('id'), $(this).html())
 	})
 }

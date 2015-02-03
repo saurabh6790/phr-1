@@ -388,7 +388,7 @@ def get_provider_info(cond):
 	else:
 		return none
 @frappe.whitelist()
-def get_linked_providers(profile_id):
+def get_linked_providers(profile_id=None):
 	import itertools
 
 	if profile_id:

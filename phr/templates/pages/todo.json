@@ -1,0 +1,20 @@
+{
+	"fields":[
+		{
+			"fieldname":"priority", 
+			"fieldtype":"select", 
+			"label":"Priority",
+			"options":["High", "Medium", "Low"]
+		},
+		{
+			"fieldname":"description", 
+			"fieldtype":"text", 
+			"label":"Description"
+		},
+		{
+			"fieldname":"due_date", 
+			"fieldtype":"date", 
+			"label":"Due Date"
+		}
+	]
+}
