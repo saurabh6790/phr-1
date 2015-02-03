@@ -26,7 +26,7 @@ $.extend(RenderFormFields.prototype,{
 		console.log(['modal_wrapper', modal_wrapper])
 
 		if(modal_wrapper) this.wrapper = modal_wrapper.find('.modal-body');
-		else this.wrapper =  $('.field-area');
+		else this.wrapper=wrapper ? wrapper:$('.field-area') 
 		this.result_set = {}
 		this.visibility_dict = {}
 		this.labelled_section_count = 0;
@@ -34,7 +34,7 @@ $.extend(RenderFormFields.prototype,{
 
 		//crear rendering area
 		$(this.wrapper).empty()
-
+	
 		//initiate rendering
 		this.render_top()
 		this.get_field_meta();
@@ -375,13 +375,13 @@ $.extend(RenderFormFields.prototype,{
 							<div class="col-xs-8">\
 								<div class="control-input">\
 									<input type="text" class="form-control" \
-										placeholder="%(label)s" name="%(fieldname)s" data-fieldtype="Date" >\
+										placeholder="%(label)s" name="%(fieldname)s" data-fieldtype="DateTime" >\
 								</div>\
 							</div>\
 						</div>\
 				</div>', field_meta)).appendTo($(this.column))
 
-		$( $input.find('[data-fieldtype="Date"]' )).datetimepicker({
+		$( $input.find('[data-fieldtype="DateTime"]' )).datetimepicker({
 						altFormat:'yy-mm-dd',
 						changeYear: true,
 						yearRange: "-70Y:+10Y",
@@ -395,6 +395,39 @@ $.extend(RenderFormFields.prototype,{
 			$input.find('input').val($.datetimepicker.formatDate('dd/mm/yy',date))
 		}
 
+		if(field_meta['required']==1){
+			$input.find("input").prop('required',true);
+			$input.find("input").css({"border": "1px solid #999","border-color": "red" });
+		}
+
+		this.set_description($input.find('.control-input'), field_meta)
+	},
+	time_field_renderer:function(field_meta){
+		var me = this;
+		$input = $(repl_str('<div class="form-horizontal frappe-control" style="max-width: 600px;margin-top:10px;">\
+						<div class="form-group row" style="margin: 0px">\
+							<label class="control-label small col-xs-4" style="padding-right: 0px;">%(label)s</label>\
+							<div class="col-xs-8">\
+								<div class="control-input">\
+									<input type="text" class="form-control" \
+										placeholder="%(label)s" name="%(fieldname)s" data-fieldtype="time" >\
+								</div>\
+							</div>\
+						</div>\
+				</div>', field_meta)).appendTo($(this.column))
+
+		$( $input.find('[data-fieldtype="time"]' )).datetimepicker({
+						dateFormat: '',
+        				timeFormat: 'hh:mm tt',
+        				timeOnly: true
+		})
+		/*var val = field_meta['value'];
+		
+		if(val){
+			var date=new Date(val)
+			$input.find('input').val($.datetimepicker.formatDate('dd/mm/yy',date))
+		}
+*/
 		if(field_meta['required']==1){
 			$input.find("input").prop('required',true);
 			$input.find("input").css({"border": "1px solid #999","border-color": "red" });
@@ -438,7 +471,7 @@ $.extend(RenderFormFields.prototype,{
 	render_table_body:function(val, cols, input_area){
 		var me = this;
 		var dict = {};
-		// var row = $("<tr>").appendTo($(input_area).find("tbody"));
+		// 
 		$.each(val,function(i, d){
 			// $("<td>").html(d)
 			// 	.appendTo(row);

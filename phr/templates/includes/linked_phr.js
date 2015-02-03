@@ -8,6 +8,8 @@ var LinkedPHR = inherit(RenderFormFields, {
 		this.args=cmd
 		this.entityid=entityid
 		this.operation=operation
+		$(this.wrapper).empty();
+		$('.field-area').empty();
 		RenderFormFields.prototype.init(this.wrapper,this.args,this.entityid,this.operation)
 		this.render_field()
 	},
@@ -77,8 +79,4 @@ var LinkedPHR = inherit(RenderFormFields, {
 			<a noherf data-name=%(entityid)s>%(fn)s</a>\
 			</div>', pro_data)).appendTo($wrap)
 	}	
-
-
-
-
 })

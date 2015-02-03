@@ -11,6 +11,8 @@ from frappe import _
 import binascii
 import base64
 from phr.templates.pages.login import create_profile_in_db,get_barcode,get_image_path
+from phr.templates.pages.patient import get_base_url
+
 
 @frappe.whitelist(allow_guest=True)
 def update_profile(data,id,dashboard=None):
@@ -85,6 +87,11 @@ def manage_dashboard(data,dashboard=None):
 	dashboard_fields=json.loads(dashboard)
 	sr=frappe.db.get_value("Shortcut",{"profile_id":obj.get('entityid')},"name")
 	if sr:
+		frappe.db.sql("""update `tabShortcut` 
+			set visits=0,events=0
+			medications=0,disease_monitoring=0 
+			appointments=0,messages=0  
+			where name='%s'"""%(sr))
 		update_values(dashboard_fields,sr)
 	else:
 		sr = frappe.get_doc({
@@ -134,8 +141,6 @@ def update_user_image(path):
 	user.user_image=path
 	user.save(ignore_permissions=True)
 
-
-
 def get_site_name():
 	return frappe.local.site_path.split('/')[1]
 
@@ -166,7 +171,6 @@ def delink_phr(selected,data,profile_id=None):
 	return profile_id
 
 def delink_phr_solr(data,id,profile_id):
-	from phr.templates.pages.patient import get_base_url
 	solr_op='unlinkProfile'
 	url=get_base_url()+solr_op
 	request_type='POST'
@@ -198,4 +202,164 @@ def get_enabled_notification(profile_id):
 
 @frappe.whitelist(allow_guest=True)
 def get_enabled_dashboard(profile_id):
-	pass
+	return frappe.db.sql("""select * from `tabShortcut` where profile_id='%s'"""%(profile_id),as_dict=1)
+
+
+@frappe.whitelist(allow_guest=True)
+def get_data_for_middle_section(profile_id):
+	db_list=get_enabled_dashboard(profile_id)
+	if db_list:
+		obj=db_list[0]
+		res_list=[]
+		if obj.get('disease_monitoring')==1:
+			data=get_diseases()
+			if data:
+				res_list=build_dm_data(data,res_list)
+		if obj.get('visits')==1 or obj.get('events')==1:
+			data=get_data_from_solr(profile_id)
+			if data:
+				res_list=build_response(json.loads(data),obj,res_list) 
+		if obj.get('appointments')==1:
+			data=get_appointments(profile_id)
+			if data:
+				res_list=build_response_for_appointments(data,obj,res_list)
+		if obj.get('medications')==1:
+			data=get_medications(profile_id)
+			if data:
+				res_list=build_response_for_medications(data,obj,res_list)
+		return {
+				"res_list":res_list,
+				"rtcode":1
+			}
+	else:
+		return
+		{
+			"message":"Please Setup Dashboard",
+			"rtcode":0
+		}
+
+
+		# if obj.get('disease_monitoring')==1:
+		# 	data=get_data_from_db(profile_id)
+		# 	if data:
+		# 		res_list=build_response(data,obj,res_list)
+
+@frappe.whitelist(allow_guest=True)
+def get_diseases():
+	return frappe.db.sql("""select disease_name,event_master_id 
+		from `tabDisease Monitoring`""",as_dict=1)
+
+
+
+@frappe.whitelist(allow_guest=True)
+def get_data_from_solr(profile_id):
+	solr_op='getlatesteventvisitlistbyprofileid'
+	url=get_base_url()+solr_op
+	request_type='POST'
+	data={"profileId":profile_id,"rowCountLimit":5}
+	from phr.phr.phr_api import get_response
+	response=get_response(url,json.dumps(data),request_type)
+	res=json.loads(response.text)
+	if res['returncode']==105:
+		#frappe.errprint(res['actualdata'])
+		return res['actualdata']
+
+@frappe.whitelist(allow_guest=True)
+def get_appointments(profile_id):
+	return frappe.db.sql("""select * from 
+		`tabAppointments` where profile_id='%s' limit 5"""%(profile_id),as_dict=1)
+
+@frappe.whitelist(allow_guest=True)
+def get_medications(profile_id):
+	return frappe.db.sql("""select * from 
+		`tabMedication` where profile_id='%s' limit 5"""%(profile_id),as_dict=1)
+
+
+def build_response(data,obj,res_list):
+	if obj.get('visits')==1:
+		visit_data=build_visit_data(data)
+		res_list.append(visit_data)
+	if obj.get('events')==1:
+		event_data=build_event_data(data)
+		res_list.append(event_data)
+	return res_list
+
+def build_response_for_medications(data,obj,res_list):
+	medication_data=build_medication_data(data)
+	res_list.append(medication_data)
+	return res_list
+	
+def build_response_for_appointments(data,obj,res_list):
+	appointments_data=build_appointments_data(data)	
+	res_list.append(appointments_data)
+	return res_list
+
+def build_dm_data(data,res_list):
+	options=[]
+	for d in data:
+		dic={"option":d["disease_name"],"id":d["event_master_id"]}
+		options.append(dic)
+	dm_dic={"fieldname":"disease_monitoring","fieldtype": "table","label": "Disease Monitoring","options":options}
+	res_list.append(dm_dic)	
+	return res_list
+
+def build_visit_data(data):
+	rows=[
+    	[
+     		"Date", 
+     		"visit description", 
+     		"Provider's Name", 
+     		"Providers Type"
+    	]
+   ]	
+	if (data["visitList"]):
+		for d in data["visitList"]:
+			rows.extend([[d["str_visit_date"],d["visit_descripton"],d["doctor_name"],d["provider_type"]]])
+	visit_dic={"fieldname":"visits","fieldtype": "table","label": "Visits","rows":rows}
+	return visit_dic
+
+def build_event_data(data):
+	rows=[
+    	[
+     		"Event Name", 
+     		"Date", 
+     		"Complaints", 
+     		"Complaints Desc"
+    	]
+   ]	
+	if (data["eventList"]):
+		for d in data["eventList"]:
+			rows.extend([[d["event_title"],d["event_date"],d["event_symptoms"][0],d["diagnosis_desc"]]])
+	event_dic={"fieldname":"events","fieldtype": "table","label": "Events","rows":rows}
+	return event_dic
+
+def build_medication_data(data):
+	rows=[
+    	[
+     		"Medicine Name", 
+     		"Dosage", 
+     		"From Date", 
+     		"To Date",
+     		"Addn Info"
+    	]
+   ]	
+	if (data):
+		for d in data:
+			rows.extend([[d["medicine_name"],d["dosage"],d["from_date_time"],d["to_date_time"],d["additional_info"]]])
+	medication_dic={"fieldname":"medications","fieldtype": "table","label": "Medications","rows":rows}
+	return medication_dic
+
+def build_appointments_data(data):
+	rows=[
+    	[
+     		"Date Time", 
+     		"Providers Name", 
+     		"Reason For Visit", 
+    	]
+   ]	
+	if (data):
+		for d in data:
+			rows.extend([[d["from_date_time"],d["provider_name"],d["reason"]]])
+	appointments_dic={"fieldname":"appointments","fieldtype": "table","label": "Appointments","rows":rows}
+	return appointments_dic
+

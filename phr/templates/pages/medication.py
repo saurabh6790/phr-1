@@ -79,6 +79,8 @@ def get_formatted_date(strdate=None):
 		return datetime.datetime.strptime(strdate,"%d/%m/%Y %H:%M:%S")
 
 
+
+
 def get_options(obj):
 	options={}
 	dt=frappe.get_doc("Dosage",obj.get('dosage_type'))
@@ -87,3 +89,8 @@ def get_options(obj):
 		for d in dtc:
 			options[d.fieldname]=obj.get(d.fieldname)
 	return json.dumps(options)
+
+
+@frappe.whitelist(allow_guest=True)
+def get_option(obj):
+	pass

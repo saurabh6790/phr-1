@@ -32,13 +32,13 @@
   {
    "depends_on": "dosage_type:Weekly", 
    "fieldname": "time", 
-   "fieldtype": "datetime", 
+   "fieldtype": "time", 
    "label": "Time"
   }, 
   {
    "depends_on": "dosage_type:Daily", 
    "fieldname": "morning", 
-   "fieldtype": "datetime", 
+   "fieldtype": "time", 
    "label": "Morning", 
    "options": [
     "", 
@@ -49,13 +49,13 @@
   {
    "depends_on": "dosage_type:Daily", 
    "fieldname": "evening", 
-   "fieldtype": "datetime", 
+   "fieldtype": "time", 
    "label": "Evening"
   }, 
   {
    "depends_on": "dosage_type:Daily", 
    "fieldname": "night", 
-   "fieldtype": "datetime", 
+   "fieldtype": "time", 
    "label": "Night"
   }, 
   {

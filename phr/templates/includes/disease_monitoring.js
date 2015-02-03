@@ -4,62 +4,103 @@ frappe.provide("templates/includes");
 
 var DiseaseMonitoring = inherit(RenderFormFields, {
 	init: function(wrapper,cmd, entityid,operation){
-		this.wrapper = wrapper;
+		console.log(wrapper)
+		this.wrapper = wrapper
 		this.args=cmd
 		this.entityid=entityid
 		this.operation=operation
-		RenderFormFields.prototype.init(this.wrapper,this.args,this.entityid,this.operation)
-		this.render_field()
+		$(this.wrapper).empty();
+		$('.field-area').empty();
+		this.render_master_select(this.wrapper)
 	},
-	render_field: function(){
+	render_master_select: function(wrapper){
 		var me = this;
-		$('.save_controller').bind('click',function(event) {
-			me.res = {};
-			var $id=$('.tab-pane.active').attr('id')
-			$(".tab-pane.active form input, .tab-pane.active form textarea, .tab-pane.active form select").each(function(i, obj) {
-				me.res[obj.name] = $(obj).val();
-			})
-			me.res["linking_id"]=frappe.get_cookie('profile_id')
-			me.res["received_from"]="Desktop"
-			if (this.operation=='create_linkphr'){
-				me.create_linkedphr(me.res,$id,me)
+		$input = $('<div class="form-horizontal frappe-control" style="max-width: 600px;margin-top:10px;margin-bottom:5px">\
+						<div class="form-group row" style="margin: 0px">\
+							<label class="control-label small col-xs-4" style="padding-right: 0px;">Disease</label>\
+							<div class="col-xs-8">\
+								<div class="control-input">\
+									<select type="text" class="form-control" \
+										name="disease">\
+								</div>\
+							</div>\
+						</div>\
+				</div>').appendTo($('.field-area'))
+		frappe.call({
+			method:"phr.templates.pages.disease_monitoring.get_diseases",
+			callback:function(r){
+				if(r.message){
+					$option=$('<option>', { 
+							'value': "",
+							'text' : "" 
+					}).appendTo($($input).find('select'))
+					$.each(r.message,function(i, val){
+						$option=$('<option>', { 
+							'value': val[0],
+							'text' : val[0] 
+						}).appendTo($($input).find('select'))
+					})
+				}
+				else{
+					$option=$('<option>', { 
+						'value': "",
+						'text' : "" 
+					}).appendTo($($input).find('select'))
+				}
 			}
-			else if (this.operation=='open_linkphr') {
-				me.update_phr(me.res,$id,me)
-			};		
+		})
+		
+		$(($input).find('select')).on('change', function(){
+			me.render_disease_fields($(this).val(),me.entityid,me)		
 		})
 	},
-	create_linkedphr:function(res,cmd,me){
+	render_disease_fields:function(value,profile_id,me){
 		frappe.call({
-				method:'phr.templates.pages.linked_phr.create_linkedphr',
-				args:{'data': res,"id":cmd},
-				callback: function(r) {
-					console.log(r)
-					if(r.message) {
-						$("input").val("");
-						var dialog = frappe.msgprint(r.message);
-					}
+			method:"phr.templates.pages.disease_monitoring.get_disease_fields",
+			args:{"name":value,"profile_id":profile_id},
+			callback:function(r){
+				console.log(r.message[0])
+				if (r.message){
+					data=r.message
+					RenderFormFields.prototype.init($("#main-con"), {'fields':data["fields"]})
+					me.bind_save_event(me,data["event_master_id"],profile_id,value,data["fields"],data["field_mapper"],data["raw_fields"])
 				}
-			})
-		/*var call_mapper={"basic_info":"update_profile","password":"update_password","update_phr":"manage_phr"}
-		me[call_mapper[cmd]].call(me,res)*/
+				else{
+					$('#main-con').empty();	
+				}
+			}
+		})
+
 	},
-	update_phr:function(res,cmd,me){
-		frappe.call({
-				method:'phr.templates.pages.profile.update_profile',
-				args:{'data': res,"id":cmd},
-				callback: function(r) {
-					console.log(r)
-					if(r.message) {
-						$("input").val("");
-						var dialog = frappe.msgprint(r.message);
-					}
-				}
+	bind_save_event:function(me,event_id,profile_id,value,fields,field_mapper,raw_fields){
+			$('.save_controller').bind('click',function(event) {
+				var $id=$('.tab-pane.active').attr('id')
+				me.res = {};
+				selected=[]
+				var $id=$('.tab-pane.active').attr('id')
+				$("form input,form textarea,form select").each(function(i, obj) {
+					me.res[obj.name] = $(obj).val();
+				})
+				arg={"profile_id":profile_id,"received_from":"Desktop","event_master_id":event_id,"event_title":value}
+				me.save_dm(me.res,arg,fields,field_mapper,raw_fields)
 			})
-		/*var call_mapper={"basic_info":"update_profile","password":"update_password","update_phr":"manage_phr"}
-		me[call_mapper[cmd]].call(me,res)*/
+	},
+	save_dm:function(data,arg,fields,field_mapper,raw_fields){
+		frappe.call({
+			method:"phr.templates.pages.disease_monitoring.save_dm",
+			args:{"data":data,"arg":arg,"fields":fields,"field_mapper":field_mapper,"raw_fields":raw_fields},
+			callback:function(r){
+				data=r.message
+				if (r.message){
+					console.log("hiii i am to re render")
+					console.log(data["fields"])
+					RenderFormFields.prototype.init($("#main-con"), {'fields':data["fields"]})
+					//me.bind_save_event(me,r.message[1],profile_id)
+				}
+				else{
+						
+				}
+			}
+		})
 	}
-
-
-
 })

@@ -13,6 +13,9 @@ var Messages = inherit(ListView,{
 		this.wrapper = wrapper;
 		var me = this;
 		this.profile_id = profile_id
+		$(this.wrapper).empty()
+		$('.field-area').empty()
+		
 		//RenderFormFields.prototype.init(this.wrapper,{"file_name" : "appointments",'profile_id':profile_id},this.entityid)
 		ListView.prototype.init($(document).find(".field-area"), {"file_name" : "messages",
 			'cmd':"medication.get_medication_data",

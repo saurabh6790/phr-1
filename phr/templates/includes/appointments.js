@@ -13,6 +13,8 @@ var Appointments = inherit(ListView,{
 		this.wrapper = wrapper;
 		var me = this;
 		this.profile_id = profile_id
+		$(this.wrapper).empty()
+		$('.field_area').empty();
 		//RenderFormFields.prototype.init(this.wrapper,{"file_name" : "appointments",'profile_id':profile_id},this.entityid)
 		ListView.prototype.init($(document).find(".field-area"), {"file_name" : "appointments",
 			'cmd':"appointments.get_appointments",
@@ -50,7 +52,7 @@ var Appointments = inherit(ListView,{
 	},
 	update_list_view:function(data){
 		var me = this;
-		RenderFormFields.prototype.init(this.wrapper, {'fields': data['listview']})
+		RenderFormFields.prototype.init($(".field-area"), {'fields': data['listview']})
 		me.bind_save_event()
 	}
 })
