@@ -119,6 +119,7 @@ var DiseaseMonitoring = inherit(RenderFormFields, {
 						me.selected_dm.push($(row[0]).html())
 					}
 				});
+
 			})
 		}).appendTo('.field-area')
 	},
@@ -132,16 +133,16 @@ var DiseaseMonitoring = inherit(RenderFormFields, {
 		$('.modal-footer .btn-primary').unbind("click").click(function(){
 			$(".modal-body form input, .modal-body form textarea, .modal-body form select").each(function(i, obj) {
 				me.res[obj.name] = $(obj).val();
-				console.log(me.res)
-				me.share_data();
 			})
+			me.share_data();
 		})
 	},
 	share_data:function(){
 		var me = this;
 		frappe.call({
 			method:"phr.templates.pages.disease_monitoring.share_dm",
-			args:{'data':me.selected_dm, 'header': $('.fixed-table-header').find('thead').html(), 'share_info':me.res},
+			args:{'data':me.selected_dm, 'header': $('.fixed-table-header').find('thead').html(), 'share_info':me.res,
+			 'profile_id':me.profile_id, 'disease':$('[name="disease"]').val()},
 			callback:function(r){
 				alert(r.message)
 			}
