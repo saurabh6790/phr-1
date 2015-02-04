@@ -29,11 +29,11 @@
 					"","Visit Date", 
 					"Visit Description", "Provider Type", 
 					"Provider Name", 
-					"<i class='icon-user-md' data-toggle='tooltip' data-placement='top' title='Consultation'></i>", 
- 					"<i class='icon-camera' data-toggle='tooltip' data-placement='top' title='Event Snaps'></i>", 
- 					"<i class='icon-beaker' data-toggle='tooltip' data-placement='top' title='Lab Reports'></i>", 
- 					"<i class='icon-file' data-toggle='tooltip' data-placement='top' title='Prescription'></i>", 
- 					"<i class='icon-credit-card' data-toggle='tooltip' data-placement='top' title='Cost of Care'></i>"
+					"<i class='icon-user-md' data-toggle='tooltip' data-placement='top' title='Consultation'></i><input type='checkbox' id='consultancy-11'  value='Consultancy' >", 
+ 					"<i class='icon-camera' data-toggle='tooltip' data-placement='top' title='Event Snaps'></i><input type='checkbox' id='event_snap-12'  value='Consultancy' >", 
+ 					"<i class='icon-beaker' data-toggle='tooltip' data-placement='top' title='Lab Reports'></i><input type='checkbox' id='lab_reports-13'  value='Consultancy' >", 
+ 					"<i class='icon-file' data-toggle='tooltip' data-placement='top' title='Prescription'></i><input type='checkbox' id='prescription-14'  value='Consultancy' >", 
+ 					"<i class='icon-credit-card' data-toggle='tooltip' data-placement='top' title='Cost of Care'></i><input type='checkbox' id='cost_of_care-15'  value='Consultancy' >"
 				]
 			]
 		}

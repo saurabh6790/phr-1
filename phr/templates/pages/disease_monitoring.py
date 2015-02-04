@@ -106,7 +106,7 @@ def build_options(dm_list,fields,field_mapper,raw_fields=None):
 			for f in field_mapper:
 				#if not f=='patient_notes':
 				if f=='sr':
-					v.append("")
+					v.append('<input type="checkbox" name="">')
 				else:
 					v.append(f_dic[f])
 			rows.extend([v])
@@ -159,4 +159,30 @@ def render_table_on_db(profile_id,event_master_id,name):
 				"rtcode":1
 			}
 
+@frappe.whitelist()
+def share_dm(data, header, share_info):
+	frappe.errprint([data, header, share_info])
+@frappe.whitelist()
+def save_pdf(data, header):
+	import pdfkit
 
+	data = eval(data)
+	rows = ''
+	for row in data:
+		rows += "<tr>%s<tr>"%row
+
+	html_str = """
+		<html>
+			<body>
+				<table class="table table-striped">
+					<thead>
+						%(header)s
+					</thead>
+					%(data_rows)s
+				</table>
+			</body>
+		</html>
+
+	"""%{'data_rows': rows, 'header': header}
+
+	pdfkit.from_string(html_str, '/home/saurabh/Documents/test_pdf.pdf')

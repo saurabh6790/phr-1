@@ -23,34 +23,27 @@ var Event = inherit(ListView,{
 			'cmd':"event.get_event_data",
 			'tab_at': 4,
 			'profile_id':profile_id})
-		
-		// $('<tr>\
-		// 	<td></td>\
-		// 	<td></td>\
-		// 	<td></td>\
-		// 	<td></td>\
-		// 	<td align="center"><input type="checkbox" id="consultancy"  value="Consultancy" ></td>\
-		// 	<td align="center"><input type="checkbox" id="event_snap"  value="Event Snap" ></td>\
-		// 	<td align="center"><input type="checkbox" id="lab_reports"  value="Lab Reports" ></td>\
-		// 	<td align="center"><input type="checkbox" id="prescription"  value="Prescription" ></td>\
-		// 	<td align="center"><input type="checkbox" id="cost_of_care"  value="Cost Of Care" ></td>\
-		// </tr>').insertBefore('table > thead > tr:first')
-
-		
 
 		$("<button class='btn btn-primary'> Share </button>").click(function(){
-				$('.table').find('tr').each(function () {
+			$('.table').find('thead').each(function(){
+				var row = $(this);
+				$('th', row).map(function(index, th) {
+					if ($(th).find('input[type="checkbox"]').is(':checked')) {
+						console.log($(th).find('input[type="checkbox"]').attr('id'))
+						me.selected_files.push($(th).find('input[type="checkbox"]').attr('id'))
+					}
+				})
+			})
+			console.log(me.selected_files)
+			$('.table').find('tr').each(function () {
 				var row = $(this);
 				$('td', row).map(function(index, td) {
-				    if ($(td).find('input[type="checkbox"]').is(':checked')) {
-						me.selected_files.push($(td).find('input[type="checkbox"]').attr('id'))
-					}
 					if ($(td).find('input[name="event"]').is(':checked')) {
 						me.selected_files.push($(td).find('input[name="event"]').attr('id'))
 					}
 				});
 			})
-
+			console.log(me.selected_files)
 			SharePhr.prototype.init(me.wrapper, {"file_name" : "share_phr", "method": "event", 'event_id': $(me.selected_files).last()[0], 'selected_files':me.selected_files, 'doc_list': me.doc_list, "profile_id":me.profile_id})
 			
 		}).appendTo($('.field-area'))
@@ -201,14 +194,20 @@ var Event = inherit(ListView,{
 			// me.render_folder_section()		
 		})
 	},
-	get_linked_providers:function(){
+	get_linked_providers:function(profile_id){
 		var me = this;
+		this.profile_id = profile_id ? profile_id : this.profile_id;
 		frappe.call({
 			method:"phr.templates.pages.event.get_linked_providers",
 			args:{'profile_id':this.profile_id},
 			callback:function(r){
 				console.log([$('[name="provider_name"]'), r.message])
 				$('[name="doctor_name"]').autocomplete({
+					open: function(){
+						setTimeout(function () {
+							$('.ui-autocomplete').css('z-index', 99999999999999);
+						}, 0);
+					},
 					source: r.message,
 					multiselect: false,
 					select: function( event, obj) {

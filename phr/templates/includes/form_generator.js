@@ -222,6 +222,11 @@ $.extend(RenderFormFields.prototype,{
 				callback: function(r){
 					console.log(['link',r.message])
 					$($input.find('.autocomplete')).autocomplete({
+						open: function(){
+							setTimeout(function () {
+								$('.ui-autocomplete').css('z-index', 99999999999999);
+							}, 0);
+						},
 						source: r.message,
 						multiselect: field_meta['multiselect'] == "false" ? false:true
 					});

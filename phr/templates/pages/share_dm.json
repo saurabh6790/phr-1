@@ -1,0 +1,39 @@
+{
+	"fields":[
+		{
+			"fieldname":"doctor_name",
+			"fieldtype":"data", 
+			"label":"Provider Name"
+		},
+		{
+			"fieldname": "share_via", 
+			"fieldtype": "select", 
+			"label": "Share Via",
+			"options": ["","Email", "Provider Account"],
+			"required":1 
+		},
+		{
+			"fieldname":"email_body",
+			"fieldtype":"text", 
+			"label":"Email Body",
+			"depends_on":"share_via:Email"
+		},
+		{
+			"fieldname":"email_id",
+			"fieldtype":"data", 
+			"label":"Email Id",
+			"depends_on":"share_via:Email"
+		},
+		{
+			"fieldname":"", 
+			"fieldtype":"column_break", 
+			"label":""
+		},	
+		{
+			"fieldname":"doctor_id", 
+			"fieldtype":"data", 
+			"label":"Provider id",
+			"depends_on":"share_via:Provider Account"
+		}
+	]
+}

@@ -78,6 +78,10 @@ def update_event(data):
 			"str_visit_date": data.get('event_date'),
 			"diagnosis_desc": data.get('diagnosis')
 	}
+
+
+	print event_data
+
 	import datetime
 	event_date = datetime.datetime.strptime(event_data.get('str_event_date'), "%d/%m/%Y").strftime('%Y-%m-%d')
 	
@@ -390,11 +394,11 @@ def get_provider_info(cond):
 @frappe.whitelist()
 def get_linked_providers(profile_id=None):
 	import itertools
-
+	frappe.errprint(['get_linked_providers', profile_id])
 	if profile_id:
 		ret = frappe.db.sql("select name1, provider, mobile, email from  `tabProviders Linked` where patient = '%s' and status = 'Active' "%profile_id, as_dict=1)
 		
 		for r in ret:
 			r.update({'label': r['name1'], 'value': r['name1']})
-
+		frappe.errprint(ret)
 		return ret

@@ -1,6 +1,6 @@
 {
  "allow_copy": 0, 
- "allow_import": 0, 
+ "allow_import": 1, 
  "allow_rename": 0, 
  "creation": "2014-12-13 19:39:36.661703", 
  "custom": 0, 
@@ -51,7 +51,7 @@
  "is_submittable": 0, 
  "issingle": 0, 
  "istable": 0, 
- "modified": "2015-01-28 15:03:34.938076", 
+ "modified": "2015-02-03 16:02:16.513428", 
  "modified_by": "Administrator", 
  "module": "phr", 
  "name": "Disease Monitoring", 
