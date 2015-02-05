@@ -5,6 +5,7 @@ frappe.provide("templates/includes");
 
 function render_dashboard(profile_id){
 	function render_providers(profile_id){
+		alert("provider")
 		frappe.call({
 			method:'phr.templates.pages.provider.get_provider_List',
 			args:{'profile_id':profile_id},
@@ -13,11 +14,9 @@ function render_dashboard(profile_id){
 					render_provider(r.message)
 				}
 				else{
-					$('#hp').empty()
-					$('<div href="" class="list-group-item-side active">My Healthcare Providers \
-						<a noherf class="create_provider">\
-						<span style="float:right"><i class="icon-plus"></i></span></a></div>\
-  						<p class="nohp">No Providers</p>').appendTo('#hp')
+					$('#hps').empty()
+					$('<p class="hp">No Providers</p>').appendTo('#clphr')
+					
 				}
 			}
 		})
@@ -33,15 +32,7 @@ function render_dashboard(profile_id){
 				else{
 					$('#clphr').empty()
 					$('<p class="nophr">No Linked PHRs</p>').appendTo('#clphr')  
-					/*$('<div href="" class="list-group-item-side active">Linked PHRs <a noherf class="create_linkphr">\
-						<span style="float:right"><i class="icon-plus"></i></span></a></div>\
-						<p class="nophr">No Linked PHRs</p>').appendTo('#linkedphr')*/
-					/*$('.create_linkphr').bind('click',function(){
-						alert("hiiidasdasa")
-						RenderFormFields.prototype.init($(document).find("#main-con"),
-							{"file_name" : "linked_patient"},"","create_linkphr")
-						$('.field-area').empty();
-					})*/
+					
 				}
 
 			}
@@ -175,8 +166,10 @@ function render_dashboard(profile_id){
 	
     }
     function render_provider(data){
-		$('#hp').find('p.nohp').remove()
-		$wrap=$('#hp')
+    	alert("provider")
+		$('#hps').find('p.nohp').remove()
+		$wrap=$('#hps')
+		$('#hps').empty()
 		meta=data
 		$.each(meta,function(i,data){
 			$(repl_str('<div class="list-group-item-side %(entityid)s">\
@@ -198,16 +191,15 @@ function render_dashboard(profile_id){
 					var val = $(".disease option:selected").val();
 					get_dm_details(profile_id,val,txt)
 				})
-    			$option=$('<option>', { 
-						'value': "",
-						'text' : "" 
-				}).appendTo($('.disease'))
-				$.each(data[0]["options"],function(i, val){
+    			$.each(data[0]["options"],function(i, val){
 					$option=$('<option>', { 
 						'value': val["id"],
 						'text' : val["option"] 
 					}).appendTo($('.disease'))
 				})
+				//onsole.log(["dm",data[0]["options"][0]['id']])
+				opt=data[0]['options'][0]
+				get_dm_details(profile_id,opt["id"],opt["option"])
 			/*$($('#field-area').find('select')).unbind('change').change(function(){
 				alert("hi")
 			})*/

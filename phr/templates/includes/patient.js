@@ -21,7 +21,6 @@ frappe.provide("frappe");
   ClassName.prototype.init(wrapper,name_of_json_file,entityid,operation_entity)
 */
 $(document).ready(function () {
-	alert("hiiiiii")
 	//sessionStorage.setItem("cid",frappe.get_cookie('profile_id'));
 	profile_id=sessionStorage.getItem("cid")
 	var db = new render_dashboard();
@@ -31,15 +30,15 @@ $(document).ready(function () {
 	db.render_emer_details(profile_id)
 	db.render_to_do(profile_id)
 	db.render_advertisements(profile_id)
-	/*
-	x.bind_ids()
+	
+	/*x.bind_ids()
 	sessionStorage.setItem("cid",profile_id );
 	localStorage.setItem("cid",profile_id);
-	$('body').attr('data-id',profile_id)
-	*/
+	$('body').attr('data-id',profile_id)*/
+	
 	$('#profile').attr('data-name',profile_id)
 	$('#home').attr('data-name',profile_id)
-	alert($('#profile').attr('data-name'))
+	//alert($('#profile').attr('data-name'))
 	bind_events(db)
 })
 function bind_events(){
@@ -115,13 +114,13 @@ function bind_events(){
 	})
 	//console.log($('#linkedphr').find('.create_linkphr'))
 	$('.create_linkphr').unbind("click").click(function(){
-		alert("hiii")
 		LinkedPHR.prototype.init($(document).find("#main-con"),
 			{"file_name" : "linked_patient"},"","create_linkphr")
 	})
 	$(".create_provider").unbind("click",function(){
-		Provider.prototype.init($(document).find("#main-con"),
-			{"file_name" : "provider"},"","create_provider")
+		alert('hiiiii')
+		/*Provider.prototype.init($(document).find("#main-con"),
+			{"file_name" : "provider"},"","create_provider")*/
 	})
 	$(".view_provider").unbind("click").click(function(){
 		Provider.prototype.init($(document).find("#main-con"), 
@@ -131,13 +130,6 @@ function bind_events(){
 		ToDo.prototype.init($(document).find("#main-con"),
 			{"cmd":"make_todo"},profile_id,"")	
 	})
-	/*$(".ad a").click(function(event) {
-    	event.preventDefault();
-    	$.ajax({
-        	url: $(this).attr("href"),
-        	
-    });
-    return false;
-});*/
+	
 }
 

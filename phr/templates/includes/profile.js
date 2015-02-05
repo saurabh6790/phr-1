@@ -5,7 +5,6 @@ frappe.provide("templates/includes");
 
 var PatientDashboard = inherit(RenderFormFields, {
 	init: function(wrapper,cmd, entityid){
-		alert(entityid)
 		this.wrapper = wrapper;
 		this.args=cmd
 		this.entityid=sessionStorage.getItem("cid")
@@ -155,7 +154,7 @@ var PatientDashboard = inherit(RenderFormFields, {
                 			console.log($(this).val())
 							selected.push($(this).val());
   						});
-						me.delink_phr(meta,selected,meta_dic,profile_id)
+						me.delink_phr(meta,selected,meta_dic,profile_id,me)
             		}else {
                 			
             		}
@@ -163,8 +162,8 @@ var PatientDashboard = inherit(RenderFormFields, {
 				
 			})
 	},
-	delink_phr:function(meta,selected,meta_dic,profile_id){
-		var me=this;
+	delink_phr:function(meta,selected,meta_dic,profile_id,me){
+		//var me=this;
 		frappe.call({
 			method:'phr.templates.pages.profile.delink_phr',
 			args:{'selected':selected,"data":meta_dic,"profile_id":profile_id},
@@ -194,7 +193,7 @@ var PatientDashboard = inherit(RenderFormFields, {
 		//meta=JSON.parse(data);
 		meta_dic={};
 		console.log(data[0].to_do)
-		$('#notification.tab-pane.active form').find("input:checkbox:checked").prop('checked', false);
+		$('#notification.tab-pane form').find("input:checkbox:checked").prop('checked', false);
 		if(data[0].linked_phr==1){
 			$('input[type="checkbox"][name="linked_phr"]').prop('checked', true);		
 		}
@@ -219,14 +218,30 @@ var PatientDashboard = inherit(RenderFormFields, {
 		var $wrapper=$("#dashboard").find("form");		
 		//meta=JSON.parse(data);
 		meta_dic={};
-		console.log(data[0].to_do)
+		console.log(data)
 		$('#dashboard.tab-pane form').find("input:checkbox:checked").prop('checked', false);
 		if(data["medications"]==1){
+			alert("hgsdahgsgsag")
 			$('input[type="checkbox"][name="medications"]').prop('checked', true);		
 		}
-		if(data["to_do"==1){
-			$('input[type="checkbox"][name="to_do"]').prop('checked', true);		
+		if(data["events"]==1){
+			$('input[type="checkbox"][name="events"]').prop('checked', true);		
 		}
+		if(data["visits"]==1){
+			$('input[type="checkbox"][name="visits"]').prop('checked', true);		
+		}
+		if(data["appointments"]==1){
+			$('input[type="checkbox"][name="appointments"]').prop('checked', true);		
+		}
+		if(data["disease_monitoring"]==1){
+			$('input[type="checkbox"][name="disease_monitoring"]').prop('checked', true);		
+		}
+		if(data["messages"]==1){
+			$('input[type="checkbox"][name="messages"]').prop('checked', true);		
+		}
+		/*if(data["to_do"==1){
+			$('input[type="checkbox"][name="to_do"]').prop('checked', true);		
+		}*/
 
 	}
 })

@@ -72,6 +72,11 @@ def get_data():
 					"name": "Events",
 					"description": _("Event Master"),
 				},
+				{
+					"type": "doctype",
+					"name": "Dosage",
+					"description": _("Dosage"),
+				},
 			]
 		},
 		{

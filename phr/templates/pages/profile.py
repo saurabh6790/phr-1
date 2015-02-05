@@ -156,7 +156,6 @@ def upload_image(profile_id,data=None):
 		update_user_image(file_path,profile_id)
 
 def update_user_image(path,profile_id):
-	frappe.errprint(path)
 	ue=frappe.db.get_value("User",{"profile_id":profile_id},"user_image")
 	if ue:
 		user=frappe.get_doc("User",frappe.session.user)

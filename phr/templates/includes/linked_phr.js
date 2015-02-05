@@ -46,13 +46,12 @@ var LinkedPHR = inherit(RenderFormFields, {
 					if(r.message) {
 						if(r.message.returncode==122){
 							console.log(r.message)
-							//me.add_profile_to_link(r.message.actualdata,r.message.entityid)
+							var db = new render_dashboard();
+							db.render_linked_phr(sessionStorage.getItem("pid"))
 						}
 					}
 				}
 			})
-		/*var call_mapper={"basic_info":"update_profile","password":"update_password","update_phr":"manage_phr"}
-		me[call_mapper[cmd]].call(me,res)*/
 	},
 	update_phr:function(res,cmd,me){
 		frappe.call({
@@ -66,20 +65,5 @@ var LinkedPHR = inherit(RenderFormFields, {
 					}
 				}
 			})
-		/*var call_mapper={"basic_info":"update_profile","password":"update_password","update_phr":"manage_phr"}
-		me[call_mapper[cmd]].call(me,res)*/
-	},
-	add_profile_to_link:function(data,entityid){
-		/*$('#linkedphr').find('p.nophr').remove()
-		$wrap=$('#linkedphr')
-		dat=JSON.parse(data)*/
-		/*console.log(["data",data["entityid"]])*/
-		/*pro_data={"entityid":dat["entityid"],"fn":dat["person_firstname"]}
-		console.log(pro_data)
-		$(repl_str('<div class="list-group-item-side %(entityid)s">\
-			<a noherf data-name=%(entityid)s>%(fn)s</a>\
-			</div>', pro_data)).appendTo($wrap)*//*
-		var db = new render_dashboard();
-		db.render_linked_phr(sessionStorage.getItem("pid"))*/
 	}	
 })
