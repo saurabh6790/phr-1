@@ -36,8 +36,11 @@ def update_profile_solr(data,dashboard=None):
 	response=get_response(url,data,request_type)
 	res=json.loads(response.text)
 	print res
+	p=json.loads(data)
 	if res['returncode']=="102":
 		return "Profile Updated Successfully"
+		sub="Profile Updated Successfully"
+		make_log(p.get('entityid'),"profile","update",sub)
 
 
 @frappe.whitelist(allow_guest=True)
@@ -54,6 +57,8 @@ def update_password(data,dashboard=None):
 			and user=%s""", (old_password, user)):
 			return "Cannot Update: Incorrect Password"
 	_update_password(user, new_password)
+	sub="Password Updated Successfully"
+	make_log(usrobj.get('entityid'),"profile","update Password",sub)
 	return "Password Updated Successfully"
 
 @frappe.whitelist(allow_guest=True)
@@ -67,7 +72,9 @@ def manage_notifications(data,dashboard=None):
 	mn=frappe.db.get_value("Notification Configuration",{"profile_id":obj.get('entityid')},"name")
 	if mn:
 		frappe.db.sql("""update `tabNotification Configuration` set linked_phr=0,to_do=0 where name='%s'"""%(mn))
-		update_values_notify(dashboard_fields,mn)
+		update_values_notify(dashboard_fields,mn,obj.get('entityid'))
+		sub="Notifications Configuration Done"
+		make_log(obj.get('entityid'),"profile","Notifications",sub)
 	else:
 		mn = frappe.get_doc({
 			"doctype":"Notification Configuration",
@@ -76,12 +83,16 @@ def manage_notifications(data,dashboard=None):
 		})
 		mn.ignore_permissions = True
 		mn.insert()
-		update_values_notify(dashboard_fields,mn.name)
+		update_values_notify(dashboard_fields,mn.name,obj.get('entityid'))
+		sub="Notifications Configuration Done"
+		make_log(obj.get('entityid'),"profile","Notifications",sub)
 	
-def update_values_notify(dashboard_fields,name):
+def update_values_notify(dashboard_fields,name,profile_id):
 	for d in dashboard_fields:
 		frappe.db.sql("""update `tabNotification Configuration` set %s=1 where name='%s'"""%(d,name))
 		frappe.db.commit()
+		sub="Notifications Configuration Done"
+		make_log(profile_id,"profile","Notifications",sub)
 
 @frappe.whitelist(allow_guest=True)
 def manage_dashboard(data,dashboard=None):
@@ -94,7 +105,9 @@ def manage_dashboard(data,dashboard=None):
 			medications=0,disease_monitoring=0, 
 			appointments=0,messages=0  
 			where name='%s'"""%(sr))
-		update_values(dashboard_fields,sr)
+		update_values(dashboard_fields,sr,obj.get('entityid'))
+		sub="Dashboard Configuration Done"
+		make_log(obj.get('entityid'),"profile","Dashboard",sub)
 	else:
 		sr = frappe.get_doc({
 			"doctype":"Shortcut",
@@ -103,12 +116,15 @@ def manage_dashboard(data,dashboard=None):
 		})
 		sr.ignore_permissions = True
 		sr.insert()
-		update_values(dashboard_fields,sr.name)
+		update_values(dashboard_fields,sr.name,obj.get('entityid'))
+		sub="Dashboard Configuration Done"
+		make_log(obj.get('entityid'),"profile","Dashboard",sub)
 
-def update_values(fields,name):
+def update_values(fields,name,profile_id):
 	for d in fields:
 		frappe.db.sql("""update `tabShortcut` set %s=1 where name='%s'"""%(d,name))
 		frappe.db.commit()
+		
 
 @frappe.whitelist(allow_guest=True)
 def get_user_image(profile_id):
@@ -161,15 +177,23 @@ def update_user_image(path,profile_id):
 		user=frappe.get_doc("User",frappe.session.user)
 		user.user_image=path
 		user.save(ignore_permissions=True)
+		sub="Image Uploaded Successfully "+path
+		make_log(profile_id,"profile","Image Upload",sub)
 	else:
 		cie=frappe.db.get_value("LinkedPHR Images",{"profile_id":profile_id},"profile_image")
 		if cie:
-			frappe.db.sql("""update `tabLinkedPHR Images` set profile_image='%s' where profile_id='%s'"""%(path,profile_id))
+			frappe.db.sql("""update `tabLinkedPHR Images` 
+				set profile_image='%s' where profile_id='%s'"""%(path,profile_id))
+			frappe.db.commit()
+			sub="Image Uploaded Successfully "+path
+			make_log(profile_id,"profile","Linked PHR Image Upload",sub)
 		else:
 			lp=frappe.new_doc("LinkedPHR Images")
 			lp.profile_id=profile_id
 			lp.profile_image=path
 			lp.save(ignore_permissions=True)
+			sub="Image Uploaded Successfully "+path
+			make_log(profile_id,"profile","Linked PHR Image Upload",sub)
 
 
 
@@ -218,12 +242,14 @@ def delink_phr_solr(data,id,profile_id):
 	if res['returncode']==121:
 		path=get_image_path(barcode,res['entityid'])
 		print res
-		sub=res['entityid']+"delinked Successfully"
-		make_log(profile_id,"profile","delink",sub)
 		actdata=res['actualdata']		
 		dt=json.loads(actdata)
+		sub=dt['person_firstname']+" "+dt['person_lastname']+" "+"delinked Successfully"
+		make_log(profile_id,"profile","delink",sub)
 		args={'person_firstname':dt['person_firstname'],'person_middlename':dt['person_middlename'],'person_lastname':dt['person_lastname'],'email':dt['email'],'mobile':dt['mobile'],'received_from':'Desktop','provider':'false','barcode':str(barcode)}
 		ret_res=create_profile_in_db(res['entityid'],args,res,path)
+		sub=dt['person_firstname']+" "+dt['person_lastname']+" "+"Profile Created Successfully"
+		make_log(profile_id,"profile","create",sub)
 		return ret_res
 
 
@@ -261,6 +287,12 @@ def get_data_for_middle_section(profile_id):
 			data=get_medications(profile_id)
 			if data:
 				res_list=build_response_for_medications(data,obj,res_list)
+
+		if obj.get('messages')==1:
+			data=get_logs(profile_id)
+			if data:
+				res_list=build_response_for_logs(data,obj,res_list)		
+
 		return {
 				"res_list":res_list,
 				"rtcode":1
@@ -277,6 +309,12 @@ def get_data_for_middle_section(profile_id):
 		# 	data=get_data_from_db(profile_id)
 		# 	if data:
 		# 		res_list=build_response(data,obj,res_list)
+@frappe.whitelist(allow_guest=True)
+def get_logs(profile_id):
+	log_list=frappe.db.sql("""select * from 
+		`tabPHR Activity Log` 
+		where profile_id='%s' order by creation desc limit 5"""%(profile_id),as_dict=1)
+	return log_list
 
 @frappe.whitelist(allow_guest=True)
 def get_diseases():
@@ -328,6 +366,11 @@ def build_response_for_medications(data,obj,res_list):
 def build_response_for_appointments(data,obj,res_list):
 	appointments_data=build_appointments_data(data)	
 	res_list.append(appointments_data)
+	return res_list
+
+def build_response_for_logs(data,obj,res_list):
+	logs_data=build_logs_data(data)
+	res_list.append(logs_data)
 	return res_list
 
 def build_dm_data(data,res_list):
@@ -398,6 +441,20 @@ def build_appointments_data(data):
 			rows.extend([[d["from_date_time"],d["provider_name"],d["reason"]]])
 	appointments_dic={"fieldname":"appointments","fieldtype": "table","label": "Appointments","rows":rows}
 	return appointments_dic
+
+def build_logs_data(data):
+	rows=[
+    	[
+     		"Entity", 
+     		"Operation", 
+     		"Description" 
+       	]
+   ]	
+	if (data):
+		for d in data:
+			rows.extend([[d["entity"],d["operation"],d["subject"]]])
+	logs_dic={"fieldname":"messages","fieldtype": "table","label": "Messages","rows":rows}
+	return logs_dic
 
 
 @frappe.whitelist(allow_guest=True)

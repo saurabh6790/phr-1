@@ -5,7 +5,6 @@ frappe.provide("templates/includes");
 
 function render_dashboard(profile_id){
 	function render_providers(profile_id){
-		alert("provider")
 		frappe.call({
 			method:'phr.templates.pages.provider.get_provider_List',
 			args:{'profile_id':profile_id},
@@ -166,8 +165,7 @@ function render_dashboard(profile_id){
 	
     }
     function render_provider(data){
-    	alert("provider")
-		$('#hps').find('p.nohp').remove()
+    	$('#hps').find('p.nohp').remove()
 		$wrap=$('#hps')
 		$('#hps').empty()
 		meta=data

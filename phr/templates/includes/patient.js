@@ -110,7 +110,7 @@ function bind_events(){
 			$('.breadcrumb li').nextAll().remove()
 			Messages.prototype.init($(document).find("#main-con"), '', sessionStorage.getItem("cid"))
 		}).appendTo('.breadcrumb');
-		Messages.prototype.init($(document).find("#main-con"))
+		Messages.prototype.init($(document).find("#main-con"),'', sessionStorage.getItem("cid"))
 	})
 	//console.log($('#linkedphr').find('.create_linkphr'))
 	$('.create_linkphr').unbind("click").click(function(){

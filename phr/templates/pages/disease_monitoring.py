@@ -86,7 +86,6 @@ def build_options(dm_list,fields,field_mapper,raw_fields=None):
 	if isinstance(fields, list):
 		f_list=fields
 	else:
-		frappe.errprint([raw_fields,"hiiii"])
 		f_list=json.loads(raw_fields)
 	pos=0
 	for filed_dict in f_list:

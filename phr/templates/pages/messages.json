@@ -3,15 +3,13 @@
         {
             "fieldname": "tab",
             "fieldtype": "table",
-            "label": "Medications",
-            "options": [
+            "label": "Message Logs",
+            "rows": [
                 [
                     "",
-                    "Date",
-                    "Provider",
-                    "Reason",
-                    "Event Name and Description",
-                    "Visit Name and Description"
+                    "Entity",
+                    "Operation",
+                    "Description"
                 ]
             ]
         }
