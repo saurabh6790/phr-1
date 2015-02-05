@@ -1,21 +1,23 @@
 frappe.provide("templates/includes");
 {% include "templates/includes/utils.js" %}
+{% include "templates/includes/log.js" %}
 {% include "templates/includes/form_generator.js" %}
 
 var PatientDashboard = inherit(RenderFormFields, {
 	init: function(wrapper,cmd, entityid){
+		alert(entityid)
 		this.wrapper = wrapper;
 		this.args=cmd
-		this.entityid=entityid
+		this.entityid=sessionStorage.getItem("cid")
 		$(this.wrapper).empty()
 		$('.field-area').empty()
 		RenderFormFields.prototype.init(this.wrapper,this.args,this.entityid)
-		this.render_field()
-		this.get_linked_phrs(frappe.get_cookie('profile_id'))
-		this.get_enabled_notification(frappe.get_cookie('profile_id'))
-		this.get_enabled_dashboard(frappe.get_cookie('profile_id'))
+		this.render_field(this.entityid)
+		this.get_linked_phrs(this.entityid)
+		this.get_enabled_notification(this.entityid)
+		this.get_enabled_dashboard(this.entityid)
 	},
-	render_field: function(){
+	render_field: function(profile_id){
 		var me = this;
 		$('.fileinput').fileinput()
 		$('.chk').bind('click',function(event){
@@ -47,7 +49,7 @@ var PatientDashboard = inherit(RenderFormFields, {
 			$(".tab-pane.active form").find(".chk:checked").each(function() {
 				selected.push($(this).val());
   			});	
-			me.res["entityid"]=frappe.get_cookie('profile_id')
+			me.res["entityid"]=profile_id
 			me.res["received_from"]="Desktop"
 			me.get_method(me.res,$id,me)		
 		})
@@ -67,16 +69,28 @@ var PatientDashboard = inherit(RenderFormFields, {
   			});
   		});
 		$('.upload').bind('click',function(){
-			me.upload_image(object)
+			me.upload_image(object,profile_id)
   		})
-  		var image=frappe.get_cookie("user_image")
-  		$('<img src="'+image+'"alt="user image"><img>').appendTo($('.fileinput-preview'))
+  		me.get_user_image(profile_id)
+  		//var image=frappe.get_cookie("user_image")
+  		
   	},
-	upload_image:function(object,files){
-		console.log(this.object)
+  	get_user_image:function(profile_id){
+  		frappe.call({
+			method:'phr.templates.pages.profile.get_user_image',
+			args:{"profile_id":profile_id},
+			callback: function(r) {
+				console.log(r)
+				$('<img src="'+r.message["image"]+'"alt="user image"><img>').appendTo($('.fileinput-preview'))
+			}
+		});
+  		
+  	},
+	upload_image:function(object,profile_id){
+		alert(profile_id)
 		frappe.call({
 			method:'phr.templates.pages.profile.upload_image',
-			args:{"data":object.data},
+			args:{"profile_id":profile_id,"data":object.data},
 			callback: function(r) {
 				console.log(r)
 				if(r.message) {
@@ -98,8 +112,6 @@ var PatientDashboard = inherit(RenderFormFields, {
 				}
 			}
 		})
-		/*var call_mapper={"basic_info":"update_profile","password":"update_password","update_phr":"manage_phr"}
-		me[call_mapper[cmd]].call(me,res)*/
 	},
 	get_linked_phrs:function(profile_id){
 		var me=this;
@@ -108,12 +120,12 @@ var PatientDashboard = inherit(RenderFormFields, {
 			args:{'profile_id':profile_id},
 			callback: function(r) {
 				if(r.message) {
-					me.render_phrs(r.message)
+					me.render_phrs(r.message,profile_id)
 				}
 			}
 		})
 	},
-	render_phrs:function(data){
+	render_phrs:function(data,profile_id){
 		var me=this
 		var $wrapper=$('#manage_phr').find('form')		
 		meta=JSON.parse(data.actualdata)
@@ -143,7 +155,7 @@ var PatientDashboard = inherit(RenderFormFields, {
                 			console.log($(this).val())
 							selected.push($(this).val());
   						});
-						me.delink_phr(meta,selected,meta_dic)
+						me.delink_phr(meta,selected,meta_dic,profile_id)
             		}else {
                 			
             		}
@@ -151,13 +163,12 @@ var PatientDashboard = inherit(RenderFormFields, {
 				
 			})
 	},
-	delink_phr:function(meta,selected,meta_dic){
+	delink_phr:function(meta,selected,meta_dic,profile_id){
 		var me=this;
 		frappe.call({
 			method:'phr.templates.pages.profile.delink_phr',
-			args:{'selected':selected,"data":meta_dic,"profile_id":frappe.get_cookie('profile_id')},
+			args:{'selected':selected,"data":meta_dic,"profile_id":profile_id},
 			callback: function(r) {
-				console.log("hiii")
 				me.get_linked_phrs(r.message)
 			}
 		})
@@ -198,9 +209,24 @@ var PatientDashboard = inherit(RenderFormFields, {
 			args:{'profile_id':profile_id},
 			callback: function(r) {
 				if(r.message) {
-					//me.render_phrs(r.message)
+					me.render_dashboard_values(r.message[0])
 				}
 			}
 		})
+	},
+	render_dashboard_values:function(data){
+		var me=this;
+		var $wrapper=$("#dashboard").find("form");		
+		//meta=JSON.parse(data);
+		meta_dic={};
+		console.log(data[0].to_do)
+		$('#dashboard.tab-pane form').find("input:checkbox:checked").prop('checked', false);
+		if(data["medications"]==1){
+			$('input[type="checkbox"][name="medications"]').prop('checked', true);		
+		}
+		if(data["to_do"==1){
+			$('input[type="checkbox"][name="to_do"]').prop('checked', true);		
+		}
+
 	}
 })

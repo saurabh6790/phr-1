@@ -1,5 +1,7 @@
 frappe.provide("templates/includes");
 {% include "templates/includes/utils.js" %}
+{% include "templates/includes/form_generator.js" %}
+
 
 function render_dashboard(profile_id){
 	function render_providers(profile_id){
@@ -9,6 +11,13 @@ function render_dashboard(profile_id){
 			callback: function(r) {
 				if(r.message) {
 					render_provider(r.message)
+				}
+				else{
+					$('#hp').empty()
+					$('<div href="" class="list-group-item-side active">My Healthcare Providers \
+						<a noherf class="create_provider">\
+						<span style="float:right"><i class="icon-plus"></i></span></a></div>\
+  						<p class="nohp">No Providers</p>').appendTo('#hp')
 				}
 			}
 		})
@@ -21,6 +30,20 @@ function render_dashboard(profile_id){
 				if(r.message) {
 					render_lphr(r.message)
 				}
+				else{
+					$('#clphr').empty()
+					$('<p class="nophr">No Linked PHRs</p>').appendTo('#clphr')  
+					/*$('<div href="" class="list-group-item-side active">Linked PHRs <a noherf class="create_linkphr">\
+						<span style="float:right"><i class="icon-plus"></i></span></a></div>\
+						<p class="nophr">No Linked PHRs</p>').appendTo('#linkedphr')*/
+					/*$('.create_linkphr').bind('click',function(){
+						alert("hiiidasdasa")
+						RenderFormFields.prototype.init($(document).find("#main-con"),
+							{"file_name" : "linked_patient"},"","create_linkphr")
+						$('.field-area').empty();
+					})*/
+				}
+
 			}
 		})
 	
@@ -31,7 +54,6 @@ function render_dashboard(profile_id){
 			args:{'profile_id':profile_id},
 			callback: function(r) {
 				if(r.message) {
-					console.log(r.message)
 					render_ed(r.message)
 				}
 			}
@@ -39,7 +61,15 @@ function render_dashboard(profile_id){
 		
 	}
 	function render_to_do(profile_id){
-		console.log("to_do")
+		frappe.call({
+			method:'phr.templates.pages.todo.get_todo',
+			args:{'profile_id':profile_id},
+			callback: function(r) {
+				if(r.message) {
+					render_td(r.message)
+				}
+			}
+		})
 	}
 	function bind_ids(profile_id){
 		console.log("ids")
@@ -53,14 +83,39 @@ function render_dashboard(profile_id){
 					if (r.message["rtcode"]==1){
 						render_middle(r.message['res_list'],profile_id)
 					}
-					//render_lphr(r.message)
+					else{
+						$('<div><h1>NO Data</h1></div>').appendTo('.field-area')
+					}
+					
+				}
+				else{
+					$('<div><h1>NO Data</h1></div>').appendTo('.field-area')
 				}
 			}
 		})
 
 	}
 	function render_advertisements(profile_id){
-		console.log("adv")	
+		frappe.call({
+			method:'phr.templates.pages.profile.get_advertisements',
+			args:{'profile_id':profile_id},
+			callback: function(r) {
+				if(r.message) {
+					if (r.message["rtcode"]==1){
+						console.log(r.message['ad_list'])
+						render_ad(r.message['ad_list'])
+					}
+					else{
+						$('<div>NO Data</div>').appendTo('#ad')
+					}
+					
+				}
+				else{
+					$('<div>NO Data</div>').appendTo('#ad')
+				}
+			}
+		})
+			
 	}	
 	return {
         render_providers: render_providers,
@@ -71,26 +126,53 @@ function render_dashboard(profile_id){
         render_middle_section: render_middle_section,
         render_advertisements:render_advertisements
     }
+    function render_td(todo){
+    	$wrap=$('#todo')
+
+    	$.each(todo,function(i,todo){
+			pro_data={"desc": todo['description'], "todo_id": todo["name"],"date":todo["date"]}
+			$(repl_str('<div class="list-group-item-side %(todo_id)s">\
+				<a noherf data-name=%(todo_id)s>%(desc)s</a>\
+				<p class="text-muted small">%(date)s </p>\
+				</div>', pro_data)).appendTo($wrap)
+		})
+    }
+    function render_ad(ads){
+    	$wrap=$('#ad')
+
+    	$.each(ads,function(i,ad){
+    		pro_data={"title": ad['ad_title'], "ad_link": ad["ad_link"]}
+			$(repl_str('<div class="list-group-item-side ad">\
+				<a href="%(ad_link)s" target="_blank">%(title)s</a>\
+				</div>', pro_data)).appendTo($wrap)
+		});
+    }
     function render_ed(data){
-    	console.log(data)
     	$wrap=$('#ed')
     	$('<div>Name:'+data["name"]+'<br>Contact:'+data["contact"]+'<br>\
     	<img src="'+data["barcode"]+'"></div>').appendTo($wrap)
-/*		
-    	$wrap=$('#ed')
-    	$(repl_str('<div>Name:%(name)s<br>Contact:%(contact)s<br>\
-    	<img src=%(barcode)s></div>'),data).appendTo($wrap)
- */   }
+  	}
     function render_lphr(data){
-    	$('#linkedphr').find('p.nophr').remove()
-		$wrap=$('#linkedphr')
+    	$('#clphr').find('p.nophr').remove()
+		$('#clphr').empty()
+		$wrap=$('#clphr')
 		meta=JSON.parse(data.actualdata)
 		meta_dic={}
 		$.each(meta,function(i,data){
-			$(repl_str('<div class="list-group-item-side %(entityid)s">\
-			<a noherf data-name=%(entityid)s>%(person_firstname)s </a>\
+			$(repl_str('<a class="list-group-item-side v_lphr %(entityid)s" data-name=%(entityid)s>\
+			%(person_firstname)s</a>\
 			</div>', data.profile)).appendTo($wrap)
 		})
+		$(".v_lphr").unbind("click").click(function(){
+			sessionStorage.setItem("cid",$(this).attr('data-name'))
+			$('.field-area').empty()
+			$('#main-con').empty()
+			render_providers($(this).attr('data-name'))
+			$('#linkedphr').hide()
+			render_middle_section($(this).attr('data-name'))
+			$('#profile').attr('data-name',$(this).attr('data-name'))
+		})
+	
     }
     function render_provider(data){
 		$('#hp').find('p.nohp').remove()
@@ -103,7 +185,7 @@ function render_dashboard(profile_id){
 		})
     }
     function render_middle(data,profile_id){
-    	console.log(data[1])
+    	console.log(data)
     	if (data[0]["fieldname"]=='disease_monitoring'){
     		$('<div class="row" ><div class="col-md-6"><label class="control-label small col-xs-4" style="padding-right: 0px;">Disease</label>\
 				<div class="col-xs-8">\
@@ -177,12 +259,14 @@ function render_dashboard(profile_id){
 		cols = [];
 		data_row = [];
 		$('<strong>').html(data["label"]).appendTo(".he1")
+		//alert(data['rows'])
 		if (data["fieldname"]!='disease_monitoring'){
 			$.each(data['rows'],function(i, val){
 				if (i==0){
+					var r = $("<tr>").appendTo($("#table1").find("thead"));
 					$.each(val,function(i, d){
 						$("<th>").html(d)
-						.appendTo($('#table1').find("thead tr"));
+						.appendTo(r);
 					})
 				} 
 				else{
@@ -215,23 +299,24 @@ function render_dashboard(profile_id){
     }
     function render_table3(data){
 		$('<strong>').html(data["label"]).appendTo(".he3")
-		$.each(data['rows'],function(i, val){
-			if (i==0){
-				$.each(val,function(i, d){
-					$("<th>").html(d)
-					.appendTo($('#table3').find("thead tr"));
-				})
-			} 
-			else{
-				var row = $("<tr>").appendTo($("#table3").find("tbody"));
-				$.each(val,function(i, d){
-				 $("<td>").html(d)
+			$.each(data['rows'],function(i, val){
+				if (i==0){
+					$.each(val,function(i, d){
+						$("<th>").html(d)
+						.appendTo($('#table3').find("thead tr"));
+					})
+				} 
+				else{
+					var row = $("<tr>").appendTo($("#table3").find("tbody"));
+					$.each(val,function(i, d){
+				 		$("<td>").html(d)
 							 	.appendTo(row); 
-				})
-			}
+					})
+				}
 		})
     }
     function render_table4(data){
+    	console.log(data)
 		$('<strong>').html(data["label"]).appendTo(".he4")
 		$.each(data['rows'],function(i, val){
 			if (i==0){
@@ -263,7 +348,6 @@ function render_dashboard(profile_id){
 		})
     }
     function render_dm_table(data,profile_id){
-    	console.log(data['rows'])
     	$("#table1 tr").remove()
     	$.each(data['rows'],function(i, val){
     		if (i==0){

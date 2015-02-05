@@ -16,7 +16,7 @@ def create_todo(data):
 	
 	return todo
 
-@frappe.whitelist()
+@frappe.whitelist(allow_guest=True)
 def get_todo(profile_id):
 	todo_list = []
 	todo = frappe.db.sql("select name from tabToDo where profile_id = '%s'"%profile_id)

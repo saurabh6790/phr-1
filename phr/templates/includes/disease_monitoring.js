@@ -30,16 +30,13 @@ var DiseaseMonitoring = inherit(RenderFormFields, {
 			method:"phr.templates.pages.disease_monitoring.get_diseases",
 			callback:function(r){
 				if(r.message){
-					$option=$('<option>', { 
-							'value': "",
-							'text' : "" 
-					}).appendTo($($input).find('select'))
 					$.each(r.message,function(i, val){
 						$option=$('<option>', { 
 							'value': val[0],
 							'text' : val[0] 
 						}).appendTo($($input).find('select'))
 					})
+					me.render_disease_fields(r.message[0][0],me.entityid,me)
 				}
 				else{
 					$option=$('<option>', { 

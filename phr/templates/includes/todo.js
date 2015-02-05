@@ -36,7 +36,7 @@ var ToDo = inherit(ListView,{
 				callback:function(r){
 					d.hide()
 					frappe.msgprint('ToDo Record Created')
-					me.add_todo(r.message)
+					//me.add_todo(r.message)
 				}
 			})
 		})
