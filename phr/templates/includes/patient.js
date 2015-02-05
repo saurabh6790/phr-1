@@ -68,15 +68,9 @@ function bind_events(){
 		$('.breadcrumb').empty()
 		$('<li><a nohref>Event</a></li>').click(function(){
 			$('.breadcrumb li').nextAll().remove()
-<<<<<<< HEAD
 			Events.prototype.init('', '', profile_id)
 		}).appendTo('.breadcrumb');
 		window.Events.prototype.init('', '', profile_id)
-=======
-			Event.prototype.init('', '', sessionStorage.getItem("cid"))
-		}).appendTo('.breadcrumb');
-		Event.prototype.init('', '', sessionStorage.getItem("cid"))
->>>>>>> 005818c71d044006fcbd4543a9d388d6023a09dd
 	})
 	$('.visit').unbind("click").click(function(){
 		$('.breadcrumb').empty()
