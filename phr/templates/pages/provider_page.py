@@ -19,7 +19,7 @@ def get_profile_list(data):
 
 
 	request_type="POST"
-	url="%s/phr-api/sharephr/getprofilelistSharedFrom"%get_base_url()
+	url="%s/sharephr/getprofilelistSharedFrom"%get_base_url()
 	from phr.phr.phr_api import get_response
 
 	pos = 0
@@ -34,15 +34,18 @@ def get_profile_list(data):
 	data=json.loads(data)
 
 	response=get_response(url, json.dumps({"to_profile_id":data.get('profile_id')}), request_type)
-	res_data = json.loads(response.text)
 
-	to_profile = data.get('profile_id')
+	print response.text
+	if response.text:
+		res_data = json.loads(response.text)
 
-	if res_data.get('visitshareProfileList'):
-		for profile in res_data.get('visitshareProfileList'):
-			print profile.get("entityid"), profile.get("person_firstname"), profile.get("person_lastname")
-			data = ['<a nohref id="%s"> %s %s </a>'%(profile.get("entityid"), profile.get("person_firstname"), profile.get("person_lastname"))]
-			rows.extend([data])
+		to_profile = data.get('profile_id')
+
+		if res_data.get('visitshareProfileList'):
+			for profile in res_data.get('visitshareProfileList'):
+				print profile.get("entityid"), profile.get("person_firstname"), profile.get("person_lastname")
+				data = ['<a nohref id="%s"> %s %s </a>'%(profile.get("entityid"), profile.get("person_firstname"), profile.get("person_lastname"))]
+				rows.extend([data])
 
 	rows = get_dm_profiles(rows, to_profile)
 
@@ -69,7 +72,7 @@ def get_patient_data(data):
 	dms_files = []
 	file_dict = {}
 	request_type="POST"
-	url="%s/phr-api/sharephr/searchsharedeventdata"%get_base_url()
+	url="%s/sharephr/searchsharedeventdata"%get_base_url()
 	from phr.phr.phr_api import get_response
 
 	pos = 0
@@ -94,8 +97,10 @@ def get_patient_data(data):
 		for event_details in res_data.get('Jsoneventlist'):
 			event =  event_details.get('event')
 
-			data = ['<a nohref id="%s"> %s </a>'%(event['entityid'], 
-					event['event_title']), 
+			data = ["""<a nohref id="%(entityid)s" 
+						onclick="Events.prototype.open_form('%(entityid)s', '%(event_title)s', '%(profile_id)s')"> 
+					%(event_title)s </a>"""%{"entityid": event['entityid'],"event_title": event['event_title'], 
+					"profile_id":data_dict.get('profile_id')}, 
 					datetime.datetime.fromtimestamp(cint(event['event_date'])/1000.0).strftime('%d/%m/%Y'), 
 					event['event_symptoms']]
 
@@ -134,10 +139,25 @@ def get_patient_data(data):
 		param = {"filelist": dms_files}
 		response=get_response(url, json.dumps(param), request_type)
 
-		get_dm_data(row, data_dict)
+		get_dm_data(rows, data_dict)
 
 	return {
 		'rows': rows,
 		'listview': fields,
 		'page_size': 5
 	}
+
+def get_dm_data(rows, data_dict):
+	for dm_data in frappe.db.sql("""select distinct dm.from_profile as entityid , u.first_name as person_firstname, 
+							ifnull(u.last_name,'') as person_lastname, dm.disease_name as disease_name, dm.pdf_path as pdf_path
+						from `tabDisease Sharing Log` dm, `tabUser` u 
+						where dm.to_profile = '%s' 
+							and dm.from_profile = u.profile_id """%to_profile, as_dict=1):
+		file_path = '/'.join(dm_data.get('pdf_path').split('/')[3:])
+		data = ['<a target="_blank" href="/%(file_path)s"> %s </a>'%( file_path, dm_data['disease_name']), 
+					'', 
+					'']
+		rows.extend([data])
+
+	return rows
+
