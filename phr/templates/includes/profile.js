@@ -50,7 +50,7 @@ var PatientDashboard = inherit(RenderFormFields, {
   			});	
 			me.res["entityid"]=profile_id
 			me.res["received_from"]="Desktop"
-			me.get_method(me.res,$id,me)		
+			me.get_method(me.res,$id,me,selected)		
 		})
 		var files = [];
  		object = {};
@@ -99,7 +99,7 @@ var PatientDashboard = inherit(RenderFormFields, {
 			}
 		});
 	},
-	get_method:function(res,cmd,me){
+	get_method:function(res,cmd,me,selected){
 		frappe.call({
 			method:'phr.templates.pages.profile.update_profile',
 			args:{'data': res,"id":cmd,"dashboard":selected},
@@ -221,7 +221,6 @@ var PatientDashboard = inherit(RenderFormFields, {
 		console.log(data)
 		$('#dashboard.tab-pane form').find("input:checkbox:checked").prop('checked', false);
 		if(data["medications"]==1){
-			alert("hgsdahgsgsag")
 			$('input[type="checkbox"][name="medications"]').prop('checked', true);		
 		}
 		if(data["events"]==1){

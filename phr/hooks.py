@@ -29,7 +29,7 @@ web_include_js = ["assets/phr/bootstrap3-dialog-master/bootstrap-dialog.js",
 					"assets/phr/bootstrap-table.js"
 				]
 
-
+fixtures=["Disease Monitoring","Dosage"]
 
 # Home Pages
 # ----------
