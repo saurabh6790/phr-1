@@ -36,11 +36,15 @@ def get_profile_list(data):
 	response=get_response(url, json.dumps({"to_profile_id":data.get('profile_id')}), request_type)
 	res_data = json.loads(response.text)
 
+	to_profile = data.get('profile_id')
+
 	if res_data.get('visitshareProfileList'):
 		for profile in res_data.get('visitshareProfileList'):
 			print profile.get("entityid"), profile.get("person_firstname"), profile.get("person_lastname")
 			data = ['<a nohref id="%s"> %s %s </a>'%(profile.get("entityid"), profile.get("person_firstname"), profile.get("person_lastname"))]
 			rows.extend([data])
+
+	rows = get_dm_profiles(rows, to_profile)
 
 	return {
 		'rows': rows,
@@ -48,6 +52,16 @@ def get_profile_list(data):
 		'page_size': 5
 	}
 
+def get_dm_profiles(rows, to_profile):
+	for dm_data in frappe.db.sql("""select distinct dm.from_profile as entityid , u.first_name as person_firstname, 
+							ifnull(u.last_name,'') as person_lastname 
+						from `tabDisease Sharing Log` dm, `tabUser` u 
+						where dm.to_profile = '%s' 
+							and dm.from_profile = u.profile_id """%to_profile, as_dict=1):
+		data = ['<a nohref id="%s"> %s %s </a>'%(dm_data.get("entityid"), dm_data.get("person_firstname"), dm_data.get("person_lastname"))]
+		rows.extend([data])
+
+	return rows
 
 @frappe.whitelist(allow_guest=True)
 def get_patient_data(data):
@@ -119,6 +133,8 @@ def get_patient_data(data):
 
 		param = {"filelist": dms_files}
 		response=get_response(url, json.dumps(param), request_type)
+
+		get_dm_data(row, data_dict)
 
 	return {
 		'rows': rows,

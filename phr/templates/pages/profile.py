@@ -88,10 +88,10 @@ def manage_dashboard(data,dashboard=None):
 	sr=frappe.db.get_value("Shortcut",{"profile_id":obj.get('entityid')},"name")
 	if sr:
 		frappe.db.sql("""update `tabShortcut` 
-			set visits=0,events=0
-			medications=0,disease_monitoring=0 
-			appointments=0,messages=0  
-			where name='%s'"""%(sr))
+			set visits=0,events=0,
+			medications=0,disease_monitoring=0,
+			appointments=0,messages=0 
+			where name='%s'"""%(sr), debug=1)
 		update_values(dashboard_fields,sr)
 	else:
 		sr = frappe.get_doc({

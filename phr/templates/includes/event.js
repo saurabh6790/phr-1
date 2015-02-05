@@ -11,7 +11,7 @@ frappe.provide("frappe");
 {% include "templates/includes/custom_dialog.js" %}
 
 
-var Event = inherit(ListView,{
+window.Events = inherit(ListView,{
 	init: function(wrapper, json_file, profile_id, entity_id){
 		this.wrapper = wrapper;
 		$('#main-con').empty();
@@ -48,9 +48,9 @@ var Event = inherit(ListView,{
 			
 		}).appendTo($('.field-area'))
 		// this.open_form()
-		$("table tr td a").bind('click', function (e) { 
-			me.open_form($(this).attr('id'), $(this).html(), me.profile_id)
-		})
+		// $("table tr td a").bind('click', function (e) { 
+		// 	me.open_form($(this).attr('id'), $(this).html(), me.profile_id)
+		// })
 
 		// $("#myModal").on("hide", function() {    // remove the event listeners when the dialog is dismissed
 		// 	$("#myModal a.btn").off("click");

@@ -43,9 +43,9 @@ function bind_events(){
 		$('.breadcrumb').empty()
 		$('<li><a nohref>Event</a></li>').click(function(){
 			$('.breadcrumb li').nextAll().remove()
-			Event.prototype.init('', '', profile_id)
+			Events.prototype.init('', '', profile_id)
 		}).appendTo('.breadcrumb');
-		Event.prototype.init('', '', profile_id)
+		window.Events.prototype.init('', '', profile_id)
 	})
 	$('.visit').unbind("click").click(function(){
 		$('.breadcrumb').empty()

@@ -129,22 +129,22 @@ var DiseaseMonitoring = inherit(RenderFormFields, {
 		d.init({"file_name":"share_dm", "title":"Linked Providers"})
 		d.show()
 		this.res = {}
-		Event.prototype.get_linked_providers(this.profile_id)
+		Events.prototype.get_linked_providers(this.profile_id)
 		$('.modal-footer .btn-primary').unbind("click").click(function(){
 			$(".modal-body form input, .modal-body form textarea, .modal-body form select").each(function(i, obj) {
 				me.res[obj.name] = $(obj).val();
 			})
-			me.share_data();
+			me.share_data(d);
 		})
 	},
-	share_data:function(){
+	share_data:function(d){
 		var me = this;
 		frappe.call({
 			method:"phr.templates.pages.disease_monitoring.share_dm",
 			args:{'data':me.selected_dm, 'header': $('.fixed-table-header').find('thead').html(), 'share_info':me.res,
 			 'profile_id':me.profile_id, 'disease':$('[name="disease"]').val()},
 			callback:function(r){
-				alert(r.message)
+				d.hide()
 			}
 		})
 	}

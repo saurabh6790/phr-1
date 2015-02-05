@@ -957,7 +957,6 @@
             data = this.getData();
 
         this.trigger('pre-body', data);
-
         this.$body = this.$el.find('tbody');
         if (!this.$body.length) {
             this.$body = $('<tbody></tbody>').appendTo(this.$el);
