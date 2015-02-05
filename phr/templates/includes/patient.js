@@ -117,10 +117,10 @@ function bind_events(){
 		LinkedPHR.prototype.init($(document).find("#main-con"),
 			{"file_name" : "linked_patient"},"","create_linkphr")
 	})
-	$(".create_provider").unbind("click",function(){
-		alert('hiiiii')
-		/*Provider.prototype.init($(document).find("#main-con"),
-			{"file_name" : "provider"},"","create_provider")*/
+	$(".create_provider").unbind("click").click(function(){
+		// alert('hiiiii')
+		Provider.prototype.init($(document).find("#main-con"),
+			{"file_name" : "provider"},"","create_provider")
 	})
 	$(".view_provider").unbind("click").click(function(){
 		Provider.prototype.init($(document).find("#main-con"), 

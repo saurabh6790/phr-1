@@ -74,7 +74,10 @@ $.extend(ThumbNails.prototype,{
 						],
 	            		"file_location": [
 	            			attachment['site_path'] +'/'+ me.args['profile_id'] + '/' +  $('input[name="entityid"]').val() + '/' + me.folder + '/' +  me.sub_folder + '/' + attachment['file_name']
-						]
+						],
+						"text_file_desc": $('[name="attch_desc"]').val() ? $('[name="attch_desc"]').val() : "" ,
+						"text_file_id": $('[name="attch_desc"]').val() ? me.folder+'_'+me.sub_folder+'.pdf' : "",
+						"text_file_loc": $('[name="attch_desc"]').val() ? attachment['site_path'] +'/'+ me.args['profile_id'] + '/' +  $('input[name="entityid"]').val() + '/' + me.folder + '/' +  me.sub_folder + '/' + me.folder+'_'+me.sub_folder+'.pdf' : ""
 				})
 				me.render_uploader_and_files();
 			}

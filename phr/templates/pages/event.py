@@ -47,7 +47,7 @@ def create_event(data):
 	frappe.errprint(['date_diff', data.get('event_date')])
 	event_date = datetime.datetime.strptime(event_data.get('str_event_date'), "%d/%m/%Y").strftime('%Y-%m-%d')
 	
-	if date_diff(event_date, nowdate()) >= 0:
+	if date_diff(event_date, nowdate()) > 0:
 		frappe.msgprint("Please sect valid date")
 
 	else:
@@ -63,6 +63,8 @@ def update_event(data):
 	# url="http://88.198.52.49:7974/phr-api/createupdateevent"
 	event_data =	{
 			"entityid":data.get('entityid'),
+			"event_complaint_list":[],
+			"profile_owner_name": frappe.db.get_value('User', {'profile_id':data.get('profile_id')}, 'first_name'),
 			"status": "active",
 			"event_diseasemontoring": False,
 			"event_symptoms" : ["Dengue" , "Headache" , "Chest Pain"],
@@ -85,7 +87,7 @@ def update_event(data):
 	import datetime
 	event_date = datetime.datetime.strptime(event_data.get('str_event_date'), "%d/%m/%Y").strftime('%Y-%m-%d')
 	
-	if date_diff(event_date, nowdate()) >= 0:
+	if date_diff(event_date, nowdate()) > 0:
 		frappe.msgprint("Please sect valid date")
 
 	else:
@@ -125,6 +127,12 @@ def get_attachments(profile_id, folder, sub_folder, event_id):
 					if fl.split('.')[-1:][0] in ['jpg','jpeg','pdf','png', 'PDF']:
 						files.append({'file_name': fl, 'type':fl.split('.')[-1:][0], 
 							'path': os.path.join('files', profile_id, event_id, folder, sub_folder, di)})
+
+		for fl in os.listdir(path):
+			if fl.split('.')[-1:][0] in ['jpg','jpeg','pdf','png', 'PDF']:
+				files.append({'file_name': fl, 'type':fl.split('.')[-1:][0], 
+					'path': os.path.join('files', profile_id, event_id, folder, sub_folder)})
+					
 
 	return files
 
