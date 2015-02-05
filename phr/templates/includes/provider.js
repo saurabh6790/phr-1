@@ -42,7 +42,6 @@ var Provider = inherit(RenderFormFields, {
 					console.log(r)
 					if(r.message) {
 						if(r.message.returncode==129){
-							console.log(r.message)
 							me.add_profile_to_link(r.message.actualdata,r.message.entityid)
 						}
 					}
@@ -63,14 +62,8 @@ var Provider = inherit(RenderFormFields, {
 			})
 	},
 	add_profile_to_link:function(data,entityid){
-		$('#hp').find('p.nohp').remove()
-		$wrap=$('#hp')
-		dat=JSON.parse(data)
-		pro_data={"entityid":dat["entityid"],"fn":dat["name"]}
-		console.log(pro_data)
-		$(repl_str('<div class="list-group-item-side %(entityid)s">\
-			<a noherf data-name=%(entityid)s>%(fn)s</a>\
-			</div>', pro_data)).appendTo($wrap)
+		var db = new render_dashboard();
+		db.render_providers(sessionStorage.getItem("cid"))
 	}	
 
 

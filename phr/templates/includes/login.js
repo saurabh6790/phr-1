@@ -127,7 +127,10 @@ login.login_handlers = (function() {
 							|| url || "/index";
 					localStorage.removeItem("last_visited");
 					window.location.href = last_visited;
+					sessionStorage.setItem("pid",frappe.get_cookie("profile_id"));
+					sessionStorage.setItem("cid",frappe.get_cookie("profile_id"));					
 				} else {
+					
 					go_to_url= url || data.access_link || "/index"
 					window.location.href = "/index";
 				}

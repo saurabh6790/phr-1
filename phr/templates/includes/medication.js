@@ -25,7 +25,6 @@ var Medications = inherit(ListView,{
 
 	},
 	update_select_options:function(){
-		console.log("hiiiii")
 		frappe.call({
 		method:"phr.templates.pages.medication.get_dosage_types",
 		callback:function(r){

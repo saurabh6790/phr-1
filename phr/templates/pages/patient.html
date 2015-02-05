@@ -6,15 +6,19 @@
 <script src="jQuery.jTableCheckbox.min.js"></script>
 <div class="list-group-side" id="profile" style="height:auto;margin-top:5%">
    <a href="#" class="list-group-item-side active">PHR Home</a>
-   <a noherf class="list-group-item-side" id='profile'>My Profile</a>
+   <a noherf class="list-group-item-side" id='profile' data-name="">My Profile</a>
 </div>
 <div class="list-group-side" id="linkedphr">
-  <div href="" class="list-group-item-side active">Linked PHR's <a noherf class="create_linkphr"><span style="float:right"><i class="icon-plus"></i></span></a></div>
-  <p class="nophr">No Linked PHR's</p>
+  <div href="" class="list-group-item-side active">Linked PHR's <a noherf class="create_linkphr" id="clp"><span style="float:right"><i class="icon-plus"></i></span></a></div>
+  <div id="clphr">
+    <p class="nophr">No Linked PHR's</p>
+  </div>  
 </div>
 <div class="list-group-side" id="hp">
   <div href="" class="list-group-item-side active">My Healthcare Providers <a noherf class="create_provider"><span style="float:right"><i class="icon-plus"></i></span></a></div>
-  <p class="nohp">No Providers</p>
+  <div id="hps">
+    <p class="hp">No Providers</p>
+  </div>
 </div>
 <div class="list-group-side" id="mhr">
   <div class="list-group-item-side active">My Health Records</div>
@@ -30,7 +34,7 @@
 <div style="padding-top:1%;">
 </div>
 <div class="top-bar" style="height:50px;">
-              <button type="button" class="btn btn-primary home" style ="vertical-align:bottom;">Home</button>
+              <button type="button" class="btn btn-primary home" style ="vertical-align:bottom;" id="home" data-name="">Home</button>
                   <button type="button" class="btn btn-primary market" style="margin:0px auto;">Health Marketplace</button>
             </div>
             <div class="form-controller">
@@ -46,14 +50,17 @@
 </div>
 {% endblock %}
 {% block con_right %}
-<div class="list-group-side" style="margin-top:5%">
+<div class="list-group-side" id="ed" style="margin-top:5%">
   <a href="" class="list-group-item-side active">Emergency details</a>
 </div>
-<div class="list-group-side">
+<div class="list-group-side" id="todo">
   <div class="list-group-item-side active">To Do List's
     <a noherf class="create_todo"><span style="float:right"><i class="icon-plus"></i></span></a>
   </div>
-  <div  id ="todo"></div>
+  
+</div>
+<div class="list-group-side" id="ad" style="margin-top:5%">
+  <a href="" class="list-group-item-side active">Advertisements</a>
 </div>
 {% endblock %}
 {% block script %}

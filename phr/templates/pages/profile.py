@@ -12,6 +12,8 @@ import binascii
 import base64
 from phr.templates.pages.login import create_profile_in_db,get_barcode,get_image_path
 from phr.templates.pages.patient import get_base_url
+from frappe.utils import cint, now, get_gravatar,cstr
+from phr.phr.doctype.phr_activity_log.phr_activity_log import make_log 
 
 
 @frappe.whitelist(allow_guest=True)
@@ -87,11 +89,11 @@ def manage_dashboard(data,dashboard=None):
 	dashboard_fields=json.loads(dashboard)
 	sr=frappe.db.get_value("Shortcut",{"profile_id":obj.get('entityid')},"name")
 	if sr:
-		frappe.db.sql("""update `tabShortcut` 
-			set visits=0,events=0,
-			medications=0,disease_monitoring=0,
-			appointments=0,messages=0 
-			where name='%s'"""%(sr), debug=1)
+		frappe.db.sql("""update `tabShortcut` set 
+			visits=0,events=0,
+			medications=0,disease_monitoring=0, 
+			appointments=0,messages=0  
+			where name='%s'"""%(sr))
 		update_values(dashboard_fields,sr)
 	else:
 		sr = frappe.get_doc({
@@ -109,7 +111,25 @@ def update_values(fields,name):
 		frappe.db.commit()
 
 @frappe.whitelist(allow_guest=True)
-def upload_image(data=None):
+def get_user_image(profile_id):
+	upexists=frappe.db.get_value("User",{"profile_id":profile_id},"user_image")
+	if upexists:
+		return {
+			"image":upexists
+		}
+	else:
+		up=frappe.db.get_value("LinkedPHR Images",{"profile_id":profile_id},"profile_image")
+		if up:
+			return{
+				"image":up	
+			}
+
+
+
+
+
+@frappe.whitelist(allow_guest=True)
+def upload_image(profile_id,data=None):
 	frappe.errprint([data])
 	from binascii import a2b_base64
 	import base64
@@ -118,28 +138,41 @@ def upload_image(data=None):
 	decoded_image = base64.b64decode(filedata)
 	site_name = get_site_name()
 	path = os.path.abspath(os.path.join('.',site_name, 'public', 'files'))
-	image=path+'/'+frappe.session.user+".jpg"
-	file_path='/files/'+frappe.session.user+".jpg"
+	image=path+'/'+profile_id+".jpg"
+	file_path='/files/'+profile_id+".jpg"
 	if os.path.exists(image):
 		try:
 			os.remove(image)
 			fd = open(image, 'wb')
 			fd.write(decoded_image)
 			fd.close()
-			update_user_image(file_path)
+			update_user_image(file_path,profile_id)
 		except OSError, e:
 			print ("Error: %s - %s." % (e.filename,e.strerror))
 	else:
 		fd = open(image, 'wb')
 		fd.write(decoded_image)
 		fd.close()
-		update_user_image(file_path)
+		update_user_image(file_path,profile_id)
 
-def update_user_image(path):
-	frappe.errprint(path)
-	user=frappe.get_doc("User",frappe.session.user)
-	user.user_image=path
-	user.save(ignore_permissions=True)
+def update_user_image(path,profile_id):
+	ue=frappe.db.get_value("User",{"profile_id":profile_id},"user_image")
+	if ue:
+		user=frappe.get_doc("User",frappe.session.user)
+		user.user_image=path
+		user.save(ignore_permissions=True)
+	else:
+		cie=frappe.db.get_value("LinkedPHR Images",{"profile_id":profile_id},"profile_image")
+		if cie:
+			frappe.db.sql("""update `tabLinkedPHR Images` set profile_image='%s' where profile_id='%s'"""%(path,profile_id))
+		else:
+			lp=frappe.new_doc("LinkedPHR Images")
+			lp.profile_id=profile_id
+			lp.profile_image=path
+			lp.save(ignore_permissions=True)
+
+
+
 
 def get_site_name():
 	return frappe.local.site_path.split('/')[1]
@@ -161,7 +194,6 @@ def get_linked_phrs(profile_id):
 
 @frappe.whitelist(allow_guest=True)
 def delink_phr(selected,data,profile_id=None):
-	frappe.errprint([data,selected])
 	obj=json.loads(data)
 	ids=json.loads(selected)
 	for id in ids:
@@ -186,6 +218,8 @@ def delink_phr_solr(data,id,profile_id):
 	if res['returncode']==121:
 		path=get_image_path(barcode,res['entityid'])
 		print res
+		sub=res['entityid']+"delinked Successfully"
+		make_log(profile_id,"profile","delink",sub)
 		actdata=res['actualdata']		
 		dt=json.loads(actdata)
 		args={'person_firstname':dt['person_firstname'],'person_middlename':dt['person_middlename'],'person_lastname':dt['person_lastname'],'email':dt['email'],'mobile':dt['mobile'],'received_from':'Desktop','provider':'false','barcode':str(barcode)}
@@ -267,12 +301,14 @@ def get_data_from_solr(profile_id):
 @frappe.whitelist(allow_guest=True)
 def get_appointments(profile_id):
 	return frappe.db.sql("""select * from 
-		`tabAppointments` where profile_id='%s' limit 5"""%(profile_id),as_dict=1)
+		`tabAppointments` where profile_id='%s' 
+		order by creation desc limit 5"""%(profile_id),as_dict=1)
 
 @frappe.whitelist(allow_guest=True)
 def get_medications(profile_id):
 	return frappe.db.sql("""select * from 
-		`tabMedication` where profile_id='%s' limit 5"""%(profile_id),as_dict=1)
+		`tabMedication` where profile_id='%s' 
+		order by creation desc limit 5"""%(profile_id),as_dict=1)
 
 
 def build_response(data,obj,res_list):
@@ -363,3 +399,35 @@ def build_appointments_data(data):
 	appointments_dic={"fieldname":"appointments","fieldtype": "table","label": "Appointments","rows":rows}
 	return appointments_dic
 
+
+@frappe.whitelist(allow_guest=True)
+def get_user_details(profile_id=None):
+	user=frappe.get_doc("User",frappe.session.user)
+	frappe.errprint(user)
+	if user:
+		name=user.first_name+''+cstr(user.last_name)
+		contact=user.contact
+		barcode=user.barcode
+		return{
+			"name":name,
+			"contact":contact,
+			"barcode":barcode
+		}
+
+
+@frappe.whitelist(allow_guest=True)
+def get_advertisements(profile_id=None):
+	ad_list=frappe.db.sql("""select * from `tabAdvertisements` 
+		where status='Active' 
+		order by creation limit 5""",as_dict=1)
+	if ad_list:
+		return {
+			"ad_list":ad_list,
+			"rtcode":1
+		}
+	else:
+		return {
+			"Message":"No data",
+			"rtcode":1
+		}
+		
