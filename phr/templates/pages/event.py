@@ -67,7 +67,7 @@ def update_event(data):
 			"event_diseasemontoring": False,
 			"event_symptoms" : ["Dengue" , "Headache" , "Chest Pain"],
 			"event_title": data.get('event_title'),
-			"profile_id": data.get('doctor_id'),
+			"profile_id": data.get('profile_id'),
 			"str_event_date": data.get('event_date'),
 			"event_descripton": data.get('event_descripton'),
 			"visit_files": data.get('dms_file_list'),
