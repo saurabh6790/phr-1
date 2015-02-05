@@ -54,6 +54,9 @@ def get_data_to_render(data=None,entityid=None):
 		tab = json_data.get('tab')
 		values = get_values(data,entityid) if not json_data.get('values') else json_data.get('values')
 
+		print "*************values*************"
+		print values
+
 	return fields, values, tab
 	
 @frappe.whitelist(allow_guest=True)	
@@ -96,6 +99,7 @@ def get_data(url,data):
 	url=url
 	from phr.phr.phr_api import get_response
 	response=get_response(url,data,request_type)
+	print "-----------------resr-1-----------------------"
 	print response
 	if response:
 		res=json.loads(response.text)

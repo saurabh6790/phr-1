@@ -60,7 +60,6 @@ window.Events = inherit(ListView,{
 		this.get_linked_providers()
 	},
 	open_form:function(event_id, event_title, profile_id){
-		alert('test')
 		var me = this;
 		this.profile_id = profile_id;
 		RenderFormFields.prototype.init(me.wrapper, {"file_name" : "event", "method": 'event'}, event_id)
@@ -86,7 +85,7 @@ window.Events = inherit(ListView,{
 		var me = this;
 		this.filters = {}
 		d = new Dialog();
-		d.init({"file_name":"provider_search"})
+		d.init({"file_name":"provider_search", "title":"Provider Search"})
 		d.show()
 		$('<button class ="btn btn-success btn-sm" > search </button>')
 			.click(function(){

@@ -31,7 +31,6 @@ $(document).ready(function () {
 })
 
 render_shared_data = function(patient_profile_id){
-	alert(profile_id)
 	ListView.prototype.init(this.wrapper, {'file_name':"temp_share_event",
 		'cmd':"provider_page.get_patient_data",
 		'tab_at': 4,

@@ -139,7 +139,7 @@ def get_patient_data(data):
 		param = {"filelist": dms_files}
 		response=get_response(url, json.dumps(param), request_type)
 
-		get_dm_data(rows, data_dict)
+	get_dm_data(rows, data_dict)
 
 	return {
 		'rows': rows,
@@ -152,9 +152,12 @@ def get_dm_data(rows, data_dict):
 							ifnull(u.last_name,'') as person_lastname, dm.disease_name as disease_name, dm.pdf_path as pdf_path
 						from `tabDisease Sharing Log` dm, `tabUser` u 
 						where dm.to_profile = '%s' 
-							and dm.from_profile = u.profile_id """%to_profile, as_dict=1):
+							and dm.from_profile = u.profile_id """%data_dict.get('to_profile_id'), as_dict=1):
+
+
+		frappe.errprint(dm_data)
 		file_path = '/'.join(dm_data.get('pdf_path').split('/')[3:])
-		data = ['<a target="_blank" href="/%(file_path)s"> %s </a>'%( file_path, dm_data['disease_name']), 
+		data = ['<a target="_blank" href="/%s"> %s </a>'%( file_path, dm_data['disease_name']), 
 					'', 
 					'']
 		rows.extend([data])

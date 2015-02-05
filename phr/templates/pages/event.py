@@ -71,7 +71,7 @@ def update_event(data):
 			"str_event_date": data.get('event_date'),
 			"event_descripton": data.get('event_descripton'),
 			"visit_files": data.get('dms_file_list'),
-			"doctor_id": "1421767671044-180707",
+			"doctor_id": data.get('doctor_id'),
 			"doctor_name": data.get("doctor_name"),
 			"visit_descripton": data.get('event_descripton'),
 			"received_from": "Desktop",
@@ -102,9 +102,7 @@ def clear_dms_list(dms_file_list):
 def copy_files_to_visit(dms_file_list, visit_id):
 	import os, shutil, glob
 	for loc in dms_file_list:
-		print "--------------------------file loc -------------------"
-		print loc.get('file_location')
-		
+	
 		path_lst = loc.get('file_location')[0].split('/')
 		
 		file_path = os.path.join('/'.join(path_lst[0:len(path_lst)-1]), visit_id)
@@ -114,8 +112,6 @@ def copy_files_to_visit(dms_file_list, visit_id):
 		for filename in glob.glob(os.path.join('/'.join(path_lst[0:len(path_lst)-1]), '*.*')):
 			print filename
 			shutil.move(filename, file_path)
-
-
 
 @frappe.whitelist(allow_guest=True)
 def get_attachments(profile_id, folder, sub_folder, event_id):
@@ -207,7 +203,7 @@ def send_shared_data(data):
 					"to_profile_id": data.get('doctor_id'),
 					"received_from":"desktop",
 					"from_profile_id": data.get('profile_id'),
-					"visit_tag_id": file_details[4],
+					"event_tag_id": data.get('entityid'),
 					"tag_id": file_details[4] + '-' + cstr(file_details[2].split('-')[1]) + cstr(file_details[3].split('_')[1]) ,
 					"file_id": [file_details[5]],
 					"file_access": ['RW'],
