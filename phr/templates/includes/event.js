@@ -227,9 +227,17 @@ window.Events = inherit(ListView,{
 			$("form input, form textarea, form select").each(function(i, obj) {
 				me.res[obj.name] = $(obj).val();
 			})
+			complaints = $('.ui-autocomplete-multiselect-item').toArray();
+			complaints_array = [];
+			$.each(complaints,function(i,j){
+				temp_var = $(j)
+				temp_var.find("span").remove()
+				complaints_array[i] = temp_var.html();
+			})
 			me.res['profile_id'] = me.profile_id;
 			me.res['dms_file_list'] = me.dms_file_list;
-			console.log(me.res)
+			me.res['complaints'] = complaints_array;
+			
 			frappe.call({
 				method:"phr.templates.pages.event.create_update_event",
 				args:{"data":JSON.stringify(me.res)},

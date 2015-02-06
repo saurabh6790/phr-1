@@ -40,6 +40,7 @@ def create_event(data):
 			"profile_id": data.get('profile_id'),
 			"str_event_date": data.get('event_date'),
 			"received_from": "Desktop",
+			"event_symptoms" : data.get('complaints'),
 			"event_descripton": data.get('event_descripton')
 		}
 
@@ -67,7 +68,7 @@ def update_event(data):
 			"profile_owner_name": frappe.db.get_value('User', {'profile_id':data.get('profile_id')}, 'first_name'),
 			"status": "active",
 			"event_diseasemontoring": False,
-			"event_symptoms" : ["Dengue" , "Headache" , "Chest Pain"],
+			"event_symptoms" :data.get('complaints'),
 			"event_title": data.get('event_title'),
 			"profile_id": data.get('profile_id'),
 			"str_event_date": data.get('event_date'),
@@ -206,6 +207,7 @@ def send_shared_data(data):
 		else:
 			sharelist = []
 			for fl in data.get('files'):
+				
 				file_details = fl.split('/')
 				sharelist.append({
 					"to_profile_id": data.get('doctor_id'),
