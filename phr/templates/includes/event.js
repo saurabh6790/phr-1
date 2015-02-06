@@ -79,7 +79,6 @@ window.Events = inherit(ListView,{
 		me.render_folder_section()
   		me.bind_events()
   		this.get_linked_providers()
-		
 	},
 	dialog_oprations: function(){
 		var me = this;

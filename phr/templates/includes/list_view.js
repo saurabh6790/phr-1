@@ -88,6 +88,12 @@ var ListView = inherit(RenderFormFields,{
 			.appendTo($('.sub-top-bar'))
 			.bind('click',function(){
 				me.new_form()
+				if(me.args['file_name'] == "event"){
+					Events.prototype.get_linked_providers()	
+					$("#provider_name").click(function(){
+						Events.prototype.dialog_oprations()
+					})
+				}
 				me.status=1
 				return me.status
 			})

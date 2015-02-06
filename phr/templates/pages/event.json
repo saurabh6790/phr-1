@@ -57,7 +57,8 @@
 			"fieldname":"", 
 			"fieldtype":"section_break", 
 			"label":"Provider Info",
-			"options": "icon-user-md"
+			"options": "icon-user-md",
+			"display": "none"
 		},
 		{
 			"fieldname":"provider_type", 

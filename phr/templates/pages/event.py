@@ -288,12 +288,7 @@ def get_visit_data(data):
 
 @frappe.whitelist(allow_guest=True)
 def get_event_data(data):
-	frappe.errprint(data)
-
 	fields, values, tab = get_data_to_render(data)
-
-	print fields
-
 
 	request_type="POST"
 	url="%s/phrdata/getprofileevent"%get_base_url()
@@ -328,15 +323,15 @@ def get_event_data(data):
 	if res_data.get('eventList'):
 		for visit in res_data.get('eventList'):
 			count_list = [0, 0, 0, 0, 0]
-
-			data = ['<input type="radio" name="event" id = "%s" ">'%visit['entityid'], 
-					"""<a nohref id="%(entityid)s" onclick="Events.prototype.open_form('%(entityid)s', '%(event_title)s', '%(profile_id)s')"> %(event_title)s </a>"""%{"entityid": visit['entityid'],"event_title": visit['event_title'], "profile_id":profile_id}, 
-					datetime.datetime.fromtimestamp(cint(visit['event_date'])/1000.0).strftime('%d/%m/%Y'), 
-					visit['event_symptoms']]
-			
-			event_list_updater(visit['entityid'], event_count_dict, count_list, data)
-			
-			rows.extend([data])
+			if not visit.get("event_diseasemontoring"):
+				data = ['<input type="radio" name="event" id = "%s" ">'%visit['entityid'], 
+						"""<a nohref id="%(entityid)s" onclick="Events.prototype.open_form('%(entityid)s', '%(event_title)s', '%(profile_id)s')"> %(event_title)s </a>"""%{"entityid": visit['entityid'],"event_title": visit['event_title'], "profile_id":profile_id}, 
+						datetime.datetime.fromtimestamp(cint(visit['event_date'])/1000.0).strftime('%d/%m/%Y'), 
+						visit['event_symptoms']]
+				
+				event_list_updater(visit['entityid'], event_count_dict, count_list, data)
+				
+				rows.extend([data])
 
 	return {
 		'rows': rows,
