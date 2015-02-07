@@ -47,15 +47,6 @@ window.Events = inherit(ListView,{
 			SharePhr.prototype.init(me.wrapper, {"file_name" : "share_phr", "method": "event", 'event_id': $(me.selected_files).last()[0], 'selected_files':me.selected_files, 'doc_list': me.doc_list, "profile_id":me.profile_id})
 			
 		}).appendTo($('.field-area'))
-		// this.open_form()
-		// $("table tr td a").bind('click', function (e) { 
-		// 	me.open_form($(this).attr('id'), $(this).html(), me.profile_id)
-		// })
-
-		// $("#myModal").on("hide", function() {    // remove the event listeners when the dialog is dismissed
-		// 	$("#myModal a.btn").off("click");
-		// });
-
 		this.render_spans()
 		this.get_linked_providers()
 	},
@@ -68,7 +59,7 @@ window.Events = inherit(ListView,{
 		$(repl_str('<li><a nohref>%(event_title)s</a></li>',{'event_title': event_title})).click(function(){
 			$(this).nextAll().remove()
 			$(this).remove()
-			me.open_form(event_id, event_title)
+			me.open_form(event_id, event_title, me.profile_id)
 		}).appendTo('.breadcrumb');
 		$('<div class="event_section" style="margin-top:-10%;"></div>').appendTo($('.field-area'))
 
@@ -244,7 +235,7 @@ window.Events = inherit(ListView,{
 					$('.breadcrumb li:last').remove()
 					console.log(r.message)
 					if(r.message.returncode == 103 || r.message.returncode == 116){
-						me.open_form(r.message.entityid, $('[name="event_title"]').val());	
+						me.open_form(r.message.entityid, $('[name="event_title"]').val(), me.profile_id);	
 						me.dms_file_list = [];
 						alert("Saved")
 					}

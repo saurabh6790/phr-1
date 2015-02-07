@@ -44,6 +44,7 @@ $(document).ready(function () {
 function bind_events(){
 	profile_id=sessionStorage.getItem("cid")
 	$("#home").on("click",function(){
+		$('.linked-phr').remove()
 		profile_id=sessionStorage.getItem("pid")
 		$('#linkedphr').show()
 		sessionStorage.setItem("cid",profile_id)
@@ -65,6 +66,7 @@ function bind_events(){
 			{"file_name" : "profile", "method": "profile"},profile_id)
 	})
 	$('.event').unbind("click").click(function(){
+		profile_id=sessionStorage.getItem("cid")
 		$('.breadcrumb').empty()
 		$('<li><a nohref>Event</a></li>').click(function(){
 			$('.breadcrumb li').nextAll().remove()

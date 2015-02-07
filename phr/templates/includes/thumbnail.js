@@ -116,6 +116,7 @@ $.extend(ThumbNails.prototype,{
 			attachment['display'] = me.args['display'];
 			me.render_attachemnt(attachment, row)
 		})
+		this.image_gallery(attachments)
 	},
 	render_attachemnt:function(attachment, row){
 		var me = this;
@@ -143,7 +144,9 @@ $.extend(ThumbNails.prototype,{
 				// me.doc_list.push( me.args['profile_id'] + '/' +  $('input[name="entityid"]').val() + '/' + me.folder + '/' +  me.sub_folder + '/' + $(this).val())
 			}
 		});
+		this.image_gallery()
+	},
+	image_gallery: function(){
 
-	
 	}
 })
