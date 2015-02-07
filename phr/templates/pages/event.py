@@ -19,11 +19,6 @@ def create_update_event(data=None):
 	else:
 		res = update_event(data)
 
-		print "==============res==============="
-		print res.get('visit').get('entityid')
-		print "=================================="
-
-
 		if res.get('returncode') == 116:
 			clear_dms_list(data.get('dms_file_list'))
 			copy_files_to_visit(data.get('dms_file_list'), res.get('visit').get('entityid'))
@@ -32,9 +27,8 @@ def create_update_event(data=None):
 def create_event(data):
 	response = ''
 	request_type="POST"
-	# url="http://192.168.5.12:9090/phr/createEvent"
 	url = "%s/createEvent"%get_base_url()
-	# url="http://88.198.52.49:7974/phr/createEvent"
+
 	event_data={
 			"event_title": data.get('event_title'),
 			"profile_id": data.get('profile_id'),
@@ -44,8 +38,6 @@ def create_event(data):
 			"event_descripton": data.get('event_descripton')
 		}
 
-	import datetime
-	frappe.errprint(['date_diff', data.get('event_date')])
 	event_date = datetime.datetime.strptime(event_data.get('str_event_date'), "%d/%m/%Y").strftime('%Y-%m-%d')
 	
 	if date_diff(event_date, nowdate()) > 0:
@@ -59,9 +51,8 @@ def create_event(data):
 def update_event(data):
 	response = ''
 	request_type="POST"
-	# url="http://192.168.5.12:9090/phr-api/createupdateevent"
 	url="%s/createupdateevent"%get_base_url()
-	# url="http://88.198.52.49:7974/phr-api/createupdateevent"
+
 	event_data =	{
 			"entityid":data.get('entityid'),
 			"event_complaint_list":[],
@@ -82,9 +73,6 @@ def update_event(data):
 			"diagnosis_desc": data.get('diagnosis')
 	}
 
-
-	print event_data
-
 	import datetime
 	event_date = datetime.datetime.strptime(event_data.get('str_event_date'), "%d/%m/%Y").strftime('%Y-%m-%d')
 	
@@ -99,7 +87,6 @@ def update_event(data):
 def clear_dms_list(dms_file_list):
 	import os
 	for loc in dms_file_list:
-		print loc.get('file_location')[0]
 		os.remove(loc.get('file_location')[0])
 
 def copy_files_to_visit(dms_file_list, visit_id):
@@ -230,11 +217,8 @@ def send_shared_data(data):
 
 @frappe.whitelist(allow_guest=True)
 def get_visit_data(data):
-	print "-----------",data
 	request_type="POST"
-	# url="http://192.168.5.12:9090/phr/phrdata/getprofilevisit"
 	url="%s/phrdata/getprofilevisit"%get_base_url()
-	# url="http://88.198.52.49:7974/phr/phrdata/getprofilevisit"
 	from phr.phr.phr_api import get_response
 
 	fields, values, tab = get_data_to_render(data)
@@ -252,9 +236,8 @@ def get_visit_data(data):
 	response=get_response(url, json.dumps({"profileId":data.get('profile_id')}), request_type)
 	res_data = json.loads(response.text)
 
-	# url="http://192.168.5.12:9090/phr-api/phrdata/getprofilevisitfilecount"
 	url = "%s/phrdata/getprofilevisitfilecount"%get_base_url()
-	# url="http://88.198.52.49:7974/phr-api/phrdata/getprofilevisitfilecount"
+
 	response=get_response(url, json.dumps({"profile_id":data.get('profile_id')}), request_type)
 	res_data1 = json.loads(response.text)
 
@@ -273,8 +256,8 @@ def get_visit_data(data):
 			count_list = [0, 0, 0, 0, 0]
 
 			data = ['<input  type="radio" name="visit" id = "%s">'%visit['entityid'],
-					visit['str_visit_date'], 
-					visit['visit_descripton'], 'DOC', visit['doctor_name']]
+					visit['event']['event_title'], visit['str_visit_date'], 
+					visit['visit_descripton'], visit['doctor_name']]
 
 			event_list_updater(visit['entityid'], event_count_dict, count_list, data)
 			
@@ -327,7 +310,7 @@ def get_event_data(data):
 				data = ['<input type="radio" name="event" id = "%s" ">'%visit['entityid'], 
 						"""<a nohref id="%(entityid)s" onclick="Events.prototype.open_form('%(entityid)s', '%(event_title)s', '%(profile_id)s')"> %(event_title)s </a>"""%{"entityid": visit['entityid'],"event_title": visit['event_title'], "profile_id":profile_id}, 
 						datetime.datetime.fromtimestamp(cint(visit['event_date'])/1000.0).strftime('%d/%m/%Y'), 
-						visit['event_symptoms']]
+						"<div style='word-wrap: break-word;width:60%%;'>%s</div>"%' ,'.join(visit['event_symptoms'])]
 				
 				event_list_updater(visit['entityid'], event_count_dict, count_list, data)
 				

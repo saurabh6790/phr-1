@@ -212,6 +212,8 @@ $.extend(RenderFormFields.prototype,{
 						</div>\
 				</div>', field_meta)).appendTo($(this.column))
 
+		console.log(['link_field_renderer', typeof(field_meta['value'])])
+
 		frappe.require("/assets/phr/js/jquery.autocomplete.multiselect.js");
 		console.log(typeof(field_meta['options']))
 
@@ -247,6 +249,15 @@ $.extend(RenderFormFields.prototype,{
 		}
 
 		this.set_description($input.find('.control-input'), field_meta)
+
+		if(typeof(field_meta['value']) === "object"){
+			$.each(field_meta['value'], function(i,j){
+				$('<div class="ui-autocomplete-multiselect-item">'+j+'\
+					<span class="ui-icon ui-icon-close"></span>\
+				</div>').appendTo($input.find('.ui-autocomplete-multiselect'))	
+			})
+			
+		}
 
 		// $($input.find('.autocomplete')).autocomplete({
   //       source: function(request, response){

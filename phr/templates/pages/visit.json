@@ -26,8 +26,8 @@
 			"label":"Visit List",
 			"rows":[
 				[
-					"","Visit Date", 
-					"Visit Description", "Provider Type", 
+					"","Event","Visit Date", 
+					"Visit Description", 
 					"Provider Name", 
 					"<i class='icon-user-md' data-toggle='tooltip' data-placement='top' title='Consultation'></i><input type='checkbox' id='consultancy-11'  value='Consultancy' >", 
  					"<i class='icon-camera' data-toggle='tooltip' data-placement='top' title='Event Snaps'></i><input type='checkbox' id='event_snap-12'  value='Consultancy' >", 
