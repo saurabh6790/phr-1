@@ -47,6 +47,14 @@
    "set_only_once": 0
   }, 
   {
+   "fieldname": "provider_type", 
+   "fieldtype": "Link", 
+   "label": "Provider Type", 
+   "options": "Provider Type", 
+   "permlevel": 0, 
+   "precision": ""
+  }, 
+  {
    "fieldname": "name1", 
    "fieldtype": "Data", 
    "label": "Name", 
@@ -103,7 +111,7 @@
  "is_submittable": 0, 
  "issingle": 0, 
  "istable": 0, 
- "modified": "2015-02-04 11:22:08.913063", 
+ "modified": "2015-02-09 13:48:53.278392", 
  "modified_by": "Administrator", 
  "module": "phr", 
  "name": "Providers Linked", 

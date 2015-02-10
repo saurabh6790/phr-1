@@ -31,6 +31,8 @@ $.extend(SharePhr.prototype,{
 		})
 		this.bind_controller()
 		this.render_folder_section()
+		console.log(['get get_linked_providers ', this.args['profile_id']])
+		Events.prototype.get_linked_providers(this.args['profile_id'])
 	 //  	me.bind_events()
 	},
 	bind_controller: function(){
@@ -117,10 +119,13 @@ $.extend(SharePhr.prototype,{
 		var uniqueNames = [];
 		me.res = {}
 
-		$.each(me.doc_list, function(i, el){
-			if($.inArray(el, uniqueNames) === -1) uniqueNames.push(el);
-		});
-
+		if(me.doc_list){
+			$.each(me.doc_list, function(i, el){
+				if($.inArray(el, uniqueNames) === -1) uniqueNames.push(el);
+			});
+	
+		}
+		
 		$("form input, form textarea, form select").each(function(i, obj) {
 			me.res[obj.name] = $(obj).val();
 		})

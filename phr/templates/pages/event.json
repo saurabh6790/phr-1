@@ -33,7 +33,8 @@
 		{
 			"fieldname":"visit_date", 
 			"fieldtype":"date", 
-			"label":"Visit Date"
+			"label":"Visit Date",
+			"display": "none"
 		},
 		{
 			"fieldname":"",
@@ -69,7 +70,7 @@
 			"fieldname":"provider_type", 
 			"fieldtype":"select","label": 
 			"Healthcare Provider", 
-			"options":["Doc", "Hospital", "Lab"]
+			"options":"Provider Type"
 		},
 		{
 			"fieldname":"number", 

@@ -97,7 +97,9 @@ $.extend(ThumbNails.prototype,{
 		frappe.call({
 			method:"phr.templates.pages.event.get_attachments",
 			args:{'profile_id': me.args['profile_id'], 'folder':me.folder, 
-				'sub_folder': me.sub_folder, 'event_id': $('input[name="entityid"]').val()},
+				'sub_folder': me.sub_folder, 
+				'event_id': $('input[name="event_id"]').val() ? $('input[name="event_id"]').val() : $('input[name="entityid"]').val(),
+				'visit_id': $('input[name="event_id"]').val() ? $('input[name="entityid"]').val() : ''},
 			callback:function(r){
 				me.create_attachement_renderer(r.message)
 			}

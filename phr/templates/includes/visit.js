@@ -15,7 +15,7 @@ var Visit = inherit(ListView,{
 		this.wrapper = wrapper;
 		$('#main-con').empty();
 		this.selected_files = [];
-		console.log(['123',profile_id])
+		this.profile_id = profile_id
 		ListView.prototype.init(this.wrapper, {"file_name": "visit", 
 			'cmd':"event.get_visit_data",
 			'tab_at': 4,

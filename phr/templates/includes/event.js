@@ -63,6 +63,9 @@ window.Events = inherit(ListView,{
 		}).appendTo('.breadcrumb');
 		$('<div class="event_section" style="margin-top:-10%;"></div>').appendTo($('.field-area'))
 
+		$('[name="event_date"]').attr('disabled', 'disabled')
+		$($('[name="visit_date"]').parents()[3]).css("display", "inherit")
+
 		$($('[name="diagnosis"]').parents()[3]).css("display", "inherit");
 		$("#provider_name").click(function(){
 			me.dialog_oprations()
@@ -190,7 +193,6 @@ window.Events = inherit(ListView,{
 			method:"phr.templates.pages.event.get_linked_providers",
 			args:{'profile_id':this.profile_id},
 			callback:function(r){
-				console.log([$('[name="provider_name"]'), r.message])
 				$('[name="doctor_name"]').autocomplete({
 					open: function(){
 						setTimeout(function () {
@@ -203,6 +205,7 @@ window.Events = inherit(ListView,{
 						$('[name="email_id"]').val(obj['item']['email'])
 						$('[name="number"]').val(obj['item']['mobile'])
 						$('[name="doctor_id"]').val(obj['item']['provider'])
+						$('[name="provider_type"]').val(obj['item']['provider_type'])
 					}
 				})
 			}
