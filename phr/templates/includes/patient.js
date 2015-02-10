@@ -22,6 +22,7 @@ frappe.provide("frappe");
 */
 $(document).ready(function () {
 	//sessionStorage.setItem("cid",frappe.get_cookie('profile_id'));
+	NProgress.start();
 	profile_id=sessionStorage.getItem("cid")
 	var db = new render_dashboard();
 	db.render_providers(profile_id)
@@ -40,10 +41,12 @@ $(document).ready(function () {
 	$('#home').attr('data-name',profile_id)
 	//alert($('#profile').attr('data-name'))
 	bind_events(db)
+	NProgress.done();
 })
 function bind_events(){
 	profile_id=sessionStorage.getItem("cid")
 	$("#home").on("click",function(){
+		NProgress.start();
 		$('.linked-phr').remove()
 		profile_id=sessionStorage.getItem("pid")
 		$('#linkedphr').show()
@@ -55,6 +58,7 @@ function bind_events(){
 		db.render_providers(profile_id)
 		db.render_linked_phr(profile_id)
 		db.render_middle_section(profile_id)
+		NProgress.done();
 		//db.render_emer_details(profile_id)
 		//db.render_to_do(profile_id)
 		//db.render_advertisements(profile_id)	

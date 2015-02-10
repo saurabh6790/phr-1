@@ -5,6 +5,7 @@ frappe.provide("templates/includes");
 var ListView = inherit(RenderFormFields,{
 	init: function(wrapper, args){
 		// console.log(args)
+		NProgress.start();
 		console.log("from even")
 		var me = this;
 		this.wrapper = wrapper;
@@ -17,6 +18,7 @@ var ListView = inherit(RenderFormFields,{
 			console.log(['test'])
 			RenderFormFields.prototype.init(this.wrapper, {'file_name': me.args['file_name'], 'param':'listview'})
 			me.render_top_section()
+			NProgress.done();
 		}
 
 	},
@@ -30,6 +32,7 @@ var ListView = inherit(RenderFormFields,{
 			data: "data="+JSON.stringify({'file_name':me.args['file_name'],"profile_id":me.profile_id, 'param':'listview', 'other_param':me.args}),
 			async: false,
 			success: function(r) {
+				NProgress.done();
 				me.listview = r.message['listview'];
 				dataTable = r.message['rows'];
 				if(me.args['tab_at']){

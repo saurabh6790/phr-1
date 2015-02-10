@@ -50,7 +50,7 @@ function thumbnail(pdfURL, elementID, filename, display){
         var img = canvas.toDataURL();
         // console.log(img)
         $(elementID).html('<div>\
-                            <input type="checkbox" style="display:'+display+'" value="'+filename+'">\
+                            <input type="checkbox" style="display:'+display+'" value="'+pdfURL+'">\
                         </div><img style="height:150px;" src="'+img+'"/><br>\
                         <label style="width: 150px;word-wrap: break-word;">'+filename+'</label>');
     });

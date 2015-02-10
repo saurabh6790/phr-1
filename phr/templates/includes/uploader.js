@@ -69,6 +69,7 @@ upload = {
 		})
 	},
 	upload_file: function(fileobj, args, opts) {
+		NProgress.start();
 		if(!fileobj && !args.file_url) {
 			msgprint(__("Please attach a file or set a URL"));
 			return;

@@ -34,7 +34,7 @@ window.Events = inherit(ListView,{
 					}
 				})
 			})
-			console.log(me.selected_files)
+			
 			$('.table').find('tr').each(function () {
 				var row = $(this);
 				$('td', row).map(function(index, td) {
@@ -43,8 +43,14 @@ window.Events = inherit(ListView,{
 					}
 				});
 			})
-			console.log(me.selected_files)
-			SharePhr.prototype.init(me.wrapper, {"file_name" : "share_phr", "method": "event", 'event_id': $(me.selected_files).last()[0], 'selected_files':me.selected_files, 'doc_list': me.doc_list, "profile_id":me.profile_id})
+			
+			SharePhr.prototype.init(me.wrapper, {"file_name" : "share_phr", 
+						"method": "event", 
+						'event_id': $(me.selected_files).last()[0], 
+						'selected_files':me.selected_files, 
+						'doc_list': me.doc_list, 
+						"profile_id":me.profile_id
+					})
 			
 		}).appendTo($('.field-area'))
 		this.render_spans()
@@ -217,6 +223,7 @@ window.Events = inherit(ListView,{
 		this.result_set = {};
 		this.doc_list = [] 
 		$('.save_controller').bind('click',function(event) {
+			NProgress.start();
 			$("form input, form textarea, form select").each(function(i, obj) {
 				me.res[obj.name] = $(obj).val();
 			})
@@ -237,6 +244,7 @@ window.Events = inherit(ListView,{
 				callback:function(r){
 					$('.breadcrumb li:last').remove()
 					console.log(r.message)
+					NProgress.done();
 					if(r.message.returncode == 103 || r.message.returncode == 116){
 						me.open_form(r.message.entityid, $('[name="event_title"]').val(), me.profile_id);	
 						me.dms_file_list = [];
@@ -245,6 +253,7 @@ window.Events = inherit(ListView,{
 					else{
 						alert(r.message.message_summary);
 					}
+
 				}
 			})			
 		})
