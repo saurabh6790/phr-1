@@ -1,13 +1,17 @@
 import frappe
 import json
 import os 
-from frappe.utils import get_site_path, get_hook_method, get_files_path, get_site_base_path,cstr
 from phr.templates.pages.patient import get_data_to_render
 import datetime
 from phr.templates.pages.patient import get_base_url
 import time
 from phr.phr.phr_api import get_response
-from datetime import datetime
+# from datetime import datetime
+from frappe.utils import getdate, date_diff, nowdate, get_site_path, get_hook_method, get_files_path, \
+		get_site_base_path, cstr, cint
+
+
+
 
 @frappe.whitelist(allow_guest=True)
 def get_diseases():
@@ -105,7 +109,7 @@ def build_options(dm_list,fields,field_mapper,raw_fields=None):
 			for f in field_mapper:
 				#if not f=='patient_notes':
 				if f=='sr':
-					v.append("")
+					v.append('<input type="checkbox" name="">')
 				else:
 					v.append(f_dic[f])
 			rows.extend([v])
@@ -158,4 +162,80 @@ def render_table_on_db(profile_id,event_master_id,name):
 				"rtcode":1
 			}
 
+@frappe.whitelist()
+def share_dm(data, header, share_info, profile_id, disease=None):
+	frappe.errprint(disease)
+	share_info = eval(share_info)
+	frappe.create_folder(os.path.join(get_files_path() , profile_id))
+	save_pdf(data, header, profile_id, disease)
 
+	if share_info.get('share_via') == 'Email':
+		send_email(share_info, profile_id, disease)
+	else:
+		share_via_phr(share_info, profile_id, disease)
+
+@frappe.whitelist()
+def save_pdf(data, header, profile_id, disease):
+	import pdfkit
+
+	data = eval(data)
+	rows = ''
+	for row in data:
+		rows += "<tr>%s<tr>"%row
+
+	html_str = """
+		<html>
+			<body>
+				<table class="table table-striped">
+					<thead>
+						%(header)s
+					</thead>
+					%(data_rows)s
+				</table>
+			</body>
+		</html>
+
+	"""%{'data_rows': rows, 'header': header}
+	file_name = disease + '.pdf'
+	pdfkit.from_string(html_str, os.path.join(get_files_path(), profile_id, file_name))
+
+
+def send_email(share_info, profile_id, disease):
+	from email.mime.audio import MIMEAudio
+	from email.mime.base import MIMEBase
+	from email.mime.image import MIMEImage
+	from email.mime.text import MIMEText
+	import mimetypes
+	import datetime
+
+	attachments = []
+	file_name = disease + '.pdf'
+	files = os.path.join(get_files_path(), profile_id, file_name)
+
+	attachments.append({
+			"fname": files,
+			"fcontent": file(files).read()
+		})
+
+	if attachments:
+		msg = """Disease Name is %(event)s <br>
+				Provider Name is %(provider_name)s <br>
+				<hr>
+					%(event_body)s <br>
+					Please see attachment <br>
+			"""%{'event': disease, 'provider_name': share_info.get('doctor_name'), 
+			'event_body': share_info.get('email_body')}
+		
+		from frappe.utils.email_lib import sendmail
+
+		sendmail([share_info.get('email_id')], subject="PHR-Disease Monitoring Data", msg=cstr(msg),
+				attachments=attachments)
+
+def share_via_phr(share_info, profile_id, disease):
+	dm_sharing = frappe.new_doc('Disease Sharing Log')
+	file_name = disease + '.pdf'
+	dm_sharing.disease_name = disease
+	dm_sharing.from_profile = profile_id
+	dm_sharing.to_profile = share_info.get('doctor_id')
+	dm_sharing.pdf_path = os.path.join(get_files_path(), profile_id, file_name)
+	dm_sharing.save()

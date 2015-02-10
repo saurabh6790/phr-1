@@ -154,6 +154,7 @@ function render_dashboard(profile_id){
 			</div>', data.profile)).appendTo($wrap)
 		})
 		$(".v_lphr").unbind("click").click(function(){
+			$('.linked-phr').html($(this).html())
 			sessionStorage.setItem("cid",$(this).attr('data-name'))
 			$('.field-area').empty()
 			$('#main-con').empty()

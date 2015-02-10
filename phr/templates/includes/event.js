@@ -11,7 +11,7 @@ frappe.provide("frappe");
 {% include "templates/includes/custom_dialog.js" %}
 
 
-var Event = inherit(ListView,{
+window.Events = inherit(ListView,{
 	init: function(wrapper, json_file, profile_id, entity_id){
 		this.wrapper = wrapper;
 		$('#main-con').empty();
@@ -23,61 +23,48 @@ var Event = inherit(ListView,{
 			'cmd':"event.get_event_data",
 			'tab_at': 4,
 			'profile_id':profile_id})
-		
-		// $('<tr>\
-		// 	<td></td>\
-		// 	<td></td>\
-		// 	<td></td>\
-		// 	<td></td>\
-		// 	<td align="center"><input type="checkbox" id="consultancy"  value="Consultancy" ></td>\
-		// 	<td align="center"><input type="checkbox" id="event_snap"  value="Event Snap" ></td>\
-		// 	<td align="center"><input type="checkbox" id="lab_reports"  value="Lab Reports" ></td>\
-		// 	<td align="center"><input type="checkbox" id="prescription"  value="Prescription" ></td>\
-		// 	<td align="center"><input type="checkbox" id="cost_of_care"  value="Cost Of Care" ></td>\
-		// </tr>').insertBefore('table > thead > tr:first')
-
-		
 
 		$("<button class='btn btn-primary'> Share </button>").click(function(){
-				$('.table').find('tr').each(function () {
+			$('.table').find('thead').each(function(){
+				var row = $(this);
+				$('th', row).map(function(index, th) {
+					if ($(th).find('input[type="checkbox"]').is(':checked')) {
+						console.log($(th).find('input[type="checkbox"]').attr('id'))
+						me.selected_files.push($(th).find('input[type="checkbox"]').attr('id'))
+					}
+				})
+			})
+			console.log(me.selected_files)
+			$('.table').find('tr').each(function () {
 				var row = $(this);
 				$('td', row).map(function(index, td) {
-				    if ($(td).find('input[type="checkbox"]').is(':checked')) {
-						me.selected_files.push($(td).find('input[type="checkbox"]').attr('id'))
-					}
 					if ($(td).find('input[name="event"]').is(':checked')) {
 						me.selected_files.push($(td).find('input[name="event"]').attr('id'))
 					}
 				});
 			})
-
+			console.log(me.selected_files)
 			SharePhr.prototype.init(me.wrapper, {"file_name" : "share_phr", "method": "event", 'event_id': $(me.selected_files).last()[0], 'selected_files':me.selected_files, 'doc_list': me.doc_list, "profile_id":me.profile_id})
 			
 		}).appendTo($('.field-area'))
-		// this.open_form()
-		$("table tr td a").bind('click', function (e) { 
-			me.open_form($(this).attr('id'), $(this).html())
-		})
-
-		// $("#myModal").on("hide", function() {    // remove the event listeners when the dialog is dismissed
-		// 	$("#myModal a.btn").off("click");
-		// });
-
 		this.render_spans()
 		this.get_linked_providers()
 	},
-	open_form:function(event_id, event_title){
-		alert('test')
+	open_form:function(event_id, event_title, profile_id){
 		var me = this;
+		this.profile_id = profile_id;
 		RenderFormFields.prototype.init(me.wrapper, {"file_name" : "event", "method": 'event'}, event_id)
 
 		me.bind_save_event()
 		$(repl_str('<li><a nohref>%(event_title)s</a></li>',{'event_title': event_title})).click(function(){
 			$(this).nextAll().remove()
 			$(this).remove()
-			me.open_form(event_id, event_title)
+			me.open_form(event_id, event_title, me.profile_id)
 		}).appendTo('.breadcrumb');
 		$('<div class="event_section" style="margin-top:-10%;"></div>').appendTo($('.field-area'))
+
+		$('[name="event_date"]').attr('disabled', 'disabled')
+		$($('[name="visit_date"]').parents()[3]).css("display", "inherit")
 
 		$($('[name="diagnosis"]').parents()[3]).css("display", "inherit");
 		$("#provider_name").click(function(){
@@ -86,13 +73,12 @@ var Event = inherit(ListView,{
 		me.render_folder_section()
   		me.bind_events()
   		this.get_linked_providers()
-		
 	},
 	dialog_oprations: function(){
 		var me = this;
 		this.filters = {}
 		d = new Dialog();
-		d.init({"file_name":"provider_search"})
+		d.init({"file_name":"provider_search", "title":"Provider Search"})
 		d.show()
 		$('<button class ="btn btn-success btn-sm" > search </button>')
 			.click(function(){
@@ -200,20 +186,26 @@ var Event = inherit(ListView,{
 			// me.render_folder_section()		
 		})
 	},
-	get_linked_providers:function(){
+	get_linked_providers:function(profile_id){
 		var me = this;
+		this.profile_id = profile_id ? profile_id : this.profile_id;
 		frappe.call({
 			method:"phr.templates.pages.event.get_linked_providers",
 			args:{'profile_id':this.profile_id},
 			callback:function(r){
-				console.log([$('[name="provider_name"]'), r.message])
 				$('[name="doctor_name"]').autocomplete({
+					open: function(){
+						setTimeout(function () {
+							$('.ui-autocomplete').css('z-index', 99999999999999);
+						}, 0);
+					},
 					source: r.message,
 					multiselect: false,
 					select: function( event, obj) {
 						$('[name="email_id"]').val(obj['item']['email'])
 						$('[name="number"]').val(obj['item']['mobile'])
 						$('[name="doctor_id"]').val(obj['item']['provider'])
+						$('[name="provider_type"]').val(obj['item']['provider_type'])
 					}
 				})
 			}
@@ -228,9 +220,17 @@ var Event = inherit(ListView,{
 			$("form input, form textarea, form select").each(function(i, obj) {
 				me.res[obj.name] = $(obj).val();
 			})
+			complaints = $('.ui-autocomplete-multiselect-item').toArray();
+			complaints_array = [];
+			$.each(complaints,function(i,j){
+				temp_var = $(j)
+				temp_var.find("span").remove()
+				complaints_array[i] = temp_var.html();
+			})
 			me.res['profile_id'] = me.profile_id;
 			me.res['dms_file_list'] = me.dms_file_list;
-			console.log(me.res)
+			me.res['complaints'] = complaints_array;
+			
 			frappe.call({
 				method:"phr.templates.pages.event.create_update_event",
 				args:{"data":JSON.stringify(me.res)},
@@ -238,7 +238,7 @@ var Event = inherit(ListView,{
 					$('.breadcrumb li:last').remove()
 					console.log(r.message)
 					if(r.message.returncode == 103 || r.message.returncode == 116){
-						me.open_form(r.message.entityid, $('[name="event_title"]').val());	
+						me.open_form(r.message.entityid, $('[name="event_title"]').val(), me.profile_id);	
 						me.dms_file_list = [];
 						alert("Saved")
 					}

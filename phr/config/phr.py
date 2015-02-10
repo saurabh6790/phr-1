@@ -48,8 +48,13 @@ def get_data():
 				},
 				{
 					"type": "doctype",
+					"name": "Disease Sharing Log",
+					"description": _("Disease Monitoring Sharing Log"),
+				},
+				{
+					"type": "doctype",
 					"name": "Advertisements",
-					"description": _("Share Fiiles Log"),
+					"description": _("Advertisements"),
 				},
 			]
 		},

@@ -7,6 +7,7 @@ var Provider = inherit(RenderFormFields, {
 		console.log(operation)
 		this.wrapper = wrapper;
 		this.args=cmd
+		console.log(entityid)
 		this.entityid=entityid
 		this.operation=operation
 		$(this.wrapper).empty()
@@ -35,18 +36,19 @@ var Provider = inherit(RenderFormFields, {
 		})
 	},
 	create_provider:function(res,cmd,me){
-		frappe.call({
-				method:'phr.templates.pages.provider.create_provider',
-				args:{'data': res,"id":cmd,"profile_id":me.entityid},
-				callback: function(r) {
-					console.log(r)
-					if(r.message) {
-						if(r.message.returncode==129){
-							me.add_profile_to_link(r.message.actualdata,r.message.entityid)
-						}
-					}
-				}
-			})
+		console.log(me)
+		// frappe.call({
+		// 		method:'phr.templates.pages.provider.create_provider',
+		// 		args:{'data': res,"id":cmd,"profile_id":me.entityid},
+		// 		callback: function(r) {
+		// 			console.log(r)
+		// 			if(r.message) {
+		// 				if(r.message.returncode==129){
+		// 					me.add_profile_to_link(r.message.actualdata,r.message.entityid)
+		// 				}
+		// 			}
+		// 		}
+		// 	})
 	},
 	update_phr:function(res,cmd,me){
 		frappe.call({

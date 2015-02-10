@@ -53,17 +53,16 @@
 			"fieldname":"", 
 			"fieldtype":"column_break", 
 			"label":""
+		},
+		{
+			"fieldname":"doctor_name",
+			"fieldtype":"data", 
+			"label":"Provider Name"
 		},	
 		{
 			"fieldname":"doctor_id", 
 			"fieldtype":"data", 
 			"label":"Provider id",
-			"depends_on":"share_via:Provider Account"
-		},
-		{
-			"fieldname":"doctor_name",
-			"fieldtype":"data", 
-			"label":"Provider Name",
 			"depends_on":"share_via:Provider Account"
 		},
 		{

@@ -387,13 +387,12 @@ def build_visit_data(data):
     	[
      		"Date", 
      		"visit description", 
-     		"Provider's Name", 
-     		"Providers Type"
+     		"Provider's Name"
     	]
    ]	
 	if (data["visitList"]):
 		for d in data["visitList"]:
-			rows.extend([[d["str_visit_date"],d["visit_descripton"],d["doctor_name"],d["provider_type"]]])
+			rows.extend([[d["str_visit_date"],d["visit_descripton"],d["doctor_name"]]])
 	visit_dic={"fieldname":"visits","fieldtype": "table","label": "Visits","rows":rows}
 	return visit_dic
 
@@ -408,7 +407,7 @@ def build_event_data(data):
    ]	
 	if (data["eventList"]):
 		for d in data["eventList"]:
-			rows.extend([[d["event_title"],d["event_date"],d["event_symptoms"][0],d["diagnosis_desc"]]])
+			rows.extend([[d["event_title"],d["event_date"],d["event_symptoms"],d["diagnosis_desc"]]])
 	event_dic={"fieldname":"events","fieldtype": "table","label": "Events","rows":rows}
 	return event_dic
 

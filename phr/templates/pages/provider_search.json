@@ -4,7 +4,7 @@
 			"fieldname":"provider_type", 
 			"fieldtype":"link", 
 			"label":"Provider Type",
-			"options":"Events",
+			"options":"Provider Type",
 			"multiselect":"false",
 			"description": "Autocomplete Field"
 		},

@@ -74,7 +74,10 @@ $.extend(ThumbNails.prototype,{
 						],
 	            		"file_location": [
 	            			attachment['site_path'] +'/'+ me.args['profile_id'] + '/' +  $('input[name="entityid"]').val() + '/' + me.folder + '/' +  me.sub_folder + '/' + attachment['file_name']
-						]
+						],
+						"text_file_desc": $('[name="attch_desc"]').val() ? $('[name="attch_desc"]').val() : "" ,
+						"text_file_id": $('[name="attch_desc"]').val() ? me.folder+'_'+me.sub_folder+'.pdf' : "",
+						"text_file_loc": $('[name="attch_desc"]').val() ? attachment['site_path'] +'/'+ me.args['profile_id'] + '/' +  $('input[name="entityid"]').val() + '/' + me.folder + '/' +  me.sub_folder + '/' + me.folder+'_'+me.sub_folder+'.pdf' : ""
 				})
 				me.render_uploader_and_files();
 			}
@@ -94,7 +97,9 @@ $.extend(ThumbNails.prototype,{
 		frappe.call({
 			method:"phr.templates.pages.event.get_attachments",
 			args:{'profile_id': me.args['profile_id'], 'folder':me.folder, 
-				'sub_folder': me.sub_folder, 'event_id': $('input[name="entityid"]').val()},
+				'sub_folder': me.sub_folder, 
+				'event_id': $('input[name="event_id"]').val() ? $('input[name="event_id"]').val() : $('input[name="entityid"]').val(),
+				'visit_id': $('input[name="event_id"]').val() ? $('input[name="entityid"]').val() : ''},
 			callback:function(r){
 				me.create_attachement_renderer(r.message)
 			}
@@ -113,6 +118,7 @@ $.extend(ThumbNails.prototype,{
 			attachment['display'] = me.args['display'];
 			me.render_attachemnt(attachment, row)
 		})
+		this.image_gallery(attachments)
 	},
 	render_attachemnt:function(attachment, row){
 		var me = this;
@@ -140,7 +146,9 @@ $.extend(ThumbNails.prototype,{
 				// me.doc_list.push( me.args['profile_id'] + '/' +  $('input[name="entityid"]').val() + '/' + me.folder + '/' +  me.sub_folder + '/' + $(this).val())
 			}
 		});
+		this.image_gallery()
+	},
+	image_gallery: function(){
 
-	
 	}
 })

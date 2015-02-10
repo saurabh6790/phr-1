@@ -36,12 +36,13 @@ def link_provider(res, data):
 	user=frappe.get_doc("User",frappe.user.name)
 
 	pl = frappe.get_doc({
-		"doctype":"Providers Linked",
-		"patient":user.profile_id,
+		"doctype": "Providers Linked",
+		"patient": user.profile_id,
+		"provider_type": data.get('provider_type'), 
 		"email": data.get('email'),
 		"mobile": data.get('mobile'),
 		"name1": data.get('name'),
-		"provider":res["entityid"],
+		"provider": res["entityid"],
 		"status": "Active",
 		"created_via": "Web"
 	})

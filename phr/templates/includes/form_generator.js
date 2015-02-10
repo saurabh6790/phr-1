@@ -178,8 +178,31 @@ $.extend(RenderFormFields.prototype,{
 							</div>\
 						</div>\
 				</div>', field_meta)).appendTo($(this.column))
-		
-		$.each(field_meta['options'],function(i, val){
+
+
+		if (typeof(field_meta['options']) === "string"){
+			$loc_ip = $input;
+			frappe.call({
+				method:'phr.templates.pages.patient.get_master_details',
+				args:{'doctype': field_meta['options']},
+				callback: function(r){
+						$.each(r.message,function(i, val){
+							console.log($loc_ip.find('select'))
+							$option=$('<option>', { 
+								'value': val,
+								'text' : val 
+							}).appendTo($($loc_ip.find('select')))
+							console.log($option)
+							if (field_meta['value']==val){
+							 $option.attr('selected','selected')
+							}
+							$option.appendTo($($loc_ip.find('select')))
+						})
+				}
+			})
+		}
+		else{
+			$.each(field_meta['options'],function(i, val){
 				$option=$('<option>', { 
 					'value': val,
 					'text' : val 
@@ -188,7 +211,9 @@ $.extend(RenderFormFields.prototype,{
 				 $option.attr('selected','selected')
 				}
 				$option.appendTo($($input.find('select')))
-		})
+			})
+		}
+	
 		if(field_meta['required']==1){
 			$input.find("select").prop('required',true)
 			$input.find("select").css({"border": "1px solid #999","border-color": "red" });
@@ -212,6 +237,8 @@ $.extend(RenderFormFields.prototype,{
 						</div>\
 				</div>', field_meta)).appendTo($(this.column))
 
+		console.log(['link_field_renderer', typeof(field_meta['value'])])
+
 		frappe.require("/assets/phr/js/jquery.autocomplete.multiselect.js");
 		console.log(typeof(field_meta['options']))
 
@@ -222,6 +249,11 @@ $.extend(RenderFormFields.prototype,{
 				callback: function(r){
 					console.log(['link',r.message])
 					$($input.find('.autocomplete')).autocomplete({
+						open: function(){
+							setTimeout(function () {
+								$('.ui-autocomplete').css('z-index', 99999999999999);
+							}, 0);
+						},
 						source: r.message,
 						multiselect: field_meta['multiselect'] == "false" ? false:true
 					});
@@ -242,6 +274,15 @@ $.extend(RenderFormFields.prototype,{
 		}
 
 		this.set_description($input.find('.control-input'), field_meta)
+
+		if(typeof(field_meta['value']) === "object"){
+			$.each(field_meta['value'], function(i,j){
+				$('<div class="ui-autocomplete-multiselect-item">'+j+'\
+					<span class="ui-icon ui-icon-close"></span>\
+				</div>').appendTo($input.find('.ui-autocomplete-multiselect'))	
+			})
+			
+		}
 
 		// $($input.find('.autocomplete')).autocomplete({
   //       source: function(request, response){
@@ -363,6 +404,10 @@ $.extend(RenderFormFields.prototype,{
 		if(field_meta['required']==1){
 			$input.find("input").prop('required',true);
 			$input.find("input").css({"border": "1px solid #999","border-color": "red" });
+		}
+
+		if(field_meta['display']){
+			$($('[name="'+field_meta['fieldname']+'"]').parents()[3]).css("display", field_meta['display']);
 		}
 
 		this.set_description($input.find('.control-input'), field_meta)

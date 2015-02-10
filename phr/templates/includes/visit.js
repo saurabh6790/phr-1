@@ -15,7 +15,7 @@ var Visit = inherit(ListView,{
 		this.wrapper = wrapper;
 		$('#main-con').empty();
 		this.selected_files = [];
-		console.log(['123',profile_id])
+		this.profile_id = profile_id
 		ListView.prototype.init(this.wrapper, {"file_name": "visit", 
 			'cmd':"event.get_visit_data",
 			'tab_at': 4,
@@ -38,17 +38,23 @@ var Visit = inherit(ListView,{
 		</tr>').insertBefore('table > thead > tr:first')
 
 		$("<button class='btn btn-primary'> Share </button>").click(function(){
-				$('.table').find('tr').each(function () {
+			$('.table').find('thead').each(function(){
+				var row = $(this);
+				$('th', row).map(function(index, th) {
+					if ($(th).find('input[type="checkbox"]').is(':checked')) {
+						console.log($(th).find('input[type="checkbox"]').attr('id'))
+						me.selected_files.push($(th).find('input[type="checkbox"]').attr('id'))
+					}
+				})
+			})
+			console.log(me.selected_files)
+			$('.table').find('tr').each(function () {
 				var row = $(this);
 				$('td', row).map(function(index, td) {
-				     if ($(td).find('input[type="checkbox"]').is(':checked')) {
-						me.selected_files.push($(td).find('input[type="checkbox"]').attr('id'))
-					}
 					if ($(td).find('input[name="visit"]').is(':checked')) {
 						me.selected_files.push($(td).find('input[name="visit"]').attr('id'))
 					}
 				});
-
 			})
 
 			$('<li><a nohref>Share Pannel</a></li>').click(function(){

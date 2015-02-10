@@ -16,7 +16,9 @@ def get_response(url,data,request_type):
 	print jsonobj
 	headers = {"content-type": "application/x-www-form-urlencoded"}
 	if request_type=='POST':
+		print 'request_type', request_type
 		try:
+			print url,jsonobj, headers
 			response = requests.post(url, data=jsonobj, headers=headers)
 		except Exception, e:
 			return "No Connection"

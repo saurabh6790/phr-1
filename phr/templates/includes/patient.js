@@ -44,6 +44,7 @@ $(document).ready(function () {
 function bind_events(){
 	profile_id=sessionStorage.getItem("cid")
 	$("#home").on("click",function(){
+		$('.linked-phr').remove()
 		profile_id=sessionStorage.getItem("pid")
 		$('#linkedphr').show()
 		sessionStorage.setItem("cid",profile_id)
@@ -65,12 +66,13 @@ function bind_events(){
 			{"file_name" : "profile", "method": "profile"},profile_id)
 	})
 	$('.event').unbind("click").click(function(){
+		profile_id=sessionStorage.getItem("cid")
 		$('.breadcrumb').empty()
 		$('<li><a nohref>Event</a></li>').click(function(){
 			$('.breadcrumb li').nextAll().remove()
-			Event.prototype.init('', '', sessionStorage.getItem("cid"))
+			Events.prototype.init('', '', profile_id)
 		}).appendTo('.breadcrumb');
-		Event.prototype.init('', '', sessionStorage.getItem("cid"))
+		window.Events.prototype.init('', '', profile_id)
 	})
 	$('.visit').unbind("click").click(function(){
 		$('.breadcrumb').empty()
@@ -117,10 +119,10 @@ function bind_events(){
 		LinkedPHR.prototype.init($(document).find("#main-con"),
 			{"file_name" : "linked_patient"},"","create_linkphr")
 	})
-	$(".create_provider").unbind("click",function(){
-		alert('hiiiii')
-		/*Provider.prototype.init($(document).find("#main-con"),
-			{"file_name" : "provider"},"","create_provider")*/
+	$(".create_provider").unbind("click").click(function(){
+		// alert('hiiiii')
+		Provider.prototype.init($(document).find("#main-con"),
+			{"file_name" : "provider"},"","create_provider")
 	})
 	$(".view_provider").unbind("click").click(function(){
 		Provider.prototype.init($(document).find("#main-con"), 
