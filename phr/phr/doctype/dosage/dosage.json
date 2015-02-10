@@ -1,6 +1,6 @@
 {
  "allow_copy": 0, 
- "allow_import": 0, 
+ "allow_import": 1, 
  "allow_rename": 0, 
  "autoname": "field:dosage", 
  "creation": "2015-01-24 15:44:05.941115", 
@@ -45,7 +45,7 @@
  "is_submittable": 0, 
  "issingle": 0, 
  "istable": 0, 
- "modified": "2015-02-05 15:59:05.022181", 
+ "modified": "2015-02-05 18:30:12.931861", 
  "modified_by": "Administrator", 
  "module": "phr", 
  "name": "Dosage", 
