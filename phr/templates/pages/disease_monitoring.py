@@ -156,7 +156,6 @@ def render_table_on_db(profile_id,event_master_id,name):
 	if name:
 		data=get_disease_fields(name,profile_id)
 		if data['values']:
-			frappe.errprint(data['values'][len(data['values'])-1])
 			return {
 				"res_list":data['values'][len(data['values'])-1],
 				"rtcode":1
@@ -164,7 +163,6 @@ def render_table_on_db(profile_id,event_master_id,name):
 
 @frappe.whitelist()
 def share_dm(data, header, share_info, profile_id, disease=None):
-	frappe.errprint(disease)
 	share_info = eval(share_info)
 	frappe.create_folder(os.path.join(get_files_path() , profile_id))
 	save_pdf(data, header, profile_id, disease)

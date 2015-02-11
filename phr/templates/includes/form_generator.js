@@ -166,6 +166,27 @@ $.extend(RenderFormFields.prototype,{
 
 		this.set_description($input.find('.control-input'), field_meta)
 	},
+	password_field_renderer: function(field_meta){
+		var me=this;
+		$input=$(repl_str('<div class="form-horizontal frappe-control" style="max-width: 600px;margin-top:10px;">\
+						<div class="form-group row" style="margin: 0px">\
+							<label class="control-label small col-xs-4" style="padding-right: 0px;">%(label)s</label>\
+							<div class="col-xs-8">\
+								<div class="control-input">\
+									<input type="password" class="form-control" \
+										placeholder="%(label)s" name="%(fieldname)s"\
+										aria-describedby="basic-addon2">\
+								</div>\
+							</div>\
+						</div>\
+				</div>', field_meta)).appendTo($(this.column))
+		if(field_meta['required']==1){
+			$input.find("input").prop('required',true)
+			$input.find("input").css({"border": "1px solid #999","border-color": "red" });
+		}
+
+		this.set_description($input.find('.control-input'), field_meta)
+	},
 	select_field_renderer: function(field_meta){
 		$input = $(repl_str('<div class="form-horizontal frappe-control" style="max-width: 600px;margin-top:10px;">\
 						<div class="form-group row" style="margin: 0px">\
@@ -397,8 +418,8 @@ $.extend(RenderFormFields.prototype,{
 					})
 			var val = field_meta['value'];
 			if(val){
-			var date=new Date(val)
-			$input.find('input').val($.datepicker.formatDate('dd/mm/yy',date))
+				var date=new Date(val)
+				$input.find('input').val($.datepicker.formatDate('dd/mm/yy',date))
 			}
 	
 		if(field_meta['required']==1){

@@ -6,10 +6,10 @@
 <script src="jQuery.jTableCheckbox.min.js"></script>
 <div class="list-group-side" id="profile" style="height:auto;margin-top:5%">
    <a href="#" class="list-group-item-side active">PHR Home</a>
-   <a noherf class="list-group-item-side" id='profile' data-name="">My Profile</a>
+   <a noherf class="list-group-item-side" id='profile' data-name="">Profile</a>
 </div>
 <div class="list-group-side" id="linkedphr">
-  <div href="" class="list-group-item-side active">Linked PHR's <a noherf class="create_linkphr" id="clp"><span style="float:right"><i class="icon-plus"></i></span></a></div>
+  <div class="list-group-item-side active">Linked PHR's <a noherf class="create_linkphr" id="clp"><span style="float:right"><i class="icon-plus"></i></span></a></div>
   <div id="clphr">
     <p class="nophr">No Linked PHR's</p>
   </div>  
@@ -31,6 +31,8 @@
 </div>
 {% endblock %}
 {% block content_area %}
+<script src="http://jqueryvalidation.org/files/dist/jquery.validate.min.js"></script>
+<script src="http://jqueryvalidation.org/files/dist/additional-methods.min.js"></script>
 <div style="padding-top:1%;">
 </div>
 <div class="top-bar" style="height:50px;">

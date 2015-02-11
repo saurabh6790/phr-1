@@ -30,25 +30,29 @@ var Provider = inherit(RenderFormFields, {
 			if (me.operation=='create_provider'){
 				me.create_provider(me.res,$id,me)
 			}
-			else if (me.operation=='open_linkphr') {
+			/*else if (me.operation=='open_linkphr') {
 				me.update_phr(me.res,$id,me)
-			};		
+			};*/		
 		})
 	},
 	create_provider:function(res,cmd,me){
-		console.log(me)
-		// frappe.call({
-		// 		method:'phr.templates.pages.provider.create_provider',
-		// 		args:{'data': res,"id":cmd,"profile_id":me.entityid},
-		// 		callback: function(r) {
-		// 			console.log(r)
-		// 			if(r.message) {
-		// 				if(r.message.returncode==129){
-		// 					me.add_profile_to_link(r.message.actualdata,r.message.entityid)
-		// 				}
-		// 			}
-		// 		}
-		// 	})
+		frappe.call({
+			method:'phr.templates.pages.provider.create_provider',
+			args:{'data': res,"id":cmd,"profile_id":sessionStorage.getItem("cid")},
+			callback: function(r) {
+				console.log(r)
+				if(r.message) {
+					if(r.message.returncode==129){
+						$("input").val("");
+						frappe.msgprint(r.message.message_summary)
+						me.add_profile_to_link(r.message.actualdata,r.message.entityid)
+					}
+					else{
+						frappe.msgprint(r.message.message_summary)
+					}
+				}
+			}
+		})
 	},
 	update_phr:function(res,cmd,me){
 		frappe.call({
@@ -67,7 +71,4 @@ var Provider = inherit(RenderFormFields, {
 		var db = new render_dashboard();
 		db.render_providers(sessionStorage.getItem("cid"))
 	}	
-
-
-
 })

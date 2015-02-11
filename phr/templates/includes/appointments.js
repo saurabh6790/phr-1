@@ -19,6 +19,7 @@ var Appointments = inherit(ListView,{
 		ListView.prototype.init($(document).find(".field-area"), {"file_name" : "appointments",
 			'cmd':"appointments.get_appointments",
 			'profile_id':profile_id})
+		$('.new_controller').remove();
 		me.bind_save_event()
 
 	},

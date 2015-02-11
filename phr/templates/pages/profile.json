@@ -59,6 +59,11 @@
       "label": "Blood Group"
    },
    {
+      "fieldname": "habits", 
+      "fieldtype": "text", 
+      "label": "Habits"
+   },
+   {
       "fieldname": "allergies", 
       "fieldtype": "text", 
       "label": "Allergies"
@@ -165,17 +170,17 @@
    },
    {
       "fieldname": "old_password", 
-      "fieldtype": "data", 
+      "fieldtype": "password", 
       "label": "Old Password"
    },
    {
       "fieldname": "new_password", 
-      "fieldtype": "data", 
+      "fieldtype": "password", 
       "label": "New Password"
    },
    {
       "fieldname": "cnf_new_password", 
-      "fieldtype": "data", 
+      "fieldtype": "password", 
       "label": "Confirm Password"
    },
    {

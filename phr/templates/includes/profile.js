@@ -43,7 +43,7 @@ var PatientDashboard = inherit(RenderFormFields, {
 			selected=[]
 			var $id=$('.tab-pane.active').attr('id')
 			$(".tab-pane.active form input, .tab-pane.active form textarea, .tab-pane.active form select").each(function(i, obj) {
-				me.res[obj.name] = $(obj).val();
+				me.res[obj.name] = $(obj).val();	 
 			})
 			$(".tab-pane.active form").find(".chk:checked").each(function() {
 				selected.push($(this).val());
@@ -94,7 +94,7 @@ var PatientDashboard = inherit(RenderFormFields, {
 				console.log(r)
 				if(r.message) {
 					$("input").val("");
-					var dialog = frappe.msgprint(r.message);
+					frappe.msgprint(r.message);
 				}
 			}
 		});
@@ -106,13 +106,13 @@ var PatientDashboard = inherit(RenderFormFields, {
 			callback: function(r) {
 				console.log(r)
 				if(r.message) {
-					$("input").val("");
-					var dialog = frappe.msgprint(r.message);
+					frappe.msgprint(r.message);
 				}
 			}
 		})
 	},
 	get_linked_phrs:function(profile_id){
+		alert("hgfhgasfhasgf")
 		var me=this;
 		frappe.call({
 			method:'phr.templates.pages.profile.get_linked_phrs',
@@ -173,7 +173,6 @@ var PatientDashboard = inherit(RenderFormFields, {
 		})
 	},
 	get_enabled_notification:function(profile_id){
-		console.log(["hiiii",profile_id])
 		var me=this;
 		frappe.call({
 			method:'phr.templates.pages.profile.get_enabled_notification',

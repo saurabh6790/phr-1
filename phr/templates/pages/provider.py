@@ -12,12 +12,12 @@ from phr.templates.pages.patient import get_base_url
 import json
 
 @frappe.whitelist(allow_guest=True)
-def create_provider(data,id=None):
-	res=create_provider_in_solr(data)
+def create_provider(data,id=None,profile_id=None):
+	res=create_provider_in_solr(data,profile_id)
 	return res
 
 @frappe.whitelist(allow_guest=True)
-def create_provider_in_solr(data):
+def create_provider_in_solr(data,profile_id):
 	request_type="POST"
 	url=get_base_url()+'createProvider'
 	from phr.phr.phr_api import get_response
@@ -26,18 +26,17 @@ def create_provider_in_solr(data):
 	print res
 	print res['returncode']
 	if res['returncode']==129:
-		link_provider(res, data)
+		link_provider(res, data,profile_id)
 		create_provider_master_entry(res, data)
 		return res
 
 
-def link_provider(res, data):
+def link_provider(res, data,profile_id):
 	data = json.loads(data)
-	user=frappe.get_doc("User",frappe.user.name)
-
+	#user=frappe.get_doc("User",frappe.user.name)#change logic to profile_id pass profile id  
 	pl = frappe.get_doc({
 		"doctype": "Providers Linked",
-		"patient": user.profile_id,
+		"patient": profile_id,
 		"provider_type": data.get('provider_type'), 
 		"email": data.get('email'),
 		"mobile": data.get('mobile'),
@@ -52,8 +51,7 @@ def link_provider(res, data):
 
 def create_provider_master_entry(res, data):
 	data = json.loads(data)
-	user=frappe.get_doc("User",frappe.user.name)
-
+	#user=frappe.get_doc("User",frappe.user.name)
 	pl = frappe.get_doc({
 		"doctype":"Provider",
 		"provider_category": "Contact List",
