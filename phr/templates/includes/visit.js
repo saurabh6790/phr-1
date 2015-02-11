@@ -15,7 +15,9 @@ var Visit = inherit(ListView,{
 		this.wrapper = wrapper;
 		$('#main-con').empty();
 		this.selected_files = [];
-		this.profile_id = profile_id
+		this.dms_file_list = [];
+		this.doc_list = [];
+		this.profile_id = profile_id;
 		ListView.prototype.init(this.wrapper, {"file_name": "visit", 
 			'cmd':"event.get_visit_data",
 			'tab_at': 4,
@@ -61,11 +63,23 @@ var Visit = inherit(ListView,{
 					$(this).nextAll().remove()
 					// $(this).remove()
 					$('.uploader').remove();
-					SharePhr.prototype.init(me.wrapper, {'selected_files':me.selected_files})
+					SharePhr.prototype.init(me.wrapper,  {"file_name" : "share_phr_visit", 
+						"method": "visit", 
+						'event_id': $(me.selected_files).last()[0], 
+						'selected_files':me.selected_files, 
+						'doc_list': me.doc_list, 
+						"profile_id":me.profile_id
+					})
 					
 			}).appendTo('.breadcrumb');
 
-			SharePhr.prototype.init(me.wrapper, {"file_name" : "share_phr_visit", "method": "visit", 'event_id': $(me.selected_files).last()[0], 'selected_files':me.selected_files, 'doc_list': me.doc_list, "profile_id":me.profile_id})
+			SharePhr.prototype.init(me.wrapper, {"file_name" : "share_phr_visit", 
+				"method": "visit", 
+				'event_id': $(me.selected_files).last()[0], 
+				'selected_files':me.selected_files, 
+				'doc_list': me.doc_list, 
+				"profile_id":me.profile_id
+			})
 			
 		}).appendTo($('.field-area'))
 
@@ -188,7 +202,10 @@ var Visit = inherit(ListView,{
 				$('.uploader').empty();
 				me.sub_folder = $(this).attr('id');
 				ThumbNails.prototype.init(me.wrapper, {'folder':me.folder, 
-						'sub_folder':me.sub_folder, 'profile_id':'123456789', 'display':'initial'})
+						'sub_folder':me.sub_folder, 
+						'profile_id': me.profile_id, 
+						'display':'initial',
+						'dms_file_list': me.dms_file_list})
 				// me.render_uploader_and_files();
 			})	
 	},

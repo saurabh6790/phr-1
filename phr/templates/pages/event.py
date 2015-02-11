@@ -115,12 +115,10 @@ def get_attachments(profile_id, folder, sub_folder, event_id, visit_id=None):
 	else:
 		path = os.path.join(get_files_path(), profile_id, event_id, folder, sub_folder, visit_id)
 
-	frappe.errprint("path")
 	if os.path.exists(path):
 		for root, dirc, filenames in os.walk(path):
 			for di in dirc:
 				for fl in os.listdir(os.path.join(path,di)):
-					frappe.errprint([fl.split('.')[-1:][0], di])
 					if fl.split('.')[-1:][0] in ['jpg','jpeg','pdf','png', 'PDF']:
 						files.append({'file_name': fl, 'type':fl.split('.')[-1:][0], 
 							'path': os.path.join('files', profile_id, event_id, folder, sub_folder, di)})
@@ -128,7 +126,7 @@ def get_attachments(profile_id, folder, sub_folder, event_id, visit_id=None):
 		for fl in os.listdir(path):
 			if fl.split('.')[-1:][0] in ['jpg','jpeg','pdf','png', 'PDF']:
 				files.append({'file_name': fl, 'type':fl.split('.')[-1:][0], 
-					'path': os.path.join('files', profile_id, event_id, folder, sub_folder)})
+					'path': os.path.join('files', profile_id, event_id, folder, sub_folder, visit_id)})
 					
 
 	return files

@@ -47,9 +47,6 @@ $.extend(ThumbNails.prototype,{
 					</div>\
 				</div>\
 			</div>\
-			<button  id="convert_to_pdf"\
-				aria-describedby="basic-addon2"> <i class="icon-upload"></i>\
-				 Attach As Pdf </button>\
 			',{'uploader_display':me.uploader_display})).appendTo($('.field-area'))
 		
 		$('#convert_to_pdf').click(function(){
@@ -64,6 +61,7 @@ $.extend(ThumbNails.prototype,{
 				'sub_folder': me.sub_folder, 'event_id': $('input[name="entityid"]').val()},
 			callback:function(attachment, r) {
 				console.log([attachment, r])
+				NProgress.done();
 				me.args['dms_file_list'].push(
 					{
 						"tag_id": me.folder.split('-')[1]+''+me.sub_folder.split('_')[1],
@@ -132,7 +130,7 @@ $.extend(ThumbNails.prototype,{
 		else if((/\.(gif|jpg|jpeg|tiff|png)$/i).test(attachment['file_name']) ){
 			$('<td style="width:200px;height:200px;padding-right:20px;vertical-align:top;">')
 				.html($(repl('<div>\
-						<input type="checkbox" name="image" style="display:%(display)s" value="%(file_name)s" >\
+						<input type="checkbox" name="image" style="display:%(display)s" value="/%(path)s/%(file_name)s" >\
 					</div>\
 					<img style="height:150px;" src="/%(path)s/%(file_name)s">\
 					<br><label style="width: 150px;word-wrap: break-word;">%(file_name)s</label>',attachment))).appendTo(row)
@@ -140,7 +138,9 @@ $.extend(ThumbNails.prototype,{
 
 		$("input[type=checkbox]").on( "click", function(){
 			if($(this).is(':checked')){
-				file_path = $($(this).parents()[1]).find('img').attr('src')
+				// file_path = $($(this).parents()[1]).find('img').attr('src')
+				file_path = $(this).val()
+				console.log(file_path)
 				// console.log(str.substring(7, str.length))
 				me.doc_list.push(file_path.substring(7, file_path.length))
 				// me.doc_list.push( me.args['profile_id'] + '/' +  $('input[name="entityid"]').val() + '/' + me.folder + '/' +  me.sub_folder + '/' + $(this).val())

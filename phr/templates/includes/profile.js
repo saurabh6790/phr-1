@@ -31,6 +31,7 @@ var PatientDashboard = inherit(RenderFormFields, {
 			}
 		})
 		$('.save_controller').bind('click',function(event) {
+			NProgress.start();
 			var $id=$('.tab-pane.active').attr('id')
 			if ($id=='dashboard'){
 				if (($('#dashboard.tab-pane.active form').find("input:checkbox:checked").length)!=4){
@@ -105,6 +106,7 @@ var PatientDashboard = inherit(RenderFormFields, {
 			args:{'data': res,"id":cmd,"dashboard":selected},
 			callback: function(r) {
 				console.log(r)
+				NProgress.done();
 				if(r.message) {
 					frappe.msgprint(r.message);
 				}
