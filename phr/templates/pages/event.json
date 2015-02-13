@@ -54,7 +54,7 @@
 			"label":"Complaint Description"
 		},
 		{
-			"fieldname": "diagnosis",
+			"fieldname": "diagnosis_desc",
 			"fieldtype": "text",
 			"label": "Diagnosis",
 			"display": "none"

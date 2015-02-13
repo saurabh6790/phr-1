@@ -56,6 +56,7 @@ def create_provider_master_entry(res, data):
 
 	pl = frappe.get_doc({
 		"doctype":"Provider",
+		"provider_id": res["entityid"],
 		"provider_category": "Contact List",
 		"provider_type": data.get('provider_type'),
 		"provider_name": data.get('name'),
@@ -72,3 +73,15 @@ def create_provider_master_entry(res, data):
 def get_provider_List(profile_id):
 	return frappe.db.sql("""select name1,provider from `tabProviders Linked` 
 		where patient='%s' order by creation desc"""%(profile_id),as_dict=1)
+
+@frappe.whitelist()
+def get_self_details(profile_id):
+	profile_info = frappe.db.sql(""" select p.provider_id, p.mobile_number,
+			 p.email, p.provider_name, p.provider_type
+			from tabProvider p, tabUser u 
+			where p.provider_id=u.profile_id 
+				and u.profile_id="%s" 
+				and u.access_type="Provider" 
+		"""%(profile_id),as_dict=1, debug=1)
+	frappe.errprint(profile_info)
+	return ((len(profile_info) > 1 ) and profile_info[0]) if profile_info else None

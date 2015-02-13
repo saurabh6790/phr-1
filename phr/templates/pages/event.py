@@ -2,7 +2,7 @@ import frappe
 import json
 import os 
 from frappe.utils import getdate, date_diff, nowdate, get_site_path, get_hook_method, get_files_path, \
-		get_site_base_path, cstr, cint
+		get_site_base_path, cstr, cint, today
 from phr.templates.pages.patient import get_data_to_render
 from phr.phr.phr_api import get_response
 import datetime
@@ -73,7 +73,7 @@ def update_event(data):
 			"visit_descripton": data.get('event_descripton'),
 			"received_from": "Desktop",
 			"str_visit_date": data.get('visit_date'),
-			"diagnosis_desc": data.get('diagnosis')
+			"diagnosis_desc": data.get('diagnosis_desc')
 	}
 
 	import datetime
@@ -174,7 +174,7 @@ def share_via_email(data):
 		sendmail([data.get('email_id')], subject="PHR-Event Data", msg=cstr(msg),
 				attachments=attachments)
 
-		return """Selected images has been shared with 
+		return """Selected image(s) has been shared with 
 			%(provider_name)s for event %(event)s """%{
 				'event': data.get('event_title'),
 				'provider_name': data.get('doctor_name')}
@@ -202,6 +202,7 @@ def share_via_providers_account(data):
 
 		response=get_response(url, json.dumps(event_data), request_type)
 		
+		make_sharing_request(event_data, data)
 		return eval(json.loads(response.text).get('sharelist'))[0].get('message_summary')
 
 	else:
@@ -227,8 +228,22 @@ def share_via_providers_account(data):
 		event_data = {'sharelist': sharelist}
 		
 		response=get_response(url, json.dumps(event_data), request_type)
-
+		make_sharing_request(event_data, data)
 		return json.loads(json.loads(response.text).get('sharelist'))[0].get('message_summary')
+
+def make_sharing_request(event_data, data):
+	req = frappe.new_doc('Shared Requests')
+	d = event_data.get('sharelist')[0]
+
+	frappe.errprint([d, type(d), data])
+
+	req.event_id = d.get("event_tag_id")
+	req.provider_id = d.get("to_profile_id")
+	req.date = today()
+	req.patient = d.get("from_profile_id")
+	req.reason = data.get('reason')
+	req.event_title = data.get("event_title")
+	req.save()
 
 @frappe.whitelist(allow_guest=True)
 def get_visit_data(data):
