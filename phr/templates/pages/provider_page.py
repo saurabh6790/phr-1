@@ -71,6 +71,7 @@ def get_patient_data(data):
 	fields, values, tab = get_data_to_render(data)
 	dms_files = []
 	file_dict = {}
+	print "\n\n--------------------------patient data------------------"
 	request_type="POST"
 	url="%s/sharephr/searchsharedeventdata"%get_base_url()
 	from phr.phr.phr_api import get_response
@@ -93,7 +94,7 @@ def get_patient_data(data):
 			data = ["""<a nohref id="%(entityid)s" 
 						onclick="Events.prototype.open_form('%(entityid)s', '%(event_title)s', '%(profile_id)s')"> 
 					%(event_title)s </a>"""%{"entityid": event['entityid'],"event_title": event['event_title'], 
-					"profile_id":data_dict.get('profile_id')}, 
+					"profile_id":data_dict.get('from_profile_id')}, 
 					datetime.datetime.fromtimestamp(cint(event['event_date'])/1000.0).strftime('%d/%m/%Y'), 
 					event['event_symptoms']]
 
@@ -126,9 +127,11 @@ def get_patient_data(data):
 							dms_files.append(file_dict)
 
 		request_type="POST"
-		url="%s/phr-api/dms/getvisitmultiplefile"%get_base_url()
+		url="%s/dms/getvisitmultiplefile"%get_base_url()
 		from phr.phr.phr_api import get_response
-
+		print "===========DMS FILES======================"
+		print dms_files
+		print "-----***************************----------"
 		param = {"filelist": dms_files}
 		response=get_response(url, json.dumps(param), request_type)
 
@@ -153,3 +156,13 @@ def get_dm_data(rows, data_dict):
 		rows.extend([data])
 	return rows
 
+@frappe.whitelist()
+def get_shared_request(profile_id):
+	return frappe.db.sql("""select name,event_title from `tabShared Requests` 
+				where ifnull(approval_status,'') not in ('Accepted', 'Rejected') 
+					and provider_id="%s" """%(profile_id), as_list=1)
+
+@frappe.whitelist()
+def update_flag(req_id):
+	frappe.db.sql("update `tabShared Requests` set approval_status = 'Accepted' where name = '%s'"%(req_id))
+	frappe.db.commit()

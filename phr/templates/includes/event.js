@@ -71,13 +71,14 @@ window.Events = inherit(ListView,{
 		$('[name="event_date"]').attr('disabled', 'disabled')
 		$($('[name="visit_date"]').parents()[3]).css("display", "inherit")
 
-		$($('[name="diagnosis"]').parents()[3]).css("display", "inherit");
+		$($('[name="diagnosis_desc"]').parents()[3]).css("display", "inherit");
 		$("#provider_name").click(function(){
 			me.dialog_oprations()
 		})
 		me.render_folder_section()
   		me.bind_events()
   		this.get_linked_providers()
+  		this.set_provider_details()
 	},
 	dialog_oprations: function(){
 		var me = this;
@@ -373,6 +374,7 @@ window.Events = inherit(ListView,{
 	},
 	bind_sub_section_events: function(){
 		var me = this;
+		me.dms_file_list = me.dms_file_list ? me.dms_file_list : []
 		$('#A_51, #B_52, #C_53').bind('click',function(){
 				$(".breadCrumb").last().remove();
 				$(repl_str("<li class=active'>%(id)s</li>\
@@ -384,5 +386,22 @@ window.Events = inherit(ListView,{
 						'dms_file_list': me.dms_file_list})
 				// me.render_uploader_and_files();
 			})	
+	},
+	set_provider_details:function(){
+		var me = this;
+		frappe.call({
+			method:"phr.templates.pages.provider.get_self_details",
+			args:{"profile_id":frappe.get_cookie("profile_id")},
+			callback:function(r){
+				if(r.message){
+					console.log(r.message[0])
+					$('[name="email_id"]').val(r.message[0]['email'])
+					$('[name="number"]').val(r.message[0]['mobile_number'])
+					$('[name="doctor_id"]').val(r.message[0]['provider_id'])
+					$('[name="provider_type"]').val(r.message[0]['provider_type'])
+					$('[name="doctor_name"]').val(r.message[0]['provider_name'])
+				}
+			}
+		})
 	}
 })

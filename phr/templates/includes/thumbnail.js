@@ -58,6 +58,7 @@ $.extend(ThumbNails.prototype,{
 				'sub_folder': me.sub_folder, 'event_id': $('input[name="entityid"]').val()},
 			callback:function(attachment, r) {
 				NProgress.done();
+				me.args['dms_file_list'] = me.args['dms_file_list'] ? me.args['dms_file_list'] : [];
 				me.args['dms_file_list'].push(
 					{
 						"tag_id": me.folder.split('-')[1]+''+me.sub_folder.split('_')[1],
