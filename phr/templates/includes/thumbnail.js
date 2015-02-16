@@ -14,8 +14,6 @@ $.extend(ThumbNails.prototype,{
 	init :function(wrapper, arg){
 		this.wrapper = wrapper;
 		this.args = arg;
-		console.log('in thumbnail')
-		console.log(arg)
 		this.doc_list = arg['doc_list']
 		this.folder = arg['folder'];
 		this.sub_folder = arg['sub_folder'];
@@ -25,7 +23,6 @@ $.extend(ThumbNails.prototype,{
 	render_uploader_and_files:function(){
 		var me = this;
 		$('.uploader').empty();
-		console.log(me.uploader_display)
 		$(repl_str('<div class="uploader">\
 			<h4> Uploaded Files </h4>\
 			<div id="uploaded_file">\
@@ -60,7 +57,6 @@ $.extend(ThumbNails.prototype,{
 			args:{'profile_id': me.args['profile_id'], 'folder':me.folder, 
 				'sub_folder': me.sub_folder, 'event_id': $('input[name="entityid"]').val()},
 			callback:function(attachment, r) {
-				console.log([attachment, r])
 				NProgress.done();
 				me.args['dms_file_list'].push(
 					{
@@ -87,11 +83,9 @@ $.extend(ThumbNails.prototype,{
 		frappe.require("/assets/phr/js/libs/sprintf.js");
 		
 		var doc = new jsPDF();
-		console.log(this)
 	},
 	show_attachments:function(){
 		var me = this;
-		console.log( me.args['profile_id'], me.folder, me.sub_folder )
 		frappe.call({
 			method:"phr.templates.pages.event.get_attachments",
 			args:{'profile_id': me.args['profile_id'], 'folder':me.folder, 
@@ -109,7 +103,6 @@ $.extend(ThumbNails.prototype,{
 
 		row = $('<tr>').appendTo(this.table)
 		$.each(attachments, function(i, attachment){
-			// console.log(i)
 			if((i+1)%4 == 0){
 				row = $('<tr>').appendTo(me.table)
 			}
@@ -120,7 +113,6 @@ $.extend(ThumbNails.prototype,{
 	},
 	render_attachemnt:function(attachment, row){
 		var me = this;
-		console.log(me.args)
 		if(attachment['type'] == 'pdf' || attachment['type'] == 'PDF'){
 			$td = $(repl('<td style="width:200px;\
 							height:200px;padding-right:20px;vertical-align:top;">\
@@ -140,8 +132,6 @@ $.extend(ThumbNails.prototype,{
 			if($(this).is(':checked')){
 				// file_path = $($(this).parents()[1]).find('img').attr('src')
 				file_path = $(this).val()
-				console.log(file_path)
-				// console.log(str.substring(7, str.length))
 				me.doc_list.push(file_path.substring(7, file_path.length))
 				// me.doc_list.push( me.args['profile_id'] + '/' +  $('input[name="entityid"]').val() + '/' + me.folder + '/' +  me.sub_folder + '/' + $(this).val())
 			}

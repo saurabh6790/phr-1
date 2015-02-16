@@ -10,6 +10,7 @@ from frappe.auth import _update_password
 from frappe import _
 from phr.templates.pages.patient import get_base_url
 import json
+from phr.phr.doctype.phr_activity_log.phr_activity_log import make_log
 
 @frappe.whitelist(allow_guest=True)
 def create_provider(data,id=None,profile_id=None):
@@ -28,12 +29,14 @@ def create_provider_in_solr(data,profile_id):
 	if res['returncode']==129:
 		link_provider(res, data,profile_id)
 		create_provider_master_entry(res, data)
+		provider=json.loads(data)
+		sub="created provider"+' '+Provider.get('name')
+		make_log(profile_id,"provider","create",sub)
 		return res
 
 
 def link_provider(res, data,profile_id):
 	data = json.loads(data)
-	#user=frappe.get_doc("User",frappe.user.name)#change logic to profile_id pass profile id  
 	pl = frappe.get_doc({
 		"doctype": "Providers Linked",
 		"patient": profile_id,
@@ -51,7 +54,6 @@ def link_provider(res, data,profile_id):
 
 def create_provider_master_entry(res, data):
 	data = json.loads(data)
-	#user=frappe.get_doc("User",frappe.user.name)
 	pl = frappe.get_doc({
 		"doctype":"Provider",
 		"provider_category": "Contact List",

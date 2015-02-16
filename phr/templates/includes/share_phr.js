@@ -13,7 +13,6 @@ SharePhr = function(){
 
 $.extend(SharePhr.prototype,{
 	init:function(wrapper, args){
-		console.log('test')
 		this.wrapper = wrapper;
 		this.args = args;
 		$(this.wrapper).empty()
@@ -31,9 +30,7 @@ $.extend(SharePhr.prototype,{
 		})
 		this.bind_controller()
 		this.render_folder_section()
-		console.log(['get get_linked_providers ', this.args['profile_id']])
 		Events.prototype.get_linked_providers(this.args['profile_id'])
-	 //  	me.bind_events()
 	},
 	bind_controller: function(){
 		
@@ -60,13 +57,9 @@ $.extend(SharePhr.prototype,{
 
 		$('#sharetab').empty()
 
-		console.log(this.args['selected_files'])
-
 		if(this.args['selected_files']){
-			console.log($.arrayIntersect(folders, this.args['selected_files']))
 			folders = $.arrayIntersect(folders, this.args['selected_files'])
 		}
-		console.log(folders)
 		$.each(folders, function(i, folder){
 			$(repl_str('<div id = "%(id)s">\
 							<div style = "display:inline-block;margin:5%; 5%;height:80px;text-align: center !important;"> \
@@ -134,9 +127,6 @@ $.extend(SharePhr.prototype,{
 		me.res['profile_id'] = me.args['profile_id'];
 		me.res['folder'] = me.folder;
 		me.res['sub_folder'] = me.sub_folder;
-
-		console.log(me.res)
-
 		frappe.call({
 			method:"phr.templates.pages.event.send_shared_data",
 			args:{"data":me.res},

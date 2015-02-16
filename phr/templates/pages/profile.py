@@ -43,11 +43,20 @@ def update_profile_solr(data,dashboard=None):
 	if res['returncode']==102:
 		sub="Profile Updated Successfully"
 		make_log(p.get('entityid'),"profile","update",sub)
+		update_user_details(p)
 		return "Profile Updated Successfully"
 	else:
 		frappe.errprint(res)
 		return "Error While Updating Profile"
 		
+def update_user_details(data):
+	frappe.db.sql("""update `tabUser` set 
+		first_name='%s',
+		middle_name='%s',
+		last_name='%s',
+		contact='%s' 
+		where profile_id='%s'"""%(data.get('person_firstname'),data.get('person_middlename'),data.get('person_lastname'),data.get('mobile'),data.get('entityid')))
+
 
 @frappe.whitelist(allow_guest=True)
 def update_password(data,dashboard=None):
@@ -81,6 +90,7 @@ def manage_notifications(data,dashboard=None):
 		update_values_notify(dashboard_fields,mn,obj.get('entityid'))
 		sub="Notifications Configuration Done"
 		make_log(obj.get('entityid'),"profile","Notifications",sub)
+		return "Notification Settings Updated"
 	else:
 		mn = frappe.get_doc({
 			"doctype":"Notification Configuration",
@@ -92,6 +102,7 @@ def manage_notifications(data,dashboard=None):
 		update_values_notify(dashboard_fields,mn.name,obj.get('entityid'))
 		sub="Notifications Configuration Done"
 		make_log(obj.get('entityid'),"profile","Notifications",sub)
+		return "Notification Settings Done"
 	
 def update_values_notify(dashboard_fields,name,profile_id):
 	for d in dashboard_fields:
@@ -114,7 +125,7 @@ def manage_dashboard(data,dashboard=None):
 		update_values(dashboard_fields,sr,obj.get('entityid'))
 		sub="Dashboard Configuration Done"
 		make_log(obj.get('entityid'),"profile","Dashboard",sub)
-		return "Dashboard Configuration Done"
+		return "Dashboard Configuration Updated"
 	else:
 		sr = frappe.get_doc({
 			"doctype":"Shortcut",
@@ -234,11 +245,14 @@ def delink_phr(selected,data,profile_id=None):
 	ids=json.loads(selected)
 	print obj
 	print ids
-	for id in ids:
-	 	print obj[id]
-		ret_res=delink_phr_solr(obj[id],id,profile_id)
-		print ret_res
-	return profile_id
+	if ids:
+		for id in ids:
+	 		print obj[id]
+			ret_res=delink_phr_solr(obj[id],id,profile_id)
+			print ret_res
+		return "Profile Delinked Successfully"
+	else:
+		return "Please Select PHR to Delink"
 
 def delink_phr_solr(data,id,profile_id):
 	solr_op='unlinkProfile'
@@ -291,8 +305,8 @@ def get_data_for_middle_section(profile_id):
 				res_list=build_dm_data(data,res_list)
 		if obj.get('visits')==1 or obj.get('events')==1:
 			data=get_data_from_solr(profile_id)
-			if data:
-				res_list=build_response(json.loads(data),obj,res_list) 
+			#if data:
+			res_list=build_response(data,obj,res_list) 
 		if obj.get('appointments')==1:
 			data=get_appointments(profile_id)
 			res_list=build_response_for_appointments(data,obj,res_list)
@@ -393,23 +407,25 @@ def build_dm_data(data,res_list):
 	res_list.append(dm_dic)	
 	return res_list
 
-def build_visit_data(data):
+def build_visit_data(obj):
 	rows=[
     	[
      		"Date", 
      		"visit description", 
      		"Provider's Name"
     	]
-   ]	
-	if (data["visitList"]):
-		for d in data["visitList"]:
-			rows.extend([[d["str_visit_date"],d["visit_descripton"],d["doctor_name"]]])
+   ]
+	if obj:
+		data=json.loads(obj)
+		if (data["visitList"]):
+			for d in data["visitList"]:
+				rows.extend([[d["str_visit_date"],d["visit_descripton"],d["doctor_name"]]])
 	else:
 		rows.extend([["","NO DATA",""]])
 	visit_dic={"fieldname":"visits","fieldtype": "table","label": "Visits","rows":rows}
 	return visit_dic
 
-def build_event_data(data):
+def build_event_data(obj):
 	rows=[
     	[
      		"Event Name", 
@@ -419,9 +435,11 @@ def build_event_data(data):
     	]
    ]	
    #datetime.datetime.fromtimestamp(cint(visit['event_date'])/1000.0)
-	if (data["eventList"]):
-		for d in data["eventList"]:
-			rows.extend([[d["event_title"],datetime.datetime.fromtimestamp(cint(d["event_date"])/1000.0),d["event_symptoms"],d["diagnosis_desc"]]])
+   	if obj:
+		data=json.loads(obj)
+		if data and data["eventList"]:
+			for d in data["eventList"]:
+				rows.extend([[d["event_title"],datetime.datetime.fromtimestamp(cint(d["event_date"])/1000.0),d["event_symptoms"],d["diagnosis_desc"]]])
 	else:
 		rows.extend([["","NO DATA","",""]])		
 	event_dic={"fieldname":"events","fieldtype": "table","label": "Events","rows":rows}
@@ -510,3 +528,8 @@ def get_advertisements(profile_id=None):
 			"rtcode":1
 		}
 		
+
+@frappe.whitelist(allow_guest=True)
+def get_states():
+	states=frappe.db.sql("""select name from `tabState`""",as_list=1)
+	return states

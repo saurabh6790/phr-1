@@ -28,29 +28,59 @@ var Appointments = inherit(ListView,{
 		this.res = {}
 		this.result_set = {};
 		this.doc_list = [] 
+		$('form input[required],form textarea[required],form select[required]').bind('change', function() { 
+   			if (!$(this).val()){
+   				$(this).css({"border": "1px solid #999","border-color": "red" });
+   			}
+   			else{
+   				$(this).css({"border": "1px solid #999","border-color": "F3F2F5" });	
+   			}
+		});
 		$('.update').bind('click',function(event) {
-			console.log(["me:",me.profile_id,"this:",this.profile_id])
-			$("form input, form textarea, form select").each(function(i, obj) {
-				me.res[obj.name] = $(obj).val();
-			})
-			me.res['profile_id'] = me.profile_id;
-			me.res['file_name']="appointments";
-			me.res['param']="listview";
-			frappe.call({
-				method:"phr.templates.pages.appointments.make_appomiments_entry",
-				args:{"data":JSON.stringify(me.res)},
-				callback:function(r){
-					if(r.message){
-						me.update_list_view(r.message)
+			NProgress.start();
+			var validated=me.validate_form()
+			if (validated==true){
+			
+				$("form input, form textarea, form select").each(function(i, obj) {
+					me.res[obj.name] = $(obj).val();
+				})
+				me.res['profile_id'] = me.profile_id;
+				me.res['file_name']="appointments";
+				me.res['param']="listview";
+				frappe.call({
+					method:"phr.templates.pages.appointments.make_appomiments_entry",
+					args:{"data":JSON.stringify(me.res)},
+					callback:function(r){
+						NProgress.done();
+						if(r.message){
+							me.update_list_view(r.message)
+						}
+						else{
+							
+						}
 					}
-					else{
-						
-					}
-				}
-			})
+				})
+			}
+			else{
+				NProgress.done();
+				frappe.msgprint("Fields Marked as Red Are Mandatory")
+				return false
+			}		
 						
 		})
 	},
+  	validate_form:function(){
+  		var me=this;
+  		var fg=true
+  		$("form input[required],form textarea[required],form select[required]").each(function(i, obj) {
+  			if ($(this).val()==""){
+  				$(this).css({"border": "1px solid #999","border-color": "red" });
+  				fg=false
+  			}
+  		})
+  		return fg	
+  		
+  	},
 	update_list_view:function(data){
 		var me = this;
 		RenderFormFields.prototype.init($(".field-area"), {'fields': data['listview']})

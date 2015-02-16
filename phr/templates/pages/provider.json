@@ -9,7 +9,8 @@
         {
             "fieldname": "name",
             "fieldtype": "data",
-            "label": "Name"
+            "label": "Name",
+            "placeholder":""
         },
         {
             "fieldname": "provider_type",
@@ -25,7 +26,8 @@
         {
             "fieldname": "visiting_hours",
             "fieldtype": "data",
-            "label": "Visiting Hours"
+            "label": "Visiting Hours",
+            "placeholder":""
         },
         {
             "fieldname": "",
@@ -35,13 +37,15 @@
         {
             "fieldname": "mobile",
             "fieldtype": "data",
-            "label": "Mobile"
+            "label": "Mobile",
+            "placeholder":""
         },
  
         {
             "fieldname": "email",
             "fieldtype": "data",
-            "label": "Email"
+            "label": "Email",
+            "placeholder":""
         },
         {
             "fieldname": "",
@@ -51,7 +55,8 @@
         {
             "fieldname": "address1",
             "fieldtype": "text",
-            "label": "Address Line 1"
+            "label": "Address Line 1",
+            "placeholder":""
         },
         {
             "fieldname": "",
@@ -61,7 +66,8 @@
         {
             "fieldname": "address2",
             "fieldtype": "text",
-            "label": "Address Line 2"
+            "label": "Address Line 2",
+            "placeholder":""
         },
         {
             "fieldname": "",
@@ -71,7 +77,8 @@
         {
             "fieldname": "comments",
             "fieldtype": "text",
-            "label": "Comemnts"
+            "label": "Comemnts",
+            "placeholder":""
         }
 
     ]

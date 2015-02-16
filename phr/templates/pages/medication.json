@@ -3,20 +3,23 @@
   {
    "fieldname": "medicine_name", 
    "fieldtype": "data", 
-   "label": "Medicine Name"
+   "label": "Medicine Name",
+   "placeholder":"", 
+   "required": 1
   }, 
   {
    "fieldname": "dosage_type", 
    "fieldtype": "select", 
    "label": "Dosage Type", 
-   "options": [
-    ""
-   ]
+   "placeholder":"",
+   "options":"Dosage",
+   "required": 1
   }, 
   {
    "depends_on": "dosage_type:Weekly", 
    "fieldname": "day", 
    "fieldtype": "select", 
+   "placeholder":"",
    "label": "Day", 
    "options": [
     "", 
@@ -33,29 +36,34 @@
    "depends_on": "dosage_type:Weekly", 
    "fieldname": "time", 
    "fieldtype": "time", 
+   "placeholder":"",
    "label": "Time"
   }, 
   {
    "depends_on": "dosage_type:Daily", 
    "fieldname": "morning", 
    "fieldtype": "time", 
-   "label": "Morning", 
-   "options": [
-    "", 
-    "Monday", 
-    "tuesday"
-   ]
-  }, 
+   "placeholder":"",
+   "label": "Morning"
+  },
+   {
+   "depends_on": "dosage_type:Daily", 
+   "fieldname": "afternoon", 
+   "fieldtype": "time", 
+   "label": "Afternoon"
+  },  
   {
    "depends_on": "dosage_type:Daily", 
    "fieldname": "evening", 
-   "fieldtype": "time", 
+   "fieldtype": "time",
+   "placeholder":"", 
    "label": "Evening"
   }, 
   {
    "depends_on": "dosage_type:Daily", 
    "fieldname": "night", 
    "fieldtype": "time", 
+   "placeholder":"",
    "label": "Night"
   }, 
   {
@@ -66,17 +74,23 @@
   {
    "fieldname": "from_date_time", 
    "fieldtype": "datetime", 
-   "label": "From Date time"
+   "label": "From Date time",
+   "placeholder":"", 
+   "required": 1
   }, 
   {
    "fieldname": "to_date_time", 
    "fieldtype": "datetime", 
-   "label": "To Date time"
+   "label": "To Date time",
+   "placeholder":"", 
+   "required": 1
   }, 
   {
    "fieldname": "additional_info", 
    "fieldtype": "text", 
-   "label": "Additional Info"
+   "label": "Additional Info",
+   "placeholder":"", 
+   "required": 1
   }, 
   {
    "fieldname": "", 

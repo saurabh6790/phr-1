@@ -4,17 +4,23 @@
          {
             "fieldname": "person_firstname", 
             "fieldtype": "data", 
-            "label": "First Name"
+            "label": "First Name",
+            "placeholder":"",
+            "required":1
 	     },
         {
             "fieldname": "person_middlename", 
             "fieldtype": "data", 
-            "label": "Middle Name"
+            "label": "Middle Name",
+            "placeholder":"",
+            "required":1
          },
 	     {
             "fieldname": "person_lastname", 
             "fieldtype": "data", 
-            "label": "Last Name"
+            "label": "Last Name",
+            "placeholder":"",
+            "required":1
 	     },
         {
             "fieldname": "", 
@@ -24,27 +30,23 @@
          {  
             "fieldname": "relationship", 
             "fieldtype": "data", 
-            "label": "Relationship"
-         },
-         {
-            "fieldname": "", 
-            "fieldtype": "section_break", 
-            "label": ""
+            "label": "Relationship",
+            "placeholder":"",
+            "required":1
          },
          {
             "fieldname": "mobile", 
             "fieldtype": "data", 
-            "label": "Mobile No"
-         },
-         {
-            "fieldname": "", 
-            "fieldtype": "column_break", 
-            "label": ""
+            "label": "Mobile No",
+            "placeholder":"",
+            "required":1
          },
          {
             "fieldname": "email", 
             "fieldtype": "data", 
-            "label": "Email"
+            "label": "Email",
+            "placeholder":"",
+            "required":1
          }   
    ]
 }

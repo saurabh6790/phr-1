@@ -23,14 +23,13 @@ $.extend(RenderFormFields.prototype,{
 		this.args = arg;
 		this.entityid=entityid;
 		this.operation=operation;
-		console.log(['modal_wrapper', modal_wrapper])
-
+		
 		if(modal_wrapper) this.wrapper = modal_wrapper.find('.modal-body');
 		else this.wrapper=wrapper ? wrapper:$('.field-area') 
 		this.result_set = {}
 		this.visibility_dict = {}
 		this.labelled_section_count = 0;
-		console.log(this.entityid)
+		
 
 		//crear rendering area
 		$(this.wrapper).empty()
@@ -63,10 +62,6 @@ $.extend(RenderFormFields.prototype,{
 		if(me.entityid){
 			arg['entityid'] = me.entityid
 		}
-
-
-		console.log(['form_generator', arg])
-
 		$.ajax({
 			method: "GET",
 			url: "/api/method/phr.templates.pages.patient.get_data_to_render",
@@ -83,7 +78,6 @@ $.extend(RenderFormFields.prototype,{
 		$.each(fields,function(indx, meta){
 			!me.section && meta['fieldtype'] !== 'section_break' && me.section_break_field_renderer()
 			!me.column && me.column_break_field_renderer()
-			console.log([values[meta['fieldname']], meta['fieldname'] , meta['fieldtype']])
 			meta['value']=values[meta['fieldname']] || "";
 			me[meta['fieldtype'] + "_field_renderer"].call(me, meta);
 			if(meta['depends_on']) me.depends_on(meta)
@@ -104,7 +98,7 @@ $.extend(RenderFormFields.prototype,{
 				</div>', field_meta)).appendTo($(this.column))
 		if(field_meta['required']==1){
 			$input.find("input").prop('required',true)
-			$input.find("input").css({"border": "1px solid #999","border-color": "red" });
+			//$input.find("input").css({"border": "1px solid #999","border-color": "red" });
 		}
 	},
 	depends_on:function(meta){
@@ -153,15 +147,20 @@ $.extend(RenderFormFields.prototype,{
 							<div class="col-xs-8">\
 								<div class="control-input">\
 									<input type="text" class="form-control" \
-										placeholder="%(label)s" name="%(fieldname)s" value="%(value)s" \
-										aria-describedby="basic-addon2">\
+										placeholder="%(placeholder)s" name="%(fieldname)s" value="%(value)s" \
+										aria-describedby="basic-addon2"><span id="valid"></span>\
 								</div>\
 							</div>\
 						</div>\
 				</div>', field_meta)).appendTo($(this.column))
+		var val = field_meta['value'];
 		if(field_meta['required']==1){
 			$input.find("input").prop('required',true)
-			$input.find("input").css({"border": "1px solid #999","border-color": "red" });
+			$input.find("label").addClass('required')
+			$('<style>.required:after{content:" *";color:red;font-size:20px;}</style>').appendTo($input)
+		}
+		if(field_meta['readonly']==1){
+			$input.find("input").prop('disabled',true)
 		}
 
 		this.set_description($input.find('.control-input'), field_meta)
@@ -173,16 +172,67 @@ $.extend(RenderFormFields.prototype,{
 							<label class="control-label small col-xs-4" style="padding-right: 0px;">%(label)s</label>\
 							<div class="col-xs-8">\
 								<div class="control-input">\
-									<input type="password" class="form-control" \
-										placeholder="%(label)s" name="%(fieldname)s"\
+									<input type="password" class="form-control disable" \
+										placeholder="%(placeholder)s" name="%(fieldname)s"\
 										aria-describedby="basic-addon2">\
 								</div>\
 							</div>\
 						</div>\
 				</div>', field_meta)).appendTo($(this.column))
+		var val = field_meta['value'];
+		if(field_meta['required']==1){
+		    $input.find("input").prop('required',true)
+		    $input.find("label").addClass('required')
+			$('<style>.required:after{content:" *";color:red;font-size:20px;}</style>').appendTo($input)
+			/*if (!val){
+				$input.find("input").css({"border": "1px solid #999","border-color": "red" });
+			}*/	
+		}
+		if(field_meta['readonly']==1){
+			$input.find("input").prop('disabled',true)
+		}
+
+		var controls = $(".disable");
+        controls.bind("paste", function () {
+            return false;
+        });
+        controls.bind("drop", function () {
+            return false;
+        });
+        controls.bind("cut", function () {
+            return false;
+        });
+        controls.bind("copy", function () {
+            return false;
+        });
+
+		this.set_description($input.find('.control-input'), field_meta)
+	},
+	email_field_renderer: function(field_meta){
+		var me=this;
+		$input=$(repl_str('<div class="form-horizontal frappe-control" style="max-width: 600px;margin-top:10px;">\
+						<div class="form-group row" style="margin: 0px">\
+							<label class="control-label small col-xs-4" style="padding-right: 0px;">%(label)s</label>\
+							<div class="col-xs-8">\
+								<div class="control-input">\
+									<input type="email" class="form-control" \
+										placeholder="%(placeholder)s" name="%(fieldname)s" value="%(value)s"\
+										aria-describedby="basic-addon2">\
+								</div>\
+							</div>\
+						</div>\
+				</div>', field_meta)).appendTo($(this.column))
+		var val = field_meta['value'];
 		if(field_meta['required']==1){
 			$input.find("input").prop('required',true)
-			$input.find("input").css({"border": "1px solid #999","border-color": "red" });
+			$input.find("label").addClass('required')
+			$('<style>.required:after{content:" *";color:red;font-size:20px;}</style>').appendTo($input)
+			/*if (!val){
+				$input.find("input").css({"border": "1px solid #999","border-color": "red" });
+			}*/	
+		}
+		if(field_meta['readonly']==1){
+			$input.find("input").prop('disabled',true)
 		}
 
 		this.set_description($input.find('.control-input'), field_meta)
@@ -207,13 +257,15 @@ $.extend(RenderFormFields.prototype,{
 				method:'phr.templates.pages.patient.get_master_details',
 				args:{'doctype': field_meta['options']},
 				callback: function(r){
+						$option=$('<option>', { 
+								'value': "",
+								'text' : "" 
+							}).appendTo($($loc_ip.find('select')))
 						$.each(r.message,function(i, val){
-							console.log($loc_ip.find('select'))
 							$option=$('<option>', { 
 								'value': val,
 								'text' : val 
 							}).appendTo($($loc_ip.find('select')))
-							console.log($option)
 							if (field_meta['value']==val){
 							 $option.attr('selected','selected')
 							}
@@ -234,10 +286,18 @@ $.extend(RenderFormFields.prototype,{
 				$option.appendTo($($input.find('select')))
 			})
 		}
-	
+		
+		var val = field_meta['value'];
 		if(field_meta['required']==1){
 			$input.find("select").prop('required',true)
-			$input.find("select").css({"border": "1px solid #999","border-color": "red" });
+			$input.find("label").addClass('required')
+			$('<style>.required:after{content:" *";color:red;font-size:20px;}</style>').appendTo($input)
+			/*if (!val){
+				$input.find("select").css({"border": "1px solid #999","border-color": "red" });
+			}*/
+		}
+		if(field_meta['readonly']==1){
+			$input.find("input").prop('disabled',true)
 		}
 
 		this.set_description($input.find('.control-input'), field_meta)
@@ -258,17 +318,14 @@ $.extend(RenderFormFields.prototype,{
 						</div>\
 				</div>', field_meta)).appendTo($(this.column))
 
-		console.log(['link_field_renderer', typeof(field_meta['value'])])
-
 		frappe.require("/assets/phr/js/jquery.autocomplete.multiselect.js");
-		console.log(typeof(field_meta['options']))
+		
 
 		if (typeof(field_meta['options']) === "string"){
 			frappe.call({
 				method:'phr.templates.pages.patient.get_master_details',
 				args:{'doctype': field_meta['options']},
 				callback: function(r){
-					console.log(['link',r.message])
 					$($input.find('.autocomplete')).autocomplete({
 						open: function(){
 							setTimeout(function () {
@@ -283,15 +340,19 @@ $.extend(RenderFormFields.prototype,{
 		}
 		
 		else{
-			console.log($input.find('.autocomplete'))
 			$($input.find('.autocomplete')).autocomplete({
 				source: field_meta['options'],
 				multiselect: field_meta['multiselect']
 			});
 		}
+		var val = field_meta['value'];
 		if(field_meta['required']==1){
 			$input.find("input").prop('required',true)
-			$input.find("input").css({"border": "1px solid #999","border-color": "red" });
+			$input.find("label").addClass('required')
+			$('<style>.required:after{content:" *";color:red;font-size:20px;}</style>').appendTo($input)
+			/*if (!val){
+				$input.find("input").css({"border": "1px solid #999","border-color": "red" });
+			}*/
 		}
 
 		this.set_description($input.find('.control-input'), field_meta)
@@ -322,20 +383,28 @@ $.extend(RenderFormFields.prototype,{
 							<div class="col-xs-8">\
 								<div class="control-input">\
 									<textarea type="text" class="form-control" \
-										placeholder="%(label)s" name="%(fieldname)s"\
+										placeholder="%(placeholder)s" name="%(fieldname)s"\
 										aria-describedby="basic-addon2"></textarea>\
 								</div>\
 							</div>\
 						</div>\
 				</div>', field_meta)).appendTo($(this.column))
 		$input.find("textarea").val(field_meta['value'])
+		var val = field_meta['value'];
 		if(field_meta['required']==1){
 			$input.find("textarea").prop('required',true)
-			$input.find("textarea").css({"border": "1px solid #999","border-color": "red" });
+			$input.find("label").addClass('required')
+			$('<style>.required:after{content:" *";color:red;font-size:20px;}</style>').appendTo($input)
+			/*if (!val){
+				$input.find("textarea").css({"border": "1px solid #999","border-color": "red" });
+			}*/
 		}
 
 		if(field_meta['display']){
 			$($('[name="'+field_meta['fieldname']+'"]').parents()[3]).css("display", field_meta['display']);
+		}
+		if(field_meta['readonly']==1){
+			$input.find("input").prop('disabled',true)
 		}
 
 		this.set_description($input.find('.control-input'), field_meta)
@@ -389,9 +458,18 @@ $.extend(RenderFormFields.prototype,{
 			$input.find('input').val($.datetimepicker.formatDate('dd/mm/yy',date))
 		}
 */
+		var val = field_meta['value'];
 		if(field_meta['required']==1){
 			$input.find("input").prop('required',true);
-			$input.find("input").css({"border": "1px solid #999","border-color": "red" });
+			$input.find("label").addClass('required')
+			$('<style>.required:after{content:" *";color:red;font-size:20px;}</style>').appendTo($input)
+			/*if (!val){
+				$input.find("input").css({"border": "1px solid #999","border-color": "red" });	
+			}*/
+			
+		}
+		if(field_meta['readonly']==1){
+			$input.find("input").prop('disabled',true)
 		}
 
 		this.set_description($input.find('.control-input'), field_meta)
@@ -421,10 +499,18 @@ $.extend(RenderFormFields.prototype,{
 				var date=new Date(val)
 				$input.find('input').val($.datepicker.formatDate('dd/mm/yy',date))
 			}
-	
+		
+		
 		if(field_meta['required']==1){
 			$input.find("input").prop('required',true);
-			$input.find("input").css({"border": "1px solid #999","border-color": "red" });
+			$input.find("label").addClass('required')
+			$('<style>.required:after{content:" *";color:red;font-size:20px;}</style>').appendTo($input)
+			/*if (!val){
+				$input.find("input").css({"border": "1px solid #999","border-color": "red" });	
+			}*/
+		}
+		if(field_meta['readonly']==1){
+			$input.find("input").prop('disabled',true)
 		}
 
 		if(field_meta['display']){
@@ -460,10 +546,17 @@ $.extend(RenderFormFields.prototype,{
 			var date=new Date(val)
 			$input.find('input').val($.datetimepicker.formatDate('dd/mm/yy',date))
 		}
+		if(field_meta['readonly']==1){
+			$input.find("input").prop('disabled',true)
+		}
 
 		if(field_meta['required']==1){
 			$input.find("input").prop('required',true);
-			$input.find("input").css({"border": "1px solid #999","border-color": "red" });
+			$input.find("label").addClass('required')
+			$('<style>.required:after{content:" *";color:red;font-size:20px;}</style>').appendTo($input)
+			/*if (!val){
+				$input.find("input").css({"border": "1px solid #999","border-color": "red" });	
+			}*/
 		}
 
 		this.set_description($input.find('.control-input'), field_meta)
@@ -487,16 +580,23 @@ $.extend(RenderFormFields.prototype,{
         				timeFormat: 'hh:mm tt',
         				timeOnly: true
 		})
-		/*var val = field_meta['value'];
+		var val = field_meta['value'];
 		
-		if(val){
+		/*if(val){
 			var date=new Date(val)
 			$input.find('input').val($.datetimepicker.formatDate('dd/mm/yy',date))
 		}
 */
 		if(field_meta['required']==1){
 			$input.find("input").prop('required',true);
-			$input.find("input").css({"border": "1px solid #999","border-color": "red" });
+			$input.find("label").addClass('required')
+			$('<style>.required:after{content:" *";color:red;font-size:20px;}</style>').appendTo($input)
+			/*if (!val){
+				$input.find("input").css({"border": "1px solid #999","border-color": "red" });	
+			}*/
+		}
+		if(field_meta['readonly']==1){
+			$input.find("input").prop('disabled',true)
 		}
 
 		this.set_description($input.find('.control-input'), field_meta)
@@ -516,10 +616,6 @@ $.extend(RenderFormFields.prototype,{
 		$.each(field_meta['rows'],function(i, val){
 			(i==0) ? me.render_table_heads(val, $input) : me.render_table_body(val, field_meta['rows'][0], $input)
 		})
-		
-
-		console.log([JSON.stringify(this.cols), JSON.stringify(this.data_row)])
-
 		$('table').bootstrapTable({
 			columns: me.cols,
 			data: me.data_row

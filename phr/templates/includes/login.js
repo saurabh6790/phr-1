@@ -135,7 +135,6 @@ login.login_handlers = (function() {
 					window.location.href = "/index";
 				}
 			} else if(["#signup", "#forgot"].indexOf(window.location.hash)!==-1) {
-				console.log(data.message)
 				frappe.msgprint(data.message);
 			}
 		},

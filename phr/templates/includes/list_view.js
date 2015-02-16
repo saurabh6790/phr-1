@@ -4,18 +4,14 @@ frappe.provide("templates/includes");
 
 var ListView = inherit(RenderFormFields,{
 	init: function(wrapper, args){
-		// console.log(args)
 		NProgress.start();
-		console.log("from even")
 		var me = this;
 		this.wrapper = wrapper;
 		this.args = args;
 		this.profile_id=args["profile_id"]
-		console.log(['arg exist', args['cmd'], args])
 		if (args['cmd']){
 			this.get_data()
 		}else{
-			console.log(['test'])
 			RenderFormFields.prototype.init(this.wrapper, {'file_name': me.args['file_name'], 'param':'listview'})
 			me.render_top_section()
 			NProgress.done();
@@ -61,7 +57,6 @@ var ListView = inherit(RenderFormFields,{
 		}
 
 		$('<li><a nohref>&raquo;</a></li>').appendTo('.pagination')
-		console.log("end of create_pagination")
 		this.page_controller()
 	},
 	page_controller : function(){
@@ -69,7 +64,7 @@ var ListView = inherit(RenderFormFields,{
 		$('ul li a').click(function(){
 			me.render_page($(this).html())
 		})
-		console.log("end of page_controller")
+		
 	},
 	render_page: function(page_id){
 		next = parseInt(this.page_size) * parseInt(page_id);
@@ -79,10 +74,8 @@ var ListView = inherit(RenderFormFields,{
 	},
 	render_top_section: function(){
 		var me = this;
-
 		$('.new_controller').remove();
 		$('.save_controller').remove();
-
 		$('<div class="new_controller" style="width:45%;display:inline-block;text-align:right;">\
 				<button class="btn btn-primary">\
 					<i class="icon-plus"></i> New \
@@ -100,11 +93,10 @@ var ListView = inherit(RenderFormFields,{
 				me.status=1
 				return me.status
 			})
-		console.log("end of render_top_section")
+		
 	},
 	new_form:function(){
 		var me = this;
-		console.log('in new form')
 		RenderFormFields.prototype.init(this.wrapper, {'file_name': me.args['file_name']})
 	}
 })

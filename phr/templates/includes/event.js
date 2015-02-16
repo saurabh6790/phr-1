@@ -29,7 +29,6 @@ window.Events = inherit(ListView,{
 				var row = $(this);
 				$('th', row).map(function(index, th) {
 					if ($(th).find('input[type="checkbox"]').is(':checked')) {
-						console.log($(th).find('input[type="checkbox"]').attr('id'))
 						me.selected_files.push($(th).find('input[type="checkbox"]').attr('id'))
 					}
 				})
@@ -95,7 +94,7 @@ window.Events = inherit(ListView,{
 
 			})
 			.appendTo($('.modal-body'))
-		console.log(d)
+		
 	},
 	render_result_table:function(filters, d){
 		var me = this;
@@ -164,10 +163,8 @@ window.Events = inherit(ListView,{
 		this.res = {}
 		$('.modal-footer .btn-primary').click(function(){
 			$(".modal-body form input, .modal-body form textarea, .modal-body form select").each(function(i, obj) {
-				console.log(obj)
 				me.res[obj.name] = $(obj).val();
 			})
-			console.log(me.res)
 			me.res["received_from"]="Desktop"
 			me.res["provider"]=true
 			me.create_provider(me.res, d)
@@ -243,7 +240,6 @@ window.Events = inherit(ListView,{
 				args:{"data":JSON.stringify(me.res)},
 				callback:function(r){
 					$('.breadcrumb li:last').remove()
-					console.log(r.message)
 					NProgress.done();
 					if(r.message.returncode == 103 || r.message.returncode == 116){
 						me.open_form(r.message.entityid, $('[name="event_title"]').val(), me.profile_id);	
@@ -302,7 +298,6 @@ window.Events = inherit(ListView,{
 						me.result_set[obj.name] = $(obj).val();
 
 					})
-					console.log([me.result_set, 'test'])
 					me.render_folder_section()
 					me.open_sharing_pannel()
 			}).appendTo('.breadcrumb');			
@@ -311,7 +306,6 @@ window.Events = inherit(ListView,{
 	},
 	open_sharing_pannel: function(){
 		var me = this;
-		console.log(['me.result_set', me.doc_list])
 		SharePhr.prototype.init(me.wrapper, {"file_name" : "share_phr", 'values': me.result_set, 'doc_list': me.doc_list, "profile_id":me.profile_id})
 	},
 	bind_events: function(){
@@ -335,7 +329,6 @@ window.Events = inherit(ListView,{
 					$(this).nextAll().remove()
 					// $(this).remove()
 					$('.uploader').remove();
-					console.log($(this).attr('id'))
 					me.render_sub_sections(me.mapper[$(this).attr('id')])
 					// me.bind_sub_section_events()
 				}).appendTo('.breadcrumb');

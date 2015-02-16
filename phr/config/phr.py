@@ -82,6 +82,11 @@ def get_data():
 					"name": "Dosage",
 					"description": _("Dosage"),
 				},
+				{
+					"type": "doctype",
+					"name": "State",
+					"description": _("States In India"),
+				},
 			]
 		},
 		{

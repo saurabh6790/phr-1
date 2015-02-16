@@ -4,7 +4,7 @@ import os
 from frappe.utils import get_site_path, get_hook_method, get_files_path, get_site_base_path,cstr
 from phr.templates.pages.patient import get_data_to_render
 import datetime
-
+from phr.phr.doctype.phr_activity_log.phr_activity_log import make_log
 
 @frappe.whitelist(allow_guest=True)
 def get_medication_data(data):
@@ -40,6 +40,9 @@ def fetch_values_from_db(data):
 def make_medication_entry(data):
 	c_medication=save_data(data)
 	response=get_medication_data(data)
+	medication=json.loads(data)
+	sub="Medication for"+" "+medication.get('medicine_name')+" created"
+	make_log(medication.get('profile_id'),"Medication","create",sub)
 	return response
 
 
@@ -77,9 +80,6 @@ def save_data(data):
 def get_formatted_date(strdate=None):
 	if strdate:
 		return datetime.datetime.strptime(strdate,"%d/%m/%Y %H:%M:%S")
-
-
-
 
 def get_options(obj):
 	options={}

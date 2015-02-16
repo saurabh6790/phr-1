@@ -4,6 +4,8 @@ import os
 from frappe.utils import get_site_path, get_hook_method, get_files_path, get_site_base_path,cstr
 from phr.templates.pages.patient import get_data_to_render
 import datetime
+from phr.phr.doctype.phr_activity_log.phr_activity_log import make_log
+
 
 @frappe.whitelist(allow_guest=True)
 def get_appointments(data):
@@ -36,6 +38,9 @@ def fetch_values_from_db(data):
 def make_appomiments_entry(data):
 	c_medication=save_data(data)
 	response=get_appointments(data)
+	appointment=json.loads(data)
+	sub="Appointment created with"+" "+appointment.get('provider')
+	make_log(appointment.get('profile_id'),"Appointment","create",sub)
 	return response
 
 def save_data(data):

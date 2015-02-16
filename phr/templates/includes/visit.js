@@ -23,7 +23,6 @@ var Visit = inherit(ListView,{
 			'tab_at': 4,
 			'profile_id':profile_id})
 
-		console.log('t')
 		$('.new_controller').hide()
 
 		$('<tr>\
@@ -44,12 +43,10 @@ var Visit = inherit(ListView,{
 				var row = $(this);
 				$('th', row).map(function(index, th) {
 					if ($(th).find('input[type="checkbox"]').is(':checked')) {
-						console.log($(th).find('input[type="checkbox"]').attr('id'))
 						me.selected_files.push($(th).find('input[type="checkbox"]').attr('id'))
 					}
 				})
 			})
-			console.log(me.selected_files)
 			$('.table').find('tr').each(function () {
 				var row = $(this);
 				$('td', row).map(function(index, td) {
@@ -104,7 +101,6 @@ var Visit = inherit(ListView,{
 				method:"phr.templates.pages.event.create_event",
 				args:{"data":JSON.stringify(me.res)},
 				callback:function(r){
-					console.log(r)
 					$('<div class="event_section"></div>').appendTo($('.field-area'))
 					me.render_folder_section()
 	  				me.bind_events()
@@ -149,7 +145,6 @@ var Visit = inherit(ListView,{
 			$("form input, form textarea").each(function(i, obj) {
 				me.result_set[obj.name] = $(obj).val();
 			})
-			// console.log(me.result_set)
 			SharePhr.prototype.init(me.wrapper, {'fields':[
 				{'fieldname':'event_date','fieldtype':'date', 'label':'Date'},
 				{'fieldname':'event','fieldtype':'link','label':'Event',  'options':'Events'},

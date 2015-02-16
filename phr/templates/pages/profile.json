@@ -11,17 +11,21 @@
    	"fieldname": "person_firstname", 
       "fieldtype": "data", 
       "label": "First Name",
+      "placeholder":"",
       "required":1
 	},
    {
       "fieldname": "person_middlename", 
       "fieldtype": "data", 
-      "label": "Middle Name"
+      "label": "Middle Name",
+      "placeholder":"",
+      "required":1
    },
 	{
    	"fieldname": "person_lastname", 
       "fieldtype": "data", 
       "label": "Last Name",
+      "placeholder":"",
       "required":1
 	},
    {
@@ -33,61 +37,20 @@
       "fieldname": "gender", 
       "fieldtype": "select", 
       "label": "Gender",
-      "options":["", "Male", "Female"],
-      "required":1
+      "options":["", "Male", "Female"]
    },
   	{
    	"fieldname": "str_date_of_birth", 
       "fieldtype": "date", 
-      "label": "DOB"
+      "label": "DOB",
+      "placeholder":"",
+      "required":1
 	},
    {
       "fieldname": "marital_status", 
       "fieldtype": "select", 
       "label": "Marital Status",
-      "options": ["","Married","Single"],
-      "required":1 
-   },
-   {
-      "fieldname": "", 
-      "fieldtype": "section_break", 
-      "label": ""
-   },
-   {
-      "fieldname": "blod_group", 
-      "fieldtype": "data", 
-      "label": "Blood Group"
-   },
-   {
-      "fieldname": "habits", 
-      "fieldtype": "text", 
-      "label": "Habits"
-   },
-   {
-      "fieldname": "allergies", 
-      "fieldtype": "text", 
-      "label": "Allergies"
-   },
-   {
-      "fieldname": "", 
-      "fieldtype": "column_break", 
-      "label": ""
-   },
-   {
-      "fieldname": "height", 
-      "fieldtype": "data", 
-      "label": "Height"
-   },
-   {
-      "fieldname": "weight", 
-      "fieldtype": "data", 
-      "label": "Weight"
-   },
-   {
-      "fieldname": "diet_type", 
-      "fieldtype": "select", 
-      "label": "Diet Type",
-      "options":["","Vegetation","Non-Vegetarian"]
+      "options": ["","Married","Single"] 
    },
    {
       "fieldname": "", 
@@ -97,12 +60,15 @@
    {
       "fieldname": "mobile", 
       "fieldtype": "data", 
-      "label": "Mobile No"
+      "label": "Mobile No",
+      "placeholder":"",
+      "required":1
    },
    {
       "fieldname": "phone", 
       "fieldtype": "data", 
-      "label": "Landline"
+      "label": "Landline",
+      "placeholder":""
    },
    {
       "fieldname": "", 
@@ -112,14 +78,16 @@
    {
       "fieldname": "fax", 
       "fieldtype": "data", 
-      "label": "Fax"
+      "label": "Fax",
+      "placeholder":""
    },
 
    {
       "fieldname": "email", 
-      "fieldtype": "data", 
+      "fieldtype": "email", 
       "label": "Email",
-      "required":1
+      "placeholder":"",
+      "readonly":1
    },
    
    {
@@ -130,58 +98,134 @@
    {
       "fieldname": "address1", 
       "fieldtype": "text", 
-      "label": "Address Line 1"
+      "label": "Address Line 1",
+      "placeholder":"Flat No, Society, Locality"
    },
    {
       "fieldname": "address2", 
       "fieldtype": "text", 
-      "label": "Address Line 2"
+      "label": "Address Line 2",
+      "placeholder":"Street, Landmark"
    },
-   
    {
-      "fieldname": "pincode", 
-      "fieldtype": "data", 
-      "label": "Pincode"
-   },
-    {
       "fieldname": "", 
       "fieldtype": "column_break", 
       "label": ""
    },
    {
-      "fieldname": "city", 
+      "fieldname": "country", 
       "fieldtype": "data", 
-      "label": "City"
+      "label": "Country",
+      "placeholder":""
+      
    },
    {
       "fieldname": "state", 
-      "fieldtype": "data", 
-      "label": "State"
+      "fieldtype": "select", 
+      "label": "State",
+      "placeholder":"",
+      "options":"State"
    },
    {
-      "fieldname": "country", 
+      "fieldname": "city", 
       "fieldtype": "data", 
-      "label": "Country"
+      "label": "City",
+      "placeholder":""
    },
+   {
+      "fieldname": "pincode", 
+      "fieldtype": "data", 
+      "label": "Pincode",
+      "placeholder":""
+   },
+
+   {
+      "fieldname": "", 
+      "fieldtype": "section_break", 
+      "label": ""
+   },
+   {
+      "fieldname": "blod_group", 
+      "fieldtype": "select", 
+      "label": "Blood Group",
+      "options":["","B+","B-", "A+", "A-", "AB+", "AB-", "O+", "O-"]
+   },
+   {
+      "fieldname": "addiction", 
+      "fieldtype": "text", 
+      "label": "Addictions",
+      "placeholder":"smoking, alcohol, tobacco, drugs"
+   },
+   {
+      "fieldname": "allergies", 
+      "fieldtype": "text", 
+      "label": "Allergies",
+      "placeholder":""
+   },
+    {
+      "fieldname": "diet_type", 
+      "fieldtype": "select", 
+      "label": "Diet Type",
+      "options":["","Vegetarian","Non-Vegetarian"]
+   },
+   {
+      "fieldname": "", 
+      "fieldtype": "column_break", 
+      "label": ""
+   },
+   {
+      "fieldname": "height", 
+      "fieldtype": "data", 
+      "label": "Height (CMS)",
+      "placeholder":"in cms"
+   },
+   {
+      "fieldname": "height_in_inches", 
+      "fieldtype": "data", 
+      "label": "Height (INCHES)",
+      "readonly":1,
+      "placeholder":""
+   },
+   {
+      "fieldname": "weight", 
+      "fieldtype": "data", 
+      "label": "Weight (KGS)",
+      "placeholder":"in KGS"
+   },
+   {
+      "fieldname": "weight_in_pounds", 
+      "fieldtype": "data", 
+      "label": "Weight (POUNDS)",
+      "readonly":1,
+      "placeholder":""
+   },
+  
    {
       "fieldname": "password", 
       "fieldtype": "section", 
       "label": "Update Password" 
+
    },
    {
       "fieldname": "old_password", 
       "fieldtype": "password", 
-      "label": "Old Password"
+      "label": "Old Password",
+      "placeholder":"",
+      "required":1
    },
    {
       "fieldname": "new_password", 
       "fieldtype": "password", 
-      "label": "New Password"
+      "label": "New Password",
+      "placeholder":"",
+      "required":1
    },
    {
       "fieldname": "cnf_new_password", 
       "fieldtype": "password", 
-      "label": "Confirm Password"
+      "label": "Confirm Password",
+      "placeholder":"",
+      "required":1
    },
    {
       "fieldname": "manage_phr", 

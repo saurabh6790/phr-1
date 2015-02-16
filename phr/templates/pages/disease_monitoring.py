@@ -9,7 +9,7 @@ from phr.phr.phr_api import get_response
 # from datetime import datetime
 from frappe.utils import getdate, date_diff, nowdate, get_site_path, get_hook_method, get_files_path, \
 		get_site_base_path, cstr, cint
-
+from phr.phr.doctype.phr_activity_log.phr_activity_log import make_log
 
 
 
@@ -35,7 +35,7 @@ def get_disease_fields(name,profile_id=None):
 			field_mapper.append("sr")
 			for d in dm.get('parameters'):
 				row_count+=1
-				f_dic={"fieldname":d.fieldname,"fieldtype":d.fieldtype,"label":d.label}
+				f_dic={"fieldname":d.fieldname,"fieldtype":d.fieldtype,"label":d.label,"placeholder":""}
 				fields.append(f_dic)
 				raw_fields.append(f_dic)
 				r.append(d.label)
@@ -147,6 +147,9 @@ def save_data_to_solr(args):
 	if res:
 		jsonobj=json.loads(res)
 		if jsonobj['returncode']==132 or jsonobj['returncode']==133:
+			dm=json.loads(args)
+			sub="Disease Monitoring created"
+			make_log(dm['profile_id'],"Disease Monitoring","create",sub)
 			return "true"			
 		else:
 			return "false"	
