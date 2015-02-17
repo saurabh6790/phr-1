@@ -24,9 +24,7 @@ def update_linked_profile(data,id):
 @frappe.whitelist(allow_guest=True)
 def update_profile_solr(data):
 	request_type="POST"
-	# url="http://192.168.5.11:9090/phr/updateProfile"
 	url = "%s/updateProfile"%get_base_url()
-	# url="http://88.198.52.49:7974/phr/updateProfile"
 	from phr.phr.phr_api import get_response
 	response=get_response(url,data,request_type)
 	res=json.loads(response.text)
@@ -36,31 +34,15 @@ def update_profile_solr(data):
 
 
 @frappe.whitelist(allow_guest=True)
-def manage_dashboard(data):
-	frappe.errprint(data)
-
-@frappe.whitelist(allow_guest=True)
-def update_notifications(data):
-	frappe.errprint(data)
-
-
-@frappe.whitelist(allow_guest=True)
-def create_linkedphr(data,id):
-	frappe.errprint(["py",data,id])
-	call_mapper={
-	"basic_info":create_profile_solr,
-	"notification":create_notifications,
-	"dashboard":manage_dashboard}
-	method=call_mapper.get(id)
-	response=method(data)
+def create_linkedphr(data):
+	response=create_profile_solr(data)
 	return response
 
 @frappe.whitelist(allow_guest=True)
 def create_profile_solr(data):
+	print data
 	request_type="POST"
-	# url="http://192.168.5.11:9090/phr-api/createProfile"
 	url="%s/createProfile"%get_base_url()
-	# url="http://88.198.52.49:7974/phr-api/createProfile"
 	from phr.phr.phr_api import get_response
 	response=get_response(url,data,request_type)
 	res=json.loads(response.text)
@@ -71,17 +53,10 @@ def create_profile_solr(data):
 		print data
 		args={"entityid":res.get('entityid'),"linking_id":data["linking_id"],"relationship":data["relationship"],"received_from":"Desktop"}
 		request_type="POST"
-		# url="http://192.168.5.11:9090/phr/linkprofile"
 		url="%s/linkprofile"%get_base_url()
-		# url="http://88.198.52.49:7974/phr/linkprofile"
 		from phr.phr.phr_api import get_response
 		response=get_response(url,json.dumps(args),request_type)
 		res=json.loads(response.text)
 		return res
 
 
-	# return "Linked PHR Created Successfully"
-
-@frappe.whitelist(allow_guest=True)
-def create_notifications(data):
-	frappe.errprint(data)

@@ -92,7 +92,6 @@ function render_dashboard(profile_id){
 			callback: function(r) {
 				if(r.message) {
 					if (r.message["rtcode"]==1){
-						console.log(r.message['ad_list'])
 						render_ad(r.message['ad_list'])
 					}
 					else{
@@ -118,7 +117,6 @@ function render_dashboard(profile_id){
     }
     function render_td(todo){
     	$wrap=$('#todo')
-
     	$.each(todo,function(i,todo){
 			pro_data={"desc": todo['description'], "todo_id": todo["name"],"date":todo["date"]}
 			$(repl_str('<div class="list-group-item-side %(todo_id)s">\
@@ -129,7 +127,6 @@ function render_dashboard(profile_id){
     }
     function render_ad(ads){
     	$wrap=$('#ad')
-
     	$.each(ads,function(i,ad){
     		pro_data={"title": ad['ad_title'], "ad_link": ad["ad_link"]}
 			$(repl_str('<div class="list-group-item-side ad">\
@@ -139,8 +136,9 @@ function render_dashboard(profile_id){
     }
     function render_ed(data){
     	$wrap=$('#ed')
-    	$('<div>Name:'+data["name"]+'<br>Contact:'+data["contact"]+'<br>\
-    	<img src="'+data["barcode"]+'"></div>').appendTo($wrap)
+    	pro_data={"name": data['name'], "contact": data["contact"],"barcode":data["barcode"]}
+		$(repl_str('<div>Name:%(name)s<br>Contact:%(contact)s<br>\
+    	<img src="%(barcode)s"></div>',pro_data)).appendTo($wrap)
   	}
     function render_lphr(data){
     	$('#clphr').find('p.nophr').remove()
@@ -154,10 +152,24 @@ function render_dashboard(profile_id){
 			</div>', data.profile)).appendTo($wrap)
 		})
 		$(".v_lphr").unbind("click").click(function(){
-			$('.linked-phr').html($(this).html())
+			var name=$(this).html()
+			$('<a nohref class="list-group-item-side chome"><div><i class="icon-home"></i>'+name+'&nbsp</div></a>').appendTo('.linked-phr').unbind("click").click(function(){
+				$('.field-area').empty()
+				$('#main-con').empty()
+				$('.breadcrumb').empty()
+				$('.new_controller').hide()
+				$('.save_controller').hide()
+				render_providers(sessionStorage.getItem('cid'))
+				$('#linkedphr').hide()
+				render_middle_section(sessionStorage.getItem('cid'))
+				//$('#profile').attr('data-name',$(this).attr('data-name'))	
+			})
 			sessionStorage.setItem("cid",$(this).attr('data-name'))
 			$('.field-area').empty()
 			$('#main-con').empty()
+			$('.breadcrumb').empty()
+			$('.new_controller').hide()
+			$('.save_controller').hide()
 			render_providers($(this).attr('data-name'))
 			$('#linkedphr').hide()
 			render_middle_section($(this).attr('data-name'))
@@ -177,7 +189,6 @@ function render_dashboard(profile_id){
 		})
     }
     function render_middle(data,profile_id){
-    	console.log(data)
     	if (data[0]["fieldname"]=='disease_monitoring'){
     		$('<div class="row" ><div class="col-md-6"><label class="control-label small col-xs-4" style="padding-right: 0px;">Disease</label>\
 				<div class="col-xs-8">\
@@ -205,7 +216,7 @@ function render_dashboard(profile_id){
     	}
     	$('<div class="row"><div class="col-md-6" style="height:250px">\
                   <div class="panel panel-primary">\
-                    <div class="panel-heading he1"><span style="float:right"><i class="icon-remove"></i></span></div>\
+                    <div class="panel-heading he1"></div>\
                       <div class="panel-body" style="padding:1px;height:200px;overflow:hidden;overflow:auto">\
                         <table data-toggle="table" class="table table-striped" data-url="fields" style="padding=0px;" id="table1">\
                         	<thead></thead>\
@@ -214,7 +225,7 @@ function render_dashboard(profile_id){
                       </div>\
                   </div>\
                   <div class="panel panel-primary">\
-                    <div class="panel-heading he2"><span style="float:right"><i class="icon-remove"></i></span></div>\
+                    <div class="panel-heading he2"></div>\
                       <div class="panel-body" style="padding:1px;height:200px;overflow:hidden;overflow:auto">\
                         <table class="table table-striped" style="padding=0px;" id="table2">\
                         <thead><tr></tr></thead>\
@@ -224,7 +235,7 @@ function render_dashboard(profile_id){
                   </div></div>\
             <div class="col-md-6" style="height:250px " >\
                 <div class="panel panel-primary">\
-                    <div class="panel-heading he3"><span style="float:right"><i class="icon-remove"></i></span></div>\
+                    <div class="panel-heading he3"></div>\
                     <div class="panel-body" style="padding:1px;height:200px;overflow:hidden;overflow:auto">\
                      <table class="table table-striped" style="padding=0px;width=100%" id="table3">\
                        <thead><tr></tr></thead>\
@@ -233,7 +244,7 @@ function render_dashboard(profile_id){
                   </div>\
                 </div> \
                 <div class="panel panel-primary">\
-                    <div class="panel-heading he4"><span style="float:right"><i class="icon-remove"></i></span></div>\
+                    <div class="panel-heading he4"></div>\
                       <div class="panel-body" style="padding:1px;height:200px;overflow:hidden;overflow:auto">\
                         <table class="table table-striped" style="padding=0px;" id="table4">\
                         <thead><tr></tr></thead>\
@@ -307,8 +318,7 @@ function render_dashboard(profile_id){
 		})
     }
     function render_table4(data){
-    	console.log(data)
-		$('<strong>').html(data["label"]).appendTo(".he4")
+    	$('<strong>').html(data["label"]).appendTo(".he4")
 		$.each(data['rows'],function(i, val){
 			if (i==0){
 				$.each(val,function(i, d){
@@ -343,16 +353,20 @@ function render_dashboard(profile_id){
     	$.each(data['rows'],function(i, val){
     		if (i==0){
     			var r = $("<tr>").appendTo($("#table1").find("thead"));
-				$.each(val,function(i, d){
-					$("<th>").html(d)
-						.appendTo(r);
+    			$.each(val,function(i, d){
+    				if (i!=0){
+    					$("<th>").html(d)
+							.appendTo(r);
+					}
 				})
 			} 
 			else{
 				var row = $("<tr>").appendTo($("#table1").find("tbody"));
 				$.each(val,function(i, d){
+					if (i!=0){
 		 			 $("<td>").html(d)
 				 		.appendTo(row); 
+				 	}
 				})
 			}
 		})

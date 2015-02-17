@@ -75,25 +75,18 @@ def get_patient_data(data):
 	request_type="POST"
 	url="%s/sharephr/searchsharedeventdata"%get_base_url()
 	from phr.phr.phr_api import get_response
-
 	pos = 0
-
 	for filed_dict in fields:
 		print filed_dict 
 		pos =+ 1
 		if 'rows' in filed_dict.keys(): 
 			rows = filed_dict.get('rows')
 			break
-
 	data=json.loads(data)
-
 	data_dict ={"to_profile_id":data.get('profile_id'), 
 			"received_from": "desktop", "from_profile_id": data.get('other_param').get('patient_profile_id')}
-
 	response=get_response(url, json.dumps(data_dict), request_type)
-
 	res_data = json.loads(response.text)
-
 	if res_data.get('Jsoneventlist'):
 		for event_details in res_data.get('Jsoneventlist'):
 			event =  event_details.get('event')
@@ -156,15 +149,11 @@ def get_dm_data(rows, data_dict):
 						from `tabDisease Sharing Log` dm, `tabUser` u 
 						where dm.to_profile = '%s' 
 							and dm.from_profile = u.profile_id """%data_dict.get('to_profile_id'), as_dict=1):
-
-
-		frappe.errprint(dm_data)
 		file_path = '/'.join(dm_data.get('pdf_path').split('/')[3:])
 		data = ['<a target="_blank" href="/%s"> %s </a>'%( file_path, dm_data['disease_name']), 
 					'', 
 					'']
 		rows.extend([data])
-
 	return rows
 
 @frappe.whitelist()

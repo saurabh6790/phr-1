@@ -114,6 +114,14 @@
    "label": "Additional Info", 
    "permlevel": 0, 
    "precision": ""
+  }, 
+  {
+   "fieldname": "status", 
+   "fieldtype": "Select", 
+   "label": "Status", 
+   "options": "\nActive\nInactive", 
+   "permlevel": 0, 
+   "precision": ""
   }
  ], 
  "hide_heading": 0, 
@@ -124,7 +132,7 @@
  "is_submittable": 0, 
  "issingle": 0, 
  "istable": 0, 
- "modified": "2015-02-04 11:18:10.016726", 
+ "modified": "2015-02-16 15:12:02.609868", 
  "modified_by": "Administrator", 
  "module": "phr", 
  "name": "Medication", 

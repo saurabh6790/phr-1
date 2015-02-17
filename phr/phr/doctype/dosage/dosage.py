@@ -34,7 +34,7 @@ class Dosage(Document):
 		fields=[]
 		depends_on="dosage_type"+":"+self.name
 		for d in self.get('dosage_fields'):
-			f_dic={"fieldname":d.fieldname,"fieldtype":d.fieldtype,"label":d.label,"depends_on":depends_on}
+			f_dic={"fieldname":d.fieldname,"fieldtype":d.fieldtype,"label":d.label,"depends_on":depends_on,"placeholder":""}
 			if d.options:
 				opts=d.options.split("\n")
 				#opt=json.dumps(opts)

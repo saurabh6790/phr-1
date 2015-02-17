@@ -1,210 +1,52 @@
 {
-   "tab":1,
+   "tab": 0,
    "fields":[
-   {
-      "fieldname": "basic_info", 
-      "fieldtype": "section", 
-      "label": "Profile",
-       "default":1 
-   },
-   {
-   	"fieldname": "person_firstname", 
-      "fieldtype": "data", 
-      "label": "First Name"
-	},
-   {
-      "fieldname": "person_middlename", 
-      "fieldtype": "data", 
-      "label": "Middle Name"
-   },
-	{
-   	"fieldname": "person_lastname", 
-      "fieldtype": "data", 
-      "label": "Last Name"
-	},
-   {
-      "fieldname": "", 
-      "fieldtype": "column_break", 
-      "label": ""
-   },
-   {
-      "fieldname": "gender", 
-      "fieldtype": "select", 
-      "label": "Gender",
-      "options":["", "Male", "Female"]
-   },
-  	{
-   	"fieldname": "str_date_of_birth", 
-      "fieldtype": "date", 
-      "label": "DOB"
-	},
-   {
-      "fieldname": "relationship", 
-      "fieldtype": "data", 
-      "label": "Relationship"
-   },
-   {
-      "fieldname": "", 
-      "fieldtype": "section_break", 
-      "label": ""
-   },
-   {
-      "fieldname": "marital_status", 
-      "fieldtype": "select", 
-      "label": "Marital Status",
-      "options": ["","Married","Single"] 
-   },
-   {
-      "fieldname": "blod_group", 
-      "fieldtype": "data", 
-      "label": "Blod Group"
-   },
-    {
-      "fieldname": "habits", 
-      "fieldtype": "text", 
-      "label": "Habits"
-   },
-   {
-      "fieldname": "", 
-      "fieldtype": "column_break", 
-      "label": ""
-   },
-   {
-      "fieldname": "allergies", 
-      "fieldtype": "text", 
-      "label": "Allergies"
-   },
-   {
-      "fieldname": "height", 
-      "fieldtype": "data", 
-      "label": "Height"
-   },
-   {
-      "fieldname": "weight", 
-      "fieldtype": "data", 
-      "label": "Weight"
-   },
-   {
-      "fieldname": "diet_type", 
-      "fieldtype": "select", 
-      "label": "Diet Type",
-      "options":["","Heavy","Lite"]
-   },
-   {
-      "fieldname": "", 
-      "fieldtype": "section_break", 
-      "label": ""
-   },
-   {
-      "fieldname": "mobile", 
-      "fieldtype": "data", 
-      "label": "Mobile No"
-   },
-   {
-      "fieldname": "phone", 
-      "fieldtype": "data", 
-      "label": "Landline"
-   },
-   {
-      "fieldname": "", 
-      "fieldtype": "column_break", 
-      "label": ""
-   },
-   {
-      "fieldname": "fax", 
-      "fieldtype": "data", 
-      "label": "Fax"
-   },
-   {
-      "fieldname": "email", 
-      "fieldtype": "data", 
-      "label": "Email"
-   },
-   {
-      "fieldname": "", 
-      "fieldtype": "section_break", 
-      "label": ""
-   }, 
-      {
-      "fieldname": "address1", 
-      "fieldtype": "text", 
-      "label": "Address Line 1"
-   },
-   {
-      "fieldname": "address2", 
-      "fieldtype": "text", 
-      "label": "Address Line 2"
-   },
-   
-   {
-      "fieldname": "pincode", 
-      "fieldtype": "data", 
-      "label": "Pincode"
-   },
-    {
-      "fieldname": "", 
-      "fieldtype": "column_break", 
-      "label": ""
-   },
-   {
-      "fieldname": "city", 
-      "fieldtype": "data", 
-      "label": "City"
-   },
-   {
-      "fieldname": "state", 
-      "fieldtype": "data", 
-      "label": "State"
-   },
-   {
-      "fieldname": "country", 
-      "fieldtype": "data", 
-      "label": "Country"
-   },
-   {
-      "fieldname": "notification", 
-      "fieldtype": "section", 
-      "label": "Manage Notifications" 
-   },
-   {
-      "fieldname": "dashboard", 
-      "fieldtype": "section", 
-      "label": "Manage Dashboard" 
-   },
-    {
-      "fieldname": "events", 
-      "fieldtype": "check", 
-      "label": "Events" 
-   },
-    {
-      "fieldname": "visits", 
-      "fieldtype": "check", 
-      "label": "Visits" 
-   },
-    {
-      "fieldname": "disease_monitoring", 
-      "fieldtype": "check", 
-      "label": "Disease Monitoring" 
-   },
-   {
-      "fieldname": "", 
-      "fieldtype": "column_break", 
-      "label": ""
-   },    
-   {
-      "fieldname": "medications", 
-      "fieldtype": "check", 
-      "label": "Medications" 
-   },
-   {
-      "fieldname":"appointments", 
-      "fieldtype":"check", 
-      "label": "Appointments" 
-   }, 
-   {
-      "fieldname":"messages", 
-      "fieldtype":"check", 
-      "label": "Messages" 
-   }   
+         {
+            "fieldname": "person_firstname", 
+            "fieldtype": "data", 
+            "label": "First Name",
+            "placeholder":"",
+            "required":1
+	     },
+        {
+            "fieldname": "person_middlename", 
+            "fieldtype": "data", 
+            "label": "Middle Name",
+            "placeholder":"",
+            "required":1
+         },
+	     {
+            "fieldname": "person_lastname", 
+            "fieldtype": "data", 
+            "label": "Last Name",
+            "placeholder":"",
+            "required":1
+	     },
+        {
+            "fieldname": "", 
+            "fieldtype": "column_break", 
+            "label": ""
+         },
+         {  
+            "fieldname": "relationship", 
+            "fieldtype": "data", 
+            "label": "Relationship",
+            "placeholder":"",
+            "required":1
+         },
+         {
+            "fieldname": "mobile", 
+            "fieldtype": "data", 
+            "label": "Mobile No",
+            "placeholder":"",
+            "required":1
+         },
+         {
+            "fieldname": "email", 
+            "fieldtype": "data", 
+            "label": "Email",
+            "placeholder":"",
+            "required":1
+         }   
    ]
 }

@@ -6,7 +6,6 @@ frappe.provide("templates/includes");
 
 var DiseaseMonitoring = inherit(RenderFormFields, {
 	init: function(wrapper,cmd, entityid,operation){
-		console.log(wrapper)
 		this.wrapper = wrapper
 		this.args=cmd
 		this.entityid=entityid
@@ -59,7 +58,6 @@ var DiseaseMonitoring = inherit(RenderFormFields, {
 			method:"phr.templates.pages.disease_monitoring.get_disease_fields",
 			args:{"name":value,"profile_id":profile_id},
 			callback:function(r){
-				console.log(r.message[0])
 				if (r.message){
 					data=r.message
 					RenderFormFields.prototype.init($("#main-con"), {'fields':data["fields"]})

@@ -6,10 +6,38 @@ function repl_str(str, args){
 	return str
 }
 
+function validate_mobile(mobile){
+    var pattern = /^\d{10}$/;
+    if (!pattern.test(mobile)) {
+        return false;
+    }
+    else{
+        return true
+    }
+}
+
+function s_alert(txt, seconds) {
+    if(!$('#dialog-container').length) {
+        $('<div id="dialog-container">').appendTo('body');
+    }
+    if(!$('#alert-container').length) {
+        $('<div id="alert-container"></div>').appendTo('#dialog-container');
+    }
+
+    var div = $('<div class="alert alert-warning" style="box-shadow: 0px 0px 2px rgba(0,0,0,0.5)">\
+        <a class="close" style="margin-left: 10px;">&times;</a>'+ txt +'</div>')
+            .appendTo('#alert-container')
+    div.find('.close').click(function() {
+        $(this).parent().remove();
+        return false;
+    });
+    div.delay(seconds ? seconds * 1000 : 3000).fadeOut(300);
+    return div;
+}
+
 
 $.arrayIntersect = function(a, b){
 	return $.grep(a, function(i){
-		console.log(i)
 		return $.inArray(i, b) > -1;
 	});
 };

@@ -22,7 +22,6 @@
 // }
 
 function thumbnail(pdfURL, elementID, filename, display){
-    console.log([display, elementID, filename,'123'])
     // console.log([pdfURL, 'test_pdf'])
     PDFJS.workerSrc="/assets/phr/pdfjs/build/pdf.worker.js";
     PDFJS.getDocument(pdfURL).then(function(pdf){

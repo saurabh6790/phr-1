@@ -123,8 +123,8 @@ login.login_handlers = (function() {
 					var last_visited =
 						localStorage.getItem("last_visited")
 							|| get_url_arg("redirect-to")
-							|| data.access_link
-							|| url || "/index";
+							|| url 
+							|| data.access_link || "/index";
 					localStorage.removeItem("last_visited");
 					window.location.href = last_visited;
 					sessionStorage.setItem("pid",frappe.get_cookie("profile_id"));
@@ -135,7 +135,6 @@ login.login_handlers = (function() {
 					window.location.href = "/index";
 				}
 			} else if(["#signup", "#forgot"].indexOf(window.location.hash)!==-1) {
-				console.log(data.message)
 				frappe.msgprint(data.message);
 			}
 		},

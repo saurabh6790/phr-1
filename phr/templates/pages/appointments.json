@@ -3,12 +3,16 @@
          {
             "fieldname": "from_date_time",
             "fieldtype": "datetime",
-            "label": "Date time"
+            "label": "Date time",
+            "placeholder":"",
+            "required":1
         },
         {
             "fieldname": "provider",
             "fieldtype": "data",
-            "label": "Provider's Name"
+            "label": "Provider's Name",
+            "placeholder":"",
+            "required":1
         },
                 {
             "fieldname": "",
@@ -18,7 +22,9 @@
         {
             "fieldname": "reason",
             "fieldtype": "text",
-            "label": "Reason For Visit"
+            "label": "Reason For Visit",
+            "placeholder":"",
+            "required":1
         },
          {
             "fieldname": "",

@@ -11,7 +11,6 @@ class PHRActivityLog(Document):
 
 @frappe.whitelist(allow_guest=True)
 def make_log(profile_id,entity,operation,subject,full_name=None):
-	frappe.errprint("gfshgsfgshfah")
 	al = frappe.get_doc({
 		"doctype":"PHR Activity Log",
 		"profile_id":profile_id,
