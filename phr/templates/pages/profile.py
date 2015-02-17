@@ -250,10 +250,16 @@ def delink_phr(selected,data,profile_id=None):
 	 		print obj[id]
 			ret_res=delink_phr_solr(obj[id],id,profile_id)
 			print ret_res
-		return "Profile Delinked Successfully"
+		l_phrs=get_linked_phrs(profile_id)
+		print l_phrs
+		return {
+			"message":"Profile Delinked Successfully",
+			"res":l_phrs
+		}
 	else:
-		return "Please Select PHR to Delink"
-
+		return {
+			"message":"Please Select PHR to Delink"
+		}
 def delink_phr_solr(data,id,profile_id):
 	solr_op='unlinkProfile'
 	url=get_base_url()+solr_op
@@ -272,12 +278,13 @@ def delink_phr_solr(data,id,profile_id):
 		print res
 		actdata=res['actualdata']		
 		dt=json.loads(actdata)
-		sub=dt['person_firstname']+" "+dt['person_lastname']+" "+"delinked Successfully"
-		make_log(profile_id,"profile","delink",sub)
+		#sub=dt['person_firstname']+" "+dt['person_lastname']+" "+"delinked Successfully"
+		#make_log(profile_id,"profile","delink",sub)
 		args={'person_firstname':dt['person_firstname'],'person_middlename':dt['person_middlename'],'person_lastname':dt['person_lastname'],'email':dt['email'],'mobile':dt['mobile'],'received_from':'Desktop','provider':'false','barcode':str(barcode)}
-		ret_res=create_profile_in_db(res['entityid'],args,res,path)
-		sub=dt['person_firstname']+" "+dt['person_lastname']+" "+"Profile Created Successfully"
-		make_log(profile_id,"profile","create",sub)
+		#ret_res=create_profile_in_db(res['entityid'],args,res,path)
+		ret_res=''
+		#sub=dt['person_firstname']+" "+dt['person_lastname']+" "+"Profile Created Successfully"
+		#make_log(profile_id,"profile","create",sub)
 		return ret_res
 
 

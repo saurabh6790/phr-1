@@ -17,10 +17,16 @@ def get_medication_data(data):
 		if 'rows' in filed_dict.keys(): 
 			rows = filed_dict.get('rows')
 			break
-	data=json.loads(data)
+	frappe.errprint(type(data))
+	if isinstance(data, unicode):
+		data=json.loads(data)
+
 	medication_list=fetch_values_from_db(data)
 	for d in medication_list:
-		rows.extend([["",d.medicine_name, d.dosage,d.from_date_time,d.to_date_time,d.additional_info]])
+		if d.status=='Active':
+			rows.extend([["<a nohref class='medication' id='%s'><i class='icon-unlock' data-toggle='tooltip' data-placement='top' title='Deactivate'></i></a>"%d.name,d.medicine_name, d.dosage,d.from_date_time,d.to_date_time,d.additional_info,d.status]])
+		else:
+			rows.extend([["",d.medicine_name, d.dosage,d.from_date_time,d.to_date_time,d.additional_info,d.status]])	
 
 	return {
 		'rows': rows,
@@ -71,6 +77,7 @@ def save_data(data):
 		"from_date_time":from_date,
 		"to_date_time":to_date,
 		"additional_info":obj.get('additional_info'),
+		"status":"Active",
 		"created_via": "Web"
 	})
 	med.ignore_permissions = True
@@ -94,3 +101,14 @@ def get_options(obj):
 @frappe.whitelist(allow_guest=True)
 def get_option(obj):
 	pass
+
+@frappe.whitelist(allow_guest=True)
+def update_status(data):
+	d=json.loads(data)
+	frappe.errprint(d["docname"])
+	med=frappe.get_doc("Medication",d["docname"])
+	med.status='Inactive'
+	med.save(ignore_permissions=True)
+	response=get_medication_data(data)
+	return response
+

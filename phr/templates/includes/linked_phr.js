@@ -59,6 +59,10 @@ var LinkedPHR = inherit(RenderFormFields, {
   				fg=false
   			}
   		})
+  		if (!validate_mobile($('form input[name="mobile"]').val())) {
+  			frappe.msgprint("Mobile No Invalid")
+  			fg=false
+  		}	
   		return fg	
   		
   	},
@@ -73,6 +77,7 @@ var LinkedPHR = inherit(RenderFormFields, {
 						if(r.message.returncode==122){
 							frappe.msgprint(r.message.message_summary)
 							$("input").val("");
+							$("form input[name='relationship']").prop("placeholder","")
 							var db = new render_dashboard();
 							db.render_linked_phr(sessionStorage.getItem("pid"))
 						}

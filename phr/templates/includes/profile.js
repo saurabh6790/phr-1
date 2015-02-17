@@ -195,7 +195,7 @@ var PatientDashboard = inherit(RenderFormFields, {
 			args:{'profile_id':profile_id},
 			callback: function(r) {
 				if(r.message) {
-					me.render_phrs(r.message,profile_id)
+					me.render_phrs(r.message)				
 				}
 			}
 		})
@@ -206,6 +206,7 @@ var PatientDashboard = inherit(RenderFormFields, {
 		meta=JSON.parse(data.actualdata)
 		meta_dic={}
 		$wrapper.empty();
+		console.log([meta,data])
 		$.each(meta,function(i,data){
 			$input=$(repl_str('<div class="form-horizontal frappe-control" style="max-width: 600px;margin-top:10px;">\
 						<div class="form-group row" style="margin: 0px">\
@@ -226,14 +227,13 @@ var PatientDashboard = inherit(RenderFormFields, {
 			</div>').appendTo($wrapper).unbind("click").click(function(){
 				selected=[]
 				BootstrapDialog.confirm('are you sure?', function(result){
+					alert(result)
            			if(result) {
            			 		NProgress.start();
                 			$(".chk_phr:checked").each(function() {
                 				selected.push($(this).val());
   							});
 							me.delink_phr(meta,selected,meta_dic,profile_id,me)
-							me.get_linked_phrs(profile_id)
-							NProgress.done();
             		}else {
                 			
             		}
@@ -242,13 +242,17 @@ var PatientDashboard = inherit(RenderFormFields, {
 			})
 	},
 	delink_phr:function(meta,selected,meta_dic,profile_id,me){
+		var me=this;
 		frappe.call({
 			method:'phr.templates.pages.profile.delink_phr',
 			args:{'selected':selected,"data":meta_dic,"profile_id":profile_id},
 			callback: function(r) {
+				console.log([r.message,r.message["message"], r])
 				if (r.message){
-					frappe.msgprint(r.message)
+					
+					me.render_phrs(r.message["res"],profile_id)
 				}
+				
 				//me.get_linked_phrs(r.message)
 			}
 		})

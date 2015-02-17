@@ -78,7 +78,7 @@ $.extend(RenderFormFields.prototype,{
 		$.each(fields,function(indx, meta){
 			!me.section && meta['fieldtype'] !== 'section_break' && me.section_break_field_renderer()
 			!me.column && me.column_break_field_renderer()
-			meta['value']=values[meta['fieldname']] || "";
+			meta['value']=values[meta['fieldname']] || meta['value'] || "";
 			me[meta['fieldtype'] + "_field_renderer"].call(me, meta);
 			if(meta['depends_on']) me.depends_on(meta)
 		})
@@ -90,7 +90,8 @@ $.extend(RenderFormFields.prototype,{
 						<div class="form-group row" style="margin: 0px">\
 								<div class="col-xs-8">\
 								<div class="control-input">\
-									<input type="checkbox" class="chk" name="%(fieldname)s" value="%(fieldname)s">\
+									<input type="checkbox" class="chk" name="%(fieldname)s" value="%(fieldname)s" \
+									data-toggle="tooltip" data-placement="top" title="%(label)s">\
 									%(label)s\
 								</div>\
 							</div>\
@@ -148,6 +149,7 @@ $.extend(RenderFormFields.prototype,{
 								<div class="control-input">\
 									<input type="text" class="form-control" \
 										placeholder="%(placeholder)s" name="%(fieldname)s" value="%(value)s" \
+										data-toggle="tooltip" data-placement="top" title="%(label)s"\
 										aria-describedby="basic-addon2"><span id="valid"></span>\
 								</div>\
 							</div>\
@@ -174,6 +176,7 @@ $.extend(RenderFormFields.prototype,{
 								<div class="control-input">\
 									<input type="password" class="form-control disable" \
 										placeholder="%(placeholder)s" name="%(fieldname)s"\
+										data-toggle="tooltip" data-placement="top" title="%(label)s"\
 										aria-describedby="basic-addon2">\
 								</div>\
 							</div>\
@@ -217,6 +220,7 @@ $.extend(RenderFormFields.prototype,{
 								<div class="control-input">\
 									<input type="email" class="form-control" \
 										placeholder="%(placeholder)s" name="%(fieldname)s" value="%(value)s"\
+										data-toggle="tooltip" data-placement="top" title="%(label)s"\
 										aria-describedby="basic-addon2">\
 								</div>\
 							</div>\
@@ -244,6 +248,7 @@ $.extend(RenderFormFields.prototype,{
 							<div class="col-xs-8">\
 								<div class="control-input">\
 									<select type="text" class="form-control" \
+									data-toggle="tooltip" data-placement="top" title="%(label)s"\
 										name="%(fieldname)s" >\
 								</div>\
 							</div>\
@@ -312,6 +317,7 @@ $.extend(RenderFormFields.prototype,{
 								<div class="control-input">\
 									<input type="text" class="form-control autocomplete" \
 										placeholder="%(label)s" name="%(fieldname)s" value="%(value)s" \
+										data-toggle="tooltip" data-placement="top" title="%(label)s"\
 										aria-describedby="basic-addon2" style="width:150px;">\
 								</div>\
 							</div>\
@@ -384,6 +390,7 @@ $.extend(RenderFormFields.prototype,{
 								<div class="control-input">\
 									<textarea type="text" class="form-control" \
 										placeholder="%(placeholder)s" name="%(fieldname)s"\
+										data-toggle="tooltip" data-placement="top" title="%(label)s"\
 										aria-describedby="basic-addon2"></textarea>\
 								</div>\
 							</div>\

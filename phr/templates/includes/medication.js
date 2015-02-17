@@ -33,7 +33,6 @@ var Medications = inherit(ListView,{
 						'value': val[0],
 						'text' : val[0] 
 					}).appendTo($('select[name="dosage_type"]'))
-					
 				})
 			}
 			else{
@@ -72,12 +71,12 @@ var Medications = inherit(ListView,{
 						NProgress.done();
 						if(r.message){
 							me.update_list_view(r.message)
-							me.update_select_options()
+							//me.update_select_options()
 							me.bind_save_event()
 						}
 						else{
 						
-					}
+						}
 					}
 				})
 			}
@@ -87,7 +86,39 @@ var Medications = inherit(ListView,{
 				return false
 			}			
 		})
+		$('.medication').bind('click',function(event){
+			data={}
+			docname=$(this).prop('id')
+			data["docname"]=docname
+			data["profile_id"]=me.profile_id
+			data['file_name']="medication";
+			data['param']="listview";
+			BootstrapDialog.confirm('are you sure?', function(result){
+				if(result){
+					me.update_status(data)
+				}
+
+			});
+			
+		})
 		
+	},
+	update_status:function(data){
+		var me=this;
+		frappe.call({
+			method:"phr.templates.pages.medication.update_status",
+			args:{"data":data},
+			callback:function(r){
+				NProgress.done();
+				if(r.message){
+					me.update_list_view(r.message)
+					me.update_select_options()
+					me.bind_save_event()
+				}
+				else{
+				}
+			}
+		})
 	},
   	validate_form:function(){
   		var me=this;

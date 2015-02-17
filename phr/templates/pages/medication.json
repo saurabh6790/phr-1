@@ -118,12 +118,13 @@
    "label": "Medications", 
    "rows": [
     [
-     "", 
+     " ", 
      "Medicine Name", 
      "Dosage", 
      "From Date time", 
      "To Date time", 
-     "Additional Info"
+     "Additional Info",
+     "Status"
     ]
    ]
   }
