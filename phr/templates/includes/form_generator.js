@@ -63,7 +63,7 @@ $.extend(RenderFormFields.prototype,{
 			arg['entityid'] = me.entityid
 		}
 		$.ajax({
-			method: "GET",
+			method: "POST",
 			url: "/api/method/phr.templates.pages.patient.get_data_to_render",
 			data: arg,
 			async: false,
