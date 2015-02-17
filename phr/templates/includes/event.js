@@ -9,6 +9,7 @@ frappe.provide("frappe");
 {% include "templates/includes/thumbnail.js" %}
 {% include "templates/includes/share_phr.js" %}
 {% include "templates/includes/custom_dialog.js" %}
+{% include "templates/includes/phr_comments.js" %}
 
 
 window.Events = inherit(ListView,{
@@ -289,6 +290,15 @@ window.Events = inherit(ListView,{
 			</div>\
 		</div>\
 	    ').appendTo($('.event_section'))
+		console.log("comment maker")
+		PHRComments.prototype.init({"wrapper":$('.event_section'), 
+				"provider_id" : frappe.get_cookie("profile_id"), 
+				"profile_id": me.profile_id,
+				"event_id": $("[name='entityid']").val(),
+				"event_title":$("[name='event_title']").val()
+
+		});
+		console.log("Tessing comments")
 
 		$('#share').click(function(){
 			$("form input, form textarea").each(function(i, obj) {
@@ -393,6 +403,8 @@ window.Events = inherit(ListView,{
 						'dms_file_list': me.dms_file_list})
 				// me.render_uploader_and_files();
 			})	
+
+		
 	},
 	set_provider_details:function(){
 		var me = this;
@@ -400,8 +412,10 @@ window.Events = inherit(ListView,{
 			method:"phr.templates.pages.provider.get_self_details",
 			args:{"profile_id":frappe.get_cookie("profile_id")},
 			callback:function(r){
+				console.log(["checking callbacks", r])
 				if(r.message){
-					console.log(r.message[0])
+					console.log(["Test set provider pannel", r.message[0], r.message[0]['email']])
+
 					$('[name="email_id"]').val(r.message[0]['email'])
 					$('[name="number"]').val(r.message[0]['mobile_number'])
 					$('[name="doctor_id"]').val(r.message[0]['provider_id'])

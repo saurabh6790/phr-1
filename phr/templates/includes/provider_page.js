@@ -32,6 +32,10 @@ $(document).ready(function () {
 	$("table tr td a").bind('click', function (e) { 
 		render_shared_data($(this).attr('id'))
 	})
+
+	$('.create_linkphr').unbind("click").click(function(){
+		LinkedPHR.prototype.init('',{"file_name" : "linked_patient"},"","create_linkphr")
+	})
 })
 
 make_notifier= function(){

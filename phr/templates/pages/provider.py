@@ -82,6 +82,10 @@ def get_self_details(profile_id):
 			where p.provider_id=u.profile_id 
 				and u.profile_id="%s" 
 				and u.access_type="Provider" 
-		"""%(profile_id),as_dict=1, debug=1)
-	frappe.errprint(profile_info)
-	return ((len(profile_info) > 1 ) and profile_info[0]) if profile_info else None
+		"""%(profile_id),as_dict=1)
+
+	if len(profile_info) > 0:
+		return profile_info
+	else:
+		return {}
+	
