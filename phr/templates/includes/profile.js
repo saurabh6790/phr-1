@@ -145,9 +145,11 @@ var PatientDashboard = inherit(RenderFormFields, {
   				fg=false
   			}
   		})
-  		if (!validate_mobile($('.tab-pane.active form input[name="mobile"]').val())) {
-  			frappe.msgprint("Mobile No Invalid")
-  			fg=false
+  		if($('.tab-pane.active form input[name="mobile"]').val()){
+  			if (!validate_mobile($('.tab-pane.active form input[name="mobile"]').val())) {
+  				frappe.msgprint("Mobile No Invalid")
+  				fg=false
+  			}
   		}	
   		return fg	
   		
