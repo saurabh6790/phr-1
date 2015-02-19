@@ -105,6 +105,64 @@ def get_data():
 				},
 			]
 		},
-
-		
+		{
+			"label": _("Reports"),
+			"icon": "icon-table",
+			"items": [
+				{
+					"type": "report",
+					"is_query_report": True,
+					"name": "Patient Login Details",
+					"doctype": "User"
+				},
+				{
+					"type": "report",
+					"is_query_report": True,
+					"name": "Patient Registration Logs",
+					"doctype": "Verification Details"
+				},
+				{
+					"type": "report",
+					"is_query_report": True,
+					"name": "Medications",
+					"doctype": "Medication"
+				},
+				{
+					"type": "report",
+					"is_query_report": True,
+					"name": "Appointments",
+					"doctype": "Appointments"
+				},
+				{
+					"type": "report",
+					"is_query_report": True,
+					"name": "Disabled Accounts",
+					"doctype": "User"
+				},
+				{
+					"type": "report",
+					"is_query_report": True,
+					"name": "Events",
+					"doctype": "Events"
+				},
+				{
+					"type": "report",
+					"is_query_report": True,
+					"name": "Visits",
+					"doctype": "Events"
+				},
+				{
+					"type": "report",
+					"is_query_report": True,
+					"name": "Disease Monitoring",
+					"doctype": "Disease Monitoring"
+				},
+				{
+					"type": "report",
+					"is_query_report": True,
+					"name": "Linked Accounts",
+					"doctype": "Providers Linked"
+				},
+			]
+		},
 	]

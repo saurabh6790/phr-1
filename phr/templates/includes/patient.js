@@ -30,6 +30,9 @@ $(document).ready(function () {
 		window.location.href = "login";
 	}
 	else{
+		if (sessionStorage.getItem("cid")!=sessionStorage.getItem("pid")){
+			$('#linkedphr').hide()
+		}	
 		NProgress.start();
 		profile_id=sessionStorage.getItem("cid")
 		var db = new render_dashboard();

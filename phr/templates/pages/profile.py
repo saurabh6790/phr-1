@@ -16,6 +16,8 @@ from frappe.utils import cint, now, get_gravatar,cstr
 from phr.phr.doctype.phr_activity_log.phr_activity_log import make_log
 import datetime
 from phr.templates.pages.patient import get_base_url 
+from erpnext.setup.doctype.sms_settings.sms_settings import send_sms
+from frappe.utils.email_lib import sendmail
 
 
 @frappe.whitelist(allow_guest=True)
@@ -540,3 +542,59 @@ def get_advertisements(profile_id=None):
 def get_states():
 	states=frappe.db.sql("""select name from `tabState`""",as_list=1)
 	return states
+
+
+
+@frappe.whitelist(allow_guest=True)
+def notify_about_registration():
+	mobile_nos=get_mobile_nos()
+	if mobile_nos:
+		send_sms(mobile_nos,msg='Please Complete Your PHR Registration')
+		
+def get_mobile_nos():
+	nos=frappe.db.sql_list("""select contact from 
+		`tabUser` where 
+		profile_id in (SELECT profile_id 
+			FROM `tabVerification Details` 
+			WHERE creation > (NOW() - INTERVAL 2 DAY) 
+			and mflag=0)""")
+
+	return nos
+
+
+@frappe.whitelist(allow_guest=True)
+def notify_about_linked_phrs(profile_id,email_msg=None,text_msg=None,entity=None):
+	linked_phr=("""select profile_id from `tabNotification Configuration` where linked_phr=1""")
+	if linked_phr:
+		user=frappe.get_doc('User',frappe.db.get_value("User",{"profile_id":profile_id},"name"))
+		if user:
+			sendmail(user.name,subject="PHR Updates:"+entity+"Updated",msg=email_msg)
+			rec_list=[]
+			rec_list.append(user.contact)
+			send_sms(rec_list,msg=text_msg)
+		else:
+			get_profile_data_from_solr(profile_id)
+
+@frappe.whitelist(allow_guest=True)
+def get_profile_data_from_solr(profile_id):
+	solr_op='admin/searchlinkprofile'
+	url=get_base_url()+solr_op
+	request_type='POST'
+	data={"profileId":profile_id}
+	from phr.phr.phr_api import get_response
+	response=get_response(url,json.dumps(data),request_type)
+	res=json.loads(response.text)
+	if res['returncode']==120:
+		return res['list']
+
+@frappe.whitelist(allow_guest=True)
+def search_profile_data_from_solr(profile_id):
+	solr_op='admin/searchlinkprofile'
+	url=get_base_url()+solr_op
+	request_type='POST'
+	data={"entityid":profile_id}
+	from phr.phr.phr_api import get_response
+	response=get_response(url,json.dumps(data),request_type)
+	res=json.loads(response.text)
+	if res['returncode']==120:
+		return res['actualdata'][0]

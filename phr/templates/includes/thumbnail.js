@@ -5,6 +5,7 @@ frappe.provide("frappe");
 // {% include "templates/includes/form_generator.js" %}
 {% include "templates/includes/list.js" %}
 {% include "templates/includes/uploader.js" %}
+{% include "templates/includes/custom_dialog.js" %}
 
 var ThumbNails = function(){
 	this.wrapper = ""
@@ -125,10 +126,23 @@ $.extend(ThumbNails.prototype,{
 				.html($(repl('<div>\
 						<input type="checkbox" name="image" style="display:%(display)s" value="/%(path)s/%(file_name)s" >\
 					</div>\
-					<img style="height:150px;" src="/%(path)s/%(file_name)s">\
-					<br><label style="width: 150px;word-wrap: break-word;">%(file_name)s</label>',attachment))).appendTo(row)
+					<a nohref class="control-image" data-name="/%(path)s/%(file_name)s"><img style="height:150px;" src="/%(path)s/%(file_name)s">\
+					<br><label style="width: 150px;word-wrap: break-word;">%(file_name)s</label></a>',attachment))).appendTo(row)
 		}
-
+		$('.control-image').bind('click',function(event) {
+			//val=$("input[name=image]").val()
+			//val=$(this).closest('.control-image').attr('data-name');
+			//val=$(this).closest('input[name=image]').val()
+			console.log($('input[name=event_title]').val())
+			var title=$('input[name=event_title]').val()+' '+$('input[name=event_date]').val()
+			val=$(this).attr('data-name')
+			d = new Dialog();
+			d.init({"title":"Image Preview"+' ('+title+')'})
+			d.show()
+			$('<div><img style="position: relative; width: 100%; height: 60%; top: 10px" src="'+val+'">\
+				<p style="position: absolute; top: 100px; left: 10%; width: 80%; padding: 4px; background-color: transparent; font-weight: bold; color: #0AD5F5; font-weight: 600; font-size: 2em;">\
+				'+title+'</p></div>').appendTo($('.modal-body'))
+		})	
 		$("input[type=checkbox]").on( "click", function(){
 			if($(this).is(':checked')){
 				// file_path = $($(this).parents()[1]).find('img').attr('src')

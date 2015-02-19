@@ -6,7 +6,7 @@ frappe.provide("frappe");
 {% include "templates/includes/list.js" %}
 {% include "templates/includes/uploader.js" %}
 {% include "templates/includes/list_view.js" %}
-
+{% include "templates/includes/linked_phr_updates.js" %}
 
 var Appointments = inherit(ListView,{
 	init: function(wrapper, json_file, profile_id, entity_id){
@@ -54,6 +54,9 @@ var Appointments = inherit(ListView,{
 						NProgress.done();
 						if(r.message){
 							me.update_list_view(r.message)
+							email_msg='Linked PHR Has Created Appointment'
+							text_msg='Linked PHR Has Created Appointment'
+							send_linkedphr_updates(email_msg,text_msg,"Appointment")
 						}
 						else{
 							

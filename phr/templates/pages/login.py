@@ -81,6 +81,7 @@ def get_site_name():
 @frappe.whitelist(allow_guest=True)
 def create_profile_in_db(id,args,response,path):
 	from frappe.utils import random_string
+	password=random_string(10)
 	user = frappe.get_doc({
 		"doctype":"User",
 		"email": args["email"],
@@ -88,11 +89,12 @@ def create_profile_in_db(id,args,response,path):
 		"first_name": args["person_firstname"],
 		"enabled": 1,
 		"contact":args["mobile"],
-		"new_password": random_string(10),
+		"new_password": password,
 		"user_type": "Website User",
 		"access_type":"Patient",
 		"barcode":path,
-		"created_via":args["received_from"]
+		"created_via":args["received_from"],
+		"password_str":password
 	})
 	user.ignore_permissions = True
 	user.insert()

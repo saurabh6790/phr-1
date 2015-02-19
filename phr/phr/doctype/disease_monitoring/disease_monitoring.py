@@ -28,3 +28,6 @@ class DiseaseMonitoring(Document):
 
 	def on_update(self):
 		self.event_master_id=self.name
+
+def get_diseases(doctype, txt, searchfield, start, page_len, filters):
+	return frappe.db.sql("""select disease_name from `tabDisease Monitoring`""",as_list=1)
