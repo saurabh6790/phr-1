@@ -137,15 +137,17 @@ def fetch_data_from_medications(med_list,recipient_list):
 			options=json.loads(mobj.options)
 			for d in fobj.get('dosage_fields'):
 				time_diff=0
-				if d.fieldtype==time:
+				if d.fieldtype=="time":
 					time_now = datetime.strptime(nowtime(),'%H:%M:%S.%f')
 					time_g = datetime.strptime(options[d.fieldname],'%I:%M %p')
 					time_c=datetime.strptime(d2.strftime('%H:%M:%S.%f'),'%H:%M:%S.%f')
 					time_diff=cint((time_c-time_now // 60)%60)
-				else d.fieldname==datetime:
+
+				elif d.fieldname=="datetime":
 					time_now= datetime.datetime.strptime(nowtime(), '%Y-%m-%d %H:%M:%S.%f')
 					time_g = datetime.datetime.strptime(options[d.fieldname], '%Y-%m-%d %H:%M:%S.%f')
 					time_diff=cint((time_c-time_now // 60)%60)
+
 				if time_diff and (time_diff > 0 and time_diff < 6):
 					user=frappe.db.get_value("User",{"profile_id":mobj.profile_id},"name")
 					if user:
