@@ -14,7 +14,7 @@ function render_dashboard(profile_id){
 				}
 				else{
 					$('#hps').empty()
-					$('<p class="hp">No Providers</p>').appendTo('#clphr')
+					$('<p class="hp">No Providers</p>').appendTo('#hps')
 					
 				}
 			}
@@ -184,7 +184,7 @@ function render_dashboard(profile_id){
 		meta=data
 		$.each(meta,function(i,data){
 			$(repl_str('<div class="list-group-item-side %(entityid)s">\
-			<a noherf data-name=%(provider)s>%(name1)s </a>\
+			<a noherf data-name=%(provider)s onclick="Provider.prototype.open_record(\'%(provider)s\')">%(name1)s </a>\
 			</div>', data)).appendTo($wrap)
 		})
     }

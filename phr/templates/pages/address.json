@@ -1,0 +1,54 @@
+{
+    "tab": 0,
+    "fields":[
+        {
+            "fieldname": "address1",
+            "fieldtype": "data",
+            "label": "Address Line 1",
+            "placeholder":""
+        },
+        {
+            "fieldname": "country",
+            "fieldtype": "data",
+            "label": "Country",
+            "value":"India",
+            "placeholder":""
+        },
+        {
+            "fieldname": "city",
+            "fieldtype": "data",
+            "label": "City",
+            "placeholder":""
+        },
+        {
+            "fieldname": "visiting_hours",
+            "fieldtype": "data",
+            "label": "Visiting Hours",
+            "placeholder":""
+        },
+        {
+            "fieldname": "",
+            "fieldtype": "column_break",
+            "label": ""
+        },
+        {
+            "fieldname": "address2",
+            "fieldtype": "data",
+            "label": "Address Line 2",
+            "placeholder":""
+        },
+        {
+            "fieldname": "state",
+            "fieldtype": "select",
+            "label": "State",
+            "options": ["Maharashtra", "Delhi"],
+            "placeholder":""
+        },
+        {
+            "fieldname": "pincode",
+            "fieldtype": "data",
+            "label": "Pincode",
+            "placeholder":""
+        }
+    ]
+}

@@ -125,15 +125,15 @@ def get_url(data):
 """
 @frappe.whitelist(allow_guest=True)
 def get_base_url():
-	# return "http://192.168.5.11:9090/phr-api/"
-	return "http://88.198.52.49:7974/phr-api/"
+	return "http://192.168.5.11:9090/phr-api/"
+	#return "http://88.198.52.49:7974/phr-api/"
 	#pass
 
 """
 Method to get name of method in solr database.contains dictionary or map.
 """
 def get_method(data):
-	method_dic={"profile":"searchProfile", "event":"searchEvent", "visit":"searchVisit"}
+	method_dic={"profile":"searchProfile", "event":"searchEvent", "visit":"searchVisit", "provider":"searchProvider"}
 	return method_dic.get(data.get('method'))
 
 

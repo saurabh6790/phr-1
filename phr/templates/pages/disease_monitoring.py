@@ -55,7 +55,7 @@ def get_disease_fields(name,profile_id=None):
 			raw_fields.append(row_dic_raw)
 			fields.append(row_dic)
 
-			values=get_values(profile_id,fields,dm.event_master_id,field_mapper)
+			values=get_values(profile_id, fields, dm.event_master_id, field_mapper)
 			return {
 				"fields":fields, 
 				"event_master_id":dm.event_master_id,

@@ -1,12 +1,58 @@
 {
-	"listview": [
+	"tab":1,
+	"fields": [
 		{
-			"fieldname": "tab", 
+			"fieldname": "my_req", 
+			"fieldtype": "section", 
+			"label": "My Requests",
+			"default":1
+		},
+		{
+			"fieldname": "my_req1", 
 			"fieldtype": "table", 
 			"label": "",
 			"rows":[
-				["Patient Name"]
+				["Date (Shared date)", "Patient Name", 
+				"Reason for Sharing",  "Period of Sharing", 
+				"Payment Status", "Accept-Reject"],
+				["Date (Shared date)", "Patient Name", 
+				"Reason for Sharing",  "Period of Sharing", 
+				"Payment Status", "Accept-Reject"],
+				["Date (Shared date)", "Patient Name", 
+				"Reason for Sharing",  "Period of Sharing", 
+				"Payment Status", "Accept-Reject"]
+			]
+		},
+		{
+			"fieldname": "acc_req", 
+			"fieldtype": "section", 
+			"label": "Accepted Request"
+		},
+		{
+			"fieldname": "acc_req1", 
+			"fieldtype": "table", 
+			"label": "",
+			"rows":[
+				["Date (Shared date)", "Patient Name", 
+				"Reason for Sharing",  "Period of Sharing", 
+				"Payment Status", "Status"]
+			]
+		},
+		{
+			"fieldname": "rej_req", 
+			"fieldtype": "section", 
+			"label": "Rejected Request"
+		},
+		{
+			"fieldname": "rej_req1", 
+			"fieldtype": "table", 
+			"label": "",
+			"rows":[
+				["Date (Shared date)", "Patient Name", 
+				"Reason for Sharing",  "Period of Sharing", 
+				"Payment Status", "Reason For Rejection"]
 			]
 		}
 	]
 }
+

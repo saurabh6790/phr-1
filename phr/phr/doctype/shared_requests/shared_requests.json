@@ -162,6 +162,13 @@
    "reqd": 0, 
    "search_index": 0, 
    "set_only_once": 0
+  }, 
+  {
+   "fieldname": "rej_reason", 
+   "fieldtype": "Text", 
+   "label": "Rejection Reason", 
+   "permlevel": 0, 
+   "precision": ""
   }
  ], 
  "hide_heading": 0, 
@@ -172,7 +179,7 @@
  "is_submittable": 0, 
  "issingle": 0, 
  "istable": 0, 
- "modified": "2015-02-12 16:49:54.063785", 
+ "modified": "2015-02-19 20:49:41.944291", 
  "modified_by": "Administrator", 
  "module": "phr", 
  "name": "Shared Requests", 

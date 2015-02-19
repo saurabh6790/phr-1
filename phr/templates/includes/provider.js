@@ -1,6 +1,7 @@
 frappe.provide("templates/includes");
 {% include "templates/includes/utils.js" %}
 {% include "templates/includes/form_generator.js" %}
+{% include "templates/includes/custom_dialog.js" %}
 
 var Provider = inherit(RenderFormFields, {
 	init: function(wrapper,cmd, entityid,operation){
@@ -51,5 +52,87 @@ var Provider = inherit(RenderFormFields, {
 	add_profile_to_link:function(data,entityid){
 		var db = new render_dashboard();
 		db.render_providers(sessionStorage.getItem("cid"))
-	}	
+	},
+	open_record:function(provider_id){
+		$(this.wrapper).empty()
+		$('.field-area').empty()
+		$('#main-con').empty()
+		RenderFormFields.prototype.init(this.wrapper, {"file_name" : "provider", "method": 'provider'}, provider_id)
+		this.get_addr(provider_id)
+		this.add_address(provider_id)
+	},
+	get_addr: function(provider_id){
+		var me =this;
+		frappe.call({
+			method:"phr.templates.pages.provider.get_address",
+			args:{'provider_id': provider_id},
+			callback:function(r){
+				$('.description').empty()
+				me.address_renderer(r.message)
+			}
+		})
+	},
+	address_renderer:function(address){
+		$.each(address, function(i, addr){
+			description = [];
+			$.each([
+				['addr_line1', '<b>Address Line1</b>'],
+				['addr_line2', '<b>Address Line2</b>'],
+				['city', '<b>City</b>'],
+				['state', '<b>State</b>'],
+				['country', '<b>Country</b>'],
+				['pincode', '<b>Pincode</b>'],
+				['visiting_hours', '<b>Visiting Hours</b>']],
+				function(i, v) {
+					if(addr[v[0]]) {
+						description.push(repl('<b>%(label)s:</b> %(value)s', {
+							label: v[1],
+							value: addr[v[0]],
+					}));
+				}
+			})
+			addr = description.join('<br />');
+
+			$(repl_str("\
+				<div class='description' style='padding-top:2%'>\
+					<p>%(description)s</p>\
+					<hr>\
+				</div>", {'description':addr})).appendTo($("#main-con"))
+		});
+	},
+	add_address:function(provider_id){
+		var me = this;
+		$('<button class="btn btn-primary">\
+			<i class="icon-plus"></i> Add New Address \
+		</button>')
+		.appendTo($("#main-con"))
+		.click(function(){
+			me.make_address(provider_id)
+		})
+	},
+	make_address: function(provider_id){
+		var me = this;
+		d = new Dialog();
+		d.init({"file_name":"address", "title":"Address"})
+		d.show()
+		this.res = {}
+		$('.modal-footer .btn-primary').click(function(){
+			$(".modal-body form input, .modal-body form textarea, .modal-body form select").each(function(i, obj) {
+				me.res[obj.name] = $(obj).val();
+			})
+			me.res["received_from"]="Desktop"
+			me.save_address(me.res, d, provider_id)
+		})
+	},
+	save_address:function(res, d, provider_id){
+		var me = this;
+		frappe.call({
+			method:"phr.templates.pages.provider.create_addr",
+			args:{'res': res, 'provider_id': provider_id},
+			callback:function(r){
+				d.hide()
+				me.get_addr(provider_id)
+			}
+		})
+	}
 })

@@ -11,7 +11,8 @@
             "fieldname": "provider",
             "fieldtype": "data",
             "label": "Provider's Name",
-            "placeholder":"",
+            "placeholder": "",
+            "description": "Select provider from linked Healthcare Providers",
             "required":1
         },
                 {

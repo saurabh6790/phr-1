@@ -59,6 +59,7 @@ window.Events = inherit(ListView,{
 	open_form:function(event_id, event_title, profile_id){
 		var me = this;
 		this.profile_id = profile_id;
+		$('#main-con').empty();
 		RenderFormFields.prototype.init(me.wrapper, {"file_name" : "event", "method": 'event'}, event_id)
 
 		me.bind_save_event()
@@ -67,6 +68,9 @@ window.Events = inherit(ListView,{
 			$(this).remove()
 			me.open_form(event_id, event_title, me.profile_id)
 		}).appendTo('.breadcrumb');
+		
+		this.make_multi_select_div()
+
 		$('<div class="event_section" style="margin-top:-10%;"></div>').appendTo($('.field-area'))
 
 		$('[name="event_date"]').attr('disabled', 'disabled')
@@ -80,6 +84,12 @@ window.Events = inherit(ListView,{
   		me.bind_events()
   		this.get_linked_providers()
   		this.set_provider_details()
+	},
+	make_multi_select_div: function(){
+		$.each($('[name="event_symptoms"]').val().split(','), function(i, val){
+			$('<div class="ui-autocomplete-multiselect-item">'+val+'<span class="ui-icon ui-icon-close"></span></div>').insertAfter($('[name="event_symptoms"]'))
+		})
+		$('[name="event_symptoms"]').val('');
 	},
 	dialog_oprations: function(){
 		var me = this;
@@ -264,7 +274,7 @@ window.Events = inherit(ListView,{
 		$('<div class="event_section1" style = "margin:10%; 10%;">\
 			<div class="btn btn-success" id = "consultancy-11" \
 				style = "margin:5%; 5%;height:80px;text-align: center !important;"> \
-				<i class="icon-folder-close-alt icon-large"></i> <br> Consultancy\
+				<i class="icon-folder-close-alt icon-large"></i> <br> Consultation\
 			</div>\
 			<div class="btn btn-success" id = "event_snap-12" \
 				style = "margin:5%; 5%;height:80px;text-align: center !important;"> \

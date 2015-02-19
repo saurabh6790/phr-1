@@ -2,11 +2,9 @@
 	"fields":[
 		{
 			"fieldname":"provider_type", 
-			"fieldtype":"link", 
-			"label":"Provider Type",
-			"options":"Provider Type",
-			"multiselect":"false",
-			"description": "Autocomplete Field"
+			"fieldtype":"select", 
+			"label":"Type",
+			"options":"Provider Type"
 		},
 		{
 			"fieldname":"",
@@ -16,8 +14,19 @@
 		{
 			"fieldname":"name", 
 			"fieldtype":"data",
-			"label":"Provider Name",
-			"description": "Provider Name"
+			"label":"Name",
+			"placeholder":""
+		},
+		{
+			"fieldname":"",
+			"fieldtype":"section_break", 
+			"label":""
+		},
+		{
+			"fieldname":"specialization", 
+			"fieldtype":"select",
+			"label":"Specialization",
+			"options":"Specialization"
 		},
 		{
 			"fieldname":"",
@@ -27,8 +36,9 @@
 		{
 			"fieldname":"provider_loc", 
 			"fieldtype":"data",
-			"label":"Provider Location",
-			"description": "Provider Location"
+			"label":"Location",
+			"description": "Locality/ City/ State/ Pincode(Zip Code)",
+			"placeholder":""
 		}
 	]
 }
