@@ -2,6 +2,7 @@ frappe.provide("templates/includes");
 {% include "templates/includes/utils.js" %}
 {% include "templates/includes/form_generator.js" %}
 {% include "templates/includes/custom_dialog.js" %}
+{% include "templates/includes/linked_phr_updates.js" %}
 
 var Provider = inherit(RenderFormFields, {
 	init: function(wrapper,cmd, entityid,operation){
@@ -41,6 +42,9 @@ var Provider = inherit(RenderFormFields, {
 						$("input").val("");
 						frappe.msgprint(r.message.message_summary)
 						me.add_profile_to_link(r.message.actualdata,r.message.entityid)
+						email_msg='Linked PHR Has Created provider'
+						text_msg='Linked PHR Has Created provider'
+						send_linkedphr_updates(email_msg,text_msg,"provider")
 					}
 					else{
 						frappe.msgprint(r.message.message_summary)

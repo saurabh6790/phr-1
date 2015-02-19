@@ -3,6 +3,7 @@ frappe.provide("templates/includes");
 {% include "templates/includes/event.js" %}
 {% include "templates/includes/form_generator.js" %}
 {% include "templates/includes/custom_dialog.js" %}
+{% include "templates/includes/linked_phr_updates.js" %}
 
 var DiseaseMonitoring = inherit(RenderFormFields, {
 	init: function(wrapper,cmd, entityid,operation){
@@ -94,6 +95,9 @@ var DiseaseMonitoring = inherit(RenderFormFields, {
 					RenderFormFields.prototype.init($("#main-con"), {'fields':data["fields"]})
 					// me.bind_save_event(me,r.message[1],profile_id)
 					me.add_share_event()
+					email_msg='Linked PHR Has Created DiseaseMonitoring'
+					text_msg='Linked PHR Has Created DiseaseMonitoring'
+					send_linkedphr_updates(email_msg,text_msg,"DiseaseMonitoring")
 				}
 				else{
 						

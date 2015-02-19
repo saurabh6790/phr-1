@@ -1,0 +1,17 @@
+{
+ "add_total_row": 0, 
+ "apply_user_permissions": 1, 
+ "creation": "2015-02-17 13:07:40.162878", 
+ "disabled": 0, 
+ "docstatus": 0, 
+ "doctype": "Report", 
+ "is_standard": "Yes", 
+ "modified": "2015-02-17 13:07:40.162878", 
+ "modified_by": "Administrator", 
+ "module": "phr", 
+ "name": "Disabled Accounts", 
+ "owner": "Administrator", 
+ "ref_doctype": "User", 
+ "report_name": "Disabled Accounts", 
+ "report_type": "Script Report"
+}

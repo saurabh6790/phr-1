@@ -2,6 +2,7 @@ frappe.provide("templates/includes");
 {% include "templates/includes/utils.js" %}
 {% include "templates/includes/log.js" %}
 {% include "templates/includes/form_generator.js" %}
+{% include "templates/includes/linked_phr_updates.js" %}
 
 var PatientDashboard = inherit(RenderFormFields, {
 	init: function(wrapper,cmd, entityid){
@@ -186,6 +187,9 @@ var PatientDashboard = inherit(RenderFormFields, {
 				NProgress.done();
 				if(r.message) {
 					frappe.msgprint(r.message);
+					email_msg='Linked PHR Has Updated His Profile'
+					text_msg='Linked PHR Has Updated His Profile'
+					send_linkedphr_updates(email_msg,text_msg,"Profile")
 				}
 			}
 		})
@@ -197,7 +201,8 @@ var PatientDashboard = inherit(RenderFormFields, {
 			args:{'profile_id':profile_id},
 			callback: function(r) {
 				if(r.message) {
-					me.render_phrs(r.message)				
+					me.render_phrs(r.message)
+					
 				}
 			}
 		})

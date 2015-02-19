@@ -5,6 +5,9 @@ from frappe.utils import get_site_path, get_hook_method, get_files_path, get_sit
 from phr.templates.pages.patient import get_data_to_render
 import datetime
 from phr.phr.doctype.phr_activity_log.phr_activity_log import make_log
+from erpnext.setup.doctype.sms_settings.sms_settings import send_sms
+from frappe.utils.email_lib import sendmail
+from phr.templates.pages.profile import search_profile_data_from_solr
 
 
 @frappe.whitelist(allow_guest=True)
@@ -66,4 +69,31 @@ def get_formatted_date(strdate=None):
 
 @frappe.whitelist(allow_guest=True)
 def notify_appointments():
-	pass
+	profile_list=get_list_to_notify()
+	send_notification(profile_list)
+
+
+def send_notification(profile_list):
+	if profile_list:
+		email_list=[]
+		sms_recipients=[]
+		for profile in profile_list:
+			pobj=frappe.get_doc('User',frappe.db.get_value("User",{"profile_id":profile},"name"))
+			if pobj
+				sms_recipients.append(pobj.contact)
+			else:
+				data=search_profile_data_from_solr(profile_id)
+				sms_recipients.append(data["mobile"])
+		if sms_recipients:
+			send_sms(sms_recipients,msg='You Have and Appointment')
+
+
+
+
+def get_list_to_notify():
+	profile_list=frappe.db.sql("""select profile_id from 
+		`tabAppointments` 
+		where from_date_time 
+		between  now() + INTERVAL 57 MINUTE 
+		and  now() + INTERVAL 63 MINUTE""",as_list=1)
+	return profile_list

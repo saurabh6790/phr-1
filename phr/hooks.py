@@ -88,23 +88,14 @@ website_generators = ["PHR Forms"]
 # Scheduled Tasks
 # ---------------
 
-# scheduler_events = {
-# 	"all": [
-# 		"phr.tasks.all"
-# 	],
-# 	"daily": [
-# 		"phr.tasks.daily"
-# 	],
-# 	"hourly": [
-# 		"phr.tasks.hourly"
-# 	],
-# 	"weekly": [
-# 		"phr.tasks.weekly"
-# 	]
-# 	"monthly": [
-# 		"phr.tasks.monthly"
-# 	]
-# }
+scheduler_events = {
+	"all": [
+		"phr.templates.pages.appointments.notify_appointments","phr.templates.pages.todo.notify_to_do","phr.templates.pages.medication.notify_medications"
+	],
+	"daily": [
+		"phr.templates.pages.profile.notify_about_registration",
+	]
+}
 
 # Testing
 # -------

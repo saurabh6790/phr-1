@@ -6,6 +6,7 @@ frappe.provide("frappe");
 {% include "templates/includes/list.js" %}
 {% include "templates/includes/uploader.js" %}
 {% include "templates/includes/list_view.js" %}
+{% include "templates/includes/linked_phr_updates.js" %}
 
 
 var Medications = inherit(ListView,{
@@ -23,7 +24,7 @@ var Medications = inherit(ListView,{
 		me.bind_save_event()
 
 	},
-	update_select_options:function(){
+	/*update_select_options:function(){
 		frappe.call({
 		method:"phr.templates.pages.medication.get_dosage_types",
 		callback:function(r){
@@ -40,7 +41,7 @@ var Medications = inherit(ListView,{
 				}
 			}
 		})
-	},
+	},*/
 	bind_save_event: function(){
 		var me = this;
 		this.res = {}
@@ -71,8 +72,10 @@ var Medications = inherit(ListView,{
 						NProgress.done();
 						if(r.message){
 							me.update_list_view(r.message)
-							//me.update_select_options()
 							me.bind_save_event()
+							email_msg='Linked PHR Has Created Medication'
+							text_msg='Linked PHR Has Created Medication'
+							send_linkedphr_updates(email_msg,text_msg,"Medication")
 						}
 						else{
 						
@@ -93,7 +96,7 @@ var Medications = inherit(ListView,{
 			data["profile_id"]=me.profile_id
 			data['file_name']="medication";
 			data['param']="listview";
-			BootstrapDialog.confirm('are you sure?', function(result){
+			BootstrapDialog.confirm('are you sure,You Want to deactivate/Stop the Medication?', function(result){
 				if(result){
 					me.update_status(data)
 				}
