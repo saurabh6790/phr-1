@@ -12,14 +12,13 @@ var PatientDashboard = inherit(RenderFormFields, {
 		$(this.wrapper).empty()
 		$('.field-area').empty()
 		RenderFormFields.prototype.init(this.wrapper,this.args,this.entityid)
+		this.render_validations(this.entityid)
 		this.render_field(this.entityid)
 		this.get_linked_phrs(this.entityid)
 		this.get_enabled_notification(this.entityid)
 		this.get_enabled_dashboard(this.entityid)
 	},
-	render_field: function(profile_id){
-		var me = this;
-		$('.fileinput').fileinput()
+	render_validations:function(profile_id){
 		$('.chk').bind('click',function(event){
 			var $id=$('.tab-pane.active').attr('id')
 			if ($id=='dashboard'){
@@ -52,15 +51,33 @@ var PatientDashboard = inherit(RenderFormFields, {
 			var inches=$(this).val()/2.54
 			console.log(inches)
 			$(".tab-pane.active form input[name='height_in_inches']").val(inches.toFixed(2))
-			0.45359237
+			
 		});
 		$('.tab-pane.active form input[name="weight"]').bind('change', function() { 
 			var pounds=$(this).val()/0.45359237
 			console.log(pounds)
 			$(".tab-pane.active form input[name='weight_in_pounds']").val(pounds.toFixed(2))
 			
-		});	
-		//me.get_states()
+		});
+		$('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+  			attr=$(e.target).attr('href')
+			if (attr=='#notification' && (sessionStorage.getItem("cid")!=sessionStorage.getItem("pid"))){
+				$($('input[name="linked_phr"]').parents()[3]).css("display", "none");  				
+  			}
+		})
+		if (sessionStorage.getItem("cid")!=sessionStorage.getItem("pid")){
+			$($('a[aria-controls="manage_phr"]').parent()).css("display", "none");
+			$($('#manage_phr')).css("display", "none");	
+		}
+		if (sessionStorage.getItem("cid")==sessionStorage.getItem("pid")){
+			$($('input[name="relationship"]').parents()[3]).css("display", "none");  				
+  		}
+
+	},
+	render_field: function(profile_id){
+		var me = this;
+		$('.fileinput').fileinput()
+				
 		$('.save_controller').bind('click',function(event) {
 			var validated=me.validate_form()	
 			NProgress.start();
