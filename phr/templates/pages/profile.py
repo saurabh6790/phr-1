@@ -511,7 +511,7 @@ def build_logs_data(data):
 def get_user_details(profile_id=None):
 	user=frappe.get_doc("User",frappe.session.user)
 	if user:
-		name=user.first_name+''+cstr(user.last_name)
+		name=user.first_name+' '+cstr(user.last_name)
 		contact=user.contact
 		barcode=user.barcode
 		return{

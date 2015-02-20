@@ -87,6 +87,8 @@ def create_profile_in_db(id,args,response,path):
 		"email": args["email"],
 		"profile_id":id,
 		"first_name": args["person_firstname"],
+		"middle_name": args["person_middlename"],
+		"last_name": args["person_lastname"],
 		"enabled": 1,
 		"contact":args["mobile"],
 		"new_password": password,
@@ -102,9 +104,7 @@ def create_profile_in_db(id,args,response,path):
 
 def create_profile_in_solr(args):
 	request_type="POST"
-	# url="http://192.168.5.11:9090/phr/createProfile"
 	url = "%s/createProfile"%get_base_url()
-	# url="http://88.198.52.49:7974/phr/createProfile"
 	data=json.dumps(args)
 	print data
 	from phr.phr.phr_api import get_response

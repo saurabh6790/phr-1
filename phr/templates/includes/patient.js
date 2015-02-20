@@ -66,6 +66,8 @@ function bind_events(){
 		db.render_providers(profile_id)
 		db.render_linked_phr(profile_id)
 		db.render_middle_section(profile_id)
+		db.render_to_do(profile_id)
+		db.render_advertisements(profile_id)
 		NProgress.done();
 	})
 	$("#profile").unbind("click").click(function(){
