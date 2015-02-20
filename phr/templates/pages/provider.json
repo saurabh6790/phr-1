@@ -7,12 +7,6 @@
             "label": "Basic Info"
         },
         {
-            "fieldname": "name",
-            "fieldtype": "data",
-            "label": "Name",
-            "placeholder":""
-        },
-        {
             "fieldname": "provider_type",
             "fieldtype": "select",
             "label": "Provider Type",
@@ -22,6 +16,70 @@
                 "Hospital",
                 "Pathology Lab"
             ]
+        },
+        {
+            "fieldname": "name",
+            "fieldtype": "data",
+            "label": "Name",
+            "placeholder":""
+        },
+        {
+            "fieldname": "",
+            "fieldtype": "column_break",
+            "label": ""
+        },
+        {
+            "fieldname": "specialization",
+            "fieldtype": "select",
+            "label": "Specialization",
+            "options": "Specialization"
+        },
+        {
+            "fieldname": "mobile",
+            "fieldtype": "data",
+            "label": "Mobile",
+            "placeholder":""
+        },
+        {
+            "fieldname": "email",
+            "fieldtype": "data",
+            "label": "Email",
+            "placeholder":""
+        },
+        {
+            "fieldname": "",
+            "fieldtype": "section_break",
+            "label": "Personal Note"
+        },
+        {
+            "fieldname": "comments",
+            "fieldtype": "text",
+            "label": "Note",
+            "placeholder":""
+        },
+        {
+            "fieldname": "",
+            "fieldtype": "section_break",
+            "label": "Primary Address"
+        },
+        {
+            "fieldname": "address1",
+            "fieldtype": "data",
+            "label": "Address Line 1",
+            "placeholder":""
+        },
+        {
+            "fieldname": "country",
+            "fieldtype": "data",
+            "label": "Country",
+            "value":"India",
+            "placeholder":""
+        },
+        {
+            "fieldname": "city",
+            "fieldtype": "data",
+            "label": "City",
+            "placeholder":""
         },
         {
             "fieldname": "visiting_hours",
@@ -35,51 +93,28 @@
             "label": ""
         },
         {
-            "fieldname": "mobile",
-            "fieldtype": "data",
-            "label": "Mobile",
-            "placeholder":""
-        },
- 
-        {
-            "fieldname": "email",
-            "fieldtype": "data",
-            "label": "Email",
-            "placeholder":""
-        },
-        {
-            "fieldname": "",
-            "fieldtype": "section_break",
-            "label": "Address"
-        },
-        {
-            "fieldname": "address1",
-            "fieldtype": "text",
-            "label": "Address Line 1",
-            "placeholder":""
-        },
-        {
-            "fieldname": "",
-            "fieldtype": "column_break",
-            "label": ""
-        },
-        {
             "fieldname": "address2",
-            "fieldtype": "text",
+            "fieldtype": "data",
             "label": "Address Line 2",
             "placeholder":""
         },
         {
-            "fieldname": "",
-            "fieldtype": "section_break",
-            "label": ""
+            "fieldname": "State",
+            "fieldtype": "select",
+            "label": "State",
+            "options": ["", "Maharashtra", "Gujrat"],
+            "placeholder":""
         },
         {
-            "fieldname": "comments",
-            "fieldtype": "text",
-            "label": "Comemnts",
+            "fieldname": "pincode",
+            "fieldtype": "data",
+            "label": "Pincode",
             "placeholder":""
+        },
+        {
+            "fieldname": "",
+            "fieldtype": "section_break",
+            "label": "Secondary Address(es)"
         }
-
     ]
 }

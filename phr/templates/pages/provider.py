@@ -62,7 +62,12 @@ def create_provider_master_entry(res, data):
 		"provider_name": data.get('name'),
 		"provider_number": data.get('mobile'),
 		"email": data.get('email'),
-		"address": str(data.get('address1')) + '\n' + str(data.get('address2')),
+		"address": str(data.get('address1')),
+		"address_2": str(data.get('address2')),
+		"city": data.get('city'),
+		"state": data.get('state'),
+		"country": data.get('country'),
+		"pincode": data.get('pincode'),
 		"created_via": "Web"
 	})
 	pl.ignore_permissions = True
@@ -82,6 +87,30 @@ def get_self_details(profile_id):
 			where p.provider_id=u.profile_id 
 				and u.profile_id="%s" 
 				and u.access_type="Provider" 
-		"""%(profile_id),as_dict=1, debug=1)
-	frappe.errprint(profile_info)
-	return ((len(profile_info) > 1 ) and profile_info[0]) if profile_info else None
+		"""%(profile_id),as_dict=1)
+
+	if len(profile_info) > 0:
+		return profile_info
+	else:
+		return {}
+
+@frappe.whitelist(allow_guest=True)
+def create_addr(res, provider_id):
+	res = eval(res)
+	addr = frappe.new_doc('PHRAddress')
+	addr.addr_line1 = res.get('address1')
+	addr.addr_line2 = res.get('address2')
+	addr.city = res.get('city')
+	addr.state = res.get('state')
+	addr.country = res.get('country')
+	addr.pincode = res.get('pincode')
+	addr.visiting_hours = res.get('visiting_hours')
+	addr.provider_id = provider_id
+	addr.provider_name = frappe.db.get_value('User', {"profile_id": provider_id}, 'concat(first_name, " ", last_name)')
+	addr.save()
+
+@frappe.whitelist(allow_guest=True)
+def get_address(provider_id):
+	return frappe.db.sql("""select addr_line1, addr_line2, city, state, country, pincode, visiting_hours 
+					from tabPHRAddress 
+					where provider_id = '%s' order by creation desc"""%(provider_id), as_dict=1,  debug=1)

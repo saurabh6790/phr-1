@@ -10,7 +10,8 @@
 			"fieldname":"entityid", 
 			"fieldtype":"data", 
 			"label":"Event Id",
-			"description": "This is event id. Autofield"
+			"description": "This is event id. Autofield",
+			"display":"none"
 		},
 		{
 			"fieldname":"event_title", 
@@ -18,7 +19,8 @@
 			"options":"Events",
 			"multiselect":"false",
 			"label":"Event Name",
-			"description": "Event Name. Manual Field"
+			"required":1,
+			"placeholder":""
 		},
 		{
 			"fieldname":"", 
@@ -28,54 +30,67 @@
 		{
 			"fieldname":"event_date", 
 			"fieldtype":"date", 
-			"label":"Date"
+			"label":"Event Date",
+			"required":1,
+			"placeholder":""
 		},
 		{
 			"fieldname":"visit_date", 
 			"fieldtype":"date", 
 			"label":"Visit Date",
-			"display": "none"
+			"display": "none",
+			"required":1,
+			"placeholder":""
 		},
 		{
 			"fieldname":"",
 			"fieldtype":"section_break",
-			"label": "Complaint Desc"
+			"label": "Complaint Details",
+			"options": "icon-list-alt"
 		},
 		{
 			"fieldname":"event_symptoms",
 			"fieldtype":"link",
 			"multiselect":"true",
 			"label": "Complaint",
-			"options": "Events"
+			"options": "Events",
+			"required":1,
+			"placeholder":""
 		},
 		{
 			"fieldname":"event_descripton",
 			"fieldtype":"text", 
-			"label":"Complaint Description"
+			"label":"Complaint Description",
+			"placeholder":""
 		},
 		{
 			"fieldname": "diagnosis_desc",
 			"fieldtype": "text",
 			"label": "Diagnosis",
-			"display": "none"
+			"display": "none",
+			"required":1,
+			"placeholder":""
 		},
 		{
 			"fieldname":"", 
 			"fieldtype":"section_break", 
 			"label":"Provider Info",
 			"options": "icon-user-md",
-			"display": "none"
+			"display": "none",
+			"placeholder":""
 		},
 		{
 			"fieldname":"provider_type", 
-			"fieldtype":"select","label": 
-			"Healthcare Provider", 
-			"options":"Provider Type"
+			"fieldtype":"select",
+			"label": "Healthcare Provider", 
+			"options":"Provider Type",
+			"placeholder":""
 		},
 		{
 			"fieldname":"number", 
 			"fieldtype":"data", 
-			"label":"Contact Number"
+			"label":"Contact Number",
+			"placeholder":""
 		},
 		{
 			"fieldname":"",
@@ -85,18 +100,23 @@
 		{
 			"fieldname":"doctor_id", 
 			"fieldtype":"data", 
-			"label":"Provider id"
+			"label":"Provider id",
+			"display":"none",
+			"placeholder":""
 		},
 		{
 			"fieldname":"doctor_name", 
 			"fieldtype":"data", 
 			"label":"Provider Name",
-			"description": "<a id='provider_name' style='color:#17329E;'>Add New Provider</a>"
+			"description": "<a id='provider_name' style='color:#17329E;'>Add New Provider</a>",
+			"required":1,
+			"placeholder":""
 		},
 		{
 			"fieldname":"email_id", 
 			"fieldtype":"data", 
-			"label":"Email Id"
+			"label":"Email Id",
+			"placeholder":""
 		},
 		{
 			"fieldname":"", 

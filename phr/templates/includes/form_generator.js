@@ -63,7 +63,7 @@ $.extend(RenderFormFields.prototype,{
 			arg['entityid'] = me.entityid
 		}
 		$.ajax({
-			method: "GET",
+			method: "POST",
 			url: "/api/method/phr.templates.pages.patient.get_data_to_render",
 			data: arg,
 			async: false,
@@ -160,6 +160,9 @@ $.extend(RenderFormFields.prototype,{
 			$input.find("input").prop('required',true)
 			$input.find("label").addClass('required')
 			$('<style>.required:after{content:" *";color:red;font-size:20px;}</style>').appendTo($input)
+		}
+		if(field_meta['display']){
+			$($('[name="'+field_meta['fieldname']+'"]').parents()[3]).css("display", field_meta['display']);
 		}
 		if(field_meta['readonly']==1){
 			$input.find("input").prop('disabled',true)
@@ -258,24 +261,27 @@ $.extend(RenderFormFields.prototype,{
 
 		if (typeof(field_meta['options']) === "string"){
 			$loc_ip = $input;
-			frappe.call({
-				method:'phr.templates.pages.patient.get_master_details',
-				args:{'doctype': field_meta['options']},
-				callback: function(r){
-						$option=$('<option>', { 
+			$.ajax({
+				method: "POST",
+				url: "/api/method/phr.templates.pages.patient.get_master_details",
+				data: {'doctype': field_meta['options']},
+				async: false,
+				success: function(r) {
+					console.log(r)
+					$option=$('<option>', { 
 								'value': "",
 								'text' : "" 
 							}).appendTo($($loc_ip.find('select')))
-						$.each(r.message,function(i, val){
-							$option=$('<option>', { 
-								'value': val,
-								'text' : val 
-							}).appendTo($($loc_ip.find('select')))
-							if (field_meta['value']==val){
-							 $option.attr('selected','selected')
-							}
-							$option.appendTo($($loc_ip.find('select')))
-						})
+					$.each(r.message,function(i, val){
+						$option=$('<option>', { 
+							'value': val,
+							'text' : val 
+						}).appendTo($($loc_ip.find('select')))
+						if (field_meta['value']==val){
+						 $option.attr('selected','selected')
+						}
+						$option.appendTo($($loc_ip.find('select')))
+					})
 				}
 			})
 		}
@@ -316,7 +322,7 @@ $.extend(RenderFormFields.prototype,{
 							<div class="col-xs-8">\
 								<div class="control-input">\
 									<input type="text" class="form-control autocomplete" \
-										placeholder="%(label)s" name="%(fieldname)s" value="%(value)s" \
+										placeholder="%(placeholder)s" name="%(fieldname)s" value="%(value)s" \
 										data-toggle="tooltip" data-placement="top" title="%(label)s"\
 										aria-describedby="basic-addon2" style="width:150px;">\
 								</div>\
@@ -447,7 +453,7 @@ $.extend(RenderFormFields.prototype,{
 							<div class="col-xs-8">\
 								<div class="control-input">\
 									<input type="text" class="form-control" \
-										placeholder="%(label)s" name="%(fieldname)s" data-fieldtype="time" >\
+										placeholder="%(placeholder)s" name="%(fieldname)s" data-fieldtype="time" >\
 								</div>\
 							</div>\
 						</div>\
@@ -489,7 +495,7 @@ $.extend(RenderFormFields.prototype,{
 							<div class="col-xs-8">\
 								<div class="control-input">\
 									<input type="text" class="form-control" \
-										placeholder="%(label)s" name="%(fieldname)s" data-fieldtype="Date" >\
+										placeholder="%(placeholder)s" name="%(fieldname)s" data-fieldtype="Date" >\
 								</div>\
 							</div>\
 						</div>\
@@ -534,7 +540,7 @@ $.extend(RenderFormFields.prototype,{
 							<div class="col-xs-8">\
 								<div class="control-input">\
 									<input type="text" class="form-control" \
-										placeholder="%(label)s" name="%(fieldname)s" data-fieldtype="DateTime" >\
+										placeholder="%(placeholder)s" name="%(fieldname)s" data-fieldtype="DateTime" >\
 								</div>\
 							</div>\
 						</div>\
@@ -576,7 +582,7 @@ $.extend(RenderFormFields.prototype,{
 							<div class="col-xs-8">\
 								<div class="control-input">\
 									<input type="text" class="form-control" \
-										placeholder="%(label)s" name="%(fieldname)s" data-fieldtype="time" >\
+										placeholder="%(placeholder)s" name="%(fieldname)s" data-fieldtype="time" >\
 								</div>\
 							</div>\
 						</div>\
@@ -703,7 +709,6 @@ $.extend(RenderFormFields.prototype,{
     			this.labelled_section_count++;
 	    		var head = $('<h4 class="col-md-12">'
 						+ (meta['options'] ? (' <i class="icon-fixed-width text-muted '+meta['options']+'"></i> ') : "")
-						+ '<span class="section-count-label">' + __(this.labelled_section_count) + "</span>. "
 						+ meta['label']
 						+ "</h4>")
 						.css({"margin":"15px 0px"})

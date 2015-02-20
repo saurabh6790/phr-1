@@ -7,6 +7,7 @@ from phr.templates.pages.patient import get_data_to_render
 from phr.phr.phr_api import get_response
 import datetime
 from phr.templates.pages.patient import get_base_url
+from phr.phr.doctype.phr_activity_log.phr_activity_log import make_log
 
 @frappe.whitelist(allow_guest=True)
 def create_update_event(data=None):
@@ -44,11 +45,12 @@ def create_event(data):
 	event_date = datetime.datetime.strptime(event_data.get('str_event_date'), "%d/%m/%Y").strftime('%Y-%m-%d')
 	
 	if date_diff(event_date, nowdate()) > 0:
-		frappe.msgprint("Please sect valid date")
+		frappe.msgprint("Event Date should be past or current",raise_exception=1)
 
 	else:
 		response=get_response(url, json.dumps(event_data), request_type)
-	
+		make_log(json.loads(response.text).get('entityid'),"Event","Create","Event Created")
+
 	return json.loads(response.text)
 
 def update_event(data):
@@ -84,6 +86,7 @@ def update_event(data):
 
 	else:
 		response=get_response(url, json.dumps(event_data), request_type)
+		make_log(data.get('entityid'),"Event","Update","Event Updated")
 
 	return json.loads(response.text)
 
@@ -174,6 +177,8 @@ def share_via_email(data):
 		sendmail([data.get('email_id')], subject="PHR-Event Data", msg=cstr(msg),
 				attachments=attachments)
 
+		make_log(data.get('entityid'),"Event","Shared Via Email","Event Shared Via Email")
+
 		return """Selected image(s) has been shared with 
 			%(provider_name)s for event %(event)s """%{
 				'event': data.get('event_title'),
@@ -203,6 +208,7 @@ def share_via_providers_account(data):
 		response=get_response(url, json.dumps(event_data), request_type)
 		
 		make_sharing_request(event_data, data)
+		make_log(data.get('entityid'),"Event","Shared Via Provider","Event Shared Via Provider")
 		return eval(json.loads(response.text).get('sharelist'))[0].get('message_summary')
 
 	else:
@@ -229,6 +235,7 @@ def share_via_providers_account(data):
 		
 		response=get_response(url, json.dumps(event_data), request_type)
 		make_sharing_request(event_data, data)
+		make_log(data.get('entityid'),"Event","Shared Via Provider","Event Shared Via Provider")
 		return json.loads(json.loads(response.text).get('sharelist'))[0].get('message_summary')
 
 def make_sharing_request(event_data, data):
@@ -242,6 +249,7 @@ def make_sharing_request(event_data, data):
 	req.date = today()
 	req.patient = d.get("from_profile_id")
 	req.reason = data.get('reason')
+	req.valid_upto = data.get('sharing_duration')
 	req.event_title = data.get("event_title")
 	req.save()
 
@@ -390,6 +398,9 @@ def get_conditions(filters):
 
 	if filters.get('name'):
 		cond.append('provider_name like "%%%(name)s%%"'%filters)
+
+	if filters.get("specialization"):
+		cond.append('specialization like "%%%(specialization)s%%"'%filters)
 
 	if filters.get('provider_loc'):
 		cond.append('address like "%%%(provider_loc)s%%"'%filters)

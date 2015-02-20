@@ -1,19 +1,28 @@
 {
 	"fields":[
 		{
+			"fieldname":"",
+			"fieldtype":"section_break", 
+			"label":"Event Details"
+		},
+		{
 			"fieldname":"entityid",
 			"fieldtype":"data", 
-			"label":"Event Id"
+			"label":"Event Id",
+			"display":"none",
+			"placeholder":""
 		},
 		{
 			"fieldname":"event_date", 
 			"fieldtype":"date", 
-			"label":"Date"
+			"label":"Event Date",
+			"placeholder":""
 		},
 		{
 			"fieldname":"event_title", 
 			"fieldtype":"data", 
-			"label":"Event Name"
+			"label":"Event Name",
+			"placeholder":""
 		},
 		{
 			"fieldname":"", 
@@ -23,31 +32,35 @@
 		{
 			"fieldname":"event_descripton", 
 			"fieldtype":"text", 
-			"label":"Description"
+			"label":"Description",
+			"placeholder":""
 		},
 		{
 			"fieldname":"",
 			"fieldtype":"section_break", 
-			"label":""
+			"label":"Sharing Details"
 		},
 		{
 			"fieldname": "share_via", 
 			"fieldtype": "select", 
 			"label": "Share Via",
 			"options": ["","Email", "Provider Account"],
-			"required":1 
+			"required":1 ,
+			"placeholder":""
 		},
 		{
 			"fieldname":"email_body",
 			"fieldtype":"text", 
 			"label":"Email Body",
-			"depends_on":"share_via:Email"
+			"depends_on":"share_via:Email",
+			"placeholder":""
 		},
 		{
 			"fieldname":"email_id",
 			"fieldtype":"data", 
 			"label":"Email Id",
-			"depends_on":"share_via:Email"
+			"depends_on":"share_via:Email",
+			"placeholder":""
 		},
 		{
 			"fieldname":"", 
@@ -57,29 +70,29 @@
 		{
 			"fieldname":"doctor_name",
 			"fieldtype":"data", 
-			"label":"Provider Name"
+			"label":"Provider Name",
+			"placeholder":""
 		},	
 		{
 			"fieldname":"doctor_id", 
 			"fieldtype":"data", 
 			"label":"Provider id",
-			"depends_on":"share_via:Provider Account"
+			"depends_on":"share_via:Provider Account",
+			"display":"none",
+			"placeholder":""
 		},
 		{
 			"fieldname":"sharing_duration",
 			"fieldtype":"date", 
 			"label":"Sharing Duration",
-			"depends_on":"share_via:Provider Account"
-		},
-		{
-			"fieldname":"",
-			"fieldtype":"section_break", 
-			"label":""
+			"depends_on":"share_via:Provider Account",
+			"placeholder":""
 		},
 		{
 			"fieldname":"reason",
 			"fieldtype":"text", 
-			"label":"Reason For Sharing"
+			"label":"Reason For Sharing",
+			"placeholder":""
 		}
 	]
 }

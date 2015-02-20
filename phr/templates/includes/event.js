@@ -9,6 +9,7 @@ frappe.provide("frappe");
 {% include "templates/includes/thumbnail.js" %}
 {% include "templates/includes/share_phr.js" %}
 {% include "templates/includes/custom_dialog.js" %}
+{% include "templates/includes/phr_comments.js" %}
 
 
 window.Events = inherit(ListView,{
@@ -58,6 +59,7 @@ window.Events = inherit(ListView,{
 	open_form:function(event_id, event_title, profile_id){
 		var me = this;
 		this.profile_id = profile_id;
+		$('#main-con').empty();
 		RenderFormFields.prototype.init(me.wrapper, {"file_name" : "event", "method": 'event'}, event_id)
 
 		me.bind_save_event()
@@ -66,6 +68,9 @@ window.Events = inherit(ListView,{
 			$(this).remove()
 			me.open_form(event_id, event_title, me.profile_id)
 		}).appendTo('.breadcrumb');
+		
+		this.make_multi_select_div()
+
 		$('<div class="event_section" style="margin-top:-10%;"></div>').appendTo($('.field-area'))
 
 		$('[name="event_date"]').attr('disabled', 'disabled')
@@ -79,6 +84,12 @@ window.Events = inherit(ListView,{
   		me.bind_events()
   		this.get_linked_providers()
   		this.set_provider_details()
+	},
+	make_multi_select_div: function(){
+		$.each($('[name="event_symptoms"]').val().split(','), function(i, val){
+			$('<div class="ui-autocomplete-multiselect-item">'+val+'<span class="ui-icon ui-icon-close"></span></div>').insertAfter($('[name="event_symptoms"]'))
+		})
+		$('[name="event_symptoms"]').val('');
 	},
 	dialog_oprations: function(){
 		var me = this;
@@ -263,7 +274,7 @@ window.Events = inherit(ListView,{
 		$('<div class="event_section1" style = "margin:10%; 10%;">\
 			<div class="btn btn-success" id = "consultancy-11" \
 				style = "margin:5%; 5%;height:80px;text-align: center !important;"> \
-				<i class="icon-folder-close-alt icon-large"></i> <br> Consultancy\
+				<i class="icon-folder-close-alt icon-large"></i> <br> Consultation\
 			</div>\
 			<div class="btn btn-success" id = "event_snap-12" \
 				style = "margin:5%; 5%;height:80px;text-align: center !important;"> \
@@ -285,6 +296,15 @@ window.Events = inherit(ListView,{
 			</div>\
 		</div>\
 	    ').appendTo($('.event_section'))
+		console.log("comment maker")
+		PHRComments.prototype.init({"wrapper":$('.event_section'), 
+				"provider_id" : frappe.get_cookie("profile_id"), 
+				"profile_id": me.profile_id,
+				"event_id": $("[name='entityid']").val(),
+				"event_title":$("[name='event_title']").val()
+
+		});
+		console.log("Tessing comments")
 
 		$('#share').click(function(){
 			$("form input, form textarea").each(function(i, obj) {
@@ -386,6 +406,8 @@ window.Events = inherit(ListView,{
 						'dms_file_list': me.dms_file_list})
 				// me.render_uploader_and_files();
 			})	
+
+		
 	},
 	set_provider_details:function(){
 		var me = this;
@@ -393,8 +415,10 @@ window.Events = inherit(ListView,{
 			method:"phr.templates.pages.provider.get_self_details",
 			args:{"profile_id":frappe.get_cookie("profile_id")},
 			callback:function(r){
+				console.log(["checking callbacks", r])
 				if(r.message){
-					console.log(r.message[0])
+					console.log(["Test set provider pannel", r.message[0], r.message[0]['email']])
+
 					$('[name="email_id"]').val(r.message[0]['email'])
 					$('[name="number"]').val(r.message[0]['mobile_number'])
 					$('[name="doctor_id"]').val(r.message[0]['provider_id'])

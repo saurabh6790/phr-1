@@ -21,6 +21,7 @@ var Appointments = inherit(ListView,{
 			'profile_id':profile_id})
 		$('.new_controller').remove();
 		me.bind_save_event()
+		this.get_linked_providers(profile_id)
 
 	},
 	bind_save_event: function(){
@@ -88,5 +89,23 @@ var Appointments = inherit(ListView,{
 		var me = this;
 		RenderFormFields.prototype.init($(".field-area"), {'fields': data['listview']})
 		me.bind_save_event()
-	}
+	},
+	get_linked_providers:function(profile_id){
+		var me = this;
+		frappe.call({
+			method:"phr.templates.pages.event.get_linked_providers",
+			args:{'profile_id':this.profile_id},
+			callback:function(r){
+				$('[name="provider"]').autocomplete({
+					open: function(){
+						setTimeout(function () {
+							$('.ui-autocomplete').css('z-index', 99999999999999);
+						}, 0);
+					},
+					source: r.message,
+					multiselect: false
+				})
+			}
+		})
+	},
 })
