@@ -99,7 +99,7 @@
             "placeholder":""
         },
         {
-            "fieldname": "State",
+            "fieldname": "state",
             "fieldtype": "select",
             "label": "State",
             "options": ["", "Maharashtra", "Gujrat"],

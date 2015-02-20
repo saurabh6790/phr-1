@@ -10,6 +10,7 @@ frappe.provide("frappe");
 {% include "templates/includes/share_phr.js" %}
 {% include "templates/includes/custom_dialog.js" %}
 {% include "templates/includes/phr_comments.js" %}
+{% include "templates/includes/dashboard_renderer.js" %}
 
 
 window.Events = inherit(ListView,{
@@ -77,9 +78,11 @@ window.Events = inherit(ListView,{
 		$($('[name="visit_date"]').parents()[3]).css("display", "inherit")
 
 		$($('[name="diagnosis_desc"]').parents()[3]).css("display", "inherit");
+
 		$("#provider_name").click(function(){
 			me.dialog_oprations()
 		})
+		
 		me.render_folder_section()
   		me.bind_events()
   		this.get_linked_providers()
@@ -150,6 +153,7 @@ window.Events = inherit(ListView,{
 		me.set_provider(d)
 	},
 	set_provider:function(d){
+		var me = this;
 		$('.modal-footer .btn-primary').click(function(){
 			$('.table').find('tr').each(function () {
 				var row = $(this);
@@ -157,11 +161,28 @@ window.Events = inherit(ListView,{
 				if ($td.find('input[name="provider"]').is(':checked')) {
 					$('[name="doctor_id"]').val($td.find('input[name="provider"]').attr('id'))
 					$('[name="doctor_name"]').val($($td[1]).html())
-					$('[name="email_id"]').val($($td[2]).html())
-					$('[name="number"]').val($($td[3]).html())
-					d.hide();
+					$('[name="email_id"]').val($($td[3]).html())
+					$('[name="number"]').val($($td[2]).html())
+					me.attach_provider({'entityid': $td.find('input[name="provider"]').attr('id')},
+						{'email': $($td[2]).html(),'mobile': $($td[3]).html(),'name': $($td[1]).html()}, d)
 				}
 			})
+		})
+	},
+	attach_provider:function(res, data, d){
+		console.log([res, data, this.profile_id])
+		var me = this;
+		NProgress.start();
+		frappe.call({
+			method:"phr.templates.pages.provider.link_provider",
+			args:{'res': res, 'data':data, 'profile_id': me.profile_id},
+			callback:function(r){
+				d.hide();
+				var db = new render_dashboard();
+				db.render_providers(profile_id);
+				NProgress.done();
+
+			}
 		})
 	},
 	create_provider_linking:function(filters, d){

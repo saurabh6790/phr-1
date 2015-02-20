@@ -410,7 +410,7 @@ def get_conditions(filters):
 
 def get_provider_info(cond):
 	if cond:
-		ret = frappe.db.sql("""select name, provider_name, mobile_number, email from tabProvider where %s """%cond, as_list=1, debug=1)
+		ret = frappe.db.sql("""select provider_id, provider_name, mobile_number, email from tabProvider where %s """%cond, as_list=1, debug=1)
 		frappe.errprint(ret)
 		return ((len(ret[0]) > 1) and ret) if ret else None
 	

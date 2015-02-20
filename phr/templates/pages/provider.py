@@ -30,13 +30,19 @@ def create_provider_in_solr(data,profile_id):
 		link_provider(res, data,profile_id)
 		create_provider_master_entry(res, data)
 		provider=json.loads(data)
-		sub="created provider"+' '+Provider.get('name')
+		sub="created provider "+provider.get('name')
 		make_log(profile_id,"provider","create",sub)
 		return res
 
-
-def link_provider(res, data,profile_id):
-	data = json.loads(data)
+@frappe.whitelist(allow_guest=True)
+def link_provider(res, data, profile_id):
+	if isinstance(res, basestring):
+		res = eval(res)
+	if isinstance(data, basestring):
+		data = eval(data)
+	else:
+		data = json.loads(data)
+		
 	pl = frappe.get_doc({
 		"doctype": "Providers Linked",
 		"patient": profile_id,
