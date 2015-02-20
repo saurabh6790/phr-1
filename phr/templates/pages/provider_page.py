@@ -177,7 +177,7 @@ def get_request(target, provider_id):
 	return method_mapper.get(target)(target, provider_id)
 
 def get_myrequests(target, provider_id):
-	data = frappe.db.sql("""select name, provider_id, patient, event_id, date, patient, event_title, reason, valid_upto, payment
+	data = frappe.db.sql("""select name, provider_id, patient, event_id, date, patient_name, event_title, reason, valid_upto, payment
 				 from `tabShared Requests`
 				 where ifnull(approval_status,'') not in ('Accept', 'Reject') 
 					and provider_id="%s" """%(provider_id), as_list=1)
@@ -218,7 +218,7 @@ def update_request_record(req_id, rej_reason):
 	sr.save()
 
 def get_acc_req(target, provider_id):
-	data = frappe.db.sql("""select name, provider_id, patient, event_id, date, patient, event_title, reason, valid_upto, payment
+	data = frappe.db.sql("""select name, provider_id, patient, event_id, date, patient_name, event_title, reason, valid_upto, payment
 				 from `tabShared Requests`
 				 where ifnull(approval_status,'') = 'Accept'
 					and provider_id="%s" """%(provider_id), as_list=1)
@@ -246,7 +246,7 @@ def get_acc_req(target, provider_id):
 
 
 def get_rej_req(target, provider_id):
-	data = frappe.db.sql("""select name, provider_id, patient, event_id, date, patient, 
+	data = frappe.db.sql("""select name, provider_id, patient, event_id, date, patient_name, 
 				event_title, reason, valid_upto, payment, rej_reason
 				 from `tabShared Requests`
 				 where ifnull(approval_status,'') = 'Reject'

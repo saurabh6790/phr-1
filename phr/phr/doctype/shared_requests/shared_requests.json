@@ -87,6 +87,13 @@
    "set_only_once": 0
   }, 
   {
+   "fieldname": "patient_name", 
+   "fieldtype": "Data", 
+   "label": "Patient Name", 
+   "permlevel": 0, 
+   "precision": ""
+  }, 
+  {
    "allow_on_submit": 0, 
    "fieldname": "reason", 
    "fieldtype": "Data", 
@@ -179,7 +186,7 @@
  "is_submittable": 0, 
  "issingle": 0, 
  "istable": 0, 
- "modified": "2015-02-19 20:49:41.944291", 
+ "modified": "2015-02-20 14:41:26.397665", 
  "modified_by": "Administrator", 
  "module": "phr", 
  "name": "Shared Requests", 

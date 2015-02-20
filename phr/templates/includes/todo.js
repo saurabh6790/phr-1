@@ -9,6 +9,7 @@ frappe.provide("frappe");
 {% include "templates/includes/thumbnail.js" %}
 {% include "templates/includes/share_phr.js" %}
 {% include "templates/includes/custom_dialog.js" %}
+{% include "templates/includes/dashboard_renderer.js" %}
 
 var ToDo = inherit(ListView,{
 	init: function(wrapper, obj, profile_id, entity_id){
@@ -53,15 +54,7 @@ var ToDo = inherit(ListView,{
 	},
 	render_todo_list: function(){
 		var me = this;
-		frappe.call({
-			method:"phr.templates.pages.todo.get_todo",
-			args: {'profile_id':me.profile_id},
-			callback:function(r){
-				$('#todo').empty()
-				$.each(r.message, function(i, d){
-					me.add_todo(d)
-				})
-			}
-		})
+		var db = new render_dashboard();
+		db.render_to_do(me.profile_id)
 	}
 })

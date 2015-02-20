@@ -14,37 +14,76 @@ frappe.provide("frappe");
 {% include "templates/includes/appointments.js" %}
 {% include "templates/includes/messages.js" %}
 {% include "templates/includes/custom_dialog.js" %}
+{% include "templates/includes/dashboard_renderer.js" %}
 /*
   Format for method Classes
   ClassName.prototype.init(wrapper,name_of_json_file,entityid,operation_entity)
 */
 $(document).ready(function () {
-	profile_id=frappe.get_cookie("profile_id")
+	if(!window.full_name) {
+		if(localStorage) {
+			localStorage.setItem("last_visited",
+				window.location.href.replace(window.location.origin, ""));
+		}
+		window.location.href = "login";
+	}
+	else{
+		profile_id=frappe.get_cookie("profile_id")
 
-	// make_notifier()
-	// get_request(profile_id)
-	RenderFormFields.prototype.init($("#main-con"), {'file_name':'provider_page'})
-	$('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
-  		e.target // newly activated tab
-  		e.relatedTarget // previous active tab
-  		// alert(e.target)
-  		request_renderer($(this).attr('href'), profile_id)
-	})
-	request_renderer('#my_req', profile_id)
-	// ListView.prototype.init(this.wrapper, {'file_name':"provider_page",
-	// 	'cmd':"provider_page.get_profile_list",
-	// 	'tab_at': 0,
-	// 	'profile_id': frappe.get_cookie("profile_id")
-	// })
+		// make_notifier()
+		// get_request(profile_id)
+		var db = new render_dashboard();
+		db.render_linked_phr(profile_id)
 
-	// $("table tr td a").bind('click', function (e) { 
-	// 	render_shared_data($(this).attr('id'))
-	// })
+		$("#home").on("click",function(){
+			$('.breadcrumb').empty()
+			$('.linked-phr').empty()
+			$('.save_controller').hide()
+			$('.new_controller').hide()
+			NProgress.start();
+			profile_id=sessionStorage.getItem("pid")
+			$('#linkedphr').show()
+			sessionStorage.setItem("cid",profile_id)
+			$('#profile').attr('data-name',profile_id)
+			$('.field-area').empty()
+			$('#main-con').empty()
+			db.render_linked_phr(profile_id);
+			render_middle_section(profile_id);
+			NProgress.done();
+		})
+		
+		
+		// ListView.prototype.init(this.wrapper, {'file_name':"provider_page",
+		// 	'cmd':"provider_page.get_profile_list",
+		// 	'tab_at': 0,
+		// 	'profile_id': frappe.get_cookie("profile_id")
+		// })
 
-	// $('.create_linkphr').unbind("click").click(function(){
-	// 	LinkedPHR.prototype.init('',{"file_name" : "linked_patient"},"","create_linkphr")
-	// })
+		// $("table tr td a").bind('click', function (e) { 
+		// 	render_shared_data($(this).attr('id'))
+		// })
+		render_middle_section(profile_id)
+
+		$('.create_linkphr').unbind("click").click(function(){
+			$("#main-con").empty()
+			LinkedPHR.prototype.init('',{"file_name" : "linked_patient"},"","create_linkphr")
+		})	
+	}
+	
 })
+
+render_middle_section = function(profile_id){
+	RenderFormFields.prototype.init($("#main-con"), {'file_name':'provider_page'})
+		
+		$('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+	  		e.target // newly activated tab
+	  		e.relatedTarget // previous active tab
+	  		// alert(e.target)
+	  		request_renderer($(this).attr('href'), profile_id)
+		})
+		
+		request_renderer('#my_req', profile_id)
+}
 
 request_renderer = function(target, profile_id){
 	target = target.split('#')[1]

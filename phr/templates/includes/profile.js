@@ -253,7 +253,7 @@ var PatientDashboard = inherit(RenderFormFields, {
 			</div>').appendTo($wrapper).unbind("click").click(function(){
 				selected=[]
 				BootstrapDialog.confirm('are you sure?', function(result){
-					alert(result)
+					// alert(result)
            			if(result) {
            			 		NProgress.start();
                 			$(".chk_phr:checked").each(function() {

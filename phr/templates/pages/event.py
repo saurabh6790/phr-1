@@ -248,6 +248,7 @@ def make_sharing_request(event_data, data):
 	req.provider_id = d.get("to_profile_id")
 	req.date = today()
 	req.patient = d.get("from_profile_id")
+	req.patient_name = frappe.db.get_value("User", {"profile_id":d.get("from_profile_id")}, 'concat(first_name, " ", last_name)')
 	req.reason = data.get('reason')
 	req.valid_upto = data.get('sharing_duration')
 	req.event_title = data.get("event_title")
@@ -403,13 +404,13 @@ def get_conditions(filters):
 		cond.append('specialization like "%%%(specialization)s%%"'%filters)
 
 	if filters.get('provider_loc'):
-		cond.append('address like "%%%(provider_loc)s%%"'%filters)
+		cond.append('address like "%%%(provider_loc)s%%" or address_2 like "%%%(provider_loc)s%%" or city like "%%%(provider_loc)s%%" or state like "%%%(provider_loc)s%%"'%filters)
 
 	return ' and '.join(cond)
 
 def get_provider_info(cond):
 	if cond:
-		ret = frappe.db.sql("""select name, provider_name, mobile_number, email from tabProvider where %s """%cond, as_list=1, debug=1)
+		ret = frappe.db.sql("""select provider_id, provider_name, mobile_number, email from tabProvider where %s """%cond, as_list=1, debug=1)
 		frappe.errprint(ret)
 		return ((len(ret[0]) > 1) and ret) if ret else None
 	

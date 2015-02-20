@@ -5,7 +5,8 @@
             "fieldtype": "datetime",
             "label": "Date time",
             "placeholder":"",
-            "required":1
+            "required":1,
+            "placeholder":""
         },
         {
             "fieldname": "provider",
@@ -13,7 +14,8 @@
             "label": "Provider's Name",
             "placeholder": "",
             "description": "Select provider from linked Healthcare Providers",
-            "required":1
+            "required":1,
+            "placeholder":""
         },
                 {
             "fieldname": "",
@@ -25,7 +27,8 @@
             "fieldtype": "text",
             "label": "Reason For Visit",
             "placeholder":"",
-            "required":1
+            "required":1,
+            "placeholder":""
         },
          {
             "fieldname": "",

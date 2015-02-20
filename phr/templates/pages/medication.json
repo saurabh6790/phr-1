@@ -3,23 +3,22 @@
   {
    "fieldname": "medicine_name", 
    "fieldtype": "data", 
-   "label": "Medicine Name",
-   "placeholder":"", 
+   "label": "Medicine Name", 
+   "placeholder": "", 
    "required": 1
   }, 
   {
    "fieldname": "dosage_type", 
    "fieldtype": "select", 
    "label": "Dosage Type", 
-   "placeholder":"",
-   "options":"Dosage",
+   "options": "Dosage", 
+   "placeholder": "", 
    "required": 1
   }, 
   {
    "depends_on": "dosage_type:Weekly", 
    "fieldname": "day", 
    "fieldtype": "select", 
-   "placeholder":"",
    "label": "Day", 
    "options": [
     "", 
@@ -30,42 +29,43 @@
     "Thursday", 
     "Friday", 
     "Saturday"
-   ]
+   ], 
+   "placeholder": ""
   }, 
   {
    "depends_on": "dosage_type:Weekly", 
    "fieldname": "time", 
    "fieldtype": "time", 
-   "placeholder":"",
-   "label": "Time"
+   "label": "Time", 
+   "placeholder": ""
   }, 
   {
    "depends_on": "dosage_type:Daily", 
    "fieldname": "morning", 
    "fieldtype": "time", 
-   "placeholder":"",
-   "label": "Morning"
-  },
-   {
+   "label": "Morning", 
+   "placeholder": ""
+  }, 
+  {
    "depends_on": "dosage_type:Daily", 
    "fieldname": "afternoon", 
    "fieldtype": "time",
     "placeholder":"", 
    "label": "Afternoon"
-  },  
+  }, 
   {
    "depends_on": "dosage_type:Daily", 
    "fieldname": "evening", 
-   "fieldtype": "time",
-   "placeholder":"", 
-   "label": "Evening"
+   "fieldtype": "time", 
+   "label": "Evening", 
+   "placeholder": ""
   }, 
   {
    "depends_on": "dosage_type:Daily", 
    "fieldname": "night", 
    "fieldtype": "time", 
-   "placeholder":"",
-   "label": "Night"
+   "label": "Night", 
+   "placeholder": ""
   }, 
   {
    "fieldname": "", 
@@ -75,22 +75,22 @@
   {
    "fieldname": "from_date_time", 
    "fieldtype": "datetime", 
-   "label": "From Date time",
-   "placeholder":"", 
+   "label": "From Date time", 
+   "placeholder": "", 
    "required": 1
   }, 
   {
    "fieldname": "to_date_time", 
    "fieldtype": "datetime", 
-   "label": "To Date time",
-   "placeholder":"", 
+   "label": "To Date time", 
+   "placeholder": "", 
    "required": 1
   }, 
   {
    "fieldname": "additional_info", 
    "fieldtype": "text", 
-   "label": "Additional Info",
-   "placeholder":"", 
+   "label": "Additional Info", 
+   "placeholder": "", 
    "required": 1
   }, 
   {
@@ -124,7 +124,7 @@
      "Dosage", 
      "From Date time", 
      "To Date time", 
-     "Additional Info",
+     "Additional Info", 
      "Status"
     ]
    ]
