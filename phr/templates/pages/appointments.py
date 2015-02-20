@@ -79,7 +79,7 @@ def send_notification(profile_list):
 		sms_recipients=[]
 		for profile in profile_list:
 			pobj=frappe.get_doc('User',frappe.db.get_value("User",{"profile_id":profile},"name"))
-			if pobj
+			if pobj:
 				sms_recipients.append(pobj.contact)
 			else:
 				data=search_profile_data_from_solr(profile_id)

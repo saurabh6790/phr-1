@@ -53,6 +53,12 @@
       "options": ["","Married","Single"] 
    },
    {
+      "fieldname": "relationship", 
+      "fieldtype": "data", 
+      "label": "Relationship",
+      "placeholder":""
+   },
+   {
       "fieldname": "", 
       "fieldtype": "section_break", 
       "label": ""
@@ -231,7 +237,7 @@
    {
       "fieldname": "manage_phr", 
       "fieldtype": "section", 
-      "label": "Manage PHR" 
+      "label": "Manage LinkedPHR" 
    },
    {
       "fieldname": "dashboard", 
