@@ -347,7 +347,7 @@ def get_data_for_middle_section(profile_id):
 def get_logs(profile_id):
 	log_list=frappe.db.sql("""select * from 
 		`tabPHR Activity Log` 
-		where profile_id='%s' order by creation desc limit 5"""%(profile_id),as_dict=1)
+		where profile_id='%s' and entity in ('Event','Visit') order by creation desc limit 5"""%(profile_id),as_dict=1)
 	return log_list
 
 @frappe.whitelist(allow_guest=True)
