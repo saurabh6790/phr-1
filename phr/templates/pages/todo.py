@@ -23,7 +23,7 @@ def create_todo(data):
 @frappe.whitelist(allow_guest=True)
 def get_todo(profile_id):
 	todo_list = []
-	todo = frappe.db.sql("select name from tabToDo where profile_id = '%s'"%profile_id)
+	todo = frappe.db.sql("select name from tabToDo where profile_id = '%s' order by creation desc limit 5"%profile_id)
 	for td in todo:
 		todo_list.append(frappe.get_doc("ToDo", td[0]))
 

@@ -116,7 +116,8 @@ function render_dashboard(profile_id){
         render_advertisements:render_advertisements
     }
     function render_td(todo){
-    	$wrap=$('#todo')
+    	$('#tdlst').empty()
+    	$wrap=$('#tdlst')
     	$.each(todo,function(i,todo){
 			pro_data={"desc": todo['description'], "todo_id": todo["name"],"date":todo["date"]}
 			$(repl_str('<div class="list-group-item-side %(todo_id)s">\

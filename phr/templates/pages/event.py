@@ -248,6 +248,7 @@ def make_sharing_request(event_data, data):
 	req.provider_id = d.get("to_profile_id")
 	req.date = today()
 	req.patient = d.get("from_profile_id")
+	req.patient_name = frappe.db.get_value("User", {"profile_id":d.get("from_profile_id")}, 'concat(first_name, " ", last_name)')
 	req.reason = data.get('reason')
 	req.valid_upto = data.get('sharing_duration')
 	req.event_title = data.get("event_title")

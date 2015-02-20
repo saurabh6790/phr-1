@@ -3,7 +3,8 @@
 		{
 			"fieldname":"doctor_name",
 			"fieldtype":"data", 
-			"label":"Provider Name"
+			"label":"Provider Name",
+			"placeholder":""
 		},
 		{
 			"fieldname": "share_via", 
@@ -16,13 +17,15 @@
 			"fieldname":"email_body",
 			"fieldtype":"text", 
 			"label":"Email Body",
-			"depends_on":"share_via:Email"
+			"depends_on":"share_via:Email",
+			"placeholder":""
 		},
 		{
 			"fieldname":"email_id",
 			"fieldtype":"data", 
 			"label":"Email Id",
-			"depends_on":"share_via:Email"
+			"depends_on":"share_via:Email",
+			"placeholder":""
 		},
 		{
 			"fieldname":"", 
@@ -33,7 +36,8 @@
 			"fieldname":"doctor_id", 
 			"fieldtype":"data", 
 			"label":"Provider id",
-			"depends_on":"share_via:Provider Account"
+			"depends_on":"share_via:Provider Account",
+			"placeholder":""
 		}
 	]
 }
