@@ -1,6 +1,11 @@
 {
 	"fields":[
 		{
+			"fieldname":"",
+			"fieldtype":"section_break", 
+			"label":"Visit Details"
+		},
+		{
 			"fieldname":"entityid",
 			"fieldtype":"data", 
 			"label":"Visit Id",
@@ -15,16 +20,16 @@
 			"display":"none"
 		},
 		{
-			"fieldname":"", 
-			"fieldtype":"column_break", 
-			"label":""
-		},	
-		{
 			"fieldname":"str_visit_date", 
 			"fieldtype":"date", 
 			"label":"Date",
 			"placeholder":""
 		},
+		{
+			"fieldname":"", 
+			"fieldtype":"column_break", 
+			"label":""
+		},	
 		{
 			"fieldname":"visit_descripton", 
 			"fieldtype":"data", 
@@ -34,7 +39,7 @@
 		{
 			"fieldname":"",
 			"fieldtype":"section_break", 
-			"label":""
+			"label":"Sharing Details"
 		},
 		{
 			"fieldname": "share_via", 
@@ -82,11 +87,6 @@
 			"label":"Sharing Duration",
 			"depends_on":"share_via:Provider Account",
 			"placeholder":""
-		},
-		{
-			"fieldname":"",
-			"fieldtype":"section_break", 
-			"label":""
 		},
 		{
 			"fieldname":"reason",

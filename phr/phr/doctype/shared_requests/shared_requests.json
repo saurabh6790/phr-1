@@ -171,6 +171,13 @@
    "set_only_once": 0
   }, 
   {
+   "fieldname": "doc_name", 
+   "fieldtype": "Data", 
+   "label": "Doc Name", 
+   "permlevel": 0, 
+   "precision": ""
+  }, 
+  {
    "fieldname": "rej_reason", 
    "fieldtype": "Text", 
    "label": "Rejection Reason", 
@@ -186,7 +193,7 @@
  "is_submittable": 0, 
  "issingle": 0, 
  "istable": 0, 
- "modified": "2015-02-20 14:41:26.397665", 
+ "modified": "2015-02-20 20:51:17.475710", 
  "modified_by": "Administrator", 
  "module": "phr", 
  "name": "Shared Requests", 

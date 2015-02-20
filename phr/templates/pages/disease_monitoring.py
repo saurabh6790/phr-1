@@ -8,7 +8,7 @@ import time
 from phr.phr.phr_api import get_response
 # from datetime import datetime
 from frappe.utils import getdate, date_diff, nowdate, get_site_path, get_hook_method, get_files_path, \
-		get_site_base_path, cstr, cint
+		get_site_base_path, cstr, cint, today
 from phr.phr.doctype.phr_activity_log.phr_activity_log import make_log
 
 
@@ -240,3 +240,17 @@ def share_via_phr(share_info, profile_id, disease):
 	dm_sharing.to_profile = share_info.get('doctor_id')
 	dm_sharing.pdf_path = os.path.join(get_files_path(), profile_id, file_name)
 	dm_sharing.save()
+	make_sharing_request(share_info, disease, dm_sharing, profile_id)
+
+def make_sharing_request(event_data, disease, dm_sharing, profile_id):
+	req = frappe.new_doc('Shared Requests')
+	req.event_id = dm_sharing.name
+	req.provider_id = event_data.get('doctor_id')
+	req.date = today()
+	req.patient = profile_id
+	req.patient_name = frappe.db.get_value("User", {"profile_id": profile_id}, 'concat(first_name, " ", last_name)')
+	req.reason = event_data.get('reason')
+	req.valid_upto = event_data.get('sharing_duration')
+	req.event_title = disease
+	req.doc_name = 'Disease Monitoring' 
+	req.save()

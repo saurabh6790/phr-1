@@ -561,7 +561,6 @@ def get_mobile_nos():
 
 	return nos
 
-
 @frappe.whitelist(allow_guest=True)
 def notify_about_linked_phrs(profile_id,email_msg=None,text_msg=None,entity=None):
 	linked_phr=("""select profile_id from `tabNotification Configuration` where linked_phr=1""")

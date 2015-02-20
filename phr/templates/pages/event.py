@@ -177,7 +177,7 @@ def share_via_email(data):
 		sendmail([data.get('email_id')], subject="PHR-Event Data", msg=cstr(msg),
 				attachments=attachments)
 
-		make_log(data.get('entityid'),"Event","Shared Via Email","Event Shared Via Email")
+		make_log(data.get('profile_id'),"Event","Shared Via Email","Event Shared Via Email to %s"%(data.get('email_id')))
 
 		return """Selected image(s) has been shared with 
 			%(provider_name)s for event %(event)s """%{
@@ -194,7 +194,7 @@ def share_via_providers_account(data):
 							"to_profile_id": data.get('doctor_id'),
 							"received_from":"desktop",
 							"from_profile_id": data.get('profile_id'),
-							"event_tag_id": data.get('entityid'),
+							"event_tag_id": data.get('entityid') if not data.get('event_id') else data.get('event_id'),
 							"access_type": "RDW",
 							"str_start_date": datetime.datetime.strptime(nowdate(), '%Y-%m-%d').strftime('%d/%m/%Y'),
 							"str_end_date": data.get('sharing_duration')
@@ -208,7 +208,7 @@ def share_via_providers_account(data):
 		response=get_response(url, json.dumps(event_data), request_type)
 		
 		make_sharing_request(event_data, data)
-		make_log(data.get('entityid'),"Event","Shared Via Provider","Event Shared Via Provider")
+		make_log(data.get('profile_id'),"Event","Shared Via Provider","Event Shared Via Provider")
 		return eval(json.loads(response.text).get('sharelist'))[0].get('message_summary')
 
 	else:
@@ -221,7 +221,7 @@ def share_via_providers_account(data):
 				"received_from":"desktop",
 				"from_profile_id": data.get('profile_id'),
 				"visit_tag_id": file_details[4],
-				"event_tag_id": data.get('entityid'),
+				"event_tag_id": data.get('entityid') if not data.get('event_id') else data.get('event_id'),
 				"tag_id": file_details[4] + '-' + cstr(file_details[2].split('-')[1]) + cstr(file_details[3].split('_')[1]) ,
 				"file_id": [file_details[5].replace('-watermark', '')],
 				"file_access": ['RW'],
@@ -235,7 +235,7 @@ def share_via_providers_account(data):
 		
 		response=get_response(url, json.dumps(event_data), request_type)
 		make_sharing_request(event_data, data)
-		make_log(data.get('entityid'),"Event","Shared Via Provider","Event Shared Via Provider")
+		make_log(data.get('profile_id'),"Event","Shared Via Provider","Event Shared Via Provider")
 		return json.loads(json.loads(response.text).get('sharelist'))[0].get('message_summary')
 
 def make_sharing_request(event_data, data):
@@ -252,6 +252,7 @@ def make_sharing_request(event_data, data):
 	req.reason = data.get('reason')
 	req.valid_upto = data.get('sharing_duration')
 	req.event_title = data.get("event_title")
+	req.doc_name = 'Event' 
 	req.save()
 
 @frappe.whitelist(allow_guest=True)

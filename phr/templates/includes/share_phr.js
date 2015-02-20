@@ -127,11 +127,13 @@ $.extend(SharePhr.prototype,{
 		me.res['profile_id'] = me.args['profile_id'];
 		me.res['folder'] = me.folder;
 		me.res['sub_folder'] = me.sub_folder;
+		NProgress.start();
 		frappe.call({
 			method:"phr.templates.pages.event.send_shared_data",
 			args:{"data":me.res},
 			callback:function(r){
 				frappe.msgprint(r.message)
+				NProgress.done();
 			}
 		})
 	}

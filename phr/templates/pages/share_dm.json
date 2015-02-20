@@ -38,6 +38,19 @@
 			"label":"Provider id",
 			"depends_on":"share_via:Provider Account",
 			"placeholder":""
+		},
+		{
+			"fieldname":"sharing_duration",
+			"fieldtype":"date", 
+			"label":"Sharing Duration",
+			"depends_on":"share_via:Provider Account",
+			"placeholder":""
+		},
+		{
+			"fieldname":"reason",
+			"fieldtype":"text", 
+			"label":"Reason For Sharing",
+			"placeholder":""
 		}
 	]
 }

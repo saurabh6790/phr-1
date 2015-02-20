@@ -164,7 +164,7 @@ window.Events = inherit(ListView,{
 					$('[name="email_id"]').val($($td[3]).html())
 					$('[name="number"]').val($($td[2]).html())
 					me.attach_provider({'entityid': $td.find('input[name="provider"]').attr('id')},
-						{'email': $($td[2]).html(),'mobile': $($td[3]).html(),'name': $($td[1]).html()}, d)
+						{'email': $($td[3]).html(),'mobile': $($td[2]).html(),'name': $($td[1]).html()}, d)
 				}
 			})
 		})
@@ -251,42 +251,56 @@ window.Events = inherit(ListView,{
 		var me = this;
 		this.res = {}
 		this.result_set = {};
-		this.doc_list = [] 
+		this.doc_list = []
 		$('.save_controller').bind('click',function(event) {
-			NProgress.start();
-			$("form input, form textarea, form select").each(function(i, obj) {
-				me.res[obj.name] = $(obj).val();
-			})
-			complaints = $('.ui-autocomplete-multiselect-item').toArray();
-			complaints_array = [];
-			$.each(complaints,function(i,j){
-				temp_var = $(j)
-				temp_var.find("span").remove()
-				complaints_array[i] = temp_var.html();
-			})
-			me.res['profile_id'] = me.profile_id;
-			me.res['dms_file_list'] = me.dms_file_list;
-			me.res['complaints'] = complaints_array;
-			
-			frappe.call({
-				method:"phr.templates.pages.event.create_update_event",
-				args:{"data":JSON.stringify(me.res)},
-				callback:function(r){
-					$('.breadcrumb li:last').remove()
-					NProgress.done();
-					if(r.message.returncode == 103 || r.message.returncode == 116){
-						me.open_form(r.message.entityid, $('[name="event_title"]').val(), me.profile_id);	
-						me.dms_file_list = [];
-						alert("Saved")
-					}
-					else{
-						alert(r.message.message_summary);
-					}
+			if(me.validate_form()){
+				NProgress.start();
+				$("form input, form textarea, form select").each(function(i, obj) {
+					me.res[obj.name] = $(obj).val();
+				})
+				complaints = $('.ui-autocomplete-multiselect-item').toArray();
+				complaints_array = [];
+				$.each(complaints,function(i,j){
+					temp_var = $(j)
+					temp_var.find("span").remove()
+					complaints_array[i] = temp_var.html();
+				})
+				me.res['profile_id'] = me.profile_id;
+				me.res['dms_file_list'] = me.dms_file_list;
+				me.res['complaints'] = complaints_array;
+				
+				frappe.call({
+					method:"phr.templates.pages.event.create_update_event",
+					args:{"data":JSON.stringify(me.res)},
+					callback:function(r){
+						$('.breadcrumb li:last').remove()
+						NProgress.done();
+						if(r.message.returncode == 103 || r.message.returncode == 116){
+							me.open_form(r.message.entityid, $('[name="event_title"]').val(), me.profile_id);	
+							me.dms_file_list = [];
+							alert("Saved")
+						}
+						else{
+							alert(r.message.message_summary);
+						}
 
-				}
-			})			
+					}
+				})
+			}			
 		})
 	},
+	validate_form:function(){
+  		var me=this;
+  		var fg=true
+  		$("form input[required], form textarea[required], form select[required]").each(function(i, obj) {
+  			if ($(this).val()=="" && $(this).is(':visible')){
+  				$(this).css({"border": "1px solid #999","border-color": "red" });
+  				frappe.msgprint("Fields Marked as Red Are Mandatory")
+  				fg=false
+  			}
+  		})
+  		return fg
+  	},
 	render_folder_section: function(){
 		var me = this;
 		$('.event_section').empty()
