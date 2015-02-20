@@ -14,7 +14,7 @@ def create_todo(data):
 	todo.description = data.get('description')
 	todo.owner = frappe.session.user
 	todo.status = 'Open'
-	todo.date = datetime.datetime.strptime(data.get('due_date'), '%d/%m/%Y').strftime('%Y-%m-%d'),
+	todo.date = datetime.datetime.strptime(data.get('due_date'), '%d/%m/%Y %H:%M:%S').strftime('%Y-%m-%d %H:%M:%S'),
 	todo.priority = data.get('priority')
 	todo.save()
 	

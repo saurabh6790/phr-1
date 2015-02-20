@@ -113,7 +113,8 @@ function render_dashboard(profile_id){
         render_to_do: render_to_do,
         bind_ids: bind_ids,
         render_middle_section: render_middle_section,
-        render_advertisements:render_advertisements
+        render_advertisements:render_advertisements,
+        render_LPHR_name:render_LPHR_name
     }
     function render_td(todo){
     	$('#tdlst').empty()
@@ -127,7 +128,8 @@ function render_dashboard(profile_id){
 		})
     }
     function render_ad(ads){
-    	$wrap=$('#ad')
+    	$('#adlst').empty()
+    	$wrap=$('#adlst')
     	$.each(ads,function(i,ad){
     		pro_data={"title": ad['ad_title'], "ad_link": ad["ad_link"]}
 			$(repl_str('<div class="list-group-item-side ad">\
@@ -154,17 +156,8 @@ function render_dashboard(profile_id){
 		})
 		$(".v_lphr").unbind("click").click(function(){
 			var name=$(this).html()
-			$('<a nohref class="list-group-item-side chome"><div><i class="icon-home"></i>'+name+'&nbsp</div></a>').appendTo('.linked-phr').unbind("click").click(function(){
-				$('.field-area').empty()
-				$('#main-con').empty()
-				$('.breadcrumb').empty()
-				$('.new_controller').hide()
-				$('.save_controller').hide()
-				render_providers(sessionStorage.getItem('cid'))
-				$('#linkedphr').hide()
-				render_middle_section(sessionStorage.getItem('cid'))
-				//$('#profile').attr('data-name',$(this).attr('data-name'))	
-			})
+			sessionStorage.setItem("cname",name)
+			render_LPHR_name()
 			sessionStorage.setItem("cid",$(this).attr('data-name'))
 			$('.field-area').empty()
 			$('#main-con').empty()
@@ -177,6 +170,19 @@ function render_dashboard(profile_id){
 			$('#profile').attr('data-name',$(this).attr('data-name'))
 		})
 	
+    }
+    function render_LPHR_name(){
+    	name=sessionStorage.getItem('cname')
+    	$('<a nohref class="list-group-item-side chome"><div><i class="icon-home"></i>'+name+'&nbsp</div></a>').appendTo('.linked-phr').unbind("click").click(function(){
+			$('.field-area').empty()
+			$('#main-con').empty()
+			$('.breadcrumb').empty()
+			$('.new_controller').hide()
+			$('.save_controller').hide()
+			render_providers(sessionStorage.getItem('cid'))
+			$('#linkedphr').hide()
+			render_middle_section(sessionStorage.getItem('cid'))
+		})
     }
     function render_provider(data){
     	$('#hps').find('p.nohp').remove()

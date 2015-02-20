@@ -67,7 +67,9 @@ var PatientDashboard = inherit(RenderFormFields, {
 		})
 		if (sessionStorage.getItem("cid")!=sessionStorage.getItem("pid")){
 			$($('a[aria-controls="manage_phr"]').parent()).css("display", "none");
-			$($('#manage_phr')).css("display", "none");	
+			$($('#manage_phr')).css("display", "none");
+			$($('a[aria-controls="password"]').parent()).css("display", "none");
+			$($('#password')).css("display", "none");	
 		}
 		if (sessionStorage.getItem("cid")==sessionStorage.getItem("pid")){
 			$($('input[name="relationship"]').parents()[3]).css("display", "none");  				
@@ -135,8 +137,8 @@ var PatientDashboard = inherit(RenderFormFields, {
   	},
   	get_states:function(){
   		frappe.call({
-		method:"phr.templates.pages.profile.get_states",
-		callback:function(r){
+			method:"phr.templates.pages.profile.get_states",
+			callback:function(r){
 			if(r.message){
 				$.each(r.message,function(i, val){
 					$option=$('<option>', { 
@@ -271,9 +273,8 @@ var PatientDashboard = inherit(RenderFormFields, {
 			method:'phr.templates.pages.profile.delink_phr',
 			args:{'selected':selected,"data":meta_dic,"profile_id":profile_id},
 			callback: function(r) {
-				console.log([r.message,r.message["message"], r])
+				NProgress.done();
 				if (r.message){
-					
 					me.render_phrs(r.message["res"],profile_id)
 				}
 				

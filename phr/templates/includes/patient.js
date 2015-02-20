@@ -32,6 +32,8 @@ $(document).ready(function () {
 	else{
 		if (sessionStorage.getItem("cid")!=sessionStorage.getItem("pid")){
 			$('#linkedphr').hide()
+			var db = new render_dashboard();
+			db.render_LPHR_name()
 		}	
 		NProgress.start();
 		profile_id=sessionStorage.getItem("cid")
@@ -66,6 +68,8 @@ function bind_events(){
 		db.render_providers(profile_id)
 		db.render_linked_phr(profile_id)
 		db.render_middle_section(profile_id)
+		db.render_to_do(profile_id)
+		db.render_advertisements(profile_id)
 		NProgress.done();
 	})
 	$("#profile").unbind("click").click(function(){

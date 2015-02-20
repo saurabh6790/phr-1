@@ -16,7 +16,7 @@ var ToDo = inherit(ListView,{
 		this.wrapper = wrapper;
 		this.res = {};
 		this.profile_id = profile_id
-		this.render_todo_list()
+		//this.render_todo_list()
 		this[obj['cmd']].call(this)
 
 	},
@@ -37,24 +37,10 @@ var ToDo = inherit(ListView,{
 				callback:function(r){
 					d.hide()
 					frappe.msgprint('ToDo Record Created')
-					//me.add_todo(r.message)
+					var db = new render_dashboard();
+					db.render_to_do(sessionStorage.getItem("cid"))
 				}
 			})
 		})
-	},
-	add_todo: function(todo){
-		$wrap=$('#todo')
-
-		pro_data={"desc": todo['description'], "todo_id": todo["name"]}
-		
-		$(repl_str('<div class="list-group-item-side %(todo_id)s">\
-			<a noherf data-name=%(todo_id)s>%(desc)s </a>\
-			<p class="text-muted small">%(todo_id)s </p>\
-			</div>', pro_data)).appendTo($wrap)
-	},
-	render_todo_list: function(){
-		var me = this;
-		var db = new render_dashboard();
-		db.render_to_do(me.profile_id)
 	}
 })
