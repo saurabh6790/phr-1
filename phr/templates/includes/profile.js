@@ -273,9 +273,8 @@ var PatientDashboard = inherit(RenderFormFields, {
 			method:'phr.templates.pages.profile.delink_phr',
 			args:{'selected':selected,"data":meta_dic,"profile_id":profile_id},
 			callback: function(r) {
-				console.log([r.message,r.message["message"], r])
+				NProgress.done();
 				if (r.message){
-					
 					me.render_phrs(r.message["res"],profile_id)
 				}
 				

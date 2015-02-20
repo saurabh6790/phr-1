@@ -32,6 +32,8 @@ $(document).ready(function () {
 	else{
 		if (sessionStorage.getItem("cid")!=sessionStorage.getItem("pid")){
 			$('#linkedphr').hide()
+			var db = new render_dashboard();
+			db.render_LPHR_name()
 		}	
 		NProgress.start();
 		profile_id=sessionStorage.getItem("cid")

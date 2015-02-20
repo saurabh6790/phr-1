@@ -568,7 +568,7 @@ def notify_about_linked_phrs(profile_id,email_msg=None,text_msg=None,entity=None
 	if linked_phr:
 		user=frappe.get_doc('User',frappe.db.get_value("User",{"profile_id":profile_id},"name"))
 		if user:
-			sendmail(user.name,subject="PHR Updates:"+entity+"Updated",msg=email_msg)
+			sendmail(user.name,subject="PHR Updates:"+entity+" Updated",msg=email_msg)
 			rec_list=[]
 			rec_list.append(user.contact)
 			send_sms(rec_list,msg=text_msg)

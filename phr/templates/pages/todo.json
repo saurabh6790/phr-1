@@ -14,7 +14,7 @@
 		},
 		{
 			"fieldname":"due_date", 
-			"fieldtype":"date", 
+			"fieldtype":"datetime", 
 			"label":"Due Date",
 			"placeholder":""
 		}
