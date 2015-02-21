@@ -229,7 +229,8 @@ var PatientDashboard = inherit(RenderFormFields, {
 	render_phrs:function(data,profile_id){
 		var me=this;
 		var $wrapper=$('#manage_phr').find('form')		
-		meta=JSON.parse(data.actualdata)
+		meta = data['list']
+		console.log(data)
 		meta_dic={}
 		$wrapper.empty();
 		console.log([meta,data])
@@ -243,8 +244,8 @@ var PatientDashboard = inherit(RenderFormFields, {
 								</div>\
 							</div>\
 						</div>\
-				</div>', data.profile)).appendTo($wrapper)	
-			meta_dic[data.profile.entityid]=data.profile
+				</div>', data)).appendTo($wrapper)	
+			meta_dic[data.entityid]=data
 		})
 		$('<div class="update" style="width:45%;display:inline-block;text-align:right;">\
 				<button class="btn btn-primary">\

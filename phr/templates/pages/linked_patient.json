@@ -38,15 +38,13 @@
             "fieldname": "mobile", 
             "fieldtype": "data", 
             "label": "Mobile No",
-            "placeholder":"",
-            "required":1
+            "placeholder":""
          },
          {
             "fieldname": "email", 
             "fieldtype": "data", 
             "label": "Email",
-            "placeholder":"",
-            "required":1
+            "placeholder":""
          }   
    ]
 }

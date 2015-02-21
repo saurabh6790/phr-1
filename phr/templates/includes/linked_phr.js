@@ -59,7 +59,7 @@ var LinkedPHR = inherit(RenderFormFields, {
   				fg=false
   			}
   		})
-  		if (!validate_mobile($('form input[name="mobile"]').val())) {
+  		if ($('form input[name="mobile"]').val() && !validate_mobile($('form input[name="mobile"]').val())) {
   			frappe.msgprint("Mobile No Invalid")
   			fg=false
   		}	

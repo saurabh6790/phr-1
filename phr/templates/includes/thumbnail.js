@@ -134,7 +134,7 @@ $.extend(ThumbNails.prototype,{
 			//val=$(this).closest('.control-image').attr('data-name');
 			//val=$(this).closest('input[name=image]').val()
 			console.log($('input[name=event_title]').val())
-			var title=$('input[name=event_title]').val()+' '+$('input[name=event_date]').val()
+			var title=$('input[name=event_title]').val()+' '+$('input[name=event_date]').val() || ''
 			val=$(this).attr('data-name')
 			d = new Dialog();
 			d.init({"title":"Image Preview"+' ('+title+')'})

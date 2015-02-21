@@ -229,7 +229,7 @@ def get_site_name():
 @frappe.whitelist(allow_guest=True)
 def get_linked_phrs(profile_id):
 	from phr.templates.pages.patient import get_base_url
-	solr_op='phrdata/searchchildphr'
+	solr_op='searchchildprofile'
 	url=get_base_url()+solr_op
 	#url="http://192.168.5.11:9090/phr/phrdata/searchchildphr"
 	request_type='POST'
@@ -238,7 +238,7 @@ def get_linked_phrs(profile_id):
 	response=get_response(url,json.dumps(data),request_type)
 	res=json.loads(response.text)
 	print res
-	if res['returncode']==106:
+	if res['returncode']==120:
 		return res
 
 @frappe.whitelist(allow_guest=True)

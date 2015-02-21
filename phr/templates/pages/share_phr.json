@@ -14,7 +14,7 @@
 		},
 		{
 			"fieldname":"event_date", 
-			"fieldtype":"date", 
+			"fieldtype":"data", 
 			"label":"Event Date",
 			"placeholder":""
 		},
