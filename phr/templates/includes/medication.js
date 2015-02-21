@@ -115,7 +115,7 @@ var Medications = inherit(ListView,{
 				NProgress.done();
 				if(r.message){
 					me.update_list_view(r.message)
-					me.update_select_options()
+					// me.update_select_options()
 					me.bind_save_event()
 				}
 				else{

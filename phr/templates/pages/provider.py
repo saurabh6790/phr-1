@@ -11,6 +11,7 @@ from frappe import _
 from phr.templates.pages.patient import get_base_url
 import json
 from phr.phr.doctype.phr_activity_log.phr_activity_log import make_log
+import json
 
 @frappe.whitelist(allow_guest=True)
 def create_provider(data,id=None,profile_id=None):
@@ -27,7 +28,7 @@ def create_provider_in_solr(data,profile_id):
 	print res
 	print res['returncode']
 	if res['returncode']==129:
-		link_provider(res, data,profile_id)
+		link_provider(res, data, profile_id)
 		create_provider_master_entry(res, data)
 		provider=json.loads(data)
 		sub="created provider "+provider.get('name')
@@ -37,9 +38,9 @@ def create_provider_in_solr(data,profile_id):
 @frappe.whitelist(allow_guest=True)
 def link_provider(res, data, profile_id):
 	if isinstance(res, basestring):
-		res = eval(res)
+		res = json.loads(res)
 	if isinstance(data, basestring):
-		data = eval(data)
+		data = json.loads(data)
 	else:
 		data = json.loads(data)
 		
