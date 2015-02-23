@@ -275,7 +275,7 @@ var PatientDashboard = inherit(RenderFormFields, {
 			callback: function(r) {
 				NProgress.done();
 				if (r.message){
-					me.render_phrs(r.message["res"],profile_id)
+					//me.render_phrs(r.message["res"],profile_id)
 				}
 				
 				//me.get_linked_phrs(r.message)

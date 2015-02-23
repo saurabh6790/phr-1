@@ -266,7 +266,7 @@ def delink_phr_solr(data,id,profile_id):
 	solr_op='unlinkProfile'
 	url=get_base_url()+solr_op
 	request_type='POST'
-	barcode=get_barcode()
+	#barcode=get_barcode()
 	#jsonobj=json.loads(data)
 	data["recieved_from"]="Desktop"
 	#data["barcode"]=str(barcode)
@@ -276,17 +276,17 @@ def delink_phr_solr(data,id,profile_id):
 	res=json.loads(response.text)
 	print res
 	if res['returncode']==121:
-		path=get_image_path(barcode,res['entityid'])
+		#path=get_image_path(barcode,res['entityid'])
 		print res
 		actdata=res['actualdata']		
 		dt=json.loads(actdata)
-		#sub=dt['person_firstname']+" "+dt['person_lastname']+" "+"delinked Successfully"
-		#make_log(profile_id,"profile","delink",sub)
-		args={'person_firstname':dt['person_firstname'],'person_middlename':dt['person_middlename'],'person_lastname':dt['person_lastname'],'email':dt['email'],'mobile':dt['mobile'],'received_from':'Desktop','provider':'false','barcode':str(barcode)}
-		#ret_res=create_profile_in_db(res['entityid'],args,res,path)
+		sub=dt['person_firstname']+" "+dt['person_lastname']+" "+"delinked Successfully"
+		make_log(profile_id,"profile","delink",sub)
+		args={'person_firstname':dt['person_firstname'],'person_middlename':dt['person_middlename'],'person_lastname':dt['person_lastname'],'email':dt['email'],'mobile':dt['mobile'],'received_from':'Desktop','provider':'false'}
+		ret_res=create_profile_in_db(res['entityid'],args,res,path)
 		ret_res=''
-		#sub=dt['person_firstname']+" "+dt['person_lastname']+" "+"Profile Created Successfully"
-		#make_log(profile_id,"profile","create",sub)
+		sub=dt['person_firstname']+" "+dt['person_lastname']+" "+"Profile Created Successfully"
+		make_log(profile_id,"profile","create",sub)
 		return ret_res
 
 
@@ -316,9 +316,11 @@ def get_data_for_middle_section(profile_id):
 			data=get_data_from_solr(profile_id)
 			#if data:
 			res_list=build_response(data,obj,res_list) 
+		
 		if obj.get('appointments')==1:
 			data=get_appointments(profile_id)
 			res_list=build_response_for_appointments(data,obj,res_list)
+		
 		if obj.get('medications')==1:
 			data=get_medications(profile_id)
 			res_list=build_response_for_medications(data,obj,res_list)

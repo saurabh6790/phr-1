@@ -130,11 +130,9 @@ $.extend(ThumbNails.prototype,{
 					<br><label style="width: 150px;word-wrap: break-word;">%(file_name)s</label></a>',attachment))).appendTo(row)
 		}
 		$('.control-image').bind('click',function(event) {
-			//val=$("input[name=image]").val()
-			//val=$(this).closest('.control-image').attr('data-name');
-			//val=$(this).closest('input[name=image]').val()
-			console.log($('input[name=event_title]').val())
-			var title=$('input[name=event_title]').val()+' '+$('input[name=event_date]').val()
+		
+			//if title=$('input[name=event_title]').val()+' '+$('input[name=event_date]').val() ? ($('input[name=event_title]').val() and $('input[name=event_date]').val()):""
+			title=$('input[name=event_title]').val()+' '+$('input[name=event_date]').val() || ""
 			val=$(this).attr('data-name')
 			d = new Dialog();
 			d.init({"title":"Image Preview"+' ('+title+')'})

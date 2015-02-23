@@ -10,6 +10,7 @@ from frappe.auth import _update_password
 from frappe import _
 from phr.phr.phr_api import get_response
 from phr.templates.pages.patient import get_base_url
+from phr.templates.pages.login import create_profile_in_db,get_barcode,get_image_path
 
 @frappe.whitelist(allow_guest=True)
 def update_linked_profile(data,id):
@@ -43,6 +44,11 @@ def create_profile_solr(data):
 	print data
 	request_type="POST"
 	url="%s/createProfile"%get_base_url()
+	barcode=get_barcode()
+	path=get_image_path(barcode,res['entityid'])
+	args=json.loads(data)
+	args["barcode"]=str(barcode)
+	data=json.dumps(args)
 	from phr.phr.phr_api import get_response
 	response=get_response(url,data,request_type)
 	res=json.loads(response.text)

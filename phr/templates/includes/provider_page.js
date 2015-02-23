@@ -51,17 +51,7 @@ $(document).ready(function () {
 			render_middle_section(profile_id);
 			NProgress.done();
 		})
-		
-		
-		// ListView.prototype.init(this.wrapper, {'file_name':"provider_page",
-		// 	'cmd':"provider_page.get_profile_list",
-		// 	'tab_at': 0,
-		// 	'profile_id': frappe.get_cookie("profile_id")
-		// })
-
-		// $("table tr td a").bind('click', function (e) { 
-		// 	render_shared_data($(this).attr('id'))
-		// })
+	
 		render_middle_section(profile_id)
 
 		$('.create_linkphr').unbind("click").click(function(){

@@ -518,9 +518,6 @@ $.extend(RenderFormFields.prototype,{
 			$input.find("input").prop('required',true);
 			$input.find("label").addClass('required')
 			$('<style>.required:after{content:" *";color:red;font-size:20px;}</style>').appendTo($input)
-			/*if (!val){
-				$input.find("input").css({"border": "1px solid #999","border-color": "red" });	
-			}*/
 		}
 		if(field_meta['readonly']==1){
 			$input.find("input").prop('disabled',true)
