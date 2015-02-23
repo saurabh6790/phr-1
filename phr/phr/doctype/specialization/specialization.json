@@ -1,6 +1,6 @@
 {
  "allow_copy": 0, 
- "allow_import": 0, 
+ "allow_import": 1, 
  "allow_rename": 0, 
  "autoname": "field:specialization", 
  "creation": "2015-02-17 17:26:12.857085", 
@@ -55,7 +55,7 @@
  "is_submittable": 0, 
  "issingle": 0, 
  "istable": 0, 
- "modified": "2015-02-18 22:11:11.028508", 
+ "modified": "2015-02-21 11:16:26.621760", 
  "modified_by": "Administrator", 
  "module": "phr", 
  "name": "Specialization", 

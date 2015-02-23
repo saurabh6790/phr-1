@@ -180,7 +180,7 @@ def get_myrequests(target, provider_id):
 	data = frappe.db.sql("""select name, provider_id, patient, event_id, date, patient_name, event_title, reason, valid_upto, payment
 				 from `tabShared Requests`
 				 where ifnull(approval_status,'') not in ('Accept', 'Reject') 
-					and provider_id="%s" """%(provider_id), as_list=1)
+					and provider_id="%s" and doc_name = 'Event'  """%(provider_id), as_list=1)
 
 	for d in data:
 		d.append("""<button class="btn btn-success  btn-sm" 

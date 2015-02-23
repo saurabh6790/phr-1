@@ -147,12 +147,12 @@ function render_dashboard(profile_id){
     	$('#clphr').find('p.nophr').remove()
 		$('#clphr').empty()
 		$wrap=$('#clphr')
-		meta=JSON.parse(data.actualdata)
+		meta= data['list']
 		meta_dic={}
 		$.each(meta,function(i,data){
 			$(repl_str('<a class="list-group-item-side v_lphr %(entityid)s" data-name=%(entityid)s>\
 			%(person_firstname)s</a>\
-			</div>', data.profile)).appendTo($wrap)
+			</div>', data)).appendTo($wrap)
 		})
 		$(".v_lphr").unbind("click").click(function(){
 			var name=$(this).html()

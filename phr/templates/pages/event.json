@@ -54,7 +54,6 @@
 			"multiselect":"true",
 			"label": "Complaint",
 			"options": "Events",
-			"required":1,
 			"placeholder":""
 		},
 		{

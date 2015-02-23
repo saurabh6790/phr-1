@@ -138,12 +138,14 @@ var DiseaseMonitoring = inherit(RenderFormFields, {
 	},
 	share_data:function(d){
 		var me = this;
+		NProgress.start();
 		frappe.call({
 			method:"phr.templates.pages.disease_monitoring.share_dm",
 			args:{'data':me.selected_dm, 'header': $('.fixed-table-header').find('thead').html(), 'share_info':me.res,
 			 'profile_id':me.profile_id, 'disease':$('[name="disease"]').val()},
 			callback:function(r){
 				d.hide()
+				NProgress.done();
 			}
 		})
 	}
