@@ -23,29 +23,43 @@ $.extend(ThumbNails.prototype,{
 	},
 	render_uploader_and_files:function(){
 		var me = this;
+		$('.thumb').empty();
 		$('.uploader').empty();
-		$(repl_str('<div class="uploader">\
-			<h4> Uploaded Files </h4>\
-			<div id="uploaded_file">\
-			</div>\
-			<hr><br>\
+		$(repl_str('<div class="uploader" style="border:1px solid #94a0b4;padding:1%;">\
+			<br>\
+			<button style="float:left;width:40%;" id="img" class="btn btn-primary" > Upload Image </button>\
+			<button style="float:left;width:40%;margin-left:15%;" id="descr" class="btn btn-primary" > Write Description </button>\
 			<div style="display:%(uploader_display)s">\
-				<h4> Uploaded Files </h4>\
 				<div id="attach"> Attach </div>\
-			</div>\
-			<hr><br>\
-			<h4> Description </h4>\
-			<div class="form-group row" style="margin: 0px">\
-				<label class="control-label small col-xs-4" style="padding-right: 0px;">Description</label>\
-				<div class="col-xs-8">\
-					<div class="control-input">\
-						<textarea type="text" class="form-control" \
-							placeholder="Description" name="attch_desc"\
-							aria-describedby="basic-addon2"></textarea>\
+				<div class="form-group row" style="display: block;padding-top: 8%;margin-right:2%;" id="desc">\
+					<div class="col-xs-12">\
+						<div class="control-input">\
+							<textarea type="text" class="form-control" \
+								placeholder="Don\'t have an image, write a description. This will be saved below as pdf." name="attch_desc"\
+								aria-describedby="basic-addon2"></textarea>\
+						</div>\
 					</div>\
 				</div>\
 			</div>\
-			',{'uploader_display':me.uploader_display})).appendTo($('.field-area'))
+			<hr>\
+			<h4> Uploaded Files </h4>\
+			<div id="uploaded_file" style="height:300px;overflow-x:auto;">\
+			</div>\
+			',{'uploader_display':me.uploader_display})).appendTo($('.thumb'))
+
+		$('#desc').hide('fast');
+		$("#descr").on("click",function(){
+			
+				$('#attach').hide('fast');
+				$('#desc').show('fast');
+			
+		})
+		$('#img').on("click", function(){
+
+				$('#desc').hide('fast');
+				$('#attach').show('fast');
+			
+		})
 		
 		$('#convert_to_pdf').click(function(){
 			me.convert_txt_to_pdf($('[name="attch_desc"]').val())
@@ -75,6 +89,7 @@ $.extend(ThumbNails.prototype,{
 						"text_file_id": $('[name="attch_desc"]').val() ? me.folder+'_'+me.sub_folder+'.pdf' : "",
 						"text_file_loc": $('[name="attch_desc"]').val() ? attachment['site_path'] +'/'+ me.args['profile_id'] + '/' +  $('input[name="entityid"]').val() + '/' + me.folder + '/' +  me.sub_folder + '/' + me.folder+'_'+me.sub_folder+'.pdf' : ""
 				})
+				console.log(me.args['dms_file_list'])
 				me.render_uploader_and_files();
 			}
 		});
@@ -105,7 +120,7 @@ $.extend(ThumbNails.prototype,{
 
 		row = $('<tr>').appendTo(this.table)
 		$.each(attachments, function(i, attachment){
-			if((i+1)%4 == 0){
+			if((i+1)%3 == 0){
 				row = $('<tr>').appendTo(me.table)
 			}
 			attachment['display'] = me.args['display'];

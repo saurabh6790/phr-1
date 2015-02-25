@@ -11,6 +11,7 @@ frappe.provide("frappe");
 {% include "templates/includes/custom_dialog.js" %}
 {% include "templates/includes/phr_comments.js" %}
 {% include "templates/includes/dashboard_renderer.js" %}
+{% include "templates/includes/treeview.js" %}
 
 
 window.Events = inherit(ListView,{
@@ -83,8 +84,9 @@ window.Events = inherit(ListView,{
 			me.dialog_oprations()
 		})
 		
-		me.render_folder_section()
-  		me.bind_events()
+		// me.render_folder_section()
+		TreeView.prototype.init({'profile_id': this.profile_id, 'dms_file_list': me.dms_file_list})
+  		// me.bind_events()
   		this.get_linked_providers()
   		this.set_provider_details()
 	},
@@ -268,7 +270,7 @@ window.Events = inherit(ListView,{
 				me.res['profile_id'] = me.profile_id;
 				me.res['dms_file_list'] = me.dms_file_list;
 				me.res['complaints'] = complaints_array;
-				
+				console.log(me.res)
 				frappe.call({
 					method:"phr.templates.pages.event.create_update_event",
 					args:{"data":JSON.stringify(me.res)},
@@ -354,7 +356,7 @@ window.Events = inherit(ListView,{
 						me.result_set[obj.name] = $(obj).val();
 
 					})
-					me.render_folder_section()
+					// me.render_folder_section()
 					me.open_sharing_pannel()
 			}).appendTo('.breadcrumb');			
 			me.open_sharing_pannel()
