@@ -64,10 +64,8 @@ var PatientDashboard = inherit(RenderFormFields, {
 			//var prod = one / 0.0254 / 100;
 			var ft = parseInt(inches / 12).toFixed(0);
 			var inch = (inches % 12).toFixed(0);
-			//var fts= ft.toFixed(0);
-			//ins= inch.toFixed(0);
-			console.log([ft,inch])
-			//$(".tab-pane.active form input[name='height_in_inches']").val(inches.toFixed(2))
+			fts_inches=ft+"."+inch
+			$(".tab-pane.active form input[name='height_in_inches']").val(parseFloat(fts_inches))
 			
 		});
 		$('.tab-pane.active form input[name="weight"]').bind('change', function() { 

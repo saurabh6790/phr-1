@@ -696,8 +696,7 @@ $.extend(RenderFormFields.prototype,{
 			.addClass("col-md-" + colspan);
     },
     section_break_field_renderer: function(meta){
-    	console.log([meta,"dsasad"])
-    	this.section = $('<div class="row sec %(fieldname)s" style="padding:2%""></div>')
+       	this.section = $('<div class="row sec %(fieldname)s" style="padding:2%""></div>')
     		.appendTo($(this.wrapper))
     		.css("border-top", "1px solid #eee")
     		.css("padding-top", "15px")

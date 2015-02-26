@@ -188,7 +188,7 @@
    {
       "fieldname": "height_in_inches", 
       "fieldtype": "data", 
-      "label": "Height (INCHES)",
+      "label": "Height (Feet Inch)",
       "readonly":1,
       "placeholder":""
    },
