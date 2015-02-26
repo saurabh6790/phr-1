@@ -13,9 +13,9 @@ $.extend(TreeView.prototype, {
 	init:function(args){
 		var me =this;
 		me.args = args;
+		me.disp = args['display']
+		me.doc_list = args['doc_list'];
 
-		me.dms_file_list = args['dms_file_list']
-		
 		me.parent_mapper = [{'label' : 'Consultation', 'id':'consultancy-11', 'icon':'icon-user-md'}, 
 				{'label' : 'Event Snap', 'id':'event_snap-12','icon':'icon-camera'}, 
 				{'label' : 'Lab Reports', 'id':'lab_reports-13', 'icon':'icon-beaker'}, 
@@ -118,14 +118,34 @@ $.extend(TreeView.prototype, {
 
 	},
 	make_tree_base: function(){
+		// console.log('make_tree_base')
 		var me = this;
-		$('<div style="width=100%;">\
+		$('<div class="event_tree" style="width=100%;">\
 				<div class="tree" style="width:40%;float:left;min-height:500px;">\
 					<ul>\
 					</ul>\
 				</div>\
-				<div class="thumb" style="width:60%;float:left;"></div>\
-			</div>').appendTo($('.event_section'))
+				<div class="thumb" style="width:60%;float:left;">\
+					<div align="center"><h4> Document Uploader and Viewer </h4></div>\
+					<div style="word-wrap: break-word;width:80%;">\
+						Besides a folder structure, to attach your documents and images related to event.\
+						Here you can attach only PDF files and images in format .jpeg, .jpg, .png.\
+						You can attach images upto size <b>20 MB max.</b><br><br>\
+						<b>eg:</b> Steps to attach documents <br>\
+						1. Click on folder, this contains subfolders. Choose appropreate subfolder.<br>\
+						2. After this you have options, like <br>\
+							i. <button class="btn btn-success" disabled> \
+									<i class="icon-upload"></i>\
+									Upload Image </button><br><br>\
+							ii.<button class="btn btn-primary" disabled> \
+									<i class="icon-file-text-alt"></i>\
+									Write Description </button><br><br>\
+							iii.<button class="btn btn-default" disabled> \
+									<i class="icon-camera" data-toggle="tooltip" data-placement="top" title="Comming Soon...."></i>\
+									Capture Image </button>\
+				</div>\
+			</div>\
+			<br style="clear:both" />').appendTo($('.event_section'))
 
 		$.each(me.parent_mapper, function(i, dic){
 			$li = $(repl_str('<li>\
@@ -142,7 +162,10 @@ $.extend(TreeView.prototype, {
 	},
 	add_tree_events:function(){
 		var me = this;
+			// console.log(['add_tree_events', me.args['dms_file_list']])
 		$(function () {
+			me.args['dms_file_list'] = me.args['dms_file_list'] ? me.args['dms_file_list'] : [];
+
 			$('.tree li:has(ul)').addClass('parent_li').find(' > span').attr('title', 'Expand this branch');
 			
 			$('.tree li.parent_li').find(' > ul > li').hide('fast');
@@ -165,11 +188,10 @@ $.extend(TreeView.prototype, {
 				children.addClass('parent_li')
 
 				children.on('click', function(){
-					me.dms_file_list = me.dms_file_list ? me.dms_file_list : [];
-
+					// console.log(['sub folder ', me.args['dms_file_list']])
 					ThumbNails.prototype.init(me.wrapper, {'folder':me.folder, 
-						'sub_folder':$(this).find('span').attr('id'), 'profile_id': me.args['profile_id'], 'display':'none', 
-						'dms_file_list': me.dms_file_list})
+						'sub_folder':$(this).find('span').attr('id'), 'profile_id': me.args['profile_id'], 'display': me.disp, 
+						'dms_file_list': me.args['dms_file_list'], 'doc_list': me.doc_list})
 				})
 
 			});

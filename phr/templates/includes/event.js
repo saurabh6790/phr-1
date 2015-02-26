@@ -85,10 +85,52 @@ window.Events = inherit(ListView,{
 		})
 		
 		// me.render_folder_section()
-		TreeView.prototype.init({'profile_id': this.profile_id, 'dms_file_list': me.dms_file_list})
+
   		// me.bind_events()
+  		this.make_tree_view()
   		this.get_linked_providers()
   		this.set_provider_details()
+  		this.make_share_pannel()
+		this.make_comment_section()
+	},
+	make_share_pannel: function(){
+		var me = this;
+		$('<button class="btn btn-primary" id="share"> Share Data </button>').appendTo($('.save_controller'))
+
+		$('#share').click(function(){
+			$("form input, form textarea").each(function(i, obj) {
+				me.result_set[obj.name] = $(obj).val();
+			})
+			
+			$('<li><a nohref>Share Panel</a></li>').click(function(){
+					$(this).nextAll().remove()
+					// $(this).remove()
+					$('.uploader').remove();
+					$("form input, form textarea").each(function(i, obj) {
+						me.result_set[obj.name] = $(obj).val();
+
+					})
+					// me.render_folder_section()
+					me.open_sharing_pannel()
+			}).appendTo('.breadcrumb');			
+			me.open_sharing_pannel()
+		})		
+	},
+	make_tree_view:function(){
+		var me = this;
+		console.log(['make_tree_view',me.dms_file_list]);
+		me.dms_file_list = me.dms_file_list ? me.dms_file_list : [];
+		TreeView.prototype.init({'profile_id': this.profile_id, 'dms_file_list': me.dms_file_list, 'display': 'none'})
+	},
+	make_comment_section: function(){
+		var me = this;
+		PHRComments.prototype.init({"wrapper":$('.field-area'), 
+				"provider_id" : frappe.get_cookie("profile_id"), 
+				"profile_id": me.profile_id,
+				"event_id": $("[name='entityid']").val(),
+				"event_title":$("[name='event_title']").val()
+
+		});
 	},
 	make_multi_select_div: function(){
 		$.each($('[name="event_symptoms"]').val().split(','), function(i, val){
@@ -254,7 +296,7 @@ window.Events = inherit(ListView,{
 		this.res = {}
 		this.result_set = {};
 		this.doc_list = []
-		$('.save_controller').bind('click',function(event) {
+		$('.save_controller').unbind('click').click(function(event) {
 			if(me.validate_form()){
 				NProgress.start();
 				$("form input, form textarea, form select").each(function(i, obj) {
@@ -267,6 +309,7 @@ window.Events = inherit(ListView,{
 					temp_var.find("span").remove()
 					complaints_array[i] = temp_var.html();
 				})
+				console.log(['save_event_', me.dms_file_list])
 				me.res['profile_id'] = me.profile_id;
 				me.res['dms_file_list'] = me.dms_file_list;
 				me.res['complaints'] = complaints_array;
@@ -278,8 +321,8 @@ window.Events = inherit(ListView,{
 						$('.breadcrumb li:last').remove()
 						NProgress.done();
 						if(r.message.returncode == 103 || r.message.returncode == 116){
-							me.open_form(r.message.entityid, $('[name="event_title"]').val(), me.profile_id);	
 							me.dms_file_list = [];
+							me.open_form(r.message.entityid, $('[name="event_title"]').val(), me.profile_id);	
 							alert("Saved")
 						}
 						else{
@@ -333,7 +376,7 @@ window.Events = inherit(ListView,{
 			</div>\
 		</div>\
 	    ').appendTo($('.event_section'))
-		console.log("comment maker")
+		// console.log("comment maker")
 		PHRComments.prototype.init({"wrapper":$('.event_section'), 
 				"provider_id" : frappe.get_cookie("profile_id"), 
 				"profile_id": me.profile_id,
@@ -341,7 +384,7 @@ window.Events = inherit(ListView,{
 				"event_title":$("[name='event_title']").val()
 
 		});
-		console.log("Tessing comments")
+		// console.log("Tessing comments")
 
 		$('#share').click(function(){
 			$("form input, form textarea").each(function(i, obj) {
@@ -452,9 +495,9 @@ window.Events = inherit(ListView,{
 			method:"phr.templates.pages.provider.get_self_details",
 			args:{"profile_id":frappe.get_cookie("profile_id")},
 			callback:function(r){
-				console.log(["checking callbacks", r])
+				// console.log(["checking callbacks", r])
 				if(r.message){
-					console.log(["Test set provider pannel", r.message[0], r.message[0]['email']])
+					// console.log(["Test set provider pannel", r.message[0], r.message[0]['email']])
 
 					$('[name="email_id"]').val(r.message[0]['email'])
 					$('[name="number"]').val(r.message[0]['mobile_number'])

@@ -54,6 +54,9 @@ def create_event(data):
 	return json.loads(response.text)
 
 def update_event(data):
+	print "---------------update event---------------------"
+	print data
+	print "------------------------------------------------"
 	response = ''
 	request_type="POST"
 	url="%s/createupdateevent"%get_base_url()
@@ -187,6 +190,7 @@ def share_via_email(data):
 		frappe.msgprint('Please select file(s) for sharing')
 
 def share_via_providers_account(data):
+	frappe.errprint([data.get('files'), not data.get('files')])
 	if not data.get('files'):
 		event_data =	{
 				"sharelist": [
