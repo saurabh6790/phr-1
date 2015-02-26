@@ -92,8 +92,7 @@
       "fieldname": "email", 
       "fieldtype": "email", 
       "label": "Email",
-      "placeholder":"",
-      "readonly":1
+      "placeholder":""
    },
    
    {

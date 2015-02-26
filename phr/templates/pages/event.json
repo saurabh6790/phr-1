@@ -23,11 +23,6 @@
 			"placeholder":""
 		},
 		{
-			"fieldname":"", 
-			"fieldtype":"column_break", 
-			"label":""
-		},
-		{
 			"fieldname":"event_date", 
 			"fieldtype":"date", 
 			"label":"Event Date",
@@ -35,18 +30,9 @@
 			"placeholder":""
 		},
 		{
-			"fieldname":"visit_date", 
-			"fieldtype":"date", 
-			"label":"Visit Date",
-			"display": "none",
-			"required":1,
-			"placeholder":""
-		},
-		{
-			"fieldname":"",
-			"fieldtype":"section_break",
-			"label": "Complaint Details",
-			"options": "icon-list-alt"
+			"fieldname":"", 
+			"fieldtype":"column_break", 
+			"label":""
 		},
 		{
 			"fieldname":"event_symptoms",
@@ -63,32 +49,26 @@
 			"placeholder":""
 		},
 		{
-			"fieldname": "diagnosis_desc",
-			"fieldtype": "text",
-			"label": "Diagnosis",
+			"fieldname":"visit_details", 
+			"fieldtype":"section_break", 
+			"label":"Visit Details",
+			"options": "icon-user-md",
+			"display": "none"
+		},
+		{
+			"fieldname":"visit_date", 
+			"fieldtype":"date", 
+			"label":"Visit Date",
 			"display": "none",
 			"required":1,
 			"placeholder":""
 		},
 		{
-			"fieldname":"", 
-			"fieldtype":"section_break", 
-			"label":"Provider Info",
-			"options": "icon-user-md",
+			"fieldname": "diagnosis_desc",
+			"fieldtype": "text",
+			"label": "Diagnosis",
 			"display": "none",
-			"placeholder":""
-		},
-		{
-			"fieldname":"provider_type", 
-			"fieldtype":"select",
-			"label": "Healthcare Provider", 
-			"options":"Provider Type",
-			"placeholder":""
-		},
-		{
-			"fieldname":"number", 
-			"fieldtype":"data", 
-			"label":"Contact Number",
+			"required":1,
 			"placeholder":""
 		},
 		{
@@ -104,11 +84,17 @@
 			"placeholder":""
 		},
 		{
+			"fieldname":"provider_type", 
+			"fieldtype":"select",
+			"label": "Healthcare Provider", 
+			"options":"Provider Type",
+			"placeholder":""
+		},
+		{
 			"fieldname":"doctor_name", 
 			"fieldtype":"data", 
 			"label":"Provider Name",
 			"description": "<a id='provider_name' style='color:#17329E;'>Add New Provider</a>",
-			"required":1,
 			"placeholder":""
 		},
 		{
@@ -117,11 +103,19 @@
 			"label":"Email Id",
 			"placeholder":""
 		},
+		
 		{
-			"fieldname":"", 
+			"fieldname":"number", 
+			"fieldtype":"data", 
+			"label":"Contact Number",
+			"placeholder":""
+		},
+		{
+			"fieldname":"upload_files", 
 			"fieldtype":"section_break", 
 			"label":"Upload Files",
-			"options": "icon-cloud-upload"
+			"options": "icon-cloud-upload",
+			"display":"none"
 		}
 	], 
 	"listview":[

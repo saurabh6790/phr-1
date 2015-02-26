@@ -96,7 +96,7 @@ var Medications = inherit(ListView,{
 			data["profile_id"]=me.profile_id
 			data['file_name']="medication";
 			data['param']="listview";
-			BootstrapDialog.confirm('are you sure,You Want to deactivate/Stop the Medication?', function(result){
+			BootstrapDialog.confirm('Are you sure,you want to Deactivate/Stop this meedication?', function(result){
 				if(result){
 					me.update_status(data)
 				}

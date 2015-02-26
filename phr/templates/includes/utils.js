@@ -16,6 +16,11 @@ function validate_mobile(mobile){
     }
 }
 
+function validate_email(id) {
+    return (id.toLowerCase().search("[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?")==-1) ? 0 : 1;
+
+}
+
 function s_alert(txt, seconds) {
     if(!$('#dialog-container').length) {
         $('<div id="dialog-container">').appendTo('body');

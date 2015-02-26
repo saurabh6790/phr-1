@@ -28,7 +28,7 @@ def get_medication_data(data):
 		if d.status=='Active':
 			rows.extend([["<a nohref class='medication' id='%s'><i class='icon-unlock' data-toggle='tooltip' data-placement='top' title='Deactivate'></i></a>"%d.name,d.medicine_name, d.dosage,d.from_date_time,d.to_date_time,d.additional_info,d.status]])
 		else:
-			rows.extend([["",d.medicine_name, d.dosage,d.from_date_time,d.to_date_time,d.additional_info,d.status]])	
+			rows.extend([["<i class='icon-lock' data-toggle='tooltip' data-placement='top' title='Activate'>",d.medicine_name, d.dosage,d.from_date_time,d.to_date_time,d.additional_info,d.status]])	
 
 	return {
 		'rows': rows,
@@ -88,7 +88,7 @@ def save_data(data):
 
 def get_formatted_date(strdate=None):
 	if strdate:
-		return datetime.datetime.strptime(strdate,"%d/%m/%Y %H:%M:%S")
+		return datetime.datetime.strptime(strdate,"%d/%m/%Y %H:%M")
 
 def get_options(obj):
 	options={}

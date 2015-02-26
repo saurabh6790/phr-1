@@ -14,11 +14,12 @@ var PatientDashboard = inherit(RenderFormFields, {
 		RenderFormFields.prototype.init(this.wrapper,this.args,this.entityid)
 		this.render_validations(this.entityid)
 		this.render_field(this.entityid)
-		this.get_linked_phrs(this.entityid)
+		//this.get_linked_phrs(this.entityid)
 		this.get_enabled_notification(this.entityid)
 		this.get_enabled_dashboard(this.entityid)
 	},
 	render_validations:function(profile_id){
+		var me=this;
 		$('.chk').bind('click',function(event){
 			var $id=$('.tab-pane.active').attr('id')
 			if ($id=='dashboard'){
@@ -47,10 +48,26 @@ var PatientDashboard = inherit(RenderFormFields, {
     		    $(this).closest('.control-input').find('#valid').css('color', 'red');
   			}
 		});
+		$('.tab-pane.active form input[name="email"]').bind('change', function() { 
+			if (validate_email($(this).val())) {
+				$(this).closest('.control-input').find('#valid').html('Valid');
+		       	$(this).closest('.control-input').find('#valid').css('color', 'green');
+			}
+			else {
+				
+				$(this).closest('.control-input').find('#valid').html('Invalid');
+    		    $(this).closest('.control-input').find('#valid').css('color', 'red');
+  			}
+		});	
 		$('.tab-pane.active form input[name="height"]').bind('change', function() { 
 			var inches=$(this).val()/2.54
-			console.log(inches)
-			$(".tab-pane.active form input[name='height_in_inches']").val(inches.toFixed(2))
+			//var prod = one / 0.0254 / 100;
+			var ft = parseInt(inches / 12).toFixed(0);
+			var inch = (inches % 12).toFixed(0);
+			//var fts= ft.toFixed(0);
+			//ins= inch.toFixed(0);
+			console.log([ft,inch])
+			//$(".tab-pane.active form input[name='height_in_inches']").val(inches.toFixed(2))
 			
 		});
 		$('.tab-pane.active form input[name="weight"]').bind('change', function() { 
@@ -64,6 +81,9 @@ var PatientDashboard = inherit(RenderFormFields, {
 			if (attr=='#notification' && (sessionStorage.getItem("cid")!=sessionStorage.getItem("pid"))){
 				$($('input[name="linked_phr"]').parents()[3]).css("display", "none");  				
   			}
+  			else if(attr=='#manage_phr'){
+  				me.get_linked_phrs(sessionStorage.getItem('pid'))
+  			}
 		})
 		if (sessionStorage.getItem("cid")!=sessionStorage.getItem("pid")){
 			$($('a[aria-controls="manage_phr"]').parent()).css("display", "none");
@@ -72,7 +92,10 @@ var PatientDashboard = inherit(RenderFormFields, {
 			$($('#password')).css("display", "none");	
 		}
 		if (sessionStorage.getItem("cid")==sessionStorage.getItem("pid")){
-			$($('input[name="relationship"]').parents()[3]).css("display", "none");  				
+			$($('input[name="relationship"]').parents()[3]).css("display", "none");
+			if ($('input[name="email"]').val()){
+				$('input[name="email"]').prop('disabled',true)
+			}  				
   		}
 
 	},
@@ -220,8 +243,11 @@ var PatientDashboard = inherit(RenderFormFields, {
 			args:{'profile_id':profile_id},
 			callback: function(r) {
 				if(r.message) {
-					me.render_phrs(r.message)
-					
+					me.render_phrs(r.message,profile_id)
+				}
+				else{
+					var $wrapper=$('#manage_phr').find('form')
+					$wrapper.empty();
 				}
 			}
 		})
@@ -239,7 +265,7 @@ var PatientDashboard = inherit(RenderFormFields, {
 						<div class="form-group row" style="margin: 0px">\
 								<div class="col-xs-8">\
 								<div class="control-input">\
-									<input type="checkbox" class="chk_phr" name="%(entityid)s" value="%(entityid)s">\
+									<input type="radio" class="chk_phr" name="%(entityid)s" value="%(entityid)s">\
 									%(person_firstname)s &nbsp %(person_lastname)s\
 								</div>\
 							</div>\
@@ -253,14 +279,11 @@ var PatientDashboard = inherit(RenderFormFields, {
 				</button>\
 			</div>').appendTo($wrapper).unbind("click").click(function(){
 				selected=[]
-				BootstrapDialog.confirm('are you sure?', function(result){
-					// alert(result)
-           			if(result) {
-           			 		NProgress.start();
-                			$(".chk_phr:checked").each(function() {
-                				selected.push($(this).val());
-  							});
-							me.delink_phr(meta,selected,meta_dic,profile_id,me)
+				BootstrapDialog.confirm('Are You Sure?', function(result){
+					if(result) {
+           				if ($('.chk_phr:checked').length>0){
+							me.delink_phr(meta,$('.chk_phr:checked').val(),meta_dic,profile_id,me)
+						}
             		}else {
                 			
             		}
@@ -269,19 +292,77 @@ var PatientDashboard = inherit(RenderFormFields, {
 			})
 	},
 	delink_phr:function(meta,selected,meta_dic,profile_id,me){
+	fields=[{
+   				"fieldname": "email", 
+				"fieldtype": "data", 
+   				"label": "Email", 
+   				"placeholder": "", 
+   				"required": 1
+  			}, 
+  			{
+   				"fieldname": "mobile", 
+   				"fieldtype": "data", 
+   				"label": "Mobile", 
+   				"placeholder": "", 
+   				"required": 1
+  			}] 
+		d = new Dialog();
+		d.init({'fields':fields,"values":meta_dic[selected],"title":"Add Email And Mobile"})
+		d.show()
 		var me=this;
-		frappe.call({
-			method:'phr.templates.pages.profile.delink_phr',
-			args:{'selected':selected,"data":meta_dic,"profile_id":profile_id},
-			callback: function(r) {
-				NProgress.done();
-				if (r.message){
-					//me.render_phrs(r.message["res"],profile_id)
-				}
-				
-				//me.get_linked_phrs(r.message)
+		res={}
+		$('.modal-footer .btn-primary').click(function(){
+			$(".modal-body .form-column input").each(function(i, obj) {
+				res[obj.name] = $(obj).val();
+			})
+			if (validate_mobile(res['mobile']) && validate_email(res['email'])) {
+				frappe.call({
+					method:'phr.templates.pages.profile.check_existing',
+					args:{'email':res['email']},
+					callback: function(r) {
+						console.log(r)
+						if (r.message){
+							frappe.msgprint('Email Already Used')
+						}
+						else{
+							me.delink_profile(meta,selected,meta_dic,profile_id,me,res)
+							var $modal = $("#myModal").detach().modal();
+							 $modal.modal("hide");
+							 $modal.modal("destroy").remove();
+						}
+
+					}
+				})
+			}
+			else{
+				frappe.msgprint('Email or Mobile Number is not valid')
 			}
 		})
+	},
+	delink_profile:function(meta,selected,meta_dic,profile_id,me,res){
+		//console.log([meta,selected,meta_dic,profile_id,me,res])
+		frappe.call({
+				method:'phr.templates.pages.profile.delink_phr',
+				args:{'selected':selected,"data":meta_dic,"profile_id":profile_id,"res":res},
+				callback: function(r) {
+					if (r.message['response']['returncode']==121){
+						frappe.msgprint(r.message['message'])
+						me.get_linked_phrs(profile_id)
+						var db = new render_dashboard();
+						db.render_linked_phr(sessionStorage.getItem("pid"))
+						me.add_profile_to_db(r.message['response'],profile_id)
+					}
+				}
+			})
+	},
+	add_profile_to_db:function(data,profile_id){
+		frappe.call({
+				method:'phr.templates.pages.profile.add_profile_to_db',
+				args:{"data":data,"profile_id":profile_id},
+				callback: function(r) {
+					NProgress.done();
+				}
+			})
 	},
 	get_enabled_notification:function(profile_id){
 		var me=this;

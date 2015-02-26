@@ -73,12 +73,13 @@ window.Events = inherit(ListView,{
 		this.make_multi_select_div()
 
 		$('<div class="event_section" style="margin-top:-10%;"></div>').appendTo($('.field-area'))
-
+		$('.visit_details').css("display","inherit")
+		$('.upload_files').css("display","inherit")
 		$('[name="event_date"]').attr('disabled', 'disabled')
 		$($('[name="visit_date"]').parents()[3]).css("display", "inherit")
 
 		$($('[name="diagnosis_desc"]').parents()[3]).css("display", "inherit");
-
+		
 		$("#provider_name").click(function(){
 			me.dialog_oprations()
 		})
@@ -106,7 +107,6 @@ window.Events = inherit(ListView,{
 					me.filters[obj.name] = $(obj).val();
 				})
 				me.render_result_table(me.filters, d)
-
 			})
 			.appendTo($('.modal-body'))
 		

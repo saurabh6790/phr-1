@@ -74,12 +74,12 @@ function render_dashboard(profile_id){
 						render_middle(r.message['res_list'],profile_id)
 					}
 					else{
-						$('<div><h1>NO Data</h1></div>').appendTo('.field-area')
+						$('<div>Your Dashboard is not configured,configure it now!!<br>Goto \' Profile\' >> \' Manage Dashboard \',choose any four options.</div>').appendTo('.field-area')
 					}
 					
 				}
 				else{
-					$('<div><h1>NO Data</h1></div>').appendTo('.field-area')
+					$('<div>Your Dashboard is not configured,configure it now!!<br>Goto \' Profile\' >> \' Manage Dashboard \',choose any four options.</div>').appendTo('.field-area')
 				}
 			}
 		})
@@ -190,8 +190,11 @@ function render_dashboard(profile_id){
 		$('#hps').empty()
 		meta=data
 		$.each(meta,function(i,data){
+			var sal=""
+			if (data['provider_type']=='Doctor') sal="Dr."
+			data['sal']=sal
 			$(repl_str('<div class="list-group-item-side %(entityid)s">\
-			<a noherf data-name=%(provider)s onclick="Provider.prototype.open_record(\'%(provider)s\')">%(name1)s </a>\
+			<a noherf data-name=%(provider)s onclick="Provider.prototype.open_record(\'%(provider)s\')">%(sal)s %(name1)s </a>\
 			</div>', data)).appendTo($wrap)
 		})
     }
@@ -267,7 +270,7 @@ function render_dashboard(profile_id){
     function render_table1(data){
 		cols = [];
 		data_row = [];
-		$('<strong>').html(data["label"]).appendTo(".he1")
+		$('<strong>').html(data["label"]).appendTo(".he1").css('color',' #ffffff')
 		//alert(data['rows'])
 		if (data["fieldname"]!='disease_monitoring'){
 			$.each(data['rows'],function(i, val){
@@ -289,7 +292,7 @@ function render_dashboard(profile_id){
 		}
     }
     function render_table2(data){
-		$('<strong>').html(data["label"]).appendTo(".he2")
+		$('<strong>').html(data["label"]).appendTo(".he2").css('color',' #ffffff')
 		$.each(data['rows'],function(i, val){
 			if (i==0){
 				$.each(val,function(i, d){
@@ -307,7 +310,7 @@ function render_dashboard(profile_id){
 		})
     }
     function render_table3(data){
-		$('<strong>').html(data["label"]).appendTo(".he3")
+		$('<strong>').html(data["label"]).appendTo(".he3").css('color',' #ffffff')
 			$.each(data['rows'],function(i, val){
 				if (i==0){
 					$.each(val,function(i, d){
@@ -325,7 +328,7 @@ function render_dashboard(profile_id){
 		})
     }
     function render_table4(data){
-    	$('<strong>').html(data["label"]).appendTo(".he4")
+    	$('<strong>').html(data["label"]).appendTo(".he4").css('color',' #ffffff')
 		$.each(data['rows'],function(i, val){
 			if (i==0){
 				$.each(val,function(i, d){

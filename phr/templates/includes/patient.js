@@ -21,6 +21,8 @@ frappe.provide("frappe");
   ClassName.prototype.init(wrapper,name_of_json_file,entityid,operation_entity)
 */
 $(document).ready(function () {
+	$("[data-toggle='popover']").popover();
+	//$("#body").css("width",'200px')
 	//sessionStorage.setItem("cid",frappe.get_cookie('profile_id'));
 	if(!window.full_name) {
 		if(localStorage) {

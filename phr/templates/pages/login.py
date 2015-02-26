@@ -26,9 +26,9 @@ def create_profile(first_name,middle_name,last_name,email_id,contact,created_via
 	print user
 	if user:
 		if user.disabled:
-			return {"returncode" : 410, "message_summary":"Registered but disabled."}
+			return {"returncode" : 410, "message_summary":"Registered but disabled.","msg_display":"Registered but disabled."}
 		else:
-			return {"returncode" : 409, "message_summary" : "Already Registered"}
+			return {"returncode" : 409, "message_summary" : "Already Registered","msg_display":"Already Registered"}
 	else:
 		barcode=get_barcode()
 		args={'person_firstname':first_name,'person_middlename':middle_name,'person_lastname':last_name,'email':email_id,'mobile':contact,'received_from':created_via,'provider':'false',"barcode":str(barcode)}
@@ -41,6 +41,7 @@ def create_profile(first_name,middle_name,last_name,email_id,contact,created_via
 			file_path='/files/'+response['entityid']+'/'+response['entityid']+".svg"
 			res=create_profile_in_db(response['entityid'],args,response,file_path)
 			print response
+			response['msg_display']='Profile created successfully, please check your email and complete signup process'
 			return response
 		else:
 			print response
@@ -79,7 +80,7 @@ def get_site_name():
 
 
 @frappe.whitelist(allow_guest=True)
-def create_profile_in_db(id,args,response,path):
+def create_profile_in_db(id,args,response,path=None):
 	from frappe.utils import random_string
 	password=random_string(10)
 	user = frappe.get_doc({

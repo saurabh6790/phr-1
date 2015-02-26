@@ -83,7 +83,7 @@ def create_provider_master_entry(res, data):
 
 @frappe.whitelist(allow_guest=True)
 def get_provider_List(profile_id):
-	return frappe.db.sql("""select name1,provider from `tabProviders Linked` 
+	return frappe.db.sql("""select name1,provider,provider_type from `tabProviders Linked` 
 		where patient='%s' order by creation desc"""%(profile_id),as_dict=1)
 
 @frappe.whitelist()

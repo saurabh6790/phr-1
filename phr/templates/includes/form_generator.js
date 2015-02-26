@@ -548,7 +548,7 @@ $.extend(RenderFormFields.prototype,{
 						changeYear: true,
 						yearRange: "-70Y:+10Y",
 						dateFormat: "dd/mm/yy",
-						timeFormat:  "HH:mm:ss"
+						timeFormat:  "HH:mm"
 					})
 		var val = field_meta['value'];
 		
@@ -696,7 +696,8 @@ $.extend(RenderFormFields.prototype,{
 			.addClass("col-md-" + colspan);
     },
     section_break_field_renderer: function(meta){
-    	this.section = $('<div class="row sec" style="padding:2%""></div>')
+    	console.log([meta,"dsasad"])
+    	this.section = $('<div class="row sec %(fieldname)s" style="padding:2%""></div>')
     		.appendTo($(this.wrapper))
     		.css("border-top", "1px solid #eee")
     		.css("padding-top", "15px")
@@ -710,7 +711,11 @@ $.extend(RenderFormFields.prototype,{
 						+ "</h4>")
 						.css({"margin":"15px 0px"})
 						.appendTo(this.section);	
-    		}	
+    		}
+    		if(meta['display']){
+				$(this.section).css("display", meta['display']);
+				$(this.section).addClass(meta['fieldname'])
+			}	
     	}
     	
     	this.column = null;

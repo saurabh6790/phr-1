@@ -64,7 +64,7 @@ def save_data(data):
 
 def get_formatted_date(strdate=None):
 	if strdate:
-		return datetime.datetime.strptime(strdate,"%d/%m/%Y %H:%M:%S")
+		return datetime.datetime.strptime(strdate,"%d/%m/%Y %H:%M")
 
 
 @frappe.whitelist(allow_guest=True)
@@ -84,6 +84,7 @@ def send_notification(profile_list):
 			else:
 				data=search_profile_data_from_solr(profile_id)
 				sms_recipients.append(data["mobile"])
+			
 		if sms_recipients:
 			send_sms(sms_recipients,msg='You Have and Appointment')
 

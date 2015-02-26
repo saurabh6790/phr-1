@@ -23,17 +23,18 @@
             "label": "Name",
             "placeholder":""
         },
-        {
-            "fieldname": "",
-            "fieldtype": "column_break",
-            "label": ""
-        },
-        {
+         {
             "fieldname": "specialization",
             "fieldtype": "select",
             "label": "Specialization",
             "options": "Specialization"
         },
+        {
+            "fieldname": "",
+            "fieldtype": "column_break",
+            "label": ""
+        },
+       
         {
             "fieldname": "mobile",
             "fieldtype": "data",
@@ -45,11 +46,6 @@
             "fieldtype": "data",
             "label": "Email",
             "placeholder":""
-        },
-        {
-            "fieldname": "",
-            "fieldtype": "section_break",
-            "label": "Personal Note"
         },
         {
             "fieldname": "comments",
@@ -102,7 +98,7 @@
             "fieldname": "state",
             "fieldtype": "select",
             "label": "State",
-            "options": ["", "Maharashtra", "Gujrat"],
+            "options":"State" ,
             "placeholder":""
         },
         {

@@ -231,7 +231,6 @@ def get_linked_phrs(profile_id):
 	from phr.templates.pages.patient import get_base_url
 	solr_op='searchchildprofile'
 	url=get_base_url()+solr_op
-	#url="http://192.168.5.11:9090/phr/phrdata/searchchildphr"
 	request_type='POST'
 	data={"to_profile_id":profile_id}
 	from phr.phr.phr_api import get_response
@@ -242,52 +241,72 @@ def get_linked_phrs(profile_id):
 		return res
 
 @frappe.whitelist(allow_guest=True)
-def delink_phr(selected,data,profile_id=None):
+def delink_phr(selected,data,profile_id,res):
 	obj=json.loads(data)
-	ids=json.loads(selected)
+	id=selected
 	print obj
-	print ids
-	if ids:
-		for id in ids:
-	 		print obj[id]
-			ret_res=delink_phr_solr(obj[id],id,profile_id)
-			print ret_res
-		l_phrs=get_linked_phrs(profile_id)
-		print l_phrs
+	print id
+	if id:
+		print obj[id]
+		ret_res=delink_phr_solr(obj[id],id,profile_id,res)
+		print ret_res
+		#l_phrs=get_linked_phrs(profile_id)
+		#print l_phrs
 		return {
 			"message":"Profile Delinked Successfully",
-			"res":l_phrs
+			"response":ret_res
 		}
 	else:
 		return {
 			"message":"Please Select PHR to Delink"
 		}
-def delink_phr_solr(data,id,profile_id):
+
+def delink_phr_solr(data,id,profile_id,res):
+	args=json.loads(res)
 	solr_op='unlinkProfile'
 	url=get_base_url()+solr_op
 	request_type='POST'
-	#barcode=get_barcode()
-	#jsonobj=json.loads(data)
 	data["recieved_from"]="Desktop"
-	#data["barcode"]=str(barcode)
-	jsonobj={"entityid":id,"linking_id":profile_id,"received_from":"Desktop"}
+	jsonobj={"entityid":id,"linking_id":profile_id,"received_from":"Desktop","mobile":args["mobile"],"email":args["email"]}
 	from phr.phr.phr_api import get_response
 	response=get_response(url,json.dumps(jsonobj),request_type)
 	res=json.loads(response.text)
 	print res
 	if res['returncode']==121:
-		#path=get_image_path(barcode,res['entityid'])
-		print res
-		actdata=res['actualdata']		
-		dt=json.loads(actdata)
-		sub=dt['person_firstname']+" "+dt['person_lastname']+" "+"delinked Successfully"
-		make_log(profile_id,"profile","delink",sub)
-		args={'person_firstname':dt['person_firstname'],'person_middlename':dt['person_middlename'],'person_lastname':dt['person_lastname'],'email':dt['email'],'mobile':dt['mobile'],'received_from':'Desktop','provider':'false'}
-		ret_res=create_profile_in_db(res['entityid'],args,res,path)
-		ret_res=''
-		sub=dt['person_firstname']+" "+dt['person_lastname']+" "+"Profile Created Successfully"
-		make_log(profile_id,"profile","create",sub)
-		return ret_res
+		return res
+		# print res
+		# actdata=res['actualdata']		
+		# dt=json.loads(actdata)
+		# sub=dt['person_firstname']+" "+dt['person_lastname']+" "+"delinked Successfully"
+		# make_log(profile_id,"profile","delink",sub)
+		# args={'person_firstname':dt['person_firstname'],'person_middlename':dt['person_middlename'],'person_lastname':dt['person_lastname'],'email':dt['email'],'mobile':dt['mobile'],'received_from':'Desktop','provider':'false'}
+		# ret_res=create_profile_in_db(res['entityid'],args,res,path)
+		# ret_res=''
+		# sub=dt['person_firstname']+" "+dt['person_lastname']+" "+"Profile Created Successfully"
+		# make_log(profile_id,"profile","create",sub)
+		# return ret_res
+
+@frappe.whitelist(allow_guest=True)
+def add_profile_to_db(data,profile_id):
+	res=json.loads(data)
+	actdata=res['actualdata']		
+	dt=json.loads(actdata)
+	sub=dt['person_firstname']+" "+dt['person_lastname']+" "+"delinked Successfully"
+	make_log(profile_id,"profile","delink",sub)
+	args={'person_firstname':dt['person_firstname'],'person_middlename':dt['person_middlename'],'person_lastname':dt['person_lastname'],'email':dt['email'],'mobile':dt['mobile'],'received_from':'Desktop','provider':'false'}
+	cie=frappe.db.get_value("LinkedPHR Images",{"profile_id":res['entityid']},"barcode")
+	frappe.errprint(["file",cie])
+	path=""
+	if cie:
+		path=cie
+	else:
+		path=""	
+	ret_res=create_profile_in_db(res['entityid'],args,res,path)
+	ret_res=''
+	sub=dt['person_firstname']+" "+dt['person_lastname']+" "+"Profile Created Successfully"
+	make_log(profile_id,"profile","create",sub)
+	return ret_res
+
 
 
 @frappe.whitelist(allow_guest=True)
@@ -599,3 +618,12 @@ def search_profile_data_from_solr(profile_id):
 	res=json.loads(response.text)
 	if res['returncode']==120:
 		return res['actualdata'][0]
+
+@frappe.whitelist(allow_guest=True)
+def get_patients_ids(doctype, txt, searchfield, start, page_len, filters):
+	return frappe.db.sql("""select profile_id,first_name,email from `tabUser`  where access_type='Patient' and enabled=1""" ,as_list=1)
+
+
+@frappe.whitelist(allow_guest=True)
+def check_existing(email):
+	return frappe.db.sql("""select email from `tabUser`  where enabled=1 and email='%s'"""%(email))

@@ -34,10 +34,10 @@ def update_password(new_password, id=None, old_password=None):
 	# verify old password
 	if id:
 		user=frappe.db.get_value("User",{"profile_id":id})
-		if old_password:
-			if not frappe.db.sql("""select user from __Auth where password=password(%s)
-				and user=%s""", (old_password, user)):
-				return _("Cannot Update: Incorrect Password")
+		# if old_password:
+		# 	if not frappe.db.sql("""select user from __Auth where password=password(%s)
+		# 		and user=%s""", (old_password, user)):
+		# 		return _("Cannot Update: Incorrect Password")
 
 		_update_password(user, new_password)
 
@@ -46,4 +46,5 @@ def update_password(new_password, id=None, old_password=None):
 		frappe.local.login_manager.logout()
 		vd=frappe.get_doc('Verification Details',id)
 		vd.pwdflag=1
+		vd.save(ignore_permissions=True)
 		return _("Password Updated")

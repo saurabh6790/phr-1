@@ -15,8 +15,10 @@ var DiseaseMonitoring = inherit(RenderFormFields, {
 		$('.field-area').empty();
 		this.render_master_select(this.wrapper)
 	},
-	render_master_select: function(wrapper){
+	render_master_select: function(event_title){
+
 		var me = this;
+		$('.field-area').empty()
 		$input = $('<div class="form-horizontal frappe-control" style="max-width: 600px;margin-top:10px;margin-bottom:5px">\
 						<div class="form-group row" style="margin: 0px">\
 							<label class="control-label small col-xs-4" style="padding-right: 0px;">Disease</label>\
@@ -38,6 +40,7 @@ var DiseaseMonitoring = inherit(RenderFormFields, {
 							'text' : val[0] 
 						}).appendTo($($input).find('select'))
 					})
+					//if (!event_title) event_title=r.message[0][0]
 					me.render_disease_fields(r.message[0][0],me.entityid,me)
 				}
 				else{
@@ -74,6 +77,7 @@ var DiseaseMonitoring = inherit(RenderFormFields, {
 	},
 	bind_save_event:function(me,event_id,profile_id,value,fields,field_mapper,raw_fields){
 			$('.save_controller').bind('click',function(event) {
+				NProgress.start();
 				var $id=$('.tab-pane.active').attr('id')
 				me.res = {};
 				selected=[]
@@ -81,20 +85,26 @@ var DiseaseMonitoring = inherit(RenderFormFields, {
 				$("form input,form textarea,form select").each(function(i, obj) {
 					me.res[obj.name] = $(obj).val();
 				})
-				arg={"profile_id":profile_id,"received_from":"Desktop","event_master_id":event_id,"event_title":value}
-				me.save_dm(me.res,arg,fields,field_mapper,raw_fields)
+				var date=""
+				if ($('input[data-fieldtype="DateTime"]') || $('input[data-fieldtype="Date"]')){
+					var date=$('input[data-fieldtype="DateTime"]').val() || $('input[data-fieldtype="Date"]').val()
+				}
+				console.log(["s",date,$('input[data-fieldtype="DateTime"]')])
+				arg={"profile_id":profile_id,"received_from":"Desktop","event_master_id":event_id,"event_title":value,"date":date}
+				me.save_dm(me.res,arg,fields,field_mapper,raw_fields,me,value,profile_id)
 			})
 	},
-	save_dm:function(data,arg,fields,field_mapper,raw_fields){
+	save_dm:function(data,arg,fields,field_mapper,raw_fields,me,event_title,profile_id){
 		frappe.call({
 			method:"phr.templates.pages.disease_monitoring.save_dm",
 			args:{"data":data,"arg":arg,"fields":fields,"field_mapper":field_mapper,"raw_fields":raw_fields},
 			callback:function(r){
 				data=r.message
 				if (r.message){
+					NProgress.done();
 					RenderFormFields.prototype.init($("#main-con"), {'fields':data["fields"]})
-					// me.bind_save_event(me,r.message[1],profile_id)
 					me.add_share_event()
+					me.render_disease_fields(event_title,profile_id,me)
 					email_msg='Linked PHR Has Created DiseaseMonitoring'
 					text_msg='Linked PHR Has Created DiseaseMonitoring'
 					send_linkedphr_updates(email_msg,text_msg,"DiseaseMonitoring")
