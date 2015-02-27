@@ -1,6 +1,10 @@
 
 .container,.navbar-static-top .container,.navbar-fixed-top .container,.navbar-fixed-bottom .container{width:992px;}
 
+.popover{
+    width:200px;
+    
+}
 
 .navbar{background-color:#020202}
 .navbar-brand {
