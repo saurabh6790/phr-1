@@ -83,12 +83,12 @@ def send_notification(profile_list):
 			apobj=frappe.get_doc('Appointments',profile['name'])
 			if pobj:
 				sms_recipients.append(pobj.contact)
-				msg[pobj.contact]='Your appointment with Dr."%s" is at "%s" today'%profile['provider_name'],profile['time']
+				msg[pobj.contact]='Your appointment with Dr."%s" is at "%s" today'%(profile['provider_name'],profile['time'])
 			else:
 				data=search_profile_data_from_solr(profile_id)
 				if data['mobile']:
 					sms_recipients.append(data["mobile"])
-				msg[data["mobile"]]='Your appointment with Dr."%s" is at "%s" today'%profile['provider_name'],profile['time']
+				msg[data["mobile"]]='Your appointment with Dr."%s" is at "%s" today'%(profile['provider_name'],profile['time'])
 			
 		if sms_recipients:
 			for no in sms_recipients:

@@ -74,15 +74,15 @@
   }, 
   {
    "fieldname": "from_date_time", 
-   "fieldtype": "datetime", 
-   "label": "From Date time", 
+   "fieldtype": "date", 
+   "label": "From Date", 
    "placeholder": "", 
    "required": 1
   }, 
   {
    "fieldname": "to_date_time", 
-   "fieldtype": "datetime", 
-   "label": "To Date time", 
+   "fieldtype": "date", 
+   "label": "To Date", 
    "placeholder": "", 
    "required": 1
   }, 

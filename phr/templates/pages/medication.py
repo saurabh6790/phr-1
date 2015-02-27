@@ -1,7 +1,7 @@
 import frappe
 import json
 import os 
-from frappe.utils import get_site_path, get_hook_method, get_files_path, get_site_base_path,cstr
+from frappe.utils import get_site_path, get_hook_method, get_files_path, get_site_base_path,cstr,cint
 from phr.templates.pages.patient import get_data_to_render
 import datetime
 from phr.phr.doctype.phr_activity_log.phr_activity_log import make_log
@@ -88,7 +88,7 @@ def save_data(data):
 
 def get_formatted_date(strdate=None):
 	if strdate:
-		return datetime.datetime.strptime(strdate,"%d/%m/%Y %H:%M")
+		return datetime.datetime.strptime(strdate,"%d/%m/%Y")
 
 def get_options(obj):
 	options={}
@@ -116,11 +116,15 @@ def update_status(data):
 
 @frappe.whitelist(allow_guest=True)
 def notify_medications():
+	print "############################~~~~~~~~~~~~Medications~~~~~~~~~~~~~~~~~~~############"
 	recipient_list=[]
 	med_list=get_medictions_to_notify()
-	build_list=fetch_data_from_medications(med_list,recipient_list)
+	build_list,msg=fetch_data_from_medications(med_list,recipient_list)
 	if build_list:
-		send_sms(build_list,msg='Medication Time')
+		for no in build_list:
+			no_list=[]
+			no_list.append(no)
+			send_sms(no_list,msg=msg[no])
 
 def get_medictions_to_notify():
 	med_list=frappe.db.sql_list("""select name from 
@@ -131,6 +135,7 @@ def get_medictions_to_notify():
 
 def fetch_data_from_medications(med_list,recipient_list):
 	if med_list:
+		msg={}
 		for md in med_list:
 			mobj=frappe.get_doc("Medication",md)
 			fobj=frappe.get_doc("Dosage",mobj.dosage)
@@ -138,27 +143,28 @@ def fetch_data_from_medications(med_list,recipient_list):
 			for d in fobj.get('dosage_fields'):
 				time_diff=0
 				if d.fieldtype=="time":
-					time_now = datetime.strptime(nowtime(),'%H:%M:%S.%f')
-					time_g = datetime.strptime(options[d.fieldname],'%I:%M %p')
-					time_c=datetime.strptime(d2.strftime('%H:%M:%S.%f'),'%H:%M:%S.%f')
-					time_diff=cint((time_c-time_now // 60)%60)
-
+					time_now = datetime.datetime.strftime(datetime.datetime.now(),'%H:%M')
+					med_time=datetime.datetime.strptime(options[d.fieldname], '%I:%M %p').strftime('%H:%M')
+					time_diff=(datetime.datetime.strptime(med_time,'%H:%M')-datetime.datetime.strptime(time_now,'%H:%M')).total_seconds()/60
+		
 				elif d.fieldname=="datetime":
-					time_now= datetime.datetime.strptime(nowtime(), '%Y-%m-%d %H:%M:%S.%f')
-					time_g = datetime.datetime.strptime(options[d.fieldname], '%Y-%m-%d %H:%M:%S.%f')
-					time_diff=cint((time_c-time_now // 60)%60)
+					now_time=datetime.datetime.strftime(datetime.datetime.now(), '%Y-%m-%d %H:%M:%S.%f')
+					now_time_str= datetime.datetime.strptime(now_time, '%Y-%m-%d %H:%M:%S.%f')
+					med_time = datetime.datetime.strptime(options[d.fieldname], '%Y-%m-%d %H:%M:%S.%f')
+					time_diff=(med_time-time_now).total_seconds()/60
 
 				if time_diff and (time_diff > 0 and time_diff < 6):
-					user=frappe.db.get_value("User",{"profile_id":mobj.profile_id},"name")
+					user=frappe.get_doc("User",frappe.db.get_value("User",{"profile_id":mobj.profile_id},"name"))
 					if user:
 						recipient_list.append(user.contact)
+						msg[user.contact]="Time for Medicine:"+mobj.get('medicine_name')
 					else:
 						data=search_profile_data_from_solr(mobj.profile_id)
 						if data['mobile']:
-							sms_recipients.append(data["mobile"])
-						sms_recipients.append(data["mobile"])
-		return recipient_list
-
+							recipient_list.append(data["mobile"])
+							msg[data["mobile"]]="Time for Medicine:"+me.get('medicine_name')
+							
+		return recipient_list,msg
 
 
 

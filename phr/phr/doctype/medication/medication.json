@@ -73,7 +73,7 @@
   {
    "allow_on_submit": 0, 
    "fieldname": "from_date_time", 
-   "fieldtype": "Datetime", 
+   "fieldtype": "Date", 
    "hidden": 0, 
    "ignore_user_permissions": 0, 
    "in_filter": 0, 
@@ -92,7 +92,7 @@
   {
    "allow_on_submit": 0, 
    "fieldname": "to_date_time", 
-   "fieldtype": "Datetime", 
+   "fieldtype": "Date", 
    "hidden": 0, 
    "ignore_user_permissions": 0, 
    "in_filter": 0, 
@@ -132,7 +132,7 @@
  "is_submittable": 0, 
  "issingle": 0, 
  "istable": 0, 
- "modified": "2015-02-17 13:14:31.079394", 
+ "modified": "2015-02-27 16:16:38.843944", 
  "modified_by": "Administrator", 
  "module": "phr", 
  "name": "Medication", 

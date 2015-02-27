@@ -15,7 +15,7 @@ from phr.templates.pages.patient import get_base_url
 from frappe.utils import cint, now, get_gravatar,cstr
 from phr.phr.doctype.phr_activity_log.phr_activity_log import make_log
 import datetime
-from phr.templates.pages.patient import get_base_url 
+from phr.templates.pages.patient import get_base_url,send_phrs_mail 
 from erpnext.setup.doctype.sms_settings.sms_settings import send_sms
 from frappe.utils.email_lib import sendmail
 
@@ -161,10 +161,6 @@ def get_user_image(profile_id):
 				"image":up	
 			}
 
-
-
-
-
 @frappe.whitelist(allow_guest=True)
 def upload_image(profile_id,data=None):
 	from binascii import a2b_base64
@@ -250,8 +246,6 @@ def delink_phr(selected,data,profile_id,res):
 		print obj[id]
 		ret_res=delink_phr_solr(obj[id],id,profile_id,res)
 		print ret_res
-		#l_phrs=get_linked_phrs(profile_id)
-		#print l_phrs
 		return {
 			"message":"Profile Delinked Successfully",
 			"response":ret_res
@@ -284,14 +278,14 @@ def add_profile_to_db(data,profile_id):
 	make_log(profile_id,"profile","delink",sub)
 	args={'person_firstname':dt['person_firstname'],'person_middlename':dt['person_middlename'],'person_lastname':dt['person_lastname'],'email':dt['email'],'mobile':dt['mobile'],'received_from':'Desktop','provider':'false'}
 	cie=frappe.db.get_value("LinkedPHR Images",{"profile_id":res['entityid']},"barcode")
-	frappe.errprint(["file",cie])
 	path=""
 	if cie:
 		path=cie
 	else:
 		path=""	
 	ret_res=create_profile_in_db(res['entityid'],args,res,path)
-	ret_res=''
+	user=frappe.get_doc("User",frappe.session.user)
+	send_phrs_mail(user.email,"PHR:Linked PHR Account Delinked","templates/emails/delink_phr.html",{"name":args['person_firstname']})
 	sub=dt['person_firstname']+" "+dt['person_lastname']+" "+"Profile Created Successfully"
 	make_log(profile_id,"profile","create",sub)
 	return ret_res
