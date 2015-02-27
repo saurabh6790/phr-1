@@ -35,27 +35,36 @@ def notify_to_do():
 	if profile_ids:
 		email_list=[]
 		sms_recipients=[]
+		msg={}
 		for profile in profile_ids:
-			pobj=frappe.get_doc('User',frappe.db.get_value("User",{"profile_id":profile},"name"))
+			pobj=frappe.get_doc('User',frappe.db.get_value("User",{"profile_id":profile['profile_id']},"name"))
+			todoobj=frappe.get_doc('ToDo',profile['name'])
 			if pobj:
 				sms_recipients.append(pobj.contact)
 				email_list.append(pobj.name)
+				msg[pobj.contact]=todoobj.description
 			else:
 				data=search_profile_data_from_solr(profile)
-				sms_recipients.append(data["mobile"])
-				email_list.append(data["email"])
+				if data['mobile']:
+					sms_recipients.append(data["mobile"])
+					msg[data['mobile']]=todoobj.description
+				if data['email']:
+					email_list.append(data["email"])
 		if sms_recipients:
-			send_sms(sms_recipients,msg='TO Do activity')
+			for no in sms_recipients:
+				mob_no=[]
+				mob_no.append(no)
+				send_sms(sms_recipients,msg=msg[no])
 		if email_list:
 			sendmail(email_list,subject="To Do Alert",msg="To do Notification")
 
 def get_profile_ids():
-	profile_ids=frappe.db.sql_list("""select profile_id from 
+	profile_ids=frappe.db.sql("""select profile_id,name from 
 		`tabToDo` where profile_id 
 		in (select profile_id 
 			from `tabNotification Configuration` 
 			where to_do=1) 
 		and date between now() + INTERVAL 57 MINUTE 
-		and now() + INTERVAL 63 MINUTE """)
+		and now() + INTERVAL 63 MINUTE """,as_dict=1)
 	return profile_ids
 

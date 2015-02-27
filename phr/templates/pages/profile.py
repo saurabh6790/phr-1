@@ -274,17 +274,6 @@ def delink_phr_solr(data,id,profile_id,res):
 	print res
 	if res['returncode']==121:
 		return res
-		# print res
-		# actdata=res['actualdata']		
-		# dt=json.loads(actdata)
-		# sub=dt['person_firstname']+" "+dt['person_lastname']+" "+"delinked Successfully"
-		# make_log(profile_id,"profile","delink",sub)
-		# args={'person_firstname':dt['person_firstname'],'person_middlename':dt['person_middlename'],'person_lastname':dt['person_lastname'],'email':dt['email'],'mobile':dt['mobile'],'received_from':'Desktop','provider':'false'}
-		# ret_res=create_profile_in_db(res['entityid'],args,res,path)
-		# ret_res=''
-		# sub=dt['person_firstname']+" "+dt['person_lastname']+" "+"Profile Created Successfully"
-		# make_log(profile_id,"profile","create",sub)
-		# return ret_res
 
 @frappe.whitelist(allow_guest=True)
 def add_profile_to_db(data,profile_id):
@@ -360,10 +349,6 @@ def get_data_for_middle_section(profile_id):
 		}
 
 
-		# if obj.get('disease_monitoring')==1:
-		# 	data=get_data_from_db(profile_id)
-		# 	if data:
-		# 		res_list=build_response(data,obj,res_list)
 @frappe.whitelist(allow_guest=True)
 def get_logs(profile_id):
 	log_list=frappe.db.sql("""select * from 
@@ -593,7 +578,7 @@ def notify_about_linked_phrs(profile_id,email_msg=None,text_msg=None,entity=None
 			rec_list.append(user.contact)
 			send_sms(rec_list,msg=text_msg)
 		else:
-			get_profile_data_from_solr(profile_id)
+			search_profile_data_from_solr(profile_id)
 
 @frappe.whitelist(allow_guest=True)
 def get_profile_data_from_solr(profile_id):

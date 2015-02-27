@@ -154,6 +154,8 @@ def fetch_data_from_medications(med_list,recipient_list):
 						recipient_list.append(user.contact)
 					else:
 						data=search_profile_data_from_solr(mobj.profile_id)
+						if data['mobile']:
+							sms_recipients.append(data["mobile"])
 						sms_recipients.append(data["mobile"])
 		return recipient_list
 

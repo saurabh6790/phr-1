@@ -145,3 +145,27 @@ def get_master_details(doctype):
 		order by creation desc """%doctype,as_list=1,debug=1)
 	return list(itertools.chain(*ret))
 
+
+@frappe.whitelist(allow_guest=True)
+def send_phrs_mail(recipient,subject, template, add_args):
+	"""send mail with login details"""
+	from frappe.utils.user import get_user_fullname
+	from frappe.utils import get_url
+
+	title = frappe.db.get_default('company') or ""
+
+	full_name = get_user_fullname(frappe.session['user'])
+	if full_name == "Guest":
+		full_name = "Administrator"
+
+	args = {
+		'title': title,
+		'user_fullname': full_name
+	}
+
+	args.update(add_args)
+
+	sender = frappe.session.user not in STANDARD_USERS and frappe.session.user or None
+
+	frappe.sendmail(recipients=recipient, sender=sender, subject=subject,
+		message=frappe.get_template(template).render(args))

@@ -83,21 +83,25 @@ def send_notification(profile_list):
 			apobj=frappe.get_doc('Appointments',profile['name'])
 			if pobj:
 				sms_recipients.append(pobj.contact)
-				msg[pobj.contact]='Your appointment with Dr. XX is at 4:00 pm today'
+				msg[pobj.contact]='Your appointment with Dr."%s" is at "%s" today'%profile['provider_name'],profile['time']
 			else:
 				data=search_profile_data_from_solr(profile_id)
-				sms_recipients.append(data["mobile"])
+				if data['mobile']:
+					sms_recipients.append(data["mobile"])
+				msg[data["mobile"]]='Your appointment with Dr."%s" is at "%s" today'%profile['provider_name'],profile['time']
 			
 		if sms_recipients:
-			send_sms(sms_recipients,msg='You Have and Appointment')
-
-
-
+			for no in sms_recipients:
+				mob_no=[]
+				mob_no.append(no)
+				send_sms(sms_recipients,msg=msg[no])
 
 def get_list_to_notify():
-	profile_list=frappe.db.sql("""select profile_id,name from 
+	profile_list=frappe.db.sql("""select profile_id,name,DATE_FORMAT(from_date_time,'%h:%i %p') as time,provider_name from 
 		`tabAppointments` 
 		where from_date_time 
 		between  now() + INTERVAL 57 MINUTE 
 		and  now() + INTERVAL 63 MINUTE""",as_dict=1)
 	return profile_list
+
+	
