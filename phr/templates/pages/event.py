@@ -425,11 +425,10 @@ def get_provider_info(cond):
 @frappe.whitelist()
 def get_linked_providers(profile_id=None):
 	import itertools
-	frappe.errprint(['get_linked_providers', profile_id])
 	if profile_id:
 		ret = frappe.db.sql("select name1, provider, mobile, email, provider_type from  `tabProviders Linked` where patient = '%s' and status = 'Active' "%profile_id, as_dict=1)
 		
 		for r in ret:
 			r.update({'label': r['name1'], 'value': r['name1']})
-		frappe.errprint(ret)
+		
 		return ret
