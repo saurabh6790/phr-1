@@ -253,6 +253,7 @@ window.Events = inherit(ListView,{
 			args:{'data':res},
 			callback:function(r){
 				if(r.message.returncode==129){
+					me.set_provider(d)
 					d.hide()
 				}
 			}
