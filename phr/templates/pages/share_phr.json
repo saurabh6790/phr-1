@@ -77,7 +77,6 @@
 			"fieldname":"doctor_id", 
 			"fieldtype":"data", 
 			"label":"Provider id",
-			"depends_on":"share_via:Provider Account",
 			"display":"none",
 			"placeholder":""
 		},
@@ -90,7 +89,8 @@
 		},
 		{
 			"fieldname":"reason",
-			"fieldtype":"text", 
+			"fieldtype":"select", 
+			"options":["", "Consultation", "Follow Up", "Second Opinion"],
 			"label":"Reason For Sharing",
 			"placeholder":""
 		}

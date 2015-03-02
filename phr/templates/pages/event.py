@@ -169,11 +169,12 @@ def share_via_email(data):
 		msg = """Event Name is %(event)s <br>
 				Event Date is %(event_date)s <br>
 				Provider Name is %(provider_name)s <br>
+				Sharing reason is %(reason)s <br>
 				<hr>
 					%(event_body)s <br>
 					Please find below attachment(s) <br>
 			"""%{'event': data.get('event_title'), 'event_date': data.get('event_date'), 
-				'provider_name': data.get('doctor_name'), 'event_body': data.get('email_body')}
+				'provider_name': data.get('doctor_name'), 'event_body': data.get('email_body'), 'reason': data.get('reason')}
 		
 		from frappe.utils.email_lib import sendmail
 

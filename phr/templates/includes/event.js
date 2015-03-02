@@ -145,7 +145,7 @@ window.Events = inherit(ListView,{
 		d = new Dialog();
 		d.init({"file_name":"provider_search", "title":"Provider Search"})
 		d.show()
-		$('<button class ="btn btn-success btn-sm" > search </button>')
+		$('<button class ="btn btn-success btn-sm" style="float:left;"> search </button>')
 			.click(function(){
 				$(".modal-body form input").each(function(i, obj) {
 					me.filters[obj.name] = $(obj).val();
@@ -153,7 +153,6 @@ window.Events = inherit(ListView,{
 				me.render_result_table(me.filters, d)
 			})
 			.appendTo($('.modal-body'))
-		
 	},
 	render_result_table:function(filters, d){
 		var me = this;
@@ -161,18 +160,17 @@ window.Events = inherit(ListView,{
 			"method":"phr.templates.pages.event.get_providers",
 			"args":{"filters":filters},
 			callback:function(r){
-				if(r.message){
-					me.generate_table(r.message, d)	
-				}
-				else{
-					d.hide()
-					me.create_provider_linking(filters, d)
-				}
+				me.generate_table(r.message, d, filters)	
+				// else{
+				// 	d.hide()
+				// 	me.create_provider_linking(filters, d)
+				// }
 			}
 		})
 	},
-	generate_table: function(result_set, d){
+	generate_table: function(result_set, d, filters){
 		var me = this;
+		
 		this.table = $("<hr><div class='table-responsive'>\
 			<table class='table table-bordered'>\
 				<thead><tr></tr></thead>\
@@ -182,19 +180,33 @@ window.Events = inherit(ListView,{
 
 		header = [["", 50], ["Provider Name", 170], ["Number", 100], ["email", 100]]
 
-		$.each(header, function(i, col) {
+		if(result_set){
+			$.each(header, function(i, col) {
 			$("<th>").html(col[0]).css("width", col[1]+"px")
 				.appendTo(me.table.find("thead tr"));
-		});
+			});
 
-		$.each(result_set, function(i,d){
-			var row = $("<tr>").appendTo(me.table.find("tbody"));
-			$('<td>').html('<input type="radio" name="provider" id = "'+d[0]+'">').appendTo(row)
-			$('<td>').html(d[1]).appendTo(row)
-			$('<td>').html(d[2]).appendTo(row)
-			$('<td>').html(d[3]).appendTo(row)
-		})
-		me.set_provider(d)
+			$.each(result_set, function(i,d){
+				var row = $("<tr>").appendTo(me.table.find("tbody"));
+				$('<td>').html('<input type="radio" name="provider" id = "'+d[0]+'">').appendTo(row)
+				$('<td>').html(d[1]).appendTo(row)
+				$('<td>').html(d[2]).appendTo(row)
+				$('<td>').html(d[3]).appendTo(row)
+			})
+			me.set_provider(d)
+		}
+		else{
+			$('<div>No Provider is there for selected criteria. \
+				You can add New Provider by clicking on Add Button</div>').appendTo('.modal-body')
+		}
+		
+
+		$('<button class ="btn btn-success btn-sm" style="float:left;"> Add New Provider </button>')
+			.click(function(){
+				d.hide()
+				me.create_provider_linking(filters, d)
+			})
+			.appendTo($('.modal-footer'))
 	},
 	set_provider:function(d){
 		var me = this;
@@ -248,12 +260,16 @@ window.Events = inherit(ListView,{
 		})
 	},
 	create_provider: function(res, d){
+		NProgress.start();
 		frappe.call({
 			method: "phr.templates.pages.provider.create_provider",
-			args:{'data':res},
+			args:{'data':res, "profile_id": sessionStorage.getItem("cid")},
 			callback:function(r){
 				if(r.message.returncode==129){
 					d.hide()
+					var db = new render_dashboard();
+					db.render_providers(profile_id);
+					NProgress.done();
 				}
 			}
 		})
