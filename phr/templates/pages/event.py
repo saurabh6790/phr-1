@@ -54,6 +54,9 @@ def create_event(data):
 	return json.loads(response.text)
 
 def update_event(data):
+	print "---------------update event---------------------"
+	print data
+	print "------------------------------------------------"
 	response = ''
 	request_type="POST"
 	url="%s/createupdateevent"%get_base_url()
@@ -166,11 +169,12 @@ def share_via_email(data):
 		msg = """Event Name is %(event)s <br>
 				Event Date is %(event_date)s <br>
 				Provider Name is %(provider_name)s <br>
+				Sharing reason is %(reason)s <br>
 				<hr>
 					%(event_body)s <br>
 					Please find below attachment(s) <br>
 			"""%{'event': data.get('event_title'), 'event_date': data.get('event_date'), 
-				'provider_name': data.get('doctor_name'), 'event_body': data.get('email_body')}
+				'provider_name': data.get('doctor_name'), 'event_body': data.get('email_body'), 'reason': data.get('reason')}
 		
 		from frappe.utils.email_lib import sendmail
 
@@ -187,6 +191,7 @@ def share_via_email(data):
 		frappe.msgprint('Please select file(s) for sharing')
 
 def share_via_providers_account(data):
+	frappe.errprint([data.get('files'), not data.get('files')])
 	if not data.get('files'):
 		event_data =	{
 				"sharelist": [
@@ -422,11 +427,10 @@ def get_provider_info(cond):
 @frappe.whitelist()
 def get_linked_providers(profile_id=None):
 	import itertools
-	frappe.errprint(['get_linked_providers', profile_id])
 	if profile_id:
 		ret = frappe.db.sql("select name1, provider, mobile, email, provider_type from  `tabProviders Linked` where patient = '%s' and status = 'Active' "%profile_id, as_dict=1)
 		
 		for r in ret:
 			r.update({'label': r['name1'], 'value': r['name1']})
-		frappe.errprint(ret)
+		
 		return ret

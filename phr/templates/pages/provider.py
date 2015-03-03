@@ -43,7 +43,7 @@ def link_provider(res, data, profile_id):
 		data = json.loads(data)
 	else:
 		data = json.loads(data)
-		
+	print "add new provider", profile_id
 	pl = frappe.get_doc({
 		"doctype": "Providers Linked",
 		"patient": profile_id,

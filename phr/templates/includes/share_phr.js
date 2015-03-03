@@ -5,6 +5,7 @@ frappe.provide("frappe");
 // {% include "templates/includes/form_generator.js" %}
 {% include "templates/includes/list.js" %}
 {% include "templates/includes/uploader.js" %}
+{% include "templates/includes/treeview.js" %}
 
 
 SharePhr = function(){
@@ -37,41 +38,43 @@ $.extend(SharePhr.prototype,{
 	},
 	render_folder_section:function(){
 		var me = this;
+		TreeView.prototype.init({'profile_id': this.args['profile_id'], 'dms_file_list': me.dms_file_list, 
+			'display': 'initial', 'doc_list': this.doc_list})
 		
-		$("<div class='main' id='sharetab'></div>").appendTo($('.event_section'))
+		// $("<div class='main' id='sharetab'></div>").appendTo($('.event_section'))
 		
-		folders = ['consultancy-11', 'event_snap-12', 'lab_reports-13', 'prescription-14', 'cost_of_care-15']
+		// folders = ['consultancy-11', 'event_snap-12', 'lab_reports-13', 'prescription-14', 'cost_of_care-15']
 
-		me.mapper = {'consultancy-11':[{'label' : 'DOCTORS  CLINICAL NOTES', 'id':'A_51'}, 
-									{'label' : 'TEST / INVESTIGATION ADVISED', 'id': 'B_52'}, 
-									{'label' : 'REFERAL NOTE', 'id': 'C_53'}],
-					'event_snap-12':[{'label' : 'PATIENT SNAPS', 'id' : 'A_51'},
-							{'label':'CLINICAL SNAPS', 'id': 'B_52'}],
-					'lab_reports-13':[{'label': 'TEST REPORTS', 'id':'A_51'}, 
-							{'label':'TEST IMAGES', 'id':'B_52'}],
-					'prescription-14':[{'label':'PRESCRIBED MEDICATION', 'id':'A_51'},
-							{'label':'PRISCRIBED ADVICE','id':'B_52'},
-							{'label':'DISCHARGE SUMMERY', 'id': 'C_53'}],
-					'cost_of_care-15':[{'label': 'MEDICAL BILLS', 'id': 'A_51'}]
-				}
+		// me.mapper = {'consultancy-11':[{'label' : 'DOCTORS  CLINICAL NOTES', 'id':'A_51'}, 
+		// 							{'label' : 'TEST / INVESTIGATION ADVISED', 'id': 'B_52'}, 
+		// 							{'label' : 'REFERAL NOTE', 'id': 'C_53'}],
+		// 			'event_snap-12':[{'label' : 'PATIENT SNAPS', 'id' : 'A_51'},
+		// 					{'label':'CLINICAL SNAPS', 'id': 'B_52'}],
+		// 			'lab_reports-13':[{'label': 'TEST REPORTS', 'id':'A_51'}, 
+		// 					{'label':'TEST IMAGES', 'id':'B_52'}],
+		// 			'prescription-14':[{'label':'PRESCRIBED MEDICATION', 'id':'A_51'},
+		// 					{'label':'PRISCRIBED ADVICE','id':'B_52'},
+		// 					{'label':'DISCHARGE SUMMERY', 'id': 'C_53'}],
+		// 			'cost_of_care-15':[{'label': 'MEDICAL BILLS', 'id': 'A_51'}]
+		// 		}
 
-		$('#sharetab').empty()
+		// $('#sharetab').empty()
 
-		if(this.args['selected_files']){
-			folders = $.arrayIntersect(folders, this.args['selected_files'])
-		}
-		$.each(folders, function(i, folder){
-			$(repl_str('<div id = "%(id)s">\
-							<div style = "display:inline-block;margin:5%; 5%;height:80px;text-align: center !important;"> \
-		 						<i class="icon-folder-close-alt icon-large"></i> %(id)s <br> \
-		 					</div>\
-					</div>',{'id':folder})).appendTo(i==0?$('#sharetab'):$("#"+folders[i-1]))	
-			$.each(me.mapper[folder], function(j, sub_folder){
-				$(repl_str('<div class="btn btn-success" id = "%(id)s" \
-			 			style = "margin:5%; 5%;height:80px;text-align: center !important;"> \
-			 			<i class="icon-folder-close-alt icon-large"></i> <br> %(label)s\
-			 		</div>', sub_folder)).appendTo('#'+folder);
-			})
+		// if(this.args['selected_files']){
+		// 	folders = $.arrayIntersect(folders, this.args['selected_files'])
+		// }
+		// $.each(folders, function(i, folder){
+		// 	$(repl_str('<div id = "%(id)s">\
+		// 					<div style = "display:inline-block;margin:5%; 5%;height:80px;text-align: center !important;"> \
+		//  						<i class="icon-folder-close-alt icon-large"></i> %(id)s <br> \
+		//  					</div>\
+		// 			</div>',{'id':folder})).appendTo(i==0?$('#sharetab'):$("#"+folders[i-1]))	
+		// 	$.each(me.mapper[folder], function(j, sub_folder){
+		// 		$(repl_str('<div class="btn btn-success" id = "%(id)s" \
+		// 	 			style = "margin:5%; 5%;height:80px;text-align: center !important;"> \
+		// 	 			<i class="icon-folder-close-alt icon-large"></i> <br> %(label)s\
+		// 	 		</div>', sub_folder)).appendTo('#'+folder);
+		// 	})
 		// 	$(repl_str('<div id = "%(id)s">\
 		// 		<div style = "display:inline-block;margin:5%; 5%;height:80px;text-align: center !important;"> \
 		//  			<i class="icon-folder-close-alt icon-large"></i> %(id)s <br> \
@@ -89,8 +92,8 @@ $.extend(SharePhr.prototype,{
 		//  			<i class="icon-folder-close-alt icon-large"></i> <br> C\
 		//  		</div>\
 		//  		</div>', {'id':folder})).appendTo(i==0?$('#sharetab'):$("#"+folders[i-1]))
-		})		
-		this.bind_sub_section_events()
+		// })		
+		// this.bind_sub_section_events()
 	},
 	bind_sub_section_events: function(){
 		var me = this;
@@ -113,12 +116,13 @@ $.extend(SharePhr.prototype,{
 		me.res = {}
 
 		if(me.doc_list){
+			// console.log(me.doc_list)
 			$.each(me.doc_list, function(i, el){
 				if($.inArray(el, uniqueNames) === -1) uniqueNames.push(el);
 			});
 	
 		}
-		
+		// console.log(uniqueNames)
 		$("form input, form textarea, form select").each(function(i, obj) {
 			me.res[obj.name] = $(obj).val();
 		})
@@ -127,13 +131,15 @@ $.extend(SharePhr.prototype,{
 		me.res['profile_id'] = me.args['profile_id'];
 		me.res['folder'] = me.folder;
 		me.res['sub_folder'] = me.sub_folder;
+
+		// console.log(me.res)
 		NProgress.start();
 		frappe.call({
 			method:"phr.templates.pages.event.send_shared_data",
 			args:{"data":me.res},
 			callback:function(r){
-				frappe.msgprint(r.message)
 				NProgress.done();
+				frappe.msgprint(r.message)
 			}
 		})
 	}

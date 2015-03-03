@@ -18,7 +18,10 @@ $.extend(PHRComments.prototype, {
 		this.get_comments()
 	},
 	make_comment_section:function(){
-		$('<div class="form-comments">\
+		console.log(['make_comment_section',this.wrapper])
+		$('<hr>\
+			<h4> Comments: </h4><br>\
+			<div class="form-comments">\
 				<div class="comments db">\
 				</div>\
 			</div>\
@@ -41,7 +44,7 @@ $.extend(PHRComments.prototype, {
 		$('#add_comment').click(function(){
 			frappe.call({
 				method:"phr.templates.pages.phr_comments.set_comment",
-				args:{"comment": $(me.wrapper).find('textarea').val(), 
+				args:{"comment": $('.comment').find('textarea').val(), 
 						"provider_id": me.args["provider_id"],
 						"profile_id": me.args["profile_id"],
 						"event_id": me.args["event_id"],

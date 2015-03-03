@@ -88,6 +88,7 @@ request_renderer = function(target, profile_id){
 
 accept_request=function(request_id, provider_id, profile_id, event_id){
 	NProgress.start();
+	console.log([request_id, provider_id, profile_id, event_id])
 	frappe.call({
 		method:"phr.templates.pages.provider_page.update_flag",
 		args:{"req_id": request_id, 'provider_id': provider_id, 'profile_id': profile_id, 'event_id': event_id},
@@ -146,7 +147,7 @@ get_request=function(profile_id){
 }
 
 render_notifications = function(requests){
-	console.log(requests)
+	// console.log(requests)
 	$.each(requests, function(i, request){
 		$input = $(repl('<li><a>\
 					<span class="btn btn-success" id=%(name)s></span> %(module)s \
