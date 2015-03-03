@@ -127,9 +127,10 @@ def save_dm(data,arg,fields,field_mapper,raw_fields):
 	d=json.loads(data)
 	args["data"]=str_data
 	args["str_event_date"]=time.strftime('%d/%m/%Y')
-	frappe.errprint(args['date'])
-	args["str_diseaseMonitoring_date"]=args['date'] or d.time.strftime('%d/%m/%Y')
-	#args["str_diseaseMonitoring_date"]="09/01/2015"
+	if args.has_key("date"):
+		args["str_diseaseMonitoring_date"]=args['date']
+	else:
+		args["str_diseaseMonitoring_date"]=	time.strftime('%d/%m/%Y')
 	res=save_data_to_solr(json.dumps(args))
 	values=get_values(args['profile_id'],fields,args['event_master_id'],json.loads(field_mapper),raw_fields) 
 	return {
