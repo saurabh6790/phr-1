@@ -362,8 +362,10 @@ def get_event_data(data):
 		'page_size': 5
 	}
 
+@frappe.whitelist(allow_guest=True)
 def get_event_wise_count_dict(count_dict, event_count_dict):
-	count_dict =  json.loads(count_dict)
+	if not isinstance(count_dict,dict):
+		count_dict =  json.loads(count_dict)
 	for key in count_dict:
 		folder = key.split('-')[-1][:2]
 		event = '-'.join(key.split('-')[:-1])

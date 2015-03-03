@@ -160,13 +160,14 @@ function bind_events(){
 	})
 	$(".create_provider").unbind("click").click(function(){
 		$('.breadcrumb').empty()
-		NProgress.start();
+		/*NProgress.start();
 		$('<li><a nohref>New Provider</a></li>').click(function(){
 			Provider.prototype.init($(document).find("#main-con"),
 				{"file_name" : "provider"},"","create_provider")
 		}).appendTo('.breadcrumb');
 		Provider.prototype.init($(document).find("#main-con"),
-				{"file_name" : "provider"},"","create_provider")
+				{"file_name" : "provider"},"","create_provider")*/
+		Events.prototype.dialog_oprations()
 		NProgress.done();
 	})
 	$(".create_todo").unbind("click").click(function(){

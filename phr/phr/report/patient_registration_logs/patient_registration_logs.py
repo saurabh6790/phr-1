@@ -11,7 +11,9 @@ def execute(filters=None):
 	logs=get_verification_log(filters)
 	data = []
 	for log in logs:
-		data.append([log.email,
+		data.append([
+				log.name,
+				log.email,
 				log.temp_password,
 				log.mobile_verification_code,
 				log.mflag,
@@ -25,7 +27,7 @@ def execute(filters=None):
 
 def get_columns(filters):
 	"""return columns based on filters"""
-	columns = ["Email:Link/User:100", "Temp Password::150","Mobile Verification Code::100",\
+	columns = ["Name:Link/Verification Details:100","Email::100", "Temp Password::150","Mobile Verification Code::100",\
 	"Mobile Verified::100", "Password Verified::100",\
 	"Created Via::100","Hash::100","Verification Link::100"]
 	return columns
@@ -34,13 +36,13 @@ def get_verification_log(filters):
 	conditions = get_conditions(filters)
 	if conditions:
 		return frappe.db.sql("""select email,temp_password,mobile_verification_code,temp_password, mflag,
-			pwdflag,hash,verification_link,created_via	
+			pwdflag,hash,verification_link,created_via,name	
 			from `tabVerification Details`
 			where %s order by creation""" %
 			conditions, as_dict=1,debug=1)
 	else:
 		return frappe.db.sql("""select email,temp_password,mobile_verification_code,temp_password, mflag,
-			pwdflag,hash,verification_link,created_via	
+			pwdflag,hash,verification_link,created_via,name	
 			from `tabVerification Details` order by creation""", as_dict=1,debug=1)
 
 def get_conditions(filters):

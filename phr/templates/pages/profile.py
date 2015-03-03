@@ -11,7 +11,6 @@ from frappe import _
 import binascii
 import base64
 from phr.templates.pages.login import create_profile_in_db,get_barcode,get_image_path
-from phr.templates.pages.patient import get_base_url
 from frappe.utils import cint, now, get_gravatar,cstr
 from phr.phr.doctype.phr_activity_log.phr_activity_log import make_log
 import datetime
@@ -575,7 +574,7 @@ def notify_about_linked_phrs(profile_id,email_msg=None,text_msg=None,entity=None
 			search_profile_data_from_solr(profile_id)
 
 @frappe.whitelist(allow_guest=True)
-def get_profile_data_from_solr(profile_id):
+def search_profile_data_from_solr(profile_id):
 	solr_op='admin/searchlinkprofile'
 	url=get_base_url()+solr_op
 	request_type='POST'
@@ -586,23 +585,27 @@ def get_profile_data_from_solr(profile_id):
 	if res['returncode']==120:
 		return res['list']
 
-@frappe.whitelist(allow_guest=True)
-def search_profile_data_from_solr(profile_id):
-	solr_op='admin/searchlinkprofile'
-	url=get_base_url()+solr_op
-	request_type='POST'
-	data={"entityid":profile_id}
-	from phr.phr.phr_api import get_response
-	response=get_response(url,json.dumps(data),request_type)
-	res=json.loads(response.text)
-	if res['returncode']==120:
-		return res['actualdata'][0]
 
 @frappe.whitelist(allow_guest=True)
 def get_patients_ids(doctype, txt, searchfield, start, page_len, filters):
-	return frappe.db.sql("""select profile_id,first_name,email from `tabUser`  where access_type='Patient' and enabled=1""" ,as_list=1)
-
+	solr_op='admin/searchallprofile'
+	url=get_base_url()+solr_op
+	request_type='POST'
+	data={}
+	from phr.phr.phr_api import get_response
+	response=get_response(url,json.dumps(data),request_type)
+	res=json.loads(response.text)
+	profile_list=[]
+	profile_dic={}
+	if res['returncode']==120:
+		for data in res['list']:
+			profile_list.append([data['entityid'],data['email'],data['person_firstname']])
+	return profile_list
 
 @frappe.whitelist(allow_guest=True)
 def check_existing(email):
 	return frappe.db.sql("""select email from `tabUser`  where enabled=1 and email='%s'"""%(email))
+
+@frappe.whitelist(allow_guest=True)
+def get_patients(doctype, txt, searchfield, start, page_len, filters):
+	return frappe.db.sql("""select email,profile_id from `tabUser`  where enabled=1 and access_type='Patient'""")
