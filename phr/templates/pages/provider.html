@@ -15,10 +15,19 @@
   </div>  
 </div>
 <!-- <div class="list-group-side" id="hp">
-  <div class="list-group-item-side active">My Healthcare Providers <a noherf class="create_provider"><span style="float:right"><i class="icon-plus" data-toggle='tooltip' data-placement='top' title='Add New Provider'></i></span></a></div>
+  <div class="list-group-item-side active" data-toggle='popover' data-placement='right'  data-container:'#body' title='Add New Provider' data-content=' Contact book for your Healthcare Providers' data-trigger="hover" data-html="true">My Healthcare Providers <a noherf class="create_provider"><span style="float:right"><i class="icon-plus" ></i></span></a></div>
   <div id="hps">
     <p class="hp">No Providers</p>
   </div>
+</div>
+<div class="list-group-side" id="mhr">
+  <div class="list-group-item-side active">My Health Records</div>
+  <a noherf class="list-group-item-side event" data-toggle='popover' data-placement='right'  data-container:'#body' title='Events' data-content=' Create, share and manage your Health Events' data-trigger="hover" data-html="true">Events</a>
+  <a noherf class="list-group-item-side visit" data-toggle='popover' data-placement='right'  data-container:'#body' title='Visits' data-content='Share your Visits' data-trigger="hover" data-html="true">Visits</a>
+  <a noherf class="list-group-item-side medications" data-toggle='popover' data-placement='right'  data-container:'#body' title='Medications' data-content='Give medicine details and get notifications on your mobile' data-trigger="hover" data-html="true">Medications</a>
+  <a noherf class="list-group-item-side dmonit" data-toggle='popover' data-placement='right'  data-container:'#body' title='Disease Monitoring' data-content=' Monitor your disease and share them with your Healthcare Providers' data-trigger="hover" data-html="true">Disease Monitoring</a>
+  <a noherf class="list-group-item-side appoint" data-toggle='popover' data-placement='right'  data-container:'#body' title='Appointments' data-content='Set Appointments with Doctors' data-trigger="hover" data-html="true">Appointments</a>
+  <a noherf class="list-group-item-side msg" data-toggle='popover' data-placement='top'  data-container:'#body' title='Messages' data-content='Check details of your shared PHRs' data-trigger="hover" data-html="true">Messages</a>
 </div> -->
 <div class="list-group-side" id="mhr">
   <div class="list-group-item-side active">My Trackers</div>
@@ -67,4 +76,5 @@
 {% endblock %}
 {% block script %}
 {% include "templates/includes/provider_page.js" %}
+<!-- {% include "templates/includes/patient.js" %} -->
 {% endblock %}

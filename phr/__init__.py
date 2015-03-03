@@ -1,5 +1,6 @@
 import frappe
 import json
+from frappe.utils import cstr
 
 @frappe.whitelist(allow_guest=True)
 def create_profile(data):
@@ -28,3 +29,40 @@ def get_linked_provides(data):
 @frappe.whitelist(allow_guest=True)
 def get_event_name():
 	return frappe.db.sql(""" select name from tabEvents """, as_dict=1)
+
+@frappe.whitelist(allow_guest=True)
+def getProfileVisitData(data):
+	data = json.loads(data)
+
+	data_dict = {'file_name': 'visit', 
+			"profile_id": data.get('profile_id'), 
+			'param':'listview', 
+			'other_param': ''}
+
+	from templates.pages.event import get_visit_data
+
+	res = get_visit_data(json.dumps(data_dict))
+	import re
+
+	TAG_RE = re.compile(r'<[^>]+>')
+
+	return eval(TAG_RE.sub('', cstr(res.get('rows')[1:])))
+
+@frappe.whitelist(allow_guest=True)
+def getProfileEventData(data):
+	data = json.loads(data)
+
+	data_dict = {'file_name': 'event', 
+			"profile_id": data.get('profile_id'), 
+			'param':'listview', 
+			'other_param': ''}
+
+	from templates.pages.event import get_event_data
+
+	res = get_event_data(json.dumps(data_dict))
+
+	import re
+
+	TAG_RE = re.compile(r'<[^>]+>')
+
+	return eval(TAG_RE.sub('', cstr(res.get('rows')[1:])))

@@ -300,7 +300,7 @@ def get_visit_data(data):
 
 			count_list = [0, 0, 0, 0, 0]
 
-			data = ['<input  type="radio" name="visit" id = "%s">'%visit['entityid'],
+			data = ['<input  type="radio" name="visit" id = "%s"><div style="display:none">%s</div>'%(visit['entityid'], visit['entityid']),
 					visit['event']['event_title'], visit['str_visit_date'], 
 					visit['visit_descripton'], visit['doctor_name']]
 
@@ -352,7 +352,7 @@ def get_event_data(data):
 		for visit in res_data.get('eventList'):
 			count_list = [0, 0, 0, 0, 0]
 			if not visit.get("event_diseasemontoring"):
-				data = ['<input type="radio" name="event" id = "%s" ">'%visit['entityid'], 
+				data = ['<input type="radio" name="event" id = "%s" "><div style="display:none">%s</div>'%(visit['entityid'], visit['entityid']), 
 						"""<a nohref id="%(entityid)s" onclick="Events.prototype.open_form('%(entityid)s', '%(event_title)s', '%(profile_id)s')"> %(event_title)s </a>"""%{"entityid": visit['entityid'],"event_title": visit['event_title'], "profile_id":profile_id}, 
 						datetime.datetime.fromtimestamp(cint(visit['event_date'])/1000.0).strftime('%d/%m/%Y'), 
 						"<div style='word-wrap: break-word;width:60%%;'>%s</div>"%' ,'.join(visit['event_symptoms'])]
