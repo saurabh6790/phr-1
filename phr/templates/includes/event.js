@@ -227,11 +227,12 @@ window.Events = inherit(ListView,{
 	},
 	attach_provider:function(res, data, d){
 		console.log([res, data, this.profile_id])
+		profile_id=sessionStorage.getItem("cid")
 		var me = this;
 		NProgress.start();
 		frappe.call({
 			method:"phr.templates.pages.provider.link_provider",
-			args:{'res': res, 'data':data, 'profile_id': me.profile_id},
+			args:{'res': res, 'data':data, 'profile_id':profile_id},
 			callback:function(r){
 				d.hide();
 				var db = new render_dashboard();
@@ -260,6 +261,7 @@ window.Events = inherit(ListView,{
 		})
 	},
 	create_provider: function(res, d){
+		var me=this;
 		NProgress.start();
 		frappe.call({
 			method: "phr.templates.pages.provider.create_provider",

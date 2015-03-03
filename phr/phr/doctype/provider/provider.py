@@ -50,6 +50,7 @@ class Provider(Document):
 		return False
 
 	def update_user(self, enabled=0):
-		user = frappe.get_doc("User", self.email)
-		user.enabled = enabled
-		user.save()
+		if self.email:
+			user = frappe.get_doc("User", self.email)
+			user.enabled = enabled
+			user.save()

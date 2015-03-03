@@ -21,8 +21,8 @@ login.bind_events = function() {
 		login.call(args);
 	});
 
-	$(".form-signup").on("submit", function(event) {
-		event.preventDefault();
+	$(".form-signup").unbind("submit").submit(function(event) {
+		//event.preventDefault();
 		var args = {};
 		args.first_name = ($("#signup_firstname").val() || "").trim();
 		args.middle_name = ($("#signup_middlename").val() || "").trim();
