@@ -3,6 +3,7 @@ import json
 from frappe.utils import cstr
 import base64
 
+""" Profile login calls """
 @frappe.whitelist(allow_guest=True)
 def create_profile(data):
 	from templates.pages.login import create_profile
@@ -27,6 +28,8 @@ def get_linked_provides(data):
 	res = get_linked_providers(data.get('profile_id'))
 	return res
 
+
+""" Event Calls """
 @frappe.whitelist(allow_guest=True)
 def get_event_name():
 	return frappe.db.sql(""" select name from tabEvents """, as_dict=1)
@@ -49,6 +52,7 @@ def getProfileVisitData(data):
 
 	return eval(TAG_RE.sub('', cstr(res.get('rows')[1:])))
 
+
 @frappe.whitelist(allow_guest=True)
 def getProfileEventData(data):
 	data = json.loads(data)
@@ -68,6 +72,9 @@ def getProfileEventData(data):
 
 	return eval(TAG_RE.sub('', cstr(res.get('rows')[1:])))
 
+
+
+"""Medication Calls"""
 @frappe.whitelist(allow_guest=True)
 def getMedicationFields():
 	dosage_list = []
@@ -92,6 +99,11 @@ def getProfileMedications(data):
 	data = json.loads(data)
 
 	return fetch_values_from_db(data)
+
+
+
+
+"""Disease Monitoring Calls"""
 
 @frappe.whitelist(allow_guest=True)
 def getDiseaseMonitoringFields():
@@ -128,6 +140,10 @@ def getProfileDM(data):
 	return res
 
 
+
+
+
+""" Profile Image Calls """
 @frappe.whitelist(allow_guest=True)
 def setProfileImage(data=None):
 	from frappe.utils import get_site_path, get_hook_method, get_files_path, get_site_base_path, get_path, get_site_name

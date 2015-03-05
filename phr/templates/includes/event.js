@@ -342,10 +342,10 @@ window.Events = inherit(ListView,{
 						if(r.message.returncode == 103 || r.message.returncode == 116){
 							me.dms_file_list = [];
 							me.open_form(r.message.entityid, $('[name="event_title"]').val(), me.profile_id);	
-							alert("Saved")
+							frappe.msgprint("Saved")
 						}
 						else{
-							alert(r.message.message_summary);
+							frappe.msgprint(r.message.message_summary);
 						}
 
 					}
