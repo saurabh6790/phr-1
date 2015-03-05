@@ -141,13 +141,13 @@ $.extend(TreeView.prototype, {
 
 		$.each(me.parent_mapper, function(i, dic){
 			$li = $(repl_str('<li>\
-				<span id="%(id)s"><i class="%(icon)s"></i> %(label)s </span> <a href=""></a>\
+				<span id="%(id)s"><i class="%(icon)s"></i> %(label)s <span class="badge">4</span> </span> <a href=""></a>\
 				<ul></ul>\
 			</li>', dic)).appendTo($('.tree').find('ul').first())
 	
 			$.each(me.mapper[dic['id']], function(j, chld_dic){
 				$(repl_str('<li>\
-					<span id="%(id)s"><i class="icon-leaf"></i> %(label)s </span> <a href=""></a>\
+					<span id="%(id)s"><i class="icon-leaf"></i> %(label)s <span class="badge">4</span> </span> <a href=""></a>\
 				</li>', chld_dic)).appendTo($li.find('ul'))
 			})
 		})
