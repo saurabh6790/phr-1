@@ -67,11 +67,12 @@ def get_disease_fields(name,profile_id=None):
 		return 
 		#values=get_existing_records_from_solr(profile_id,dm.event_master_id)
 
-def get_values(profile_id,fields,event_master_id,field_mapper,raw_fields=None):
+def get_values(profile_id,fields,event_master_id,field_mapper,raw_fields=None, val_req=True):
 	res=get_existing_records_from_solr(profile_id,event_master_id)
-	print res
-	values=build_options(res,fields,field_mapper,raw_fields)
-	return values
+	if val_req:
+		values=build_options(res,fields,field_mapper,raw_fields)
+		return values
+	return res
 
 def get_existing_records_from_solr(profile_id,event_master_id):
 	request_type="POST"
@@ -118,7 +119,7 @@ def build_options(dm_list,fields,field_mapper,raw_fields=None):
 
 
 @frappe.whitelist(allow_guest=True)
-def save_dm(data,arg,fields,field_mapper,raw_fields):
+def save_dm(data, arg, fields, field_mapper, raw_fields=None, val_req=True):
 	str_data=[]
 	for key,value in json.loads(data).items():
 		datastr=key+'='+value
@@ -132,7 +133,7 @@ def save_dm(data,arg,fields,field_mapper,raw_fields):
 	else:
 		args["str_diseaseMonitoring_date"]=	time.strftime('%d/%m/%Y')
 	res=save_data_to_solr(json.dumps(args))
-	values=get_values(args['profile_id'],fields,args['event_master_id'],json.loads(field_mapper),raw_fields) 
+	values=get_values(args['profile_id'], fields, args['event_master_id'], json.loads(field_mapper), raw_fields, val_req) 
 	return {
 		"fields":values, 
 		"event_master_id":args['event_master_id'],

@@ -153,9 +153,9 @@ $.extend(ThumbNails.prototype,{
 					<br><label style="width: 150px;word-wrap: break-word;">%(file_name)s</label></a>',attachment))).appendTo(row)
 		}
 		console.log([attachment['file_name'].substring(7, attachment['file_name'].length), me.doc_list, $("input[type=checkbox]").val() ])
-		if(attachment['file_name'].substring(7, attachment['file_name'].length) in me.doc_list && $("input[type=checkbox]").val() == attachment['file_name']){
-			$("input[type=checkbox]").prop('checked', true);	
-		}
+		// if(attachment['file_name'].substring(7, attachment['file_name'].length) in me.doc_list && $("input[type=checkbox]").val() == attachment['file_name']){
+		// 	$("input[type=checkbox]").prop('checked', true);	
+		// }
 
 		$('.control-image').unbind("click").click(function() {
 			var title=$('input[name=event_title]').val()+' '+$('input[name=event_date]').val() || ''
