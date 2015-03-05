@@ -108,10 +108,10 @@ def create_profile_in_solr(args):
 	url = "%s/createProfile"%get_base_url()
 	data=json.dumps(args)
 	print data
-	# from phr.phr.phr_api import get_response
-	# response=get_response(url,data,request_type)
-	# print response
-	# return response.text
+	from phr.phr.phr_api import get_response
+	response=get_response(url,data,request_type)
+	print response
+	return response.text
 
 @frappe.whitelist(allow_guest=True)
 def reset_password(user):

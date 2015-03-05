@@ -21,9 +21,22 @@ frappe.provide("frappe");
   ClassName.prototype.init(wrapper,name_of_json_file,entityid,operation_entity)
 */
 $(document).ready(function () {
+/*	function preventBack() {
+    	window.history.forward();
+	}
+ 	window.onunload = function() {
+    	null;
+	}	;
+	setTimeout("preventBack()", 0);*/
+	//alert(frappe.get_cookie("profile_id"))
+	//console.log(sessionStorage.getItem("pid"))
+	if (!sessionStorage.getItem("pid") || frappe.get_cookie("profile_id")!=sessionStorage.getItem("pid")){
+		sessionStorage.setItem("pid",frappe.get_cookie("profile_id"))
+		sessionStorage.setItem("cid",frappe.get_cookie("profile_id"))
+	}
+
 	$("[data-toggle='popover']").popover();
-	//$("#body").css("width",'200px')
-	//sessionStorage.setItem("cid",frappe.get_cookie('profile_id'));
+	
 	if(!window.full_name) {
 		if(localStorage) {
 			localStorage.setItem("last_visited",

@@ -74,11 +74,13 @@ function render_dashboard(profile_id){
 						render_middle(r.message['res_list'],profile_id)
 					}
 					else{
+						$('.field-area').empty()
 						$('<div>Your Dashboard is not configured,configure it now!!<br>Goto \' Profile\' >> \' Manage Dashboard \',choose any four options.</div>').appendTo('.field-area')
 					}
 					
 				}
 				else{
+					$('.field-area').empty()
 					$('<div>Your Dashboard is not configured,configure it now!!<br>Goto \' Profile\' >> \' Manage Dashboard \',choose any four options.</div>').appendTo('.field-area')
 				}
 			}
