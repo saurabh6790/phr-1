@@ -73,7 +73,6 @@ def getProfileEventData(data):
 	return eval(TAG_RE.sub('', cstr(res.get('rows')[1:])))
 
 
-
 """Medication Calls"""
 @frappe.whitelist(allow_guest=True)
 def getMedicationFields():
@@ -99,8 +98,6 @@ def getProfileMedications(data):
 	data = json.loads(data)
 
 	return fetch_values_from_db(data)
-
-
 
 
 """Disease Monitoring Calls"""
@@ -139,17 +136,35 @@ def getProfileDM(data):
 	res = get_existing_records_from_solr(data.get('profile_id'), data.get('event_master_id'))
 	return res
 
+"""Appointment services"""
+@frappe.whitelist(allow_guest=True)
+def createAppointment(data):
+	from templates.pages.appointments import save_data
+	return save_data(data)
 
+@frappe.whitelist(allow_guest=True)
+def getAppointments(data):
+	from templates.pages.appointments import fetch_values_from_db
+	return fetch_values_from_db(json.loads(data))
 
+"""Messages services"""
+@frappe.whitelist(allow_guest=True)
+def getMessages(data):
+	from templates.pages.messages import fetch_values_from_db
+	return fetch_values_from_db(json.loads(data))
 
+@frappe.whitelist(allow_guest=True)
+def createMessageLog(data):
+	from phr.doctype.phr_activity_log.phr_activity_log import make_log
+	data = json.loads(data)
+	make_log(data.get('profile_id'), data.get("entity_name"), data.get('operation'), data.get("subject"))
+	return "Log Created"
 
 """ Profile Image Calls """
 @frappe.whitelist(allow_guest=True)
 def setProfileImage(data=None):
 	from frappe.utils import get_site_path, get_hook_method, get_files_path, get_site_base_path, get_path, get_site_name
 	data = json.loads(frappe.form_dict.get('data'))
-
-	# # print data.get('binary_data') > "/home/saurabh/Desktop/op1.txt"
 
 	file_path = "%(files_path)s/%(file_name)s.%(file_ext)s"%{'files_path': get_files_path(), 
 		'file_name': data.get('file_name'), 
