@@ -367,6 +367,15 @@ def get_event_data(data):
 		'page_size': 5
 	}
 
+
+
+@frappe.whitelist(allow_guest=True)
+def get_individual_event_count_for_badges():
+	pass
+
+
+
+
 @frappe.whitelist(allow_guest=True)
 def get_event_wise_count_dict(count_dict, event_count_dict):
 	if not isinstance(count_dict,dict):
