@@ -112,7 +112,7 @@ $.extend(ThumbNails.prototype,{
 		var me = this;
 		frappe.call({
 			method:"phr.templates.pages.event.get_attachments",
-			args:{'profile_id': me.args['profile_id'], 'folder':me.folder, 
+			args:{'profile_id': sessionStorage.getItem("cid"), 'folder':me.folder, 
 				'sub_folder': me.sub_folder, 
 				'event_id': $('input[name="event_id"]').val() ? $('input[name="event_id"]').val() : $('input[name="entityid"]').val(),
 				'visit_id': $('input[name="event_id"]').val() ? $('input[name="entityid"]').val() : ''},
