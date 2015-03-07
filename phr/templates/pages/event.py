@@ -370,8 +370,57 @@ def get_event_data(data):
 
 
 @frappe.whitelist(allow_guest=True)
-def get_individual_event_count_for_badges():
-	pass
+def get_individual_event_count_for_badges(event_id,profile_id):
+	request_type="POST"
+	url=get_base_url()+'admin/geteventfilecount'
+	args={"profileId":profile_id,"eventId":event_id}
+	response=get_response(url,json.dumps(args),request_type)
+	res=response.text
+	event_list=[]
+	event_dict={}
+	sub_event_count={}
+	if res:
+		jsonobj=json.loads(res)
+		if jsonobj["returncode"]==139:
+			event=json.loads(jsonobj["list"])
+			event_wise_count_dict(event[0]['eventFileMapCount'], event_dict,sub_event_count)
+			
+
+	for event in ["11","12","13","14","15"]:
+		if not event_dict.has_key(event):
+			event_dict[event]=0
+	
+	for sub_event in ["1151","1152","1153","1251","1252","1351","1352","1451","1452","1453","1551"]:
+		if not sub_event_count.has_key(sub_event):
+			sub_event_count[sub_event]=0
+
+	return {
+				"event_dict":event_dict,
+				"sub_event_count":sub_event_count
+			}
+
+
+@frappe.whitelist(allow_guest=True)
+def event_wise_count_dict(count_dict, event_dict,sub_event_count):
+	for key in count_dict:
+		main_folder = key.split('-')[-1][:2]
+		folder = key.split('-')[-1][:4]
+		
+		if not event_dict.get(main_folder):
+			event_dict[main_folder] = {}
+	
+		if not sub_event_count.get(folder):
+			sub_event_count[folder] = {}
+
+		if not event_dict.get(main_folder):
+			event_dict[main_folder] = count_dict[key]	
+		else:
+			event_dict[main_folder] += count_dict[key]
+	
+		sub_event_count[folder] = count_dict[key]
+	
+	
+
 
 
 

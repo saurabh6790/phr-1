@@ -16,7 +16,6 @@ var ToDo = inherit(ListView,{
 		this.wrapper = wrapper;
 		this.res = {};
 		this.profile_id = profile_id
-		//this.render_todo_list()
 		this[obj['cmd']].call(this)
 
 	},
@@ -29,7 +28,7 @@ var ToDo = inherit(ListView,{
 			$(".modal-body form input, .modal-body form textarea, .modal-body form select").each(function(i, obj) {
 				me.res[obj.name] = $(obj).val();
 			})
-			me.res['profile_id'] = me.profile_id
+			me.res['profile_id'] = sessionStorage.getItem("pid")
 
 			frappe.call({
 				method:"phr.templates.pages.todo.create_todo",
@@ -38,7 +37,7 @@ var ToDo = inherit(ListView,{
 					d.hide()
 					frappe.msgprint('ToDo Record Created')
 					var db = new render_dashboard();
-					db.render_to_do(sessionStorage.getItem("cid"))
+					db.render_to_do(sessionStorage.getItem("pid"))
 				}
 			})
 		})

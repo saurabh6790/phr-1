@@ -18,6 +18,7 @@ $.extend(SharePhr.prototype,{
 		this.args = args;
 		$(this.wrapper).empty()
 		$('.field-area').empty()
+		console.log([args["event_id"],this.args['event_id']])
 		var me = this;
 		this.selected_files = args.selected_files
 		this.doc_list = args.doc_list;
@@ -30,16 +31,24 @@ $.extend(SharePhr.prototype,{
 			me.send_email();
 		})
 		this.bind_controller()
-		this.render_folder_section()
+		//console.log(["ss",me.args['event_id']])
+		this.render_folder_section(args['event_id'])
 		Events.prototype.get_linked_providers(this.args['profile_id'])
 	},
 	bind_controller: function(){
 		
 	},
-	render_folder_section:function(){
+	render_folder_section:function(event_id){
+		console.log(event_id)
 		var me = this;
-		TreeView.prototype.init({'profile_id': this.args['profile_id'], 'dms_file_list': me.dms_file_list, 
-			'display': 'initial', 'doc_list': this.doc_list})
+		frappe.call({
+			"method":"phr.templates.pages.event.get_individual_event_count_for_badges",
+			"args":{"event_id":event_id,"profile_id":sessionStorage.getItem("cid")},
+			callback:function(r){
+				TreeView.prototype.init({'profile_id': this.args['profile_id'], 'dms_file_list': me.dms_file_list, 
+					'display': 'initial', 'doc_list': this.doc_list,"event_dict":r.message.event_dict,"sub_event_count":r.message.sub_event_count})
+			}
+		})
 		
 		// $("<div class='main' id='sharetab'></div>").appendTo($('.event_section'))
 		

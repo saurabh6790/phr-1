@@ -88,13 +88,13 @@ window.Events = inherit(ListView,{
 		// me.render_folder_section()
 
   		// me.bind_events()
-  		this.make_tree_view()
+  		this.make_tree_view(event_id)
   		this.get_linked_providers()
   		this.set_provider_details()
-  		this.make_share_pannel()
+  		this.make_share_pannel(event_id)
 		this.make_comment_section()
 	},
-	make_share_pannel: function(){
+	make_share_pannel: function(event_id){
 		var me = this;
 		$('<button class="btn btn-primary" id="share"> Share Data </button>').appendTo($('.save_controller'))
 
@@ -112,16 +112,27 @@ window.Events = inherit(ListView,{
 
 					})
 					// me.render_folder_section()
-					me.open_sharing_pannel()
+					me.open_sharing_pannel(event_id)
 			}).appendTo('.breadcrumb');			
-			me.open_sharing_pannel()
+			me.open_sharing_pannel(event_id)
 		})		
 	},
-	make_tree_view:function(){
+	make_tree_view:function(event_id){
 		var me = this;
 		console.log(['make_tree_view',me.dms_file_list]);
 		me.dms_file_list = me.dms_file_list ? me.dms_file_list : [];
-		TreeView.prototype.init({'profile_id': this.profile_id, 'dms_file_list': me.dms_file_list, 'display': 'none'})
+		file_counts=me.get_file_counts(event_id,this.profile_id,me.dms_file_list)
+	},
+	get_file_counts:function(event_id,profile_id,dms_file_list){
+		var me = this;
+		frappe.call({
+			"method":"phr.templates.pages.event.get_individual_event_count_for_badges",
+			"args":{"event_id":event_id,"profile_id":profile_id},
+			callback:function(r){
+				TreeView.prototype.init({'profile_id': this.profile_id, 'dms_file_list':dms_file_list, 'display': 'none',"event_dict":r.message.event_dict,"sub_event_count":r.message.sub_event_count})
+			}
+		})
+
 	},
 	make_comment_section: function(){
 		var me = this;
@@ -419,14 +430,14 @@ window.Events = inherit(ListView,{
 
 					})
 					// me.render_folder_section()
-					me.open_sharing_pannel()
-			}).appendTo('.breadcrumb');			
-			me.open_sharing_pannel()
+					me.open_sharing_pannel($("[name='entityid']").val())
+				}).appendTo('.breadcrumb');			
+			me.open_sharing_pannel($("[name='entityid']").val())
 		})
 	},
-	open_sharing_pannel: function(){
+	open_sharing_pannel: function(event_id){
 		var me = this;
-		SharePhr.prototype.init(me.wrapper, {"file_name" : "share_phr", 'values': me.result_set, 'doc_list': me.doc_list, "profile_id":me.profile_id})
+		SharePhr.prototype.init(me.wrapper, {"file_name" : "share_phr", 'values': me.result_set, 'doc_list': me.doc_list, "profile_id":me.profile_id,"event_id":event_id})
 	},
 	bind_events: function(){
 		var me = this;

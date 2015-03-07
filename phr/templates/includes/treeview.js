@@ -15,24 +15,25 @@ $.extend(TreeView.prototype, {
 		me.args = args;
 		me.disp = args['display']
 		me.doc_list = args['doc_list'];
+		console.log(me.args['event_dict']['11'])
 
-		me.parent_mapper = [{'label' : 'Consultation', 'id':'consultancy-11', 'icon':'icon-user-md'}, 
-				{'label' : 'Event Snap', 'id':'event_snap-12','icon':'icon-camera'}, 
-				{'label' : 'Lab Reports', 'id':'lab_reports-13', 'icon':'icon-beaker'}, 
-				{'label' : 'Prescription', 'id':'prescription-14', 'icon':'icon-file'},
-				{'label' : 'Cost of Care', 'id':'cost_of_care-15', 'icon':'icon-credit-card'}]
+		me.parent_mapper = [{'label' : 'Consultation', 'id':'consultancy-11', 'icon':'icon-user-md',"count":me.args['event_dict']['11']}, 
+				{'label' : 'Event Snap', 'id':'event_snap-12','icon':'icon-camera',"count":me.args['event_dict']['12']}, 
+				{'label' : 'Lab Reports', 'id':'lab_reports-13', 'icon':'icon-beaker',"count":me.args['event_dict']['13']}, 
+				{'label' : 'Prescription', 'id':'prescription-14', 'icon':'icon-file',"count":me.args['event_dict']['14']},
+				{'label' : 'Cost of Care', 'id':'cost_of_care-15', 'icon':'icon-credit-card',"count":me.args['event_dict']['15']}]
 
-		me.mapper = {'consultancy-11':[{'label' : 'DOCTORS  CLINICAL NOTES', 'id':'A_51'}, 
-									{'label' : 'TEST / INVESTIGATION ADVISED', 'id': 'B_52'}, 
-									{'label' : 'REFERAL NOTE', 'id': 'C_53'}],
-					'event_snap-12':[{'label' : 'PATIENT SNAPS', 'id' : 'A_51'},
-							{'label':'CLINICAL SNAPS', 'id': 'B_52'}],
-					'lab_reports-13':[{'label': 'TEST REPORTS', 'id':'A_51'}, 
-							{'label':'TEST IMAGES', 'id':'B_52'}],
-					'prescription-14':[{'label':'PRESCRIBED MEDICATION', 'id':'A_51'},
-							{'label':'PRISCRIBED ADVICE','id':'B_52'},
-							{'label':'DISCHARGE SUMMERY', 'id': 'C_53'}],
-					'cost_of_care-15':[{'label': 'MEDICAL BILLS', 'id': 'A_51'}]
+		me.mapper = {'consultancy-11':[{'label' : 'DOCTORS  CLINICAL NOTES', 'id':'A_51',"count":me.args['sub_event_count']['1151']}, 
+									{'label' : 'TEST / INVESTIGATION ADVISED', 'id': 'B_52',"count":me.args['sub_event_count']['1152']}, 
+									{'label' : 'REFERAL NOTE', 'id': 'C_53',"count":me.args['sub_event_count']['1153']}],
+					'event_snap-12':[{'label' : 'PATIENT SNAPS', 'id' : 'A_51',"count":me.args['sub_event_count']['1251']},
+							{'label':'CLINICAL SNAPS', 'id': 'B_52',"count":me.args['sub_event_count']['1252']}],
+					'lab_reports-13':[{'label': 'TEST REPORTS', 'id':'A_51',"count":me.args['sub_event_count']['1351']}, 
+							{'label':'TEST IMAGES', 'id':'B_52',"count":me.args['sub_event_count']['1352']}],
+					'prescription-14':[{'label':'PRESCRIBED MEDICATION', 'id':'A_51',"count":me.args['sub_event_count']['1451']},
+							{'label':'PRISCRIBED ADVICE','id':'B_52',"count":me.args['sub_event_count']['1452']},
+							{'label':'DISCHARGE SUMMERY', 'id': 'C_53',"count":me.args['sub_event_count']['1453']}],
+					'cost_of_care-15':[{'label': 'MEDICAL BILLS', 'id': 'A_51',"count":me.args['sub_event_count']['1552']}]
 				}
 
 		this.make_tree_base()
@@ -62,13 +63,13 @@ $.extend(TreeView.prototype, {
 
 		$.each(me.parent_mapper, function(i, dic){
 			$li = $(repl_str('<li>\
-				<span id="%(id)s"><i class="%(icon)s"></i> %(label)s <span class="badge">4</span> </span> <a href=""></a>\
+				<span id="%(id)s"><i class="%(icon)s"></i> %(label)s <span class="badge">%(count)s</span> </span> <a href=""></a>\
 				<ul></ul>\
 			</li>', dic)).appendTo($('.tree').find('ul').first())
 	
 			$.each(me.mapper[dic['id']], function(j, chld_dic){
 				$(repl_str('<li>\
-					<span id="%(id)s"><i class="icon-leaf"></i> %(label)s <span class="badge">4</span> </span> <a href=""></a>\
+					<span id="%(id)s"><i class="icon-leaf"></i> %(label)s <span class="badge">%(count)s</span> </span> <a href=""></a>\
 				</li>', chld_dic)).appendTo($li.find('ul'))
 			})
 		})
