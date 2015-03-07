@@ -33,7 +33,7 @@ $.extend(TreeView.prototype, {
 					'prescription-14':[{'label':'PRESCRIBED MEDICATION', 'id':'A_51',"count":me.args['sub_event_count']['1451']},
 							{'label':'PRISCRIBED ADVICE','id':'B_52',"count":me.args['sub_event_count']['1452']},
 							{'label':'DISCHARGE SUMMERY', 'id': 'C_53',"count":me.args['sub_event_count']['1453']}],
-					'cost_of_care-15':[{'label': 'MEDICAL BILLS', 'id': 'A_51',"count":me.args['sub_event_count']['1552']}]
+					'cost_of_care-15':[{'label': 'MEDICAL BILLS', 'id': 'A_51',"count":me.args['sub_event_count']['1551']}]
 				}
 
 		this.make_tree_base()
