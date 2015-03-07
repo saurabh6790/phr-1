@@ -15,7 +15,7 @@ $.extend(TreeView.prototype, {
 		me.args = args;
 		me.disp = args['display']
 		me.doc_list = args['doc_list'];
-		console.log(me.args['event_dict']['11'])
+		
 
 		me.parent_mapper = [{'label' : 'Consultation', 'id':'consultancy-11', 'icon':'icon-user-md',"count":me.args['event_dict']['11']}, 
 				{'label' : 'Event Snap', 'id':'event_snap-12','icon':'icon-camera',"count":me.args['event_dict']['12']}, 
