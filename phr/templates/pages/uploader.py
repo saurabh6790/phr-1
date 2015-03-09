@@ -26,7 +26,7 @@ def upload():
 	file_url = frappe.form_dict.file_url
 	filename = frappe.form_dict.filename
 
-	frappe.errprint([file_url, filename])
+	# frappe.errprint([file_url, filename])
 	if not filename and not file_url:
 		frappe.msgprint(_("Please select a file or url"),
 			raise_exception=True)
@@ -41,7 +41,7 @@ def upload():
 	# if dt and dn:
 	# 	comment = frappe.get_doc(dt, dn).add_comment("Attachment",
 	# 		_("Added {0}").format("<a href='{file_url}' target='_blank'>{file_name}</a>".format(**filedata.as_dict())))
-	frappe.errprint(['test',filename, get_site_base_path(), get_path(), os.getcwd(), get_site_path().split('.')])
+	# frappe.errprint(['test',filename, get_site_base_path(), get_path(), os.getcwd(), get_site_path().split('.')])
 	return {
 		"site_path" : os.path.join(os.getcwd(), get_site_path().replace('.',"").replace('/', ""), 'public', 'files'),
 		"file_name": filename
@@ -118,7 +118,7 @@ def save_file(fname, content, decode=False):
 	content_hash = get_content_hash(content)
 	content_type = mimetypes.guess_type(fname)[0]
 	fname = get_file_name(fname, content_hash[-6:])
-	frappe.errprint([file_size, content_hash, content_type, fname])
+	# frappe.errprint([file_size, content_hash, content_type, fname])
 	# file_data = get_file_data_from_hash(content_hash)
 	# frappe.errprint(file_data)
 	# if not file_data:
@@ -144,7 +144,7 @@ def save_file(fname, content, decode=False):
 	# return f
 
 def get_file_data_from_hash(content_hash):
-	frappe.errprint("in get_file_data_from_hash")
+	# frappe.errprint("in get_file_data_from_hash")
 	for name in frappe.db.sql_list("select name from `tabFile Data` where content_hash=%s", content_hash):
 		b = frappe.get_doc('File Data', name)
 		return {k:b.get(k) for k in frappe.get_hooks()['write_file_keys']}
@@ -156,13 +156,13 @@ def save_file_on_filesystem(fname, content, content_type=None):
 	sub_folder = frappe.form_dict.sub_folder
 	event_id = frappe.form_dict.event_id
 
-	frappe.errprint([profile_id, folder, sub_folder])
+	# frappe.errprint([profile_id, folder, sub_folder])
 
 	public_path = os.path.join(frappe.local.site_path, "public")
-	frappe.errprint([get_files_path(), profile_id, folder, sub_folder])
+	# frappe.errprint([get_files_path(), profile_id, event_id, folder, sub_folder])
 	folder_path = os.path.join(get_files_path(), profile_id, event_id, folder, sub_folder)
 
-	frappe.errprint(folder_path)
+	# frappe.errprint(folder_path)
 	fpath = write_file(content, folder_path, fname)
 	path =  os.path.relpath(fpath, public_path)
 	return {

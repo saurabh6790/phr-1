@@ -40,7 +40,6 @@ $.extend(TreeView.prototype, {
 		this.add_tree_events()
 	},
 	make_tree_base: function(){
-		// console.log('make_tree_base')
 		var me = this;
 		$('<div class="event_tree" style="width=100%;">\
 				<div class="tree" style="width:40%;float:left;min-height:500px;">\
@@ -76,7 +75,6 @@ $.extend(TreeView.prototype, {
 	},
 	add_tree_events:function(){
 		var me = this;
-			// console.log(['add_tree_events', me.args['dms_file_list']])
 		$(function () {
 			me.args['dms_file_list'] = me.args['dms_file_list'] ? me.args['dms_file_list'] : [];
 
@@ -102,7 +100,6 @@ $.extend(TreeView.prototype, {
 				children.addClass('parent_li')
 
 				children.on('click', function(){
-					// console.log(['sub folder ', me.args['dms_file_list']])
 					ThumbNails.prototype.init(me.wrapper, {'folder':me.folder, 
 						'sub_folder':$(this).find('span').attr('id'), 'profile_id': me.args['profile_id'], 'display': me.disp, 
 						'dms_file_list': me.args['dms_file_list'], 'doc_list': me.doc_list})
