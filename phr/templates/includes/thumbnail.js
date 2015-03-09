@@ -96,7 +96,6 @@ $.extend(ThumbNails.prototype,{
 						"text_file_id": $('[name="attch_desc"]').val() ? me.folder+'_'+me.sub_folder+'.pdf' : "",
 						"text_file_loc": $('[name="attch_desc"]').val() ? attachment['site_path'] +'/'+ me.args['profile_id'] + '/' +  $('input[name="entityid"]').val() + '/' + me.folder + '/' +  me.sub_folder + '/' + me.folder+'_'+me.sub_folder+'.pdf' : ""
 				})
-				// console.log(me.args['dms_file_list'])
 				me.render_uploader_and_files();
 			}
 		});
@@ -152,7 +151,6 @@ $.extend(ThumbNails.prototype,{
 					src="/%(path)s/%(file_name)s" data-bigimgsrc="/%(path)s/%(file_name)s">\
 					<br><label style="width: 150px;word-wrap: break-word;">%(file_name)s</label></a>',attachment))).appendTo(row)
 		}
-		console.log([attachment['file_name'].substring(7, attachment['file_name'].length), me.doc_list, $("input[type=checkbox]").val() ])
 		// if(attachment['file_name'].substring(7, attachment['file_name'].length) in me.doc_list && $("input[type=checkbox]").val() == attachment['file_name']){
 		// 	$("input[type=checkbox]").prop('checked', true);	
 		// }

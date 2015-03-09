@@ -119,20 +119,18 @@ window.Events = inherit(ListView,{
 	},
 	make_tree_view:function(event_id){
 		var me = this;
-		console.log(['make_tree_view',me.dms_file_list]);
 		me.dms_file_list = me.dms_file_list ? me.dms_file_list : [];
 		file_counts=me.get_file_counts(event_id,this.profile_id,me.dms_file_list)
 	},
-	get_file_counts:function(event_id,profile_id,dms_file_list){
+	get_file_counts:function(event_id, profile_id, dms_file_list){
 		var me = this;
 		frappe.call({
 			"method":"phr.templates.pages.event.get_individual_event_count_for_badges",
 			"args":{"event_id":event_id,"profile_id":profile_id},
 			callback:function(r){
-				TreeView.prototype.init({'profile_id': this.profile_id, 'dms_file_list':dms_file_list, 'display': 'none',"event_dict":r.message.event_dict,"sub_event_count":r.message.sub_event_count})
+				TreeView.prototype.init({'profile_id': me.profile_id, 'dms_file_list':dms_file_list, 'display': 'none',"event_dict":r.message.event_dict,"sub_event_count":r.message.sub_event_count})
 			}
 		})
-
 	},
 	make_comment_section: function(){
 		var me = this;
@@ -237,7 +235,6 @@ window.Events = inherit(ListView,{
 		})
 	},
 	attach_provider:function(res, data, d){
-		console.log([res, data, this.profile_id])
 		profile_id=sessionStorage.getItem("cid")
 		var me = this;
 		NProgress.start();
@@ -339,11 +336,9 @@ window.Events = inherit(ListView,{
 					temp_var.find("span").remove()
 					complaints_array[i] = temp_var.html();
 				})
-				console.log(['save_event_', me.dms_file_list])
 				me.res['profile_id'] = me.profile_id;
 				me.res['dms_file_list'] = me.dms_file_list;
 				me.res['complaints'] = complaints_array;
-				console.log(me.res)
 				frappe.call({
 					method:"phr.templates.pages.event.create_update_event",
 					args:{"data":JSON.stringify(me.res)},
@@ -406,7 +401,6 @@ window.Events = inherit(ListView,{
 			</div>\
 		</div>\
 	    ').appendTo($('.event_section'))
-		// console.log("comment maker")
 		PHRComments.prototype.init({"wrapper":$('.event_section'), 
 				"provider_id" : frappe.get_cookie("profile_id"), 
 				"profile_id": me.profile_id,
@@ -414,7 +408,6 @@ window.Events = inherit(ListView,{
 				"event_title":$("[name='event_title']").val()
 
 		});
-		// console.log("Tessing comments")
 
 		$('#share').click(function(){
 			$("form input, form textarea").each(function(i, obj) {
@@ -525,10 +518,7 @@ window.Events = inherit(ListView,{
 			method:"phr.templates.pages.provider.get_self_details",
 			args:{"profile_id":frappe.get_cookie("profile_id")},
 			callback:function(r){
-				// console.log(["checking callbacks", r])
 				if(r.message){
-					// console.log(["Test set provider pannel", r.message[0], r.message[0]['email']])
-
 					$('[name="email_id"]').val(r.message[0]['email'])
 					$('[name="number"]').val(r.message[0]['mobile_number'])
 					$('[name="doctor_id"]').val(r.message[0]['provider_id'])
