@@ -182,7 +182,9 @@ def linkSelectedProvider(data):
 def createProvider(data):
 	from templates.pages.provider import create_provider
 	data = json.loads(data)
-	return create_provider(json.dumps(data.get('data')), '',data.get('profile_id'))
+	res = create_provider(json.dumps(data.get('data')), '', data.get('profile_id'))
+	del res['actualdata']
+	return res
 
 """ Profile Image Calls """
 @frappe.whitelist(allow_guest=True)
