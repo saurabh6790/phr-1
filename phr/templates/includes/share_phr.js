@@ -46,7 +46,7 @@ $.extend(SharePhr.prototype,{
 			"args":{"event_id":event_id,"profile_id":sessionStorage.getItem("cid")},
 			callback:function(r){
 				TreeView.prototype.init({'profile_id': this.args['profile_id'], 'dms_file_list': me.dms_file_list, 
-					'display': 'initial', 'doc_list': this.doc_list,"event_dict":r.message.event_dict,"sub_event_count":r.message.sub_event_count})
+					'display': 'initial', 'doc_list': me.doc_list,"event_dict":r.message.event_dict,"sub_event_count":r.message.sub_event_count})
 			}
 		})
 		
