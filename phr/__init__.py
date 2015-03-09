@@ -21,14 +21,6 @@ def validate_mobile_code(data):
 	res = verify_mobile(data.get('profile_id'),data.get('verification_code'))
 	return res
 
-@frappe.whitelist(allow_guest=True)
-def get_linked_provides(data):
-	from templates.pages.event import get_linked_providers
-	data = json.loads(data)
-	res = get_linked_providers(data.get('profile_id'))
-	return res
-
-
 """ Event Calls """
 @frappe.whitelist(allow_guest=True)
 def get_event_name():
@@ -162,7 +154,14 @@ def createMessageLog(data):
 
 """Provider services"""
 @frappe.whitelist(allow_guest=True)
-def getAllProviders(data=None):
+def get_linked_provides(data):
+	from templates.pages.event import get_linked_providers
+	data = json.loads(data)
+	res = get_linked_providers(data.get('profile_id'))
+	return res
+
+@frappe.whitelist(allow_guest=True)
+def searchProviders(data=None):
 	from templates.pages.event import get_providers
 	return get_providers(data)
 
@@ -183,30 +182,49 @@ def linkSelectedProvider(data):
 def createProvider(data):
 	from templates.pages.provider import create_provider
 	data = json.loads(data)
-	return create_provider(json.dumps(data.get('data')), data.get('profile_id'))
+	return create_provider(json.dumps(data.get('data')), '',data.get('profile_id'))
 
 """ Profile Image Calls """
 @frappe.whitelist(allow_guest=True)
-def setProfileImage(data=None):
+def setProfileImage():
 	from frappe.utils import get_site_path, get_hook_method, get_files_path, get_site_base_path, get_path, get_site_name
-	data = json.loads(frappe.form_dict.get('data'))
+	# return frappe.local.request
+	data = frappe.local.request.form
 
-	file_path = "%(files_path)s/%(file_name)s.%(file_ext)s"%{'files_path': get_files_path(), 
-		'file_name': data.get('file_name'), 
-		'file_ext': data.get('file_ext')
+	atr = ['content_length', 'content_type', 'filename', 'headers', 'mimetype', 'mimetype_params', 'name']
+
+	for key in frappe.local.request.files:
+		print "\n"
+		print frappe.local.request.files.get(key).content_type
+		print "\n"
+		print frappe.local.request.files.get(key).content_length
+		print "\n"
+		print frappe.local.request.files.get(key).filename
+		print "\n"
+		print frappe.local.request.files.get(key).headers
+		print "\n"
+		print frappe.local.request.files.get(key).mimetype
+		print "\n"
+		print frappe.local.request.files.get(key).mimetype_params
+		print "\n"
+		print frappe.local.request.files.get(key).name
+		print "\n"
+		print frappe.local.request.files.get(key).stream
+
+	file_path = "%(files_path)s/%(file_name)s"%{'files_path': get_files_path(), 
+		'file_name': data.get('file_name')
 	}
 
-	binary_stuff = base64.b64decode(data.get('binary_data'))
+	print file_path
+	open(file_path, 'wb').write(frappe.local.request.files.get(key).stream)
+	# with open(file_path, 'wb') as f:
+ # 		f.write(data.get('file_content'))
 
-	with open(file_path, 'wb') as f:
- 		f.write(b''+binary_stuff)
- 		# f.write(data.get('binary_data'))
+ # 	update_profile_image(data.get('profile_id'), data.get('file_name'))
 
- # 	update_profile_image(data.get('profile_id'), data.get('file_name'), data.get('file_ext'))
-
-def update_profile_image(profile_id, file_name, file_ext):
+def update_profile_image(profile_id, file_name):
 	user_id = frappe.db.get_value('User', {'profile_id': profile_id}, 'name')
 	if user_id:
 		user = frappe.get_doc('User', user_id)
-		user.user_image = "/files/%s.%s"%(file_name, file_ext)
+		user.user_image = "/files/%s"%(file_name)
 		user.save(ignore_permissions=True)
