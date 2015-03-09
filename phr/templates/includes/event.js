@@ -197,10 +197,10 @@ window.Events = inherit(ListView,{
 
 			$.each(result_set, function(i,d){
 				var row = $("<tr>").appendTo(me.table.find("tbody"));
-				$('<td>').html('<input type="radio" name="provider" id = "'+d[0]+'">').appendTo(row)
-				$('<td>').html(d[1]).appendTo(row)
-				$('<td>').html(d[2]).appendTo(row)
-				$('<td>').html(d[3]).appendTo(row)
+				$('<td>').html('<input type="radio" name="provider" id = "'+d['provider_id']+'">').appendTo(row)
+				$('<td>').html(d['provider_name']).appendTo(row)
+				$('<td>').html(d['mobile_number']).appendTo(row)
+				$('<td>').html(d['email']).appendTo(row)
 			})
 			me.set_provider(d)
 		}

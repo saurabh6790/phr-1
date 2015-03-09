@@ -49,9 +49,9 @@
   {
    "depends_on": "dosage_type:Daily", 
    "fieldname": "afternoon", 
-   "fieldtype": "time",
-    "placeholder":"", 
-   "label": "Afternoon"
+   "fieldtype": "time", 
+   "label": "Afternoon", 
+   "placeholder": ""
   }, 
   {
    "depends_on": "dosage_type:Daily", 

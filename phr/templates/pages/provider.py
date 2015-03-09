@@ -34,6 +34,7 @@ def create_provider_in_solr(data,profile_id):
 		sub="created provider "+provider.get('name')
 		make_log(profile_id,"provider","create",sub)
 		return res
+	return res
 
 @frappe.whitelist(allow_guest=True)
 def link_provider(res, data, profile_id):
@@ -42,8 +43,8 @@ def link_provider(res, data, profile_id):
 	if isinstance(data, basestring):
 		data = json.loads(data)
 	else:
-		data = json.loads(data)
-	print "add new provider", profile_id
+		data = data
+	# print "add new provider", profile_id
 	pl = frappe.get_doc({
 		"doctype": "Providers Linked",
 		"patient": profile_id,

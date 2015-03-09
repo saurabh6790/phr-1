@@ -459,7 +459,6 @@ def get_providers(filters):
 
 def get_conditions(filters):
 	cond = []
-
 	if filters.get('provider_type'):
 		cond.append('provider_type = "%(provider_type)s"'%filters)
 
@@ -476,12 +475,13 @@ def get_conditions(filters):
 
 def get_provider_info(cond):
 	if cond:
-		ret = frappe.db.sql("""select provider_id, provider_name, mobile_number, email from tabProvider where %s """%cond, as_list=1, debug=1)
-		frappe.errprint(ret)
+		ret = frappe.db.sql("""select provider_id, provider_name, mobile_number, email from tabProvider where %s """%cond, as_dict=1)
+		# frappe.errprint(ret)
 		return ((len(ret[0]) > 1) and ret) if ret else None
 	
 	else:
-		return none
+		return None
+
 @frappe.whitelist()
 def get_linked_providers(profile_id=None):
 	import itertools

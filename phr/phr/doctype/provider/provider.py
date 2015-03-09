@@ -16,7 +16,8 @@ class Provider(Document):
 		if self.provider_category == "TieUp":
 			self.create_user()
 		else:
-			self.update_user()
+			if self.exisitng_user():
+				self.update_user()
 
 	def create_user(self):
 		if self.exisitng_user():

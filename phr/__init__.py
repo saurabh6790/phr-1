@@ -79,7 +79,7 @@ def getMedicationFields():
 	dosage_list = []
 	for dosage in frappe.db.sql("select name from `tabDosage`", as_list=1):
 		dosage_details = {'dosage_type': dosage[0]}
-		dosage_details['fields'] = frappe.db.sql(""" select label, fieldtype, fieldname, options
+		dosage_details['fields'] = frappe.db.sql(""" select label, fieldtype, fieldname, replace(ifnull(options,''), '\n', ', ') as options
 				from `tabDosage Fields` where parent = '%s' """%(dosage[0]), as_dict=1)
 		dosage_list.append(dosage_details)
 
@@ -106,7 +106,7 @@ def getProfileMedications(data):
 def getDiseaseMonitoringFields():
 	disease_list = []
 	for disease in frappe.db.sql("select event_master_id, disease_name from `tabDisease Monitoring`", as_list=1):
-		field_mapper = ['Sr']
+		field_mapper = ['sr']
 
 		disease_details = {'event_master_id': disease[0], 'disease_name': disease[1]}
 
@@ -159,6 +159,31 @@ def createMessageLog(data):
 	data = json.loads(data)
 	make_log(data.get('profile_id'), data.get("entity_name"), data.get('operation'), data.get("subject"))
 	return "Log Created"
+
+"""Provider services"""
+@frappe.whitelist(allow_guest=True)
+def getAllProviders(data=None):
+	from templates.pages.event import get_providers
+	return get_providers(data)
+
+@frappe.whitelist(allow_guest=True)
+def linkSelectedProvider(data):
+	""" data = { 
+			"res" : {"entityid":"1425266248745-498294"}, 
+			"data" : {"name": "testadmin","email": "testadmin@test.com", "mobile": "1234567890"},
+			"profile_id": "1421132127691-812100"
+		} """
+
+	data = json.loads(data)
+	from templates.pages.provider import link_provider
+
+	return {"link_id": link_provider(data.get('res'), data.get('data'), data.get("profile_id"))}
+
+@frappe.whitelist(allow_guest=True)
+def createProvider(data):
+	from templates.pages.provider import create_provider
+	data = json.loads(data)
+	return create_provider(json.dumps(data.get('data')), data.get('profile_id'))
 
 """ Profile Image Calls """
 @frappe.whitelist(allow_guest=True)
