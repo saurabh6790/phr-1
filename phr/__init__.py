@@ -186,6 +186,13 @@ def createProvider(data):
 	del res['actualdata']
 	return res
 
+"""Event/Visit Sharing via Provider"""
+@frappe.whitelist(allow_guest=True)
+def sharingVaiProvider(data):
+	from templates.pages.event import share_via_providers_account
+	data = json.loads(data)
+	return share_via_providers_account(data)
+
 """ Profile Image Calls """
 @frappe.whitelist(allow_guest=True)
 def setProfileImage():
