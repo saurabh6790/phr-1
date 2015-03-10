@@ -20,13 +20,22 @@ frappe.provide("frappe");
   Format for method Classes
   ClassName.prototype.init(wrapper,name_of_json_file,entityid,operation_entity)
 */
+ window.onload = function () {
+    noBack();
+ }
+ function noBack() {
+    window.history.forward();
+ }
 $(document).ready(function () {
-	window.onunload = function() {
+	//window.history.forward();
+	/*window.onunload = function() {
     	null;
 	};
-	setTimeout("preventBack()", 0);
+	setTimeout("preventBack()", 0);*/
 	//alert(frappe.get_cookie("profile_id"))
 	//console.log(sessionStorage.getItem("pid"))
+	//preventBack();
+	   
 	if (!sessionStorage.getItem("pid") || frappe.get_cookie("profile_id")!=sessionStorage.getItem("pid")){
 		sessionStorage.setItem("pid",frappe.get_cookie("profile_id"))
 		sessionStorage.setItem("cid",frappe.get_cookie("profile_id"))
@@ -161,15 +170,20 @@ function bind_events(){
 		NProgress.done();
 	})
 	$('.create_linkphr').unbind("click").click(function(){
-		$('.breadcrumb').empty()
-		NProgress.start();
-		$('<li><a nohref>New Linked PHR</a></li>').click(function(){
+		if (!(sessionStorage.getItem("lphrs")>=10)){
+			$('.breadcrumb').empty()
+			NProgress.start();
+			$('<li><a nohref>New Linked PHR</a></li>').click(function(){
+				LinkedPHR.prototype.init($(document).find("#main-con"),
+				{"file_name" : "linked_patient"},"","create_linkphr")
+			}).appendTo('.breadcrumb');
 			LinkedPHR.prototype.init($(document).find("#main-con"),
-			{"file_name" : "linked_patient"},"","create_linkphr")
-		}).appendTo('.breadcrumb');
-		LinkedPHR.prototype.init($(document).find("#main-con"),
-			{"file_name" : "linked_patient"},"","create_linkphr")
-		NProgress.done();
+				{"file_name" : "linked_patient"},"","create_linkphr")
+			NProgress.done();
+		}
+		else{
+			frappe.msgprint("Linked PHR's Limit Exceeded.Please Contact Admin or Delink One of Existing PHR")
+		}
 	})
 	$(".create_provider").unbind("click").click(function(){
 		$('.breadcrumb').empty()

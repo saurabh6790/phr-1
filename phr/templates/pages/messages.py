@@ -19,7 +19,7 @@ def get_messages_list(data):
 	data=json.loads(data)
 	log_list=fetch_values_from_db(data)
 	for d in log_list:
-		rows.extend([["",d.entity,d.operation,d.subject]])
+		rows.extend([["",d.entity,d.operation,d.subject,d.creation]])
 
 	return {
 		'rows': rows,
@@ -29,5 +29,7 @@ def get_messages_list(data):
 def fetch_values_from_db(data):
 	log_list=frappe.db.sql("""select * from 
 		`tabPHR Activity Log` 
-		where profile_id='%s' and entity in ('Event','Visit') order by creation desc"""%(data["profile_id"]),as_dict=1)
+		where profile_id='%s' and 
+		entity in ('Event','Visit') 
+		order by creation desc"""%(data["profile_id"]),as_dict=1)
 	return log_list

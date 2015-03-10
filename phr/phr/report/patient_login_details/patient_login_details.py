@@ -15,7 +15,8 @@ def execute(filters=None):
 				d.profile_id,
 				d.password_str,
 				d.first_name,
-				d.last_name
+				d.last_name,
+				d.last_login
 			])
 
 	return columns, data
@@ -23,18 +24,15 @@ def execute(filters=None):
 
 def get_columns(filters):
 	"""return columns based on filters"""
-	columns = ["User:Link/User:100", "Profile Id::150","Password::100","First Name::100", "Last Name::90"]
+	columns = ["User:Link/User:100", "Profile Id::150","Password::100","First Name::100", "Last Name::90","Last Login::90"]
 	return columns
 
 def get_users_data(filters):
 	conditions = get_conditions(filters)
-	return frappe.db.sql("""select name, first_name, last_name, password_str, profile_id
+	return frappe.db.sql("""select name, first_name, last_name, password_str, profile_id,last_login
 		from `tabUser`
 		where enabled=1 %s order by creation""" %
 		conditions, as_dict=1)
-
-
-
 
 def get_conditions(filters):
 	conditions = ""

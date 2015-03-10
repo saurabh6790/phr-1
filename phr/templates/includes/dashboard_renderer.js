@@ -151,6 +151,7 @@ function render_dashboard(profile_id){
 		$wrap=$('#clphr')
 		meta= data['list']
 		meta_dic={}
+		sessionStorage.setItem("lphrs",data["list_size"])
 		$.each(meta,function(i,data){
 			$(repl_str('<a class="list-group-item-side v_lphr %(entityid)s" data-name=%(entityid)s>\
 			%(person_firstname)s</a>\
