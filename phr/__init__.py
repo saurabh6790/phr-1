@@ -21,14 +21,6 @@ def validate_mobile_code(data):
 	res = verify_mobile(data.get('profile_id'),data.get('verification_code'))
 	return res
 
-@frappe.whitelist(allow_guest=True)
-def get_linked_provides(data):
-	from templates.pages.event import get_linked_providers
-	data = json.loads(data)
-	res = get_linked_providers(data.get('profile_id'))
-	return res
-
-
 """ Event Calls """
 @frappe.whitelist(allow_guest=True)
 def get_event_name():
@@ -79,7 +71,7 @@ def getMedicationFields():
 	dosage_list = []
 	for dosage in frappe.db.sql("select name from `tabDosage`", as_list=1):
 		dosage_details = {'dosage_type': dosage[0]}
-		dosage_details['fields'] = frappe.db.sql(""" select label, fieldtype, fieldname, options
+		dosage_details['fields'] = frappe.db.sql(""" select label, fieldtype, fieldname, replace(ifnull(options,''), '\n', ', ') as options
 				from `tabDosage Fields` where parent = '%s' """%(dosage[0]), as_dict=1)
 		dosage_list.append(dosage_details)
 
@@ -106,7 +98,7 @@ def getProfileMedications(data):
 def getDiseaseMonitoringFields():
 	disease_list = []
 	for disease in frappe.db.sql("select event_master_id, disease_name from `tabDisease Monitoring`", as_list=1):
-		field_mapper = ['Sr']
+		field_mapper = ['sr']
 
 		disease_details = {'event_master_id': disease[0], 'disease_name': disease[1]}
 
@@ -160,28 +152,81 @@ def createMessageLog(data):
 	make_log(data.get('profile_id'), data.get("entity_name"), data.get('operation'), data.get("subject"))
 	return "Log Created"
 
+"""Provider services"""
+@frappe.whitelist(allow_guest=True)
+def get_linked_provides(data):
+	from templates.pages.event import get_linked_providers
+	data = json.loads(data)
+	res = get_linked_providers(data.get('profile_id'))
+	return res
+
+@frappe.whitelist(allow_guest=True)
+def searchProviders(data=None):
+	from templates.pages.event import get_providers
+	return get_providers(data)
+
+@frappe.whitelist(allow_guest=True)
+def linkSelectedProvider(data):
+	""" data = { 
+			"res" : {"entityid":"1425266248745-498294"}, 
+			"data" : {"name": "testadmin","email": "testadmin@test.com", "mobile": "1234567890"},
+			"profile_id": "1421132127691-812100"
+		} """
+
+	data = json.loads(data)
+	from templates.pages.provider import link_provider
+
+	return {"link_id": link_provider(data.get('res'), data.get('data'), data.get("profile_id"))}
+
+@frappe.whitelist(allow_guest=True)
+def createProvider(data):
+	from templates.pages.provider import create_provider
+	data = json.loads(data)
+	res = create_provider(json.dumps(data.get('data')), '', data.get('profile_id'))
+	del res['actualdata']
+	return res
+
 """ Profile Image Calls """
 @frappe.whitelist(allow_guest=True)
-def setProfileImage(data=None):
+def setProfileImage():
 	from frappe.utils import get_site_path, get_hook_method, get_files_path, get_site_base_path, get_path, get_site_name
-	data = json.loads(frappe.form_dict.get('data'))
+	# return frappe.local.request
+	data = frappe.local.request.form
 
-	file_path = "%(files_path)s/%(file_name)s.%(file_ext)s"%{'files_path': get_files_path(), 
-		'file_name': data.get('file_name'), 
-		'file_ext': data.get('file_ext')
+	atr = ['content_length', 'content_type', 'filename', 'headers', 'mimetype', 'mimetype_params', 'name']
+
+	for key in frappe.local.request.files:
+		print "\n"
+		print frappe.local.request.files.get(key).content_type
+		print "\n"
+		print frappe.local.request.files.get(key).content_length
+		print "\n"
+		print frappe.local.request.files.get(key).filename
+		print "\n"
+		print frappe.local.request.files.get(key).headers
+		print "\n"
+		print frappe.local.request.files.get(key).mimetype
+		print "\n"
+		print frappe.local.request.files.get(key).mimetype_params
+		print "\n"
+		print frappe.local.request.files.get(key).name
+		print "\n"
+		print frappe.local.request.files.get(key).stream
+
+	file_path = "%(files_path)s/%(file_name)s"%{'files_path': get_files_path(), 
+		'file_name': data.get('file_name')
 	}
 
-	binary_stuff = base64.b64decode(data.get('binary_data'))
+	print file_path
+	open(file_path, 'wb').write(frappe.local.request.files.get(key).stream)
+	# with open(file_path, 'wb') as f:
+ # 		f.write(data.get('file_content'))
 
-	with open(file_path, 'wb') as f:
- 		f.write(b''+binary_stuff)
- 		# f.write(data.get('binary_data'))
+ # 	update_profile_image(data.get('profile_id'), data.get('file_name'))
 
- # 	update_profile_image(data.get('profile_id'), data.get('file_name'), data.get('file_ext'))
-
-def update_profile_image(profile_id, file_name, file_ext):
+def update_profile_image(profile_id, file_name):
 	user_id = frappe.db.get_value('User', {'profile_id': profile_id}, 'name')
 	if user_id:
 		user = frappe.get_doc('User', user_id)
-		user.user_image = "/files/%s.%s"%(file_name, file_ext)
+		user.user_image = "/files/%s"%(file_name)
 		user.save(ignore_permissions=True)

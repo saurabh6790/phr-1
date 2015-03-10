@@ -39,6 +39,7 @@ $.extend(SharePhr.prototype,{
 	},
 	render_folder_section:function(event_id,method){
 		var me = this;
+
 		//method=""
 		if (method=="visit"){
 			frappe.call({
