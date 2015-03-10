@@ -191,7 +191,7 @@ def share_via_email(data):
 		frappe.msgprint('Please select file(s) for sharing')
 
 def share_via_providers_account(data):
-	frappe.errprint([data.get('files'), not data.get('files')])
+	# frappe.errprint([data.get('files'), not data.get('files')])
 	if not data.get('files'):
 		event_data =	{
 				"sharelist": [
@@ -218,6 +218,7 @@ def share_via_providers_account(data):
 
 	else:
 		sharelist = []
+		print "\n\n\n\n share event files \n\n\n", data.get('files')
 		for fl in data.get('files'):
 			
 			file_details = fl.split('/')
