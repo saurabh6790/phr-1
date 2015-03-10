@@ -18,6 +18,7 @@ var RenderFormFields = function(){
 $.extend(RenderFormFields.prototype,{
 	init:function(wrapper, arg, entityid, operation, modal_wrapper){
 		//initializing
+		
 		this.section = '';
 		this.column = '';
 		this.args = arg;

@@ -28,14 +28,8 @@ $(document).ready(function () {
 		window.location.href = "login";
 	}
 	else{
-		profile_id=frappe.get_cookie("profile_id")
-
-		// make_notifier()
-		// get_request(profile_id)
-		var db = new render_dashboard();
-		db.render_linked_phr(profile_id)
-
 		$("#home").on("click",function(){
+			$('#phr').addClass("hide");
 			$('.breadcrumb').empty()
 			$('.linked-phr').empty()
 			$('.save_controller').hide()
@@ -47,32 +41,114 @@ $(document).ready(function () {
 			$('#profile').attr('data-name',profile_id)
 			$('.field-area').empty()
 			$('#main-con').empty()
-			db.render_linked_phr(profile_id);
-			render_middle_section(profile_id);
+			render_middle(profile_id);
 			NProgress.done();
 		})
 	
-		render_middle_section(profile_id)
+		render_middle(sessionStorage.getItem("pid"))
 
 		$('.create_linkphr').unbind("click").click(function(){
 			$("#main-con").empty()
 			LinkedPHR.prototype.init('',{"file_name" : "linked_patient"},"","create_linkphr")
 		})	
 	}
-	
-})
+	$("#profile").unbind("click").click(function(){
+		profile_id=sessionStorage.getItem("cid")
+		$('.breadcrumb').empty()
+		NProgress.start();
+		$('<li><a nohref>Profile</a></li>').click(function(){
+			PatientDashboard.prototype.init($(document).find("#main-con"),
+				{"file_name" : "profile", "method": "profile"},profile_id)
+		}).appendTo('.breadcrumb');
+		PatientDashboard.prototype.init($(document).find("#main-con"),
+				{"file_name" : "profile", "method": "profile"},profile_id)	
+		NProgress.done();
+	})
+	$(".patients").unbind("click").click(function(){
+		profile_id=sessionStorage.getItem("cid")
+		$('.breadcrumb').empty()
+		$('#main-con').empty()
+		NProgress.start();
+		$('<li><a nohref>Profile</a></li>').click(function(){
+			ListView.prototype.init($(document).find(".field-area"), {"file_name" : "patients",
+			'cmd':"provider.get_pateint_data",
+			'profile_id':profile_id})
+		}).appendTo('.breadcrumb');
+			ListView.prototype.init($(document).find(".field-area"), {"file_name" : "patients",
+			'cmd':"provider.get_patient_data",
+			'profile_id':profile_id})
+		NProgress.done();
 
-render_middle_section = function(profile_id){
+	})
+	$('.event').unbind("click").click(function(){
+		profile_id=sessionStorage.getItem("cid")
+		$('.breadcrumb').empty()
+		NProgress.start();
+		$('<li><a nohref>Event</a></li>').click(function(){
+			$('.breadcrumb li').nextAll().remove()
+			Events.prototype.init('', '', profile_id)
+		}).appendTo('.breadcrumb');
+		window.Events.prototype.init('', '', profile_id)
+		NProgress.done();
+	})
+	$('.visit').unbind("click").click(function(){
+		$('.breadcrumb').empty()
+		NProgress.start();
+		$('<li><a nohref>Visit</a></li>').click(function(){
+			$('.breadcrumb li').nextAll().remove()
+			Visit.prototype.init('', '', sessionStorage.getItem("cid"))
+		}).appendTo('.breadcrumb');
+		Visit.prototype.init('', '', sessionStorage.getItem("cid"))
+		NProgress.done();
+	})
+	$('.medications').unbind("click").click(function(){
+		$('.breadcrumb').empty()
+		NProgress.start();
+		$('<li><a nohref>Medications</a></li>').click(function(){
+			$('.breadcrumb li').nextAll().remove()
+			Medications.prototype.init($(document).find("#main-con"), '', sessionStorage.getItem("cid"))
+		}).appendTo('.breadcrumb');
+		Medications.prototype.init($(document).find("#main-con"),'', sessionStorage.getItem("cid"))
+		NProgress.done();
+	})
+	$('.dmonit').unbind("click").click(function(){
+		$('.breadcrumb').empty()
+		NProgress.start();
+		$('<li><a nohref>Disease Monitoring</a></li>').click(function(){
+			$('.breadcrumb li').nextAll().remove()
+			DiseaseMonitoring.prototype.init($(document).find("#main-con"), '', sessionStorage.getItem("cid"))
+		}).appendTo('.breadcrumb');
+		DiseaseMonitoring.prototype.init($(document).find("#main-con"),'', sessionStorage.getItem("cid"))
+		NProgress.done();
+	})
+
+})
+open_patient=function(profile_id,name){
+	sessionStorage.setItem("cname",name)
+	var db = new render_dashboard();
+	db.render_LPHR_name()
+	sessionStorage.setItem("cid",profile_id)
+	$('#phr').removeClass("hide");
+	$('.field-area').empty()
+	$('#main-con').empty()
+	$('.breadcrumb').empty()
+	$('.new_controller').hide()
+	$('.save_controller').hide()
+	$('#linkedphr').hide()
+	db.render_middle_section(profile_id)
+	$('#profile').attr('data-name',profile_id)
+}
+
+render_middle = function(profile_id){
+	$(".field-area").empty()
 	RenderFormFields.prototype.init($("#main-con"), {'file_name':'provider_page'})
-		
-		$('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
-	  		e.target // newly activated tab
-	  		e.relatedTarget // previous active tab
-	  		// alert(e.target)
-	  		request_renderer($(this).attr('href'), profile_id)
-		})
-		
-		request_renderer('#my_req', profile_id)
+	$('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+		e.target // newly activated tab
+		e.relatedTarget // previous active tab
+	 		// alert(e.target)
+		request_renderer($(this).attr('href'), profile_id)
+	})
+	request_renderer('#my_req', profile_id)
 }
 
 request_renderer = function(target, profile_id){

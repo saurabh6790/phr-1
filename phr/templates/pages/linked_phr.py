@@ -12,6 +12,7 @@ from phr.phr.phr_api import get_response
 from phr.templates.pages.patient import get_base_url
 from phr.templates.pages.login import create_profile_in_db,get_barcode,get_image_path
 from phr.phr.doctype.phr_activity_log.phr_activity_log import make_log
+from frappe.utils import cint, now, get_gravatar,cstr
 
 @frappe.whitelist(allow_guest=True)
 def update_linked_profile(data,id):
@@ -70,10 +71,11 @@ def create_profile_solr(data):
 
 def update_lphr_barcode(path,profile_id):
 	cie=frappe.db.get_value("LinkedPHR Images",{"profile_id":profile_id},"barcode")
+	uimage=get_gravatar(profile_id)
 	file_path='/files/'+profile_id+'/'+profile_id+".svg"
 	if cie:
 		frappe.db.sql("""update `tabLinkedPHR Images` 
-			set barcode='%s' where profile_id='%s'"""%(file_path,profile_id))
+			set barcode='%s',profile_image='%s' where profile_id='%s'"""%(file_path,uimage,profile_id))
 		frappe.db.commit()
 		sub="Barcode Uploaded Successfully "+path
 		make_log(profile_id,"profile","Linked PHR Image Upload",sub)
