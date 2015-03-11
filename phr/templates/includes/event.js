@@ -97,7 +97,7 @@ window.Events = inherit(ListView,{
 	},
 	write_visit_file: function(event_title, profile_id){
 		frappe.call({
-			method:"phr.templates.pages.event.image_writter"
+			method:"phr.templates.pages.event.image_writter",
 			args:{'profile_id': profile_id, "event_id": event_id},
 			callback:function(r){
 				// no callback
