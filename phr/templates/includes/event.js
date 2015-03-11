@@ -88,14 +88,14 @@ window.Events = inherit(ListView,{
 		// me.render_folder_section()
 
   		// me.bind_events()
-  		this.write_visit_file()
+  		this.write_visit_file(event_id, profile_id)
   		this.make_tree_view(event_id)
   		this.get_linked_providers()
   		this.set_provider_details()
   		this.make_share_pannel(event_id)
 		this.make_comment_section(event_title, profile_id)
 	},
-	write_visit_file: function(event_title, profile_id){
+	write_visit_file: function(event_id, profile_id){
 		frappe.call({
 			method:"phr.templates.pages.event.image_writter",
 			args:{'profile_id': profile_id, "event_id": event_id},

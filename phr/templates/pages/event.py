@@ -500,9 +500,9 @@ sub_tag_dict = {
 }
 
 @frappe.whitelist()
-def image_writter(data):
+def image_writter(profile_id, event_id):
 	import os, base64
-	data = json.loads(data)
+	data = {"profile_id": profile_id, "event_id": event_id}
 	
 	filelist = get_image_details(data)
 
