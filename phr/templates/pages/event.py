@@ -420,12 +420,6 @@ def event_wise_count_dict(count_dict, event_dict,sub_event_count):
 	
 		sub_event_count[folder] = count_dict[key]
 	
-	
-
-
-
-
-
 @frappe.whitelist(allow_guest=True)
 def get_event_wise_count_dict(count_dict, event_count_dict):
 	if not isinstance(count_dict,dict):
@@ -493,3 +487,46 @@ def get_linked_providers(profile_id=None):
 			r.update({'label': r['name1'], 'value': r['name1']})
 		
 		return ret
+
+
+
+tag_dict = {'11': "consultancy-11", "12": "event_snap-12", "13": "lab_reports-13", "14":"prescription-14", "15": "cost_of_care-15"}
+sub_tag_dict = {
+	"11":{'51':"A_51", "52":"B_52", "53":"C_53"},
+	"12":{'51':"A_51", "52":"B_52"},
+	"13":{'51':"A_51", "52":"B_52"},
+	"14":{'51':"A_51", "52":"B_52", "53":"C_53"},
+	"15":{'51':"A_51"},
+}
+
+@frappe.whitelist()
+def image_writter(data):
+	import os, base64
+	data = json.loads(data)
+	
+	filelist = get_image_details(data)
+
+	for file_obj in filelist:
+		
+		tags = file_obj.get('tag_id').split('-')[2]
+		folder = tag_dict.get(tags[:2])
+		sub_folder = sub_tag_dict.get(tags[:2]).get(tags[2:])
+		path = os.path.join(get_files_path(), data.get('profile_id'), data.get("event_id"),  folder, sub_folder, file_obj.get('visit_id'))
+		
+		if not os.path.exists(os.path.join(path, file_obj.get('temp_file_id'))):
+			wfile_name = file_obj.get('temp_file_id').split('.')[0] + '-watermark.' + file_obj.get('temp_file_id').split('.')[1]
+			frappe.create_folder(path)
+			decoded_image = base64.b64decode('filedata')
+			img_path = os.path.join(path,  wfile_name)
+			with open(img_path, 'wb') as f:
+				f.write(decoded_image)
+
+def get_image_details(data):
+	request_type="POST"
+	url="%smobile/dms/getalleventfiles"%get_base_url()
+	
+	response=get_response(url, json.dumps({"profile_id":data.get('profile_id'), "event_id": data.get("event_id")}), request_type)
+	res_data = json.loads(response.text)
+
+	return res_data.get('filelist')
+
