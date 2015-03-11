@@ -104,7 +104,7 @@ window.Events = inherit(ListView,{
 			}
 		})
 
-	}
+	},
 	make_share_pannel: function(event_id){
 		var me = this;
 		$('<button class="btn btn-primary" id="share"> Share Data </button>').appendTo($('.save_controller'))
