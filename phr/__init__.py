@@ -167,7 +167,7 @@ def searchProviders(data=None):
 	if providers_list:
 		return providers_list
 	else:
-		return str([])
+		return []
 @frappe.whitelist(allow_guest=True)
 def linkSelectedProvider(data):
 	""" data = { 
