@@ -48,6 +48,9 @@ $.extend(ThumbNails.prototype,{
 					</div>\
 				</div>\
 			</div>\
+			<button style="float:left;width:30%;margin-left:5%;" id="save_as_pdf" class="btn btn-default" > \
+				<i class="icon-camera" data-toggle="tooltip" data-placement="top" title="Save Description as pdf"></i>\
+				Save As PDF </button>\
 			<hr>\
 			<h4> Uploaded Files </h4>\
 			<div id="uploaded_file" style="height:300px;overflow-x:auto;">\

@@ -188,7 +188,7 @@ def share_via_email(data):
 				'event': data.get('event_title'),
 				'provider_name': data.get('doctor_name')}
 	else:
-		frappe.msgprint('Please select file(s) for sharing')
+		return 'Please select file(s) for sharing'
 
 def share_via_providers_account(data):
 	# frappe.errprint([data.get('files'), not data.get('files')])
@@ -259,7 +259,7 @@ def make_sharing_request(event_data, data):
 	req.valid_upto = data.get('sharing_duration')
 	req.event_title = data.get("event_title")
 	req.doc_name = 'Event' 
-	req.save()
+	req.save(ignore_permissions=True)
 
 @frappe.whitelist(allow_guest=True)
 def get_visit_data(data):
@@ -513,8 +513,10 @@ def image_writter(profile_id, event_id):
 		sub_folder = sub_tag_dict.get(tags[:2]).get(tags[2:])
 		path = os.path.join(get_files_path(), data.get('profile_id'), data.get("event_id"),  folder, sub_folder, file_obj.get('visit_id'))
 		
-		if not os.path.exists(os.path.join(path, file_obj.get('temp_file_id'))):
-			wfile_name = file_obj.get('temp_file_id').split('.')[0] + '-watermark.' + file_obj.get('temp_file_id').split('.')[1]
+		wfile_name = file_obj.get('temp_file_id').split('.')[0] + '-watermark.' + file_obj.get('temp_file_id').split('.')[1]
+		frappe.errprint([wfile_name, os.path.join(path, wfile_name)])
+		if not os.path.exists(os.path.join(path, wfile_name)):
+			frappe.errprint("file exists")
 			frappe.create_folder(path)
 			decoded_image = base64.b64decode('filedata')
 			img_path = os.path.join(path,  wfile_name)

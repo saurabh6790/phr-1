@@ -163,8 +163,11 @@ def get_linked_provides(data):
 @frappe.whitelist(allow_guest=True)
 def searchProviders(data=None):
 	from templates.pages.event import get_providers
-	return get_providers(data)
-
+	providers_list = get_providers(data)
+	if providers_list:
+		return providers_list
+	else:
+		return str([])
 @frappe.whitelist(allow_guest=True)
 def linkSelectedProvider(data):
 	""" data = { 
