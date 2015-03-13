@@ -518,7 +518,11 @@ def image_writter(profile_id, event_id):
 		if not os.path.exists(os.path.join(path, wfile_name)):
 			frappe.errprint("file exists")
 			frappe.create_folder(path)
-			decoded_image = base64.b64decode('filedata')
+			filedata = file_obj.get('base64StringFile')
+			# data_index = filedata.index('base64') + 7
+			# filedata = filedata[data_index:len(filedata)]
+			decoded_image = base64.b64decode(filedata)
+			print "filedata\n\n\n", decoded_image
 			img_path = os.path.join(path,  wfile_name)
 			with open(img_path, 'wb') as f:
 				f.write(decoded_image)
