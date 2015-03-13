@@ -22,30 +22,31 @@ def create_profile(first_name,middle_name,last_name,email_id,contact,created_via
 		3.After Successful Profile Creation genarate link
 		4.Complete Registration 
 	"""
-	user = frappe.db.get("User", {"email": email_id})
-	print user
-	if user:
-		if user.disabled:
-			return {"returncode" : 410, "message_summary":"Registered but disabled.","msg_display":"Registered but disabled."}
-		else:
-			return {"returncode" : 409, "message_summary" : "Already Registered","msg_display":"Already Registered"}
-	else:
-		barcode=get_barcode()
-		args={'person_firstname':first_name,'person_middlename':middle_name,'person_lastname':last_name,'email':email_id,'mobile':contact,'received_from':created_via,'provider':'false',"barcode":str(barcode)}
-		print args
-		profile_res=create_profile_in_solr(args)
-		response=json.loads(profile_res)
-		print response
-		if response['returncode']==101:
-			path=get_image_path(barcode,response['entityid'])
-			file_path='/files/'+response['entityid']+'/'+response['entityid']+".svg"
-			res=create_profile_in_db(response['entityid'],args,response,file_path)
-			print response
-			response['msg_display']='Profile created successfully, please check your email and complete signup process'
-			return response
-		else:
-			print response
-			return response
+	frappe.errprint("create profile for signed up user")
+	# user = frappe.db.get("User", {"email": email_id})
+	# print user
+	# if user:
+	# 	if user.disabled:
+	# 		return {"returncode" : 410, "message_summary":"Registered but disabled.","msg_display":"Registered but disabled."}
+	# 	else:
+	# 		return {"returncode" : 409, "message_summary" : "Already Registered","msg_display":"Already Registered"}
+	# else:
+	# 	barcode=get_barcode()
+	# 	args={'person_firstname':first_name,'person_middlename':middle_name,'person_lastname':last_name,'email':email_id,'mobile':contact,'received_from':created_via,'provider':'false',"barcode":str(barcode)}
+	# 	print args
+	# 	profile_res=create_profile_in_solr(args)
+	# 	response=json.loads(profile_res)
+	# 	print response
+	# 	if response['returncode']==101:
+	# 		path=get_image_path(barcode,response['entityid'])
+	# 		file_path='/files/'+response['entityid']+'/'+response['entityid']+".svg"
+	# 		res=create_profile_in_db(response['entityid'],args,response,file_path)
+	# 		print response
+	# 		response['msg_display']='Profile created successfully, please check your email and complete signup process'
+	# 		return response
+	# 	else:
+	# 		print response
+	# 		return response
 
 @frappe.whitelist(allow_guest=True)
 def get_barcode():
