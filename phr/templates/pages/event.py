@@ -511,21 +511,42 @@ def image_writter(profile_id, event_id):
 		tags = file_obj.get('tag_id').split('-')[2]
 		folder = tag_dict.get(tags[:2])
 		sub_folder = sub_tag_dict.get(tags[:2]).get(tags[2:])
-		path = os.path.join(get_files_path(), data.get('profile_id'), data.get("event_id"),  folder, sub_folder, file_obj.get('visit_id'))
+		path = os.path.join(os.getcwd(), get_site_path().replace('.',"").replace('/', ""), 'public', 'files', data.get('profile_id'), data.get("event_id"),  folder, sub_folder, file_obj.get('visit_id'))
 		
 		wfile_name = file_obj.get('temp_file_id').split('.')[0] + '-watermark.' + file_obj.get('temp_file_id').split('.')[1]
-		frappe.errprint([wfile_name, os.path.join(path, wfile_name)])
 		if not os.path.exists(os.path.join(path, wfile_name)):
-			frappe.errprint("file exists")
 			frappe.create_folder(path)
-			filedata = file_obj.get('base64StringFile')
-			# data_index = filedata.index('base64') + 7
-			# filedata = filedata[data_index:len(filedata)]
-			decoded_image = base64.b64decode(filedata)
-			print "filedata\n\n\n", decoded_image
+			# filedata = file_obj.get('base64StringFile')
+			# # frappe.errprint(filedata)
+			# decoded_image = base64.b64decode(filedata)
+			# # decoded_image = filedata.decode('base64','strict')
+			# with open(img_path, 'wb') as f:
+			# 	f.write(filedata)
+
 			img_path = os.path.join(path,  wfile_name)
-			with open(img_path, 'wb') as f:
-				f.write(decoded_image)
+			data = {
+				"entityid": file_obj.get('visit_id'),
+				"profile_id": data.get('profile_id'),
+				"event_id": data.get("event_id"),
+				"tag_id": file_obj.get('tag_id'),
+				"file_id": [
+					file_obj.get('temp_file_id')
+				],
+				"file_location": [
+					img_path
+				]
+			}
+			
+			res = write_file(data)
+			
+def write_file(data):
+	request_type="POST"
+	url="%sdms/getvisitsinglefile"%get_base_url()
+	
+	response=get_response(url, json.dumps(data), request_type)
+	res_data = json.loads(response.text)
+
+	return res_data
 
 def get_image_details(data):
 	request_type="POST"

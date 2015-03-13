@@ -213,7 +213,7 @@ def getDropdownMenu():
 		"diet_type": ["Vegetarian", "Non-Vegetarian"],
 		"provider_type": get_provider_type(),
 		"specialization": get_specialization_list(),
-		"share_vai": ["Email", "Provider Account"],
+		"share_via": ["Email", "Provider Account"],
 		"reason_for_sharing": ["Consultation", "Follow Up", "Second Opinion"]
 	}
 
