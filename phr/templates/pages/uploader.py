@@ -276,3 +276,7 @@ def get_file_name(fname, optional_suffix):
 		return '{partial}{suffix}{extn}'.format(partial=partial, extn=extn, suffix=optional_suffix)
 	return fname
 
+@frappe.whitelist()
+def get_pdf_site_path():
+	return {'site_path': 
+				os.path.join(os.getcwd(), get_site_path().replace('.',"").replace('/', ""), 'public', 'files')}
