@@ -95,9 +95,9 @@ $.extend(ThumbNails.prototype,{
 	            		"file_location": [
 	            			attachment['site_path'] +'/'+ me.args['profile_id'] + '/' +  $('input[name="entityid"]').val() + '/' + me.folder + '/' +  me.sub_folder + '/' + attachment['file_name']
 						],
-						"text_file_desc": $('[name="attch_desc"]').val() ? $('[name="attch_desc"]').val() : "" ,
-						"text_file_id": $('[name="attch_desc"]').val() ? me.folder+'_'+me.sub_folder+'.pdf' : "",
-						"text_file_loc": $('[name="attch_desc"]').val() ? attachment['site_path'] +'/'+ me.args['profile_id'] + '/' +  $('input[name="entityid"]').val() + '/' + me.folder + '/' +  me.sub_folder + '/' + me.folder+'_'+me.sub_folder+'.pdf' : ""
+						"text_file_desc":  "" ,
+						"text_file_id":  "",
+						"text_file_loc": ""
 				})
 				me.render_uploader_and_files();
 			}
@@ -105,22 +105,30 @@ $.extend(ThumbNails.prototype,{
 	},
 	convert_txt_to_pdf:function(desc){
 		var me = this;
-		frappe.call({
-			method:"phr.templates.pages.uploader.get_pdf_site_path",
-			callback:function(r){
-				me.args['dms_file_list'] = me.args['dms_file_list'] ? me.args['dms_file_list'] : [];
-				me.args['dms_file_list'].push(			{
-					"tag_id": me.folder.split('-')[1]+''+me.sub_folder.split('_')[1],
-					"tag_name": me.folder.split('-')[0],
-		    		"sub_tag_name": me.sub_folder.split('_')[0],
-		    		"file_id": [],
-		    		"file_location": [],
-					"text_file_desc": $('[name="attch_desc"]').val() ? $('[name="attch_desc"]').val() : "" ,
-					"text_file_id": $('[name="attch_desc"]').val() ? String(new Date().getTime())+'_'+ me.folder+'_'+me.sub_folder+'.pdf' : "",
-					"text_file_loc": $('[name="attch_desc"]').val() ? r.message['site_path'] +'/'+ me.args['profile_id'] + '/' +  $('input[name="entityid"]').val() + '/' + me.folder + '/' +  me.sub_folder + '/' + me.folder+'_'+me.sub_folder+'.pdf' : ""
-				})
-			}
-		})
+		if($('[name="attch_desc"]').val()){
+			frappe.call({
+				method:"phr.templates.pages.uploader.get_pdf_site_path",
+				callback:function(r){
+					me.args['dms_file_list'] = me.args['dms_file_list'] ? me.args['dms_file_list'] : [];
+					me.args['dms_file_list'].push(			{
+						"tag_id": me.folder.split('-')[1]+''+me.sub_folder.split('_')[1],
+						"tag_name": me.folder.split('-')[0],
+			    		"sub_tag_name": me.sub_folder.split('_')[0],
+			    		"file_id": [],
+			    		"file_location": [],
+						"text_file_desc": $('[name="attch_desc"]').val() ? $('[name="attch_desc"]').val() : "" ,
+						"text_file_id": $('[name="attch_desc"]').val() ? String(new Date().getTime())+'_'+ me.folder+'_'+me.sub_folder+'.pdf' : "",
+						"text_file_loc": $('[name="attch_desc"]').val() ? r.message['site_path'] +'/'+ me.args['profile_id'] + '/' +  $('input[name="entityid"]').val() + '/' + me.folder + '/' +  me.sub_folder + '/' + me.folder+'_'+me.sub_folder+'.pdf' : ""
+					})
+					frappe.msgprint("Description added as pdf, click on save to make it as attachment")
+					$('[name="attch_desc"]').val('')
+				}
+			})
+		}
+		else{
+			frappe.msgprint("Please write description before converting it as pdf!!!")
+		}
+			
 	},
 	show_attachments:function(){
 		var me = this;
