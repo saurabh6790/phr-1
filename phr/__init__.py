@@ -239,6 +239,7 @@ def image_writter(data):
 """ Profile Image Calls """
 @frappe.whitelist(allow_guest=True)
 def setProfileImage():
+	import os
 	from frappe.utils import  get_files_path
 
 	data = json.loads(frappe.local.request.data)
@@ -246,14 +247,18 @@ def setProfileImage():
 	file_path = "%(files_path)s/%(profile_id)s/%(file_name)s"%{'files_path': get_files_path(), "profile_id": data.get('profile_id'),
 		'file_name': data.get('file_name')
 	}
-
-	with open(file_path, 'wb') as f:
+	path = os.path.join(os.getcwd(), get_files_path()[2:], data.get('profile_id'))
+	frappe.create_folder(path)
+	with open("%s/%s"%(path,data.get('file_name')), 'wb') as f:
  		f.write(base64.b64decode(data.get('bin_img')))
 
- 	update_profile_image(data.get('profile_id'), data.get('file_name'))
- 	return {"filestatus": "Image uploaded Successfully"}
+ 	res = update_profile_image(data.get('profile_id'), data.get('file_name'))
+ 	return {"filestatus": res}
 
 def update_profile_image(profile_id, file_name):
+	# from templates.pages.profile import update_user_image
+	# return update_user_image("/files/%s/%s"%(profile_id, file_name), profile_id)
+
 	user_id = frappe.db.get_value('User', {'profile_id': profile_id}, 'name')
 	if user_id:
 		user = frappe.get_doc('User', user_id)
@@ -262,9 +267,12 @@ def update_profile_image(profile_id, file_name):
 
 @frappe.whitelist(allow_guest=True)
 def getProfileImage(data):
+	import os
 	from frappe.utils import  get_files_path
 	data = json.loads(data)
 	user_id = frappe.db.get_value('User', {'profile_id': data.get('profile_id')}, 'name')
+	user_img = {}
+	bin_img = ''
 
 	if user_id:
 		user = frappe.get_doc('User', user_id)
@@ -276,12 +284,19 @@ def getProfileImage(data):
 			'file_name': file_name
 		}
 		
-		image = open(file_path,'rb').read()
+		if os.path.exists(file_path):
+			image = open(file_path,'rb').read()
+			bin_img = base64.b64encode(image)
+
+		else:
+			from templates.pages.profile import get_user_image
+			user_img = get_user_image(data.get('profile_id'))
 
 		return {
 			"profile_id": data.get('profile_id'),
-			"bin_img": base64.b64encode(image),
-			"file_name": file_name
+			"bin_img": bin_img,
+			"file_name": file_name,
+			"img_url": user_img.get('image')
 		}
 
 	else:

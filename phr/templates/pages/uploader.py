@@ -277,6 +277,11 @@ def get_file_name(fname, optional_suffix):
 	return fname
 
 @frappe.whitelist()
-def get_pdf_site_path():
-	return {'site_path': 
-				os.path.join(os.getcwd(), get_site_path().replace('.',"").replace('/', ""), 'public', 'files')}
+def get_pdf_site_path(profile_id, folder, sub_folder, event_id, timestamp):
+	site_path = os.path.join(os.getcwd(), get_site_path().replace('.',"").replace('/', ""), 'public', 'files')
+	path = os.path.join(site_path, profile_id, event_id, folder, sub_folder)
+	frappe.create_folder(path)
+	return {
+		'site_path': site_path,
+		'timestamp': timestamp 
+	}

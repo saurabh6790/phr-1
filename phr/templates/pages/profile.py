@@ -188,7 +188,7 @@ def upload_image(profile_id,data=None):
 		update_user_image(file_path,profile_id)
 		return "Profile Image Uploaded Successfully"
 
-def update_user_image(path,profile_id):
+def update_user_image(path, profile_id):
 	ue=frappe.db.get_value("User",{"profile_id":profile_id},"user_image")
 	if ue:
 		user=frappe.get_doc("User",frappe.session.user)
@@ -214,9 +214,6 @@ def update_user_image(path,profile_id):
 			sub="Image Uploaded Successfully "+path
 			make_log(profile_id,"profile","Linked PHR Image Upload",sub)
 			return "Image Uploaded Successfully"
-
-
-
 
 def get_site_name():
 	return frappe.local.site_path.split('/')[1]

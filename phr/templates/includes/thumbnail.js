@@ -108,6 +108,8 @@ $.extend(ThumbNails.prototype,{
 		if($('[name="attch_desc"]').val()){
 			frappe.call({
 				method:"phr.templates.pages.uploader.get_pdf_site_path",
+				args:{'profile_id': me.args['profile_id'], 'folder':me.folder, 
+				'sub_folder': me.sub_folder, 'event_id': $('input[name="entityid"]').val(), 'timestamp' : String(new Date().getTime())},
 				callback:function(r){
 					me.args['dms_file_list'] = me.args['dms_file_list'] ? me.args['dms_file_list'] : [];
 					me.args['dms_file_list'].push(			{
@@ -117,8 +119,8 @@ $.extend(ThumbNails.prototype,{
 			    		"file_id": [],
 			    		"file_location": [],
 						"text_file_desc": $('[name="attch_desc"]').val() ? $('[name="attch_desc"]').val() : "" ,
-						"text_file_id": $('[name="attch_desc"]').val() ? String(new Date().getTime())+'_'+ me.folder+'_'+me.sub_folder+'.pdf' : "",
-						"text_file_loc": $('[name="attch_desc"]').val() ? r.message['site_path'] +'/'+ me.args['profile_id'] + '/' +  $('input[name="entityid"]').val() + '/' + me.folder + '/' +  me.sub_folder + '/' + me.folder+'_'+me.sub_folder+'.pdf' : ""
+						"text_file_id": $('[name="attch_desc"]').val() ? r.message['timestamp']+'_'+ me.folder+'_'+me.sub_folder+'.pdf' : "",
+						"text_file_loc": $('[name="attch_desc"]').val() ? r.message['site_path'] +'/'+ me.args['profile_id'] + '/' +  $('input[name="entityid"]').val() + '/' + me.folder + '/' +  me.sub_folder + '/' + r.message['timestamp']+'_'+ me.folder+'_'+me.sub_folder+'.pdf' : ""
 					})
 					frappe.msgprint("Description added as pdf, click on save to make it as attachment")
 					$('[name="attch_desc"]').val('')

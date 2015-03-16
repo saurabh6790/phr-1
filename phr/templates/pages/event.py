@@ -96,13 +96,16 @@ def update_event(data):
 def clear_dms_list(dms_file_list):
 	import os
 	for loc in dms_file_list:
-		os.remove(loc.get('file_location')[0])
+		if len(loc.get('file_location')) > 0:
+			os.remove(loc.get('file_location')[0])
+		else:
+			os.remove(loc.get('text_file_loc'))
 
 def copy_files_to_visit(dms_file_list, visit_id):
 	import os, shutil, glob
 	for loc in dms_file_list:
 	
-		path_lst = loc.get('file_location')[0].split('/')
+		path_lst = loc.get('file_location')[0].split('/') if len(loc.get('file_location')) > 0 else loc.get('text_file_loc').split('/')
 		
 		file_path = os.path.join('/'.join(path_lst[0:len(path_lst)-1]), visit_id)
 		
