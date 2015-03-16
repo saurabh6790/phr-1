@@ -83,6 +83,14 @@ var PatientDashboard = inherit(RenderFormFields, {
   				me.get_linked_phrs(sessionStorage.getItem('pid'))
   			}
 		})
+		/*frappe.datetime.get_diff(doc.schedule_date) < 1*/
+		$('.tab-pane.active form input[name="str_date_of_birth"]').bind('change', function() { 
+			val=$(this).val()
+			if (diffDays(parseDate(val),new Date().setHours(0,0,0,0)) < 0) { 
+				$(this).val("")
+    			frappe.msgprint("OOP's Date of Birth is not valid")
+			}
+		});
 		if (sessionStorage.getItem("cid")!=sessionStorage.getItem("pid")){
 			$($('a[aria-controls="manage_phr"]').parent()).css("display", "none");
 			$($('#manage_phr')).css("display", "none");
@@ -93,8 +101,31 @@ var PatientDashboard = inherit(RenderFormFields, {
 			$($('input[name="relationship"]').parents()[3]).css("display", "none");
 			if ($('input[name="email"]').val()){
 				$('input[name="email"]').prop('disabled',true)
-			}  				
+			}
+			//me.verify_mobile()  				
   		}
+  		
+
+	},
+	verify_mobile:function(profile_id){
+		//<i class="icon-ok"></i>
+		/*frappe.call({
+			method:"phr.templates.pages.profile.verify_mobile",
+			callback:function(r){
+			if(r.message){
+				$.each(r.message,function(i, val){
+					$option=$('<option>', { 
+						'value': val[0],
+						'text' : val[0] 
+					}).appendTo($('select[name="state"]'))
+					
+				})
+			}
+			else{
+					
+				}
+			}
+		})*/
 
 	},
 	render_field: function(profile_id){
@@ -104,7 +135,7 @@ var PatientDashboard = inherit(RenderFormFields, {
 		$('.save_controller').bind('click',function(event) {
 			var validated=me.validate_form()	
 			NProgress.start();
-			if (validated==true){
+			if (validated['fg']==true){
 				var $id=$('.tab-pane.active').attr('id')
 				if ($id=='dashboard'){
 					if (($('#dashboard.tab-pane.active form').find("input:checkbox:checked").length)!=4){
@@ -128,7 +159,7 @@ var PatientDashboard = inherit(RenderFormFields, {
 			}
 			else{
 				NProgress.done();
-				//frappe.msgprint("Fields Marked as Red Are Mandatory")
+				frappe.msgprint(validated["msg"])
 				return false
 			}		
 		})
@@ -179,20 +210,33 @@ var PatientDashboard = inherit(RenderFormFields, {
   	validate_form:function(){
   		var me=this;
   		var fg=true
+  		msg=""
   		$(".tab-pane.active form input[required],.tab-pane.active form textarea[required],.tab-pane.active form select[required]").each(function(i, obj) {
   			if ($(this).val()==""){
   				$(this).css({"border": "1px solid #999","border-color": "red" });
-  				frappe.msgprint("Fields Marked as Red Are Mandatory")
+  				//frappe.msgprint("Fields Marked as Red Are Mandatory")
+  				msg="Fields Marked as Red Are Mandatory"
   				fg=false
   			}
   		})
   		if($('.tab-pane.active form input[name="mobile"]').val()){
   			if (!validate_mobile($('.tab-pane.active form input[name="mobile"]').val())) {
-  				frappe.msgprint("Mobile No Invalid")
+  				//frappe.msgprint("Mobile No Invalid")
+  				msg="Mobile No Invalid"
   				fg=false
   			}
-  		}	
-  		return fg	
+  		}
+  		/*$('.tab-pane.active form input[name="str_date_of_birth"]').bind('change', function() { 
+			val=$(this).val()
+			if (diffDays(parseDate(val),new Date().setHours(0,0,0,0)) < 0) { 
+    			//frappe.msgprint("OOP's Date of Birth is not valid")
+    			msg="OOP's Date of Birth is not valid"
+			}
+		});*/	
+  		return {
+  				"fg":fg,
+  				"msg":msg
+  			}	
   		
   	},
   	get_user_image:function(profile_id){
@@ -295,14 +339,16 @@ var PatientDashboard = inherit(RenderFormFields, {
 				"fieldtype": "data", 
    				"label": "Email", 
    				"placeholder": "", 
-   				"required": 1
+   				"required": 1,
+   				"description": "All your future notifications will be sent on these Email"
   			}, 
   			{
    				"fieldname": "mobile", 
    				"fieldtype": "data", 
    				"label": "Mobile", 
    				"placeholder": "", 
-   				"required": 1
+   				"required": 1,
+   				"description": "All your future notifications will be sent on these Mobile"
   			}] 
 		d = new Dialog();
 		d.init({'fields':fields,"values":meta_dic[selected],"title":"Add Email And Mobile"})

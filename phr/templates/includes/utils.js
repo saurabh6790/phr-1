@@ -1,3 +1,27 @@
+moment.defaultFormat = "DD-MM-YYYY";
+
+
+function parseDate(s) {
+  var b = s.split(/\D/);
+  return new Date(b[2],--b[1],b[0]);
+}
+
+function daydiff(d1,d2) {
+    return (d2-d1)/(1000*60*60*24);
+}
+
+function getfdate(date) {
+    var result = new Date(date);
+    result.setMinutes(result.getMinutes() - result.getTimezoneOffset());
+    return result;
+}
+
+var millisecondsPerDay = 24 * 60 * 60 * 1000;
+function diffDays(startDate, endDate) {
+    return Math.floor(getfdate(endDate) / millisecondsPerDay) - Math.floor(getfdate(startDate) / millisecondsPerDay);
+}
+
+
 function repl_str(str, args){
 	$.each(args, function(key, val){
 		var reg = new RegExp("\\%\\(" + key + "\\)s", "igm");

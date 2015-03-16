@@ -121,9 +121,11 @@ def reset_password(user):
 		user = frappe.get_doc("User", user)
 		user.validate_reset_password()
 		user.reset_password()
-		return _("Password reset instructions have been sent to your email")
+		return {"returncode":101,"msg_display":"Password reset instructions have been sent to your email"}
 	except frappe.DoesNotExistError:
-		return _("User {0} does not exist").format(user)
+		msg="""User %s does not exist"""%user
+		return {"returncode":401,"msg_display":msg}
+		#return _("User {0} does not exist").format(user)
 
 def user_query(doctype, txt, searchfield, start, page_len, filters):
 	from frappe.widgets.reportview import get_match_cond

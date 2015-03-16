@@ -136,8 +136,16 @@ login.login_handlers = (function() {
 					window.location.href = "/index";
 				}
 			} else if(["#signup", "#forgot"].indexOf(window.location.hash)!==-1) {
-				frappe.msgprint(data.message.msg_display);
-				window.location.href = "/login";
+				console.log(data)
+				if (data.message["returncode"]==101){
+					frappe.msgprint(data.message.msg_display);
+					window.location.href = "/login";	
+				}
+				else{
+					frappe.msgprint(data.message.msg_display);
+				}
+
+				
 			}
 		},
 		401: get_error_handler(__("Invalid Login")),

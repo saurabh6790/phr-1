@@ -24,10 +24,18 @@ var ToDo = inherit(ListView,{
 		d = new Dialog();
 		d.init({"file_name":"todo", "title":"ToDo"})
 		d.show()
+		$('.modal-body form input[name="due_date"]').bind('change', function() { 
+				val=$(this).val()
+				if (diffDays(parseDate(val),new Date().setHours(0,0,0,0)) > 0) { 
+					$(this).val("")
+    				frappe.msgprint("Date not Valid")
+				}
+		});
 		$('.modal-footer .btn-primary').click(function(){
 			$(".modal-body form input, .modal-body form textarea, .modal-body form select").each(function(i, obj) {
 				me.res[obj.name] = $(obj).val();
 			})
+			 
 			me.res['profile_id'] = sessionStorage.getItem("pid")
 
 			frappe.call({
