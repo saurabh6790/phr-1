@@ -55,7 +55,10 @@ $(document).ready(function () {
 			$('#linkedphr').hide()
 			var db = new render_dashboard();
 			db.render_LPHR_name()
-		}	
+		}
+		else{
+			
+		}	download_phr()
 		NProgress.start();
 		profile_id=sessionStorage.getItem("cid")
 		var db = new render_dashboard();
@@ -71,6 +74,24 @@ $(document).ready(function () {
 		NProgress.done();
 	}
 })
+function download_phr(){
+	$('<a nohref class="list-group-item-side chome"><div><i class="icon-download"></i> Download PHR</div></a>').appendTo('.linked-phr').unbind("click").click(function(){
+				args={
+					"cmd": "phr.templates.pages.profile.get_phr_pdf",
+					'profile_id': sessionStorage.getItem("pid")
+				}
+				//cmd="phr.templates.pages.profile.verify_mobile"
+				$.ajax({
+					url: '/',
+					type: 'POST',
+					data: args,
+					success: function(data) {
+						console.log(data)
+						window.open(data['message']['url'], '_blank')
+					}
+				});
+			})
+}
 function preventBack() {
     	window.history.forward();
 }
@@ -89,6 +110,7 @@ function bind_events(){
 		var db = new render_dashboard();
 		$('.field-area').empty()
 		$('#main-con').empty()
+		download_phr()
 		db.render_providers(profile_id)
 		db.render_linked_phr(profile_id)
 		db.render_middle_section(profile_id)

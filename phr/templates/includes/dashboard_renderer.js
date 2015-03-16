@@ -175,6 +175,7 @@ function render_dashboard(profile_id){
 	
     }
     function render_LPHR_name(){
+    	$('.linked-phr').empty()
     	name=sessionStorage.getItem('cname')
     	$('<a nohref class="list-group-item-side chome"><div><i class="icon-home"></i>'+name+'&nbsp</div></a>').appendTo('.linked-phr').unbind("click").click(function(){
 			$('.field-area').empty()

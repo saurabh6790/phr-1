@@ -50,8 +50,12 @@ function thumbnail(pdfURL, elementID, filename, doc_list, display){
         // console.log(img)
         $(elementID).html('<div>\
                             <input type="checkbox" style="display:'+display+'" value="'+pdfURL+'">\
-                        </div><img style="height:150px;" src="'+img+'"/><br>\
+                        </div><a class = "pdf_img" data-name="'+pdfURL+'" ><img style="height:150px;" src="'+img+'"/></a><br>\
                         <label style="width: 150px;word-wrap: break-word;">'+filename+'</label>');
+
+        $('.pdf_img').unbind("click").click(function(){
+            window.open($(this).attr('data-name'))
+        })
 
         $("input[type=checkbox]").unbind("click").click(function(){
             if($(this).is(':checked')){

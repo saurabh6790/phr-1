@@ -17,6 +17,10 @@ var PatientDashboard = inherit(RenderFormFields, {
 		//this.get_linked_phrs(this.entityid)
 		this.get_enabled_notification(this.entityid)
 		this.get_enabled_dashboard(this.entityid)
+		//this.download_phr(this.entityid)
+	},
+	download_phr:function(profile_id){
+		
 	},
 	render_validations:function(profile_id){
 		var me=this;

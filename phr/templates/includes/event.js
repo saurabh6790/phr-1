@@ -58,14 +58,11 @@ window.Events = inherit(ListView,{
 		this.render_spans()
 		this.get_linked_providers()
 	},
-	open_form:function(event_id, event_title, profile_id){
+	open_form:function(event_id, event_title, profile_id, res){
 		var me = this;
 		this.profile_id = profile_id;
 		$('#main-con').empty();
 		RenderFormFields.prototype.init(me.wrapper, {"file_name" : "event", "method": 'event'}, event_id)
-		//if ($('input[name="event_symptoms"]').val()){
-				$('input[name="event_symptoms"]').prop('disabled',true)
-		//}
 
 		me.bind_save_event()
 		$(repl_str('<li><a nohref>%(event_title)s</a></li>',{'event_title': event_title})).click(function(){
@@ -79,7 +76,9 @@ window.Events = inherit(ListView,{
 		$('<div class="event_section" style="margin-top:-10%;"></div>').appendTo($('.field-area'))
 		$('.visit_details').css("display","inherit")
 		$('.upload_files').css("display","inherit")
-		$('[name="event_date"]').attr('disabled', 'disabled')
+
+		disable_fields(['event_title', 'event_date', 'event_symptoms'])
+
 		$($('[name="visit_date"]').parents()[3]).css("display", "inherit")
 
 		$($('[name="diagnosis_desc"]').parents()[3]).css("display", "inherit");
@@ -91,12 +90,20 @@ window.Events = inherit(ListView,{
 		// me.render_folder_section()
 
   		// me.bind_events()
+  		this.set_values(res)
   		this.write_visit_file(event_id, profile_id)
   		this.make_tree_view(event_id)
   		this.get_linked_providers()
   		this.set_provider_details()
   		this.make_share_pannel(event_id)
 		this.make_comment_section(event_title, profile_id)
+	},
+	set_values: function(res){
+		if(res){
+			$.each(res, function(i, field){
+				if(field!='event_symptoms') $('[name="'+field+'"]').val(res[field])
+			})
+		}
 	},
 	write_visit_file: function(event_id, profile_id){
 		frappe.call({
@@ -202,7 +209,7 @@ window.Events = inherit(ListView,{
 			</table>\
 		</div>").appendTo('.modal-body');
 
-		header = [["", 50], ["Provider Name", 170], ["Number", 100], ["email", 100]]
+		header = [["", 50], ["Provider Name", 170], ["Number", 100], ["Email", 100], ["Specialization", 100], ["City", 100]]
 
 		if(result_set){
 			$.each(header, function(i, col) {
@@ -216,6 +223,8 @@ window.Events = inherit(ListView,{
 				$('<td>').html(d['provider_name']).appendTo(row)
 				$('<td>').html(d['mobile_number']).appendTo(row)
 				$('<td>').html(d['email']).appendTo(row)
+				$('<td>').html(d['specialization']).appendTo(row)
+				$('<td>').html(d['city']).appendTo(row)
 			})
 			me.set_provider(d)
 		}
@@ -260,8 +269,8 @@ window.Events = inherit(ListView,{
 				d.hide();
 				var db = new render_dashboard();
 				db.render_providers(profile_id);
+				me.get_linked_providers();
 				NProgress.done();
-
 			}
 		})
 	},
@@ -295,6 +304,7 @@ window.Events = inherit(ListView,{
 					d.hide()
 					var db = new render_dashboard();
 					db.render_providers(profile_id);
+					me.get_linked_providers()
 					NProgress.done();
 				}
 			}
@@ -362,7 +372,7 @@ window.Events = inherit(ListView,{
 						NProgress.done();
 						if(r.message.returncode == 103 || r.message.returncode == 116){
 							me.dms_file_list = [];
-							me.open_form(r.message.entityid, $('[name="event_title"]').val(), me.profile_id);	
+							me.open_form(r.message.entityid, $('[name="event_title"]').val(), me.profile_id, me.res);	
 							frappe.msgprint("Saved")
 						}
 						else{
