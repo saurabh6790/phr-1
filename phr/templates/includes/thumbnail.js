@@ -165,7 +165,8 @@ $.extend(ThumbNails.prototype,{
 			$td = $(repl('<td style="width:200px;\
 							height:200px;padding-right:20px;vertical-align:top;">\
 						',attachment)).appendTo(row)
-			thumbnail("/"+attachment['path']+"/"+attachment['file_name'], $td, attachment['file_name'], me.args['display'])
+			console.log(me.doc_list)
+			thumbnail("/"+attachment['path']+"/"+attachment['file_name'], $td, attachment['file_name'], me.doc_list, me.args['display'])
 		}
 		else if((/\.(gif|jpg|jpeg|tiff|png)$/i).test(attachment['file_name']) ){
 			$('<td style="width:200px;height:200px;padding-right:20px;vertical-align:top;">')
@@ -194,6 +195,7 @@ $.extend(ThumbNails.prototype,{
 			if($(this).is(':checked')){
 				// file_path = $($(this).parents()[1]).find('img').attr('src')
 				file_path = $(this).val()
+				console.log(file_path)
 				me.doc_list.push(file_path.substring(7, file_path.length))
 				// me.doc_list.push( me.args['profile_id'] + '/' +  $('input[name="entityid"]').val() + '/' + me.folder + '/' +  me.sub_folder + '/' + $(this).val())
 			}
