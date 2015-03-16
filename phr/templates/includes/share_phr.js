@@ -18,7 +18,6 @@ $.extend(SharePhr.prototype,{
 		this.args = args;
 		$(this.wrapper).empty()
 		$('.field-area').empty()
-		console.log([args["event_id"],this.args['event_id']])
 		var me = this;
 		this.selected_files = args.selected_files
 		this.doc_list = args.doc_list;
@@ -32,23 +31,37 @@ $.extend(SharePhr.prototype,{
 		})
 		this.bind_controller()
 		//console.log(["ss",me.args['event_id']])
-		this.render_folder_section(args['event_id'])
+		this.render_folder_section(args['event_id'],args['method'])
 		Events.prototype.get_linked_providers(this.args['profile_id'])
 	},
 	bind_controller: function(){
 		
 	},
-	render_folder_section:function(event_id){
-		console.log(event_id)
+	render_folder_section:function(event_id,method){
 		var me = this;
-		frappe.call({
-			"method":"phr.templates.pages.event.get_individual_event_count_for_badges",
-			"args":{"event_id":event_id,"profile_id":sessionStorage.getItem("cid")},
-			callback:function(r){
-				TreeView.prototype.init({'profile_id': this.args['profile_id'], 'dms_file_list': me.dms_file_list, 
-					'display': 'initial', 'doc_list': me.doc_list,"event_dict":r.message.event_dict,"sub_event_count":r.message.sub_event_count})
-			}
-		})
+
+		//method=""
+		if (method=="visit"){
+			frappe.call({
+				"method":"phr.templates.pages.event.get_individual_visit_count_for_badges",
+				"args":{"visit_id":$('input[name="entityid"]').val(),"profile_id":sessionStorage.getItem("cid")},
+				callback:function(r){
+					TreeView.prototype.init({'profile_id': this.args['profile_id'], 'dms_file_list': me.dms_file_list, 
+						'display': 'initial', 'doc_list': this.doc_list,"event_dict":r.message.event_dict,"sub_event_count":r.message.sub_event_count})
+				}
+			})
+		}
+		else if (method=="event"){
+			frappe.call({
+				"method":"phr.templates.pages.event.get_individual_event_count_for_badges",
+				"args":{"event_id":event_id,"profile_id":sessionStorage.getItem("cid")},
+				callback:function(r){
+					TreeView.prototype.init({'profile_id': this.args['profile_id'], 'dms_file_list': me.dms_file_list, 
+						'display': 'initial', 'doc_list': this.doc_list,"event_dict":r.message.event_dict,"sub_event_count":r.message.sub_event_count})
+				}
+			})
+		}
+		
 		
 		// $("<div class='main' id='sharetab'></div>").appendTo($('.event_section'))
 		

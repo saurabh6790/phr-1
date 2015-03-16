@@ -1,0 +1,16 @@
+{
+   "listview": [
+        {
+            "fieldname": "tab",
+            "fieldtype": "table",
+            "label": "My Patients",
+            "rows": [
+                [
+                    "Name",
+                    "Email",
+                    "Mobile No"
+                ]
+            ]
+        }
+    ]
+}

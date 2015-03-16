@@ -117,7 +117,8 @@ login.login_handlers = (function() {
 
 	var login_handlers = {
 		200: function(data) {
-			if(data.message=="Logged In") {
+			           
+            if(data.message=="Logged In") {
 				window.location.href = get_url_arg("redirect-to") || "/desk";
 			} else if(data.message=="No App") {
 				var url='';
@@ -140,8 +141,16 @@ login.login_handlers = (function() {
 					window.location.href = "/index";
 				}
 			} else if(["#signup", "#forgot"].indexOf(window.location.hash)!==-1) {
-				frappe.msgprint(data.message.msg_display);
-				window.location.href = "/login";
+				console.log(data)
+				if (data.message["returncode"]==101){
+					frappe.msgprint(data.message.msg_display);
+					window.location.href = "/login";	
+				}
+				else{
+					frappe.msgprint(data.message.msg_display);
+				}
+
+				
 			}
 		},
 		401: get_error_handler(__("Invalid Login")),

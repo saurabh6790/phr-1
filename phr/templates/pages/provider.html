@@ -9,10 +9,11 @@
    <a noherf class="list-group-item-side" id='profile' data-name="">Profile</a>
 </div>
 <div class="list-group-side" id="linkedphr">
-  <div class="list-group-item-side active">Linked PHR's <a noherf class="create_linkphr" id="clp"><span style="float:right"><i class="icon-plus" data-toggle='tooltip' data-placement='top' title='Add New Linked PHR'></i></span></a></div>
-  <div id="clphr">
+  <div class="list-group-item-side active">My Patients<a noherf class="create_linkphr" id="clp"><span style="float:right"><i class="icon-plus" data-toggle='tooltip' data-placement='top' title='Add New Pateint'></i></span></a></div>
+  <a noherf class="list-group-item-side patients">View Patients</a>
+  <!-- <div id="clphr">
     <p class="nophr">No Linked PHR's<div class="btn create_linkphr">Add New</div></p>
-  </div>  
+  </div>   -->
 </div>
 <!-- <div class="list-group-side" id="hp">
   <div class="list-group-item-side active" data-toggle='popover' data-placement='right'  data-container:'#body' title='Add New Provider' data-content=' Contact book for your Healthcare Providers' data-trigger="hover" data-html="true">My Healthcare Providers <a noherf class="create_provider"><span style="float:right"><i class="icon-plus" ></i></span></a></div>
@@ -31,12 +32,22 @@
 </div> -->
 <div class="list-group-side" id="mhr">
   <div class="list-group-item-side active">My Trackers</div>
-  <a noherf class="list-group-item-side event">Appointments</a>
-  <a noherf class="list-group-item-side visit">Messages</a>
-  <a noherf class="list-group-item-side medications">Remote Consulting</a>
-  <a noherf class="list-group-item-side dmonit">Chat Room</a>
-  <a noherf class="list-group-item-side appoint">Accounts</a>
+  <a noherf class="list-group-item-side appoint">Appointments</a>
+  <a noherf class="list-group-item-side msgs">Messages</a>
+  <a noherf class="list-group-item-side rmtc">Remote Consulting</a>
+  <a noherf class="list-group-item-side cr">Chat Room</a>
+  <a noherf class="list-group-item-side acc">Accounts</a>
 </div>
+<div class="list-group-side hide" id="phr">
+  <div class="list-group-item-side active">Patient Health Record</div>
+  <a noherf class="list-group-item-side event" data-toggle='popover' data-placement='right'  data-container:'#body' title='Events' data-content=' Create, share and manage your Health Events' data-trigger="hover" data-html="true">Events</a>
+  <a noherf class="list-group-item-side visit" data-toggle='popover' data-placement='right'  data-container:'#body' title='Visits' data-content='Share your Visits' data-trigger="hover" data-html="true">Visits</a>
+  <a noherf class="list-group-item-side medications" data-toggle='popover' data-placement='right'  data-container:'#body' title='Medications' data-content='Give medicine details and get notifications on your mobile' data-trigger="hover" data-html="true">Medications</a>
+  <a noherf class="list-group-item-side dmonit" data-toggle='popover' data-placement='right'  data-container:'#body' title='Disease Monitoring' data-content=' Monitor your disease and share them with your Healthcare Providers' data-trigger="hover" data-html="true">Disease Monitoring</a>
+  <a noherf class="list-group-item-side appoint" data-toggle='popover' data-placement='right'  data-container:'#body' title='Appointments' data-content='Set Appointments with Doctors' data-trigger="hover" data-html="true">Appointments</a>
+  <a noherf class="list-group-item-side msg" data-toggle='popover' data-placement='top'  data-container:'#body' title='Messages' data-content='Check details of your shared PHRs' data-trigger="hover" data-html="true">Messages</a>
+</div>
+
 {% endblock %}
 {% block content_area %}
 <script src="http://jqueryvalidation.org/files/dist/jquery.validate.min.js"></script>
@@ -76,5 +87,4 @@
 {% endblock %}
 {% block script %}
 {% include "templates/includes/provider_page.js" %}
-<!-- {% include "templates/includes/patient.js" %} -->
 {% endblock %}

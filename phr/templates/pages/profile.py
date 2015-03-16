@@ -316,7 +316,7 @@ def get_data_for_middle_section(profile_id):
 		if obj.get('visits')==1 or obj.get('events')==1:
 			data=get_data_from_solr(profile_id)
 			#if data:
-			res_list=build_response(data,obj,res_list) 
+			res_list=build_response(data,obj,res_list,profile_id) 
 		
 		if obj.get('appointments')==1:
 			data=get_appointments(profile_id)
@@ -382,12 +382,12 @@ def get_medications(profile_id):
 		order by creation desc limit 5"""%(profile_id),as_dict=1)
 
 
-def build_response(data,obj,res_list):
+def build_response(data,obj,res_list,profile_id):
 	if obj.get('visits')==1:
 		visit_data=build_visit_data(data)
 		res_list.append(visit_data)
 	if obj.get('events')==1:
-		event_data=build_event_data(data)
+		event_data=build_event_data(data,profile_id)
 		res_list.append(event_data)
 	return res_list
 
@@ -419,7 +419,7 @@ def build_visit_data(obj):
 	rows=[
     	[
      		"Date", 
-     		"visit description", 
+     		"Visit Description", 
      		"Provider's Name"
     	]
    ]
@@ -433,7 +433,7 @@ def build_visit_data(obj):
 	visit_dic={"fieldname":"visits","fieldtype": "table","label": "Visits","rows":rows}
 	return visit_dic
 
-def build_event_data(obj):
+def build_event_data(obj,profile_id):
 	rows=[
     	[
      		"Event Name", 
@@ -447,7 +447,7 @@ def build_event_data(obj):
 		data=json.loads(obj)
 		if data and data["eventList"]:
 			for d in data["eventList"]:
-				rows.extend([[d["event_title"],datetime.datetime.fromtimestamp(cint(d["event_date"])/1000.0),d["event_symptoms"],d["diagnosis_desc"]]])
+				rows.extend([["""<a nohref id="%(entityid)s" onclick="Events.prototype.open_form('%(entityid)s', '%(event_title)s', '%(profile_id)s')"> %(event_title)s </a>"""%{"entityid": d['entityid'],"event_title": d['event_title'], "profile_id":profile_id},datetime.datetime.fromtimestamp(cint(d["event_date"])/1000.0),d["event_symptoms"],d["diagnosis_desc"]]])
 	else:
 		rows.extend([["","NO DATA","",""]])		
 	event_dic={"fieldname":"events","fieldtype": "table","label": "Events","rows":rows}
@@ -609,3 +609,36 @@ def check_existing(email):
 @frappe.whitelist(allow_guest=True)
 def get_patients(doctype, txt, searchfield, start, page_len, filters):
 	return frappe.db.sql("""select email,profile_id from `tabUser`  where enabled=1 and access_type='Patient'""")
+
+@frappe.whitelist(allow_guest=True)
+def verify_mobile():
+	# import urllib2                                                # needed for functions,classed for opening urls.
+	# site_name = get_site_name()
+	# path = os.path.abspath(os.path.join('.',site_name, 'public', 'files'))
+	# url = "http://localhost:9888/files/WO-00086.pdf"
+	# usock = urllib2.urlopen(url)                                  #function for opening desired url
+	# #file_name = url.split('/')[-1]                                #Example : for given url "www.cs.berkeley.edu/~vazirani/algorithms/chap6.pdf" file_name will store "chap6.pdf"
+	# data=usock.read()
+	# with open("code2.pdf", "wb") as code:
+	# 	code.write(data)	
+	# #f = open(file_name, 'wb')                                     #opening file for write and that too in binary mode.
+	# # file_size = int(usock.info().getheaders("Content-Length")[0]) #getting size in bytes of file(pdf,mp3...)
+	# # print "Downloading: %s Bytes: %s" % (file_name, file_size)
+	 
+	# # downloaded = 0
+	# # block_size = 8192                                            #bytes to be downloaded in each loop till file pointer does not return eof
+	# # while True:
+	# # 	buff = usock.read(block_size)
+	# # 	if not buff:                                             #file pointer reached the eof
+	# # 		break
+ 
+	# # downloaded = downloaded + len(buff)
+	# # f.write(buff)
+	# # download_status = r"%3.2f%%" % (downloaded * 100.00 / file_size) #Simple mathematics
+	# # download_status = download_status + (len(download_status)+1) * chr(8)
+	# # print download_status,"done"
+ 
+	# #f.close()
+	pass
+
+		

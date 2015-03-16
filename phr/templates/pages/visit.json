@@ -3,7 +3,8 @@
 		{
 			"fieldname":"from_date",
 			"fieldtype":"date",
-			"label":"From Date"
+			"label":"From Date",
+			"placeholder":""
 		},
 		{
 			"fieldname":"",
@@ -13,7 +14,8 @@
 		{
 			"fieldname":"to_date", 
 			"fieldtype":"date",
-			"label":"To Date"
+			"label":"To Date",
+			"placeholder":""
 		},
 		{
 			"fieldname":"", 

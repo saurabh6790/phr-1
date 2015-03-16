@@ -63,6 +63,9 @@ window.Events = inherit(ListView,{
 		this.profile_id = profile_id;
 		$('#main-con').empty();
 		RenderFormFields.prototype.init(me.wrapper, {"file_name" : "event", "method": 'event'}, event_id)
+		//if ($('input[name="event_symptoms"]').val()){
+				$('input[name="event_symptoms"]').prop('disabled',true)
+		//}
 
 		me.bind_save_event()
 		$(repl_str('<li><a nohref>%(event_title)s</a></li>',{'event_title': event_title})).click(function(){
@@ -150,7 +153,6 @@ window.Events = inherit(ListView,{
 				"profile_id": me.profile_id,
 				"event_id": $("[name='entityid']").val(),
 				"event_title":$("[name='event_title']").val()
-
 		});
 	},
 	make_multi_select_div: function(){
@@ -190,8 +192,10 @@ window.Events = inherit(ListView,{
 	},
 	generate_table: function(result_set, d, filters){
 		var me = this;
-		
-		this.table = $("<hr><div class='table-responsive'>\
+		$('.stable').empty()
+		$('.ap').remove()
+		$('.hr').remove()
+		this.table = $("<hr class='hr'><div class='table-responsive stable'>\
 			<table class='table table-bordered'>\
 				<thead><tr></tr></thead>\
 				<tbody></tbody>\
@@ -216,12 +220,12 @@ window.Events = inherit(ListView,{
 			me.set_provider(d)
 		}
 		else{
-			$('<div>No Provider is there for selected criteria. \
+			$('<div class="stable">No Provider is there for selected criteria. \
 				You can add New Provider by clicking on Add Button</div>').appendTo('.modal-body')
 		}
 		
 
-		$('<button class ="btn btn-success btn-sm" style="float:left;"> Add New Provider </button>')
+		$('<button class ="btn btn-success btn-sm ap" style="float:left;"> Add New Provider </button>')
 			.click(function(){
 				d.hide()
 				me.create_provider_linking(filters, d)

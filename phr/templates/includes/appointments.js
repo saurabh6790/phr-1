@@ -37,6 +37,13 @@ var Appointments = inherit(ListView,{
    				$(this).css({"border": "1px solid #999","border-color": "F3F2F5" });	
    			}
 		});
+		$('form input[name="from_date_time"]').bind('change', function() { 
+			val=$(this).val()
+			if (diffDays(parseDate(val),new Date().setHours(0,0,0,0)) > 0) { 
+				$(this).val("")
+    			frappe.msgprint("Appointment Date Should not be less than  Cureent Date")
+			}
+		});
 		$('.update').bind('click',function(event) {
 			NProgress.start();
 			var validated=me.validate_form()

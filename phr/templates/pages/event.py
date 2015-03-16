@@ -402,6 +402,37 @@ def get_individual_event_count_for_badges(event_id,profile_id):
 
 
 @frappe.whitelist(allow_guest=True)
+def get_individual_visit_count_for_badges(visit_id,profile_id):
+	request_type="POST"
+	url=get_base_url()+'admin/getvisitfilecount'
+	args={"profileId":profile_id}
+	response=get_response(url,json.dumps(args),request_type)
+	res=response.text
+	event_list=[]
+	event_dict={}
+	sub_event_count={}
+	if res:
+		jsonobj=json.loads(res)
+		if jsonobj["returncode"]==139:
+			for visit in json.loads(jsonobj["list"]):
+				if visit['visit']['entityid']==visit_id:
+					event_wise_count_dict(visit['visitFileMapCount'], event_dict,sub_event_count)
+					break
+
+	for event in ["11","12","13","14","15"]:
+		if not event_dict.has_key(event):
+			event_dict[event]=0
+	
+	for sub_event in ["1151","1152","1153","1251","1252","1351","1352","1451","1452","1453","1551"]:
+		if not sub_event_count.has_key(sub_event):
+			sub_event_count[sub_event]=0
+
+	return {
+				"event_dict":event_dict,
+				"sub_event_count":sub_event_count
+			}
+
+@frappe.whitelist(allow_guest=True)
 def event_wise_count_dict(count_dict, event_dict,sub_event_count):
 	for key in count_dict:
 		main_folder = key.split('-')[-1][:2]
@@ -419,7 +450,7 @@ def event_wise_count_dict(count_dict, event_dict,sub_event_count):
 			event_dict[main_folder] += count_dict[key]
 	
 		sub_event_count[folder] = count_dict[key]
-	
+
 @frappe.whitelist(allow_guest=True)
 def get_event_wise_count_dict(count_dict, event_count_dict):
 	if not isinstance(count_dict,dict):

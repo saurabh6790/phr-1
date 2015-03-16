@@ -8,10 +8,11 @@ import requests
 import os
 from frappe.auth import _update_password
 from frappe import _
-from phr.templates.pages.patient import get_base_url
+from phr.templates.pages.patient import get_base_url,get_data_to_render
 import json
 from phr.phr.doctype.phr_activity_log.phr_activity_log import make_log
 import json
+from phr.templates.pages.profile import get_linked_phrs
 
 @frappe.whitelist(allow_guest=True)
 def create_provider(data,id=None,profile_id=None):
@@ -122,3 +123,32 @@ def get_address(provider_id):
 	return frappe.db.sql("""select addr_line1, addr_line2, city, state, country, pincode, visiting_hours 
 					from tabPHRAddress 
 					where provider_id = '%s' order by creation desc"""%(provider_id), as_dict=1,  debug=1)
+
+
+@frappe.whitelist(allow_guest=True)
+def get_patient_data(data):
+	
+	fields, values, tab = get_data_to_render(data)
+
+	pos = 0
+	for filed_dict in fields:
+		pos =+ 1
+		if 'rows' in filed_dict.keys(): 
+			rows = filed_dict.get('rows')
+			break
+	
+	if isinstance(data, unicode):
+		data=json.loads(data)
+
+	pateints=get_linked_phrs(data["profile_id"])
+	print pateints['list']
+
+	for patient in pateints['list']:
+		pi=frappe.db.get_value("LinkedPHR Images",{"profile_id":patient['entityid']},"profile_image")
+		rows.extend([["""<a nohref class='popen' onclick="open_patient('%(entityid)s','%(name)s')" id='%(entityid)s'><img class='user-picture' src='%(pi)s' style='min-width: 20px; max-height: 20px; border-radius: 4px'/> %(name)s %(lname)s</i></a>"""%{"entityid":patient['entityid'],"pi":pi,"name":patient['person_firstname'],"lname":patient['person_lastname']},patient["email"],patient['mobile']]])
+		
+
+	return {
+		'rows': rows,
+		'listview': fields
+	}

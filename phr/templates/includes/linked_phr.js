@@ -29,24 +29,29 @@ var LinkedPHR = inherit(RenderFormFields, {
 		});
 		var me = this;
 		$('.save_controller').bind('click',function(event) {
-			me.res = {};
-			NProgress.start();
-			var validated=me.validate_form()
-			if (validated==true){	
-				$("form input,form textarea,form select").each(function(i, obj) {
-					me.res[obj.name] = $(obj).val();
-				})
-				me.res["linking_id"]=sessionStorage.getItem("pid")
-				me.res["received_from"]="Desktop"
-				if (me.operation=='create_linkphr'){
-					me.res["parent_linked"]=true
-					me.create_linkedphr(me.res,me)
+			if (!(sessionStorage.getItem("lphrs")>=10)){
+				me.res = {};
+				NProgress.start();
+				var validated=me.validate_form()
+				if (validated==true){	
+					$("form input,form textarea,form select").each(function(i, obj) {
+						me.res[obj.name] = $(obj).val();
+					})	
+					me.res["linking_id"]=sessionStorage.getItem("pid")
+					me.res["received_from"]="Desktop"
+					if (me.operation=='create_linkphr'){
+						me.res["parent_linked"]=true
+						me.create_linkedphr(me.res,me)
+					}
+				}
+				else{
+					NProgress.done();
+					frappe.msgprint("Fields Marked as Red Are Mandatory")
+					return false
 				}
 			}
 			else{
-				NProgress.done();
-				frappe.msgprint("Fields Marked as Red Are Mandatory")
-				return false
+				frappe.msgprint("Linked PHR's Limit Exceeded.Please Contact Admin or Delink One of Existing PHR")
 			}
 		})
 	},

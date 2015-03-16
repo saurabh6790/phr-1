@@ -54,6 +54,14 @@ var Medications = inherit(ListView,{
    			else{
    				$(this).css({"border": "1px solid #999","border-color": "F3F2F5" });	
    			}
+		});
+		$('form input[name="to_date_time"]').bind('change', function() { 
+			val=$(this).val()
+			//console.log(diffDays(parseDate(val),parseDate($('form input[name="to_date_time"]').val())))
+			if (diffDays(parseDate(val),parseDate($('form input[name="from_date_time"]').val())) > 0) { 
+				$(this).val("")
+    			frappe.msgprint("To Date Should be less than From date")
+			}
 		}); 
 		$('.update').bind('click',function(event) {
 			NProgress.start();
