@@ -63,7 +63,7 @@ window.Events = inherit(ListView,{
 		this.profile_id = profile_id;
 		$('#main-con').empty();
 		RenderFormFields.prototype.init(me.wrapper, {"file_name" : "event", "method": 'event'}, event_id)
-
+		this.set_values(res)
 		me.bind_save_event()
 		$(repl_str('<li><a nohref>%(event_title)s</a></li>',{'event_title': event_title})).click(function(){
 			$(this).nextAll().remove()
@@ -90,7 +90,6 @@ window.Events = inherit(ListView,{
 		// me.render_folder_section()
 
   		// me.bind_events()
-  		this.set_values(res)
   		this.write_visit_file(event_id, profile_id)
   		this.make_tree_view(event_id)
   		this.get_linked_providers()
@@ -99,9 +98,10 @@ window.Events = inherit(ListView,{
 		this.make_comment_section(event_title, profile_id)
 	},
 	set_values: function(res){
+		console.log(['setting visits details',res])
 		if(res){
-			$.each(res, function(i, field){
-				if(field!='event_symptoms') $('[name="'+field+'"]').val(res[field])
+			$.each(res, function(field, value){
+				if(field!='event_symptoms') $('[name="'+field+'"]').val(value)
 			})
 		}
 	},
@@ -235,7 +235,7 @@ window.Events = inherit(ListView,{
 		
 
 		$('<button class ="btn btn-success btn-sm ap" style="float:left;"> Add New Provider </button>')
-			.click(function(){
+			.unbind("click").click(function(){
 				d.hide()
 				me.create_provider_linking(filters, d)
 			})
@@ -266,11 +266,14 @@ window.Events = inherit(ListView,{
 			method:"phr.templates.pages.provider.link_provider",
 			args:{'res': res, 'data':data, 'profile_id':profile_id},
 			callback:function(r){
-				d.hide();
 				var db = new render_dashboard();
 				db.render_providers(profile_id);
 				me.get_linked_providers();
 				NProgress.done();
+				d.hide()
+				var $modal = $("#myModal").detach().modal();
+				$modal.modal("hide");
+				$modal.modal("destroy").remove();
 			}
 		})
 	},
@@ -300,12 +303,15 @@ window.Events = inherit(ListView,{
 			args:{'data':res, "profile_id": sessionStorage.getItem("cid")},
 			callback:function(r){
 				if(r.message.returncode==129){
-					me.set_provider(d)
-					d.hide()
+					// me.set_provider(d)
 					var db = new render_dashboard();
 					db.render_providers(profile_id);
 					me.get_linked_providers()
 					NProgress.done();
+					d.hide()
+					var $modal = $("#myModal").detach().modal();
+					$modal.modal("hide");
+					$modal.modal("destroy").remove();
 				}
 			}
 		})
