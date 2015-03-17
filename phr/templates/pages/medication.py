@@ -28,7 +28,7 @@ def get_medication_data(data):
 		if d.status=='Active':
 			rows.extend([["<a nohref class='medication' id='%s'><i class='icon-unlock' data-toggle='tooltip' data-placement='top' title='Deactivate'></i></a>"%d.name,d.medicine_name, d.dosage,d.from_date_time,d.to_date_time,d.additional_info,d.status]])
 		else:
-			rows.extend([["<i class='icon-lock' data-toggle='tooltip' data-placement='top' title='Activate'>",d.medicine_name, d.dosage,d.from_date_time,d.to_date_time,d.additional_info,d.status]])	
+			rows.extend([["<i class='icon-lock' data-toggle='tooltip' data-placement='top'>",d.medicine_name, d.dosage,d.from_date_time,d.to_date_time,d.additional_info,d.status]])	
 
 	return {
 		'rows': rows,

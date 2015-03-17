@@ -11,12 +11,12 @@ from frappe import _
 import binascii
 import base64
 from phr.templates.pages.login import create_profile_in_db,get_barcode,get_image_path
-from frappe.utils import cint, now, get_gravatar,cstr
+from frappe.utils import cint, now, get_gravatar,cstr,get_site_path
 from phr.phr.doctype.phr_activity_log.phr_activity_log import make_log
 import datetime
 from phr.templates.pages.patient import get_base_url,send_phrs_mail 
 from erpnext.setup.doctype.sms_settings.sms_settings import send_sms
-from frappe.utils.email_lib import sendmail
+import requests
 
 
 @frappe.whitelist(allow_guest=True)
@@ -612,33 +612,22 @@ def get_patients(doctype, txt, searchfield, start, page_len, filters):
 
 @frappe.whitelist(allow_guest=True)
 def verify_mobile():
-	# import urllib2                                                # needed for functions,classed for opening urls.
-	# site_name = get_site_name()
-	# path = os.path.abspath(os.path.join('.',site_name, 'public', 'files'))
-	# url = "http://localhost:9888/files/WO-00086.pdf"
-	# usock = urllib2.urlopen(url)                                  #function for opening desired url
-	# #file_name = url.split('/')[-1]                                #Example : for given url "www.cs.berkeley.edu/~vazirani/algorithms/chap6.pdf" file_name will store "chap6.pdf"
-	# data=usock.read()
-	# with open("code2.pdf", "wb") as code:
-	# 	code.write(data)	
-	# #f = open(file_name, 'wb')                                     #opening file for write and that too in binary mode.
-	# # file_size = int(usock.info().getheaders("Content-Length")[0]) #getting size in bytes of file(pdf,mp3...)
-	# # print "Downloading: %s Bytes: %s" % (file_name, file_size)
-	 
-	# # downloaded = 0
-	# # block_size = 8192                                            #bytes to be downloaded in each loop till file pointer does not return eof
-	# # while True:
-	# # 	buff = usock.read(block_size)
-	# # 	if not buff:                                             #file pointer reached the eof
-	# # 		break
- 
-	# # downloaded = downloaded + len(buff)
-	# # f.write(buff)
-	# # download_status = r"%3.2f%%" % (downloaded * 100.00 / file_size) #Simple mathematics
-	# # download_status = download_status + (len(download_status)+1) * chr(8)
-	# # print download_status,"done"
- 
-	# #f.close()
-	pass
+	pass	
 
-		
+
+@frappe.whitelist(allow_guest=True)		
+def get_phr_pdf(profile_id):
+	path = os.path.join(os.getcwd(), get_site_path().replace('.',"").replace('/', ""), 'public', 'files', profile_id)
+	solr_op='dms/getPhrPdfwithfilelocation'
+	url=get_base_url()+solr_op
+	request_type='POST'
+	data={"profileId":profile_id,"file_location": [path]}
+	from phr.phr.phr_api import get_response
+	response=get_response(url,json.dumps(data),request_type)
+	res=json.loads(response.text)
+	frappe.errprint(res)
+	
+	# url = "http://localhost:9888/files/WO-00086.pdf"
+	# res = requests.get(url)
+	# res.headers['Content-Disposition'] = 'attachment; filename=WO-00086.pdf'
+	# return res.text
