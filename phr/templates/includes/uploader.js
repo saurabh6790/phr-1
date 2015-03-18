@@ -85,8 +85,12 @@ upload = {
 					"method": "phr.templates.pages.uploader.upload",
 					args: args,
 					callback: function(r) {
-						if(!r._server_messages)
+						console.log(r)
+						if(!r._server_messages){
 							msgbox.hide();
+							$('.modal-backdrop').remove()
+							frappe.msgprint(r.message['success_meg'])
+						}
 						// if(r.exc) {
 						// 	// if no onerror, assume callback will handle errors
 						// 	opts.onerror ? opts.onerror(r) : opts.callback(null, null, r);

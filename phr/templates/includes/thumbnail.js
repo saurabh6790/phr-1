@@ -53,7 +53,7 @@ $.extend(ThumbNails.prototype,{
 			</div>\
 			<hr>\
 			<h4> Uploaded Files </h4>\
-			<div id="uploaded_file" style="height:300px;overflow-x:auto;">\
+			<div id="uploaded_file" style="height:300px;overflow-x:auto;background-color:#F5F5F5;">\
 			</div>\
 			',{'uploader_display':me.uploader_display})).appendTo($('.thumb'))
 
@@ -163,23 +163,26 @@ $.extend(ThumbNails.prototype,{
 		var me = this;
 		if(attachment['type'] == 'pdf' || attachment['type'] == 'PDF'){
 			$td = $(repl('<td style="width:200px;\
-							height:200px;padding-right:20px;vertical-align:top;">\
+							height:200px;padding-right:20px;vertical-align:top;padding-left:5%;padding-top:5%;">\
 						',attachment)).appendTo(row)
 			console.log(me.doc_list)
 			thumbnail("/"+attachment['path']+"/"+attachment['file_name'], $td, attachment['file_name'], me.doc_list, me.args['display'])
 		}
 		else if((/\.(gif|jpg|jpeg|tiff|png)$/i).test(attachment['file_name']) ){
-			$('<td style="width:200px;height:200px;padding-right:20px;vertical-align:top;">')
+			$('<td style="width:200px;height:200px;padding-right:20px;vertical-align:top;padding-left:5%;padding-top:5%;">')
 				.html($(repl('<div>\
 						<input type="checkbox" name="image" style="display:%(display)s" value="/%(path)s/%(file_name)s" >\
 					</div>\
 					<a nohref class="control-image" data-name="/%(path)s/%(file_name)s"><img class="img-responsive"  style="height:150px;" \
 					src="/%(path)s/%(file_name)s" data-bigimgsrc="/%(path)s/%(file_name)s">\
-					<br><label style="width: 150px;word-wrap: break-word;">%(file_name)s</label></a>',attachment))).appendTo(row)
+					<br><label style="width: 150px;word-wrap: break-word;color: #009906;">%(file_name)s</label></a>',attachment))).appendTo(row)
 		}
-		// if(attachment['file_name'].substring(7, attachment['file_name'].length) in me.doc_list && $("input[type=checkbox]").val() == attachment['file_name']){
-		// 	$("input[type=checkbox]").prop('checked', true);	
-		// }
+
+		if(me.doc_list){
+			$.each(me.doc_list, function(i, val){
+				$("input[value='/files/"+val+"']").prop('checked', true);
+			})	
+		}
 
 		$('.control-image').unbind("click").click(function() {
 			var title=$('input[name=event_title]').val()+' '+$('input[name=event_date]').val() || ''
@@ -193,11 +196,16 @@ $.extend(ThumbNails.prototype,{
 		})	
 		$("input[type=checkbox]").unbind("click").click(function(){
 			if($(this).is(':checked')){
-				// file_path = $($(this).parents()[1]).find('img').attr('src')
 				file_path = $(this).val()
 				console.log(file_path)
 				me.doc_list.push(file_path.substring(7, file_path.length))
-				// me.doc_list.push( me.args['profile_id'] + '/' +  $('input[name="entityid"]').val() + '/' + me.folder + '/' +  me.sub_folder + '/' + $(this).val())
+			}
+			else{
+				file_path = $(this).val()
+				var index = me.doc_list.indexOf(file_path.substring(7, file_path.length));
+				if (index >= 0) {
+  					me.doc_list.splice( index, 1 );
+				}
 			}
 		});
 		this.image_gallery()

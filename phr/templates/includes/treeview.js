@@ -62,13 +62,13 @@ $.extend(TreeView.prototype, {
 
 		$.each(me.parent_mapper, function(i, dic){
 			$li = $(repl_str('<li>\
-				<span id="%(id)s"><i class="%(icon)s"></i> %(label)s <span class="badge">%(count)s</span> </span> <a href=""></a>\
+				<span id="%(id)s"><i class="%(icon)s"></i> %(label)s <span class="badge" style="background-color:#1094A0;">%(count)s</span> </span> <a href=""></a>\
 				<ul></ul>\
 			</li>', dic)).appendTo($('.tree').find('ul').first())
 	
 			$.each(me.mapper[dic['id']], function(j, chld_dic){
 				$(repl_str('<li>\
-					<span id="%(id)s"><i class="icon-leaf"></i> %(label)s <span class="badge">%(count)s</span> </span> <a href=""></a>\
+					<span id="%(id)s"><i class="icon-leaf"></i> %(label)s <span class="badge" style="background-color:#1094A0;">%(count)s</span> </span> <a href=""></a>\
 				</li>', chld_dic)).appendTo($li.find('ul'))
 			})
 		})
@@ -82,8 +82,13 @@ $.extend(TreeView.prototype, {
 			
 			$('.tree li.parent_li').find(' > ul > li').hide('fast');
 			
-			$('.tree li.parent_li > span').on('click', function (e) {
-				
+			$('.tree li.parent_li > span').unbind('click').on('click', function (e) {
+
+				$('.tree li.parent_li').find(' > ul > li').hide('fast');
+				$('.tree li.parent_li').removeClass('selected')
+				$('.tree li.parent_li').find(' > ul > li').removeClass('selected-chld')
+
+				$(this).addClass('selected')
 				var children = $(this).parent('li.parent_li').find(' > ul > li');
 
 				me.folder = $(this).attr('id');
@@ -99,7 +104,10 @@ $.extend(TreeView.prototype, {
 
 				children.addClass('parent_li')
 
-				children.on('click', function(){
+				children.unbind('click').on('click', function(){
+					children.removeClass('selected-chld')
+					$(this).addClass('selected-chld')
+
 					ThumbNails.prototype.init(me.wrapper, {'folder':me.folder, 
 						'sub_folder':$(this).find('span').attr('id'), 'profile_id': me.args['profile_id'], 'display': me.disp, 
 						'dms_file_list': me.args['dms_file_list'], 'doc_list': me.doc_list})

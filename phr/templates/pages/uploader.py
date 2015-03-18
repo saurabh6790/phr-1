@@ -44,7 +44,8 @@ def upload():
 	# frappe.errprint(['test',filename, get_site_base_path(), get_path(), os.getcwd(), get_site_path().split('.')])
 	return {
 		"site_path" : os.path.join(os.getcwd(), get_site_path().replace('.',"").replace('/', ""), 'public', 'files'),
-		"file_name": filename
+		"file_name": filename,
+		"success_meg": filedata
 	}
 
 def save_uploaded():
@@ -125,7 +126,7 @@ def save_file(fname, content, decode=False):
 	method = get_hook_method('write_file', fallback=save_file_on_filesystem)
 	file_data = method(fname, content, content_type=content_type)
 	file_data = copy(file_data)
-	frappe.msgprint("Attachment Successful")
+	return "Attachment Successful"
 
 	# # file_data.update({
 	# # 	"doctype": "File Data",

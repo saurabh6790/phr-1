@@ -51,20 +51,30 @@ function thumbnail(pdfURL, elementID, filename, doc_list, display){
         $(elementID).html('<div>\
                             <input type="checkbox" style="display:'+display+'" value="'+pdfURL+'">\
                         </div><a class = "pdf_img" data-name="'+pdfURL+'" ><img style="height:150px;" src="'+img+'"/></a><br>\
-                        <label style="width: 150px;word-wrap: break-word;">'+filename+'</label>');
+                        <label style="width: 150px;word-wrap: break-word;color: #009906;">'+filename+'</label>');
 
         $('.pdf_img').unbind("click").click(function(){
             window.open($(this).attr('data-name'))
         })
 
+        if(doc_list){
+            $.each(doc_list, function(i, val){
+                $("input[value='/files/"+val+"']").prop('checked', true);
+            })  
+        }
+
         $("input[type=checkbox]").unbind("click").click(function(){
             if($(this).is(':checked')){
-                console.log(doc_list)
-                // file_path = $($(this).parents()[1]).find('img').attr('src')
                 file_path = $(this).val()
                 console.log(file_path)
                 doc_list.push(file_path.substring(7, file_path.length))
-                // me.doc_list.push( me.args['profile_id'] + '/' +  $('input[name="entityid"]').val() + '/' + me.folder + '/' +  me.sub_folder + '/' + $(this).val())
+            }
+            else{
+                file_path = $(this).val()
+                var index = doc_list.indexOf(file_path.substring(7, file_path.length));
+                if (index >= 0) {
+                    doc_list.splice( index, 1 );
+                }
             }
         });
         });
