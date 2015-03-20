@@ -278,6 +278,9 @@ window.Events = inherit(ListView,{
 				}
 				else{
 					d.hide();
+					$('#myModal').remove();
+					$('.modal').remove();
+					$('.modal-backdrop').remove();
 				}
 			}
 		})
