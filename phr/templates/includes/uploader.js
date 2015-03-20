@@ -66,14 +66,23 @@ upload = {
 
 			var fileobj = $upload.find(":file").get(0).files[0];
 			upload.upload_file(fileobj, opts.args, opts);
+
+			var $modal = $("#myModal").detach().modal();
+			$modal.modal("hide");
+			$modal.modal("destroy").remove();
 		})
 	},
 	upload_file: function(fileobj, args, opts) {
 		NProgress.start();
+		
 		if(!fileobj && !args.file_url) {
-			msgprint(__("Please attach a file or set a URL"));
+			frappe.msgprint(__("Please attach a file or set a URL"));
 			return;
 		}
+		// args["dialog"].hide();
+
+		delete args["dialog"];
+		
 
 		var dataurl = null;
 		var _upload_file = function() {
@@ -86,8 +95,10 @@ upload = {
 					args: args,
 					callback: function(r) {
 						console.log(r)
+						
 						if(!r._server_messages){
 							msgbox.hide();
+							$('.modal').remove()
 							$('.modal-backdrop').remove()
 							frappe.msgprint(r.message['success_meg'])
 						}

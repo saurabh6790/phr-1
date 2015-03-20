@@ -36,51 +36,79 @@ $.extend(ThumbNails.prototype,{
 			<button style="float:left;width:30%;margin-left:5%;" id="cp_img" class="btn btn-default" > \
 				<i class="icon-camera" data-toggle="tooltip" data-placement="top" title="Comming Soon...."></i>\
 				Capture Image </button>\
-			<div style="display:%(uploader_display)s">\
-				<div id="attach"> Attach </div>\
-				<div class="form-group row" style="display: block;padding-top: 8%;margin-right:2%;" id="desc">\
+			<hr>\
+			<h4> Uploaded Files </h4>\
+			<div id="uploaded_file" style="height:500px;overflow-x:auto;background-color:#F5F5F5;">\
+			</div>\
+			',{'uploader_display':me.uploader_display})).appendTo($('.thumb'))
+		
+		// this.d.show()
+		$('#desc').hide('fast');
+		
+		$("#descr").on("click",function(){
+				$('#myModal').remove()
+				$('.modal').remove()
+
+				d = new Dialog();
+				d.init({"title":"File Uploader/ Writer"})
+				d.show();
+				
+				$('.modal-dialog').removeClass('modal-sm').addClass('modal-lg');
+				$('.modal-body').empty();
+				$('.modal-footer .btn-primary').hide();
+				
+				$('	<div class="form-group row" style="display: block;margin-right:2%;" id="desc">\
 					<div class="col-xs-12">\
 						<div class="control-input">\
 							<textarea type="text" class="form-control" \
 								placeholder="Don\'t have an image, write a description. This will be saved below as pdf." name="attch_desc"\
-								aria-describedby="basic-addon2"></textarea>\
+								aria-describedby="basic-addon2" style="height:150px;"></textarea>\
 						</div>\
 					</div>\
-					<button style="float:left;width:30%;margin-left:5%;margin-top:5%;" id="pdf_maker" class="btn btn-default" > \
+					<button style="float:left;width:30%;margin-left:5%;margin-top:5%;" id="pdf_maker" class="btn btn-primary" > \
 						<i class="icon-book"></i>\
 						Save as PDF </button>\
 				</div>\
-			</div>\
-			<hr>\
-			<h4> Uploaded Files </h4>\
-			<div id="uploaded_file" style="height:300px;overflow-x:auto;background-color:#F5F5F5;">\
-			</div>\
-			',{'uploader_display':me.uploader_display})).appendTo($('.thumb'))
+				').appendTo('.modal-body');
 
-		$('#desc').hide('fast');
-		$("#descr").on("click",function(){
-			
+				console.log($('#pdf_maker'));
+
+				$('#myModal #pdf_maker').click(function(){
+					console.log('trigger pdf pdf_maker')
+					me.convert_txt_to_pdf($('[name="attch_desc"]').val())
+				})
+					
 				$('#attach').hide('fast');
 				$('#desc').show('fast');
 			
 		})
-		$('#img').on("click", function(){
 
+		$('#img').on("click", function(){
+				$('#myModal').remove()
+				$('.modal').remove()
+
+				d = new Dialog();
+				d.init({"title":"File Uploader/ Writer"})
+				d.show()
+				
+				$('.modal-dialog').removeClass('modal-lg').addClass('modal-sm');
+				$('.modal-body').empty();
+				$('.modal-footer .btn-primary').hide();
 				$('#desc').hide('fast');
-				$('#attach').show('fast');
+				me.make_image_uploader(d)
+				// $('#attach').show('fast');
 			
-		})
-		
-		$('#pdf_maker').click(function(){
-			me.convert_txt_to_pdf($('[name="attch_desc"]').val())
 		})
 
 		this.show_attachments();
-
+	},
+	make_image_uploader:function(d){
+		var me =this;
+		console.log($('input[name="entityid"]').val())
 		upload.make({
-			parent: $('#attach'),
+			parent: $('.modal-body'),
 			args:{'profile_id': me.args['profile_id'], 'folder':me.folder, 
-				'sub_folder': me.sub_folder, 'event_id': $('input[name="entityid"]').val()},
+				'sub_folder': me.sub_folder, 'event_id': $('input[name="entityid"]').val(), 'dialog': d},
 			callback:function(attachment, r) {
 				NProgress.done();
 				me.args['dms_file_list'] = me.args['dms_file_list'] ? me.args['dms_file_list'] : [];
@@ -105,6 +133,7 @@ $.extend(ThumbNails.prototype,{
 	},
 	convert_txt_to_pdf:function(desc){
 		var me = this;
+		console.log($('[name="attch_desc"]').val())
 		if($('[name="attch_desc"]').val()){
 			frappe.call({
 				method:"phr.templates.pages.uploader.get_pdf_site_path",
@@ -122,6 +151,11 @@ $.extend(ThumbNails.prototype,{
 						"text_file_id": $('[name="attch_desc"]').val() ? r.message['timestamp']+'_'+ me.folder+'_'+me.sub_folder+'.pdf' : "",
 						"text_file_loc": $('[name="attch_desc"]').val() ? r.message['site_path'] +'/'+ me.args['profile_id'] + '/' +  $('input[name="entityid"]').val() + '/' + me.folder + '/' +  me.sub_folder + '/' + r.message['timestamp']+'_'+ me.folder+'_'+me.sub_folder+'.pdf' : ""
 					})
+				
+					var $modal = $("#myModal").detach().modal();
+					$modal.modal("hide");
+					$modal.modal("destroy").remove();
+					
 					frappe.msgprint("Description added as pdf, click on save to make it as attachment")
 					$('[name="attch_desc"]').val('')
 				}

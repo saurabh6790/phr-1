@@ -171,6 +171,10 @@ window.Events = inherit(ListView,{
 	dialog_oprations: function(){
 		var me = this;
 		this.filters = {}
+
+		$('#myModal').remove()
+		$('.modal').remove()
+
 		d = new Dialog();
 		d.init({"file_name":"provider_search", "title":"Provider Search"})
 		d.show()
@@ -270,15 +274,17 @@ window.Events = inherit(ListView,{
 				db.render_providers(profile_id);
 				me.get_linked_providers();
 				NProgress.done();
-				d.hide()
-				var $modal = $("#myModal").detach().modal();
-				$modal.modal("hide");
-				$modal.modal("destroy").remove();
+				$('#myModal').remove();
+				$('.modal').remove();
+				$('.modal-backdrop').remove();
 			}
 		})
 	},
 	create_provider_linking:function(filters, d){
 		var me = this;
+		$('#myModal').remove()
+		$('.modal').remove()
+
 		d.init({"file_name":"provider", "values": filters})
 		d.show()
 		me.bind_provider_creation(d)
@@ -303,15 +309,16 @@ window.Events = inherit(ListView,{
 			args:{'data':res, "profile_id": sessionStorage.getItem("cid")},
 			callback:function(r){
 				if(r.message.returncode==129){
-					// me.set_provider(d)
+					
 					var db = new render_dashboard();
 					db.render_providers(profile_id);
 					me.get_linked_providers()
 					NProgress.done();
-					d.hide()
-					var $modal = $("#myModal").detach().modal();
-					$modal.modal("hide");
-					$modal.modal("destroy").remove();
+					
+					$('#myModal').remove();
+					$('.modal').remove();
+					$('.modal-backdrop').remove();
+					
 				}
 			}
 		})

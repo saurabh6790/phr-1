@@ -85,7 +85,7 @@ $.extend(TreeView.prototype, {
 			$('.tree li.parent_li > span').unbind('click').on('click', function (e) {
 
 				$('.tree li.parent_li').find(' > ul > li').hide('fast');
-				$('.tree li.parent_li').removeClass('selected')
+				$('.tree li.parent_li > span').removeClass('selected')
 				$('.tree li.parent_li').find(' > ul > li').removeClass('selected-chld')
 
 				$(this).addClass('selected')
@@ -95,6 +95,7 @@ $.extend(TreeView.prototype, {
 
 				if (children.is(":visible")) {
 					children.hide('fast');
+					$('.tree li.parent_li > span').removeClass('selected')
 					$(this).attr('title', 'Expand this branch').find(' > i').addClass('icon-plus-sign').removeClass('icon-minus-sign');
 				} else {
 					children.show('fast');
