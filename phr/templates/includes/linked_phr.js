@@ -27,6 +27,9 @@ var LinkedPHR = inherit(RenderFormFields, {
 			name=$(this).val()+"'s Relationship With you"
 			$("form input[name='relationship']").prop("placeholder",name)
 		});
+		if (frappe.get_cookie("user_type") && frappe.get_cookie("user_type")=="provider"){
+			$("form input[name='relationship']").val("patient")
+		}
 		var me = this;
 		$('.save_controller').bind('click',function(event) {
 			if (!(sessionStorage.getItem("lphrs")>=10)){

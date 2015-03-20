@@ -23,6 +23,9 @@ var PatientDashboard = inherit(RenderFormFields, {
 		
 	},
 	render_validations:function(profile_id){
+		
+
+
 		var me=this;
 		$('.chk').bind('click',function(event){
 			var $id=$('.tab-pane.active').attr('id')
@@ -218,30 +221,25 @@ var PatientDashboard = inherit(RenderFormFields, {
   		$(".tab-pane.active form input[required],.tab-pane.active form textarea[required],.tab-pane.active form select[required]").each(function(i, obj) {
   			if ($(this).val()==""){
   				$(this).css({"border": "1px solid #999","border-color": "red" });
-  				//frappe.msgprint("Fields Marked as Red Are Mandatory")
-  				msg="Fields Marked as Red Are Mandatory"
   				fg=false
   			}
   		})
+  		if (fg==false){
+  			return {
+  				"fg":fg,
+  				"msg":"Fields Marked as Red Are Mandatory"
+  			}
+ 		}
   		if($('.tab-pane.active form input[name="mobile"]').val()){
   			if (!validate_mobile($('.tab-pane.active form input[name="mobile"]').val())) {
-  				//frappe.msgprint("Mobile No Invalid")
   				msg="Mobile No Invalid"
   				fg=false
   			}
   		}
-  		/*$('.tab-pane.active form input[name="str_date_of_birth"]').bind('change', function() { 
-			val=$(this).val()
-			if (diffDays(parseDate(val),new Date().setHours(0,0,0,0)) < 0) { 
-    			//frappe.msgprint("OOP's Date of Birth is not valid")
-    			msg="OOP's Date of Birth is not valid"
-			}
-		});*/	
   		return {
-  				"fg":fg,
-  				"msg":msg
-  			}	
-  		
+  			"fg":fg,
+  			"msg":msg
+  		}	
   	},
   	get_user_image:function(profile_id){
   		frappe.call({
@@ -249,7 +247,7 @@ var PatientDashboard = inherit(RenderFormFields, {
 			args:{"profile_id":profile_id},
 			callback: function(r) {
 				if (r.message["image"]){
-					$('<img src="'+r.message["image"]+'"alt="user image"><img>').appendTo($('.fileinput-preview'))
+					$('<img src="'+r.message["image"]+'"alt="user image">').appendTo($('.fileinput-preview'))
 				}
 			}
 		});
@@ -475,3 +473,5 @@ var PatientDashboard = inherit(RenderFormFields, {
 		}
 	}
 })
+
+

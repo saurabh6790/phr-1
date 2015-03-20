@@ -256,10 +256,30 @@ window.Events = inherit(ListView,{
 					$('[name="doctor_name"]').val($($td[1]).html())
 					$('[name="email_id"]').val($($td[3]).html())
 					$('[name="number"]').val($($td[2]).html())
-					me.attach_provider({'entityid': $td.find('input[name="provider"]').attr('id')},
-						{'email': $($td[3]).html(),'mobile': $($td[2]).html(),'name': $($td[1]).html()}, d)
+					me.check_existing($td.find('input[name="provider"]').attr('id'),$($td[3]).html(),$($td[2]).html(),$($td[1]).html(),d)
+					/*if (!me.check_existing($td.find('input[name="provider"]').attr('id'))==true){
+						me.attach_provider({'entityid': $td.find('input[name="provider"]').attr('id')},
+							{'email': $($td[3]).html(),'mobile': $($td[2]).html(),'name': $($td[1]).html()}, d)
+					}*/
 				}
 			})
+		})
+	},
+	check_existing:function(provider_id,email,mobile,name,d){
+		var me=this;
+		frappe.call({
+			method:"phr.templates.pages.provider.check_existing_provider",
+			args:{'provider_id':provider_id, 'profile_id':sessionStorage.getItem("cid")},
+			callback:function(r){
+				console.log(r.message)
+				if (r.message!=true){
+					me.attach_provider({'entityid':provider_id},
+							{'email': email,'mobile': mobile,'name':name }, d)
+				}
+				else{
+					d.hide();
+				}
+			}
 		})
 	},
 	attach_provider:function(res, data, d){
@@ -292,14 +312,36 @@ window.Events = inherit(ListView,{
 	bind_provider_creation:function(d){
 		var me = this;
 		this.res = {}
+
 		$('.modal-footer .btn-primary').click(function(){
-			$(".modal-body form input, .modal-body form textarea, .modal-body form select").each(function(i, obj) {
-				me.res[obj.name] = $(obj).val();
-			})
-			me.res["received_from"]="Desktop"
-			me.res["provider"]=true
-			me.create_provider(me.res, d)
+			var validated=me.validate_form_model()
+			if (validated['fg']==true){
+				$(".modal-body form input, .modal-body form textarea, .modal-body form select").each(function(i, obj) {
+					me.res[obj.name] = $(obj).val();
+				})
+				me.res["received_from"]="Desktop"
+				me.res["provider"]=true
+				me.create_provider(me.res, d)
+			}
+			else{
+				frappe.msgprint(validated["msg"])
+				return false
+			}
 		})
+	},
+	validate_form_model:function(){
+		var fg=true
+  		msg=""
+		$(".modal-body form input[required],.modal-body form textarea[required],.modal-body form select[required]").each(function(i, obj) {
+  			if ($(this).val()==""){
+  				$(this).css({"border": "1px solid #999","border-color": "red" });
+  				fg=false
+  			}
+  		})
+  		return {
+  			"fg":fg,
+  			"msg":msg
+  		}
 	},
 	create_provider: function(res, d){
 		var me=this;

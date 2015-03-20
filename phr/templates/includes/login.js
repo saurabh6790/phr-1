@@ -144,7 +144,7 @@ login.login_handlers = (function() {
 				console.log(data)
 				if (data.message["returncode"]==101){
 					frappe.msgprint(data.message.msg_display);
-					window.location.href = "/login";	
+					setTimeout("window.location.href = '/login'", 5000);
 				}
 				else{
 					frappe.msgprint(data.message.msg_display);

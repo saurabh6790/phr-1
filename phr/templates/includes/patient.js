@@ -90,7 +90,8 @@ function download_phr(){
 						window.open(data['message']['url'], '_blank')
 					}
 				});
-			})
+	})
+	
 }
 function preventBack() {
     	window.history.forward();
@@ -224,6 +225,20 @@ function bind_events(){
 		ToDo.prototype.init($(document).find("#main-con"),
 			{"cmd":"make_todo"},profile_id,"")
 		NProgress.done();	
+	})
+
+	$(".ped").unbind("click").click(function(){
+		profile_id=sessionStorage.getItem("pid")
+		//var html='<div style="border:1px solid black;width:400px;height:238px;align:center"><div width=100% height=50%%><div width=30%>Logo</div><div width=65%>Name of Application</div></div><hr><div width=100%><div width=30%><img src="'+frappe.get_cookie("user_image")+'"></div><div width=65%>Name: Anand Pawar</br>Blood Group: b+ve</br>Contact No: 9860733789</br>Emer Contact:9860733789<br><img src="'+sessionStorage.getItem("barcode")+'"></div></div></div>'
+		frappe.call({
+			method:'phr.templates.pages.profile.get_pdf',
+			args:{"profile_id":profile_id},
+			callback: function(r) {
+				if(r.message) {
+					window.open(r.message, '_blank')
+				}
+			}
+		});		
 	})
 	
 }

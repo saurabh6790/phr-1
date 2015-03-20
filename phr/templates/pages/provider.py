@@ -152,3 +152,14 @@ def get_patient_data(data):
 		'rows': rows,
 		'listview': fields
 	}
+
+@frappe.whitelist(allow_guest=True)
+def check_existing_provider(provider_id,profile_id):
+	frappe.errprint(provider_id)
+	provider=frappe.db.sql("""select provider from `tabProviders Linked` 
+		where patient='%s' and provider='%s'"""%(profile_id,provider_id),as_dict=1)
+	frappe.errprint(provider)
+	if provider:
+		return True
+	else:
+		return False
