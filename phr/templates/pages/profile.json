@@ -94,7 +94,12 @@
       "label": "Email",
       "placeholder":""
    },
-   
+   {
+      "fieldname": "emergemcy_contactno", 
+      "fieldtype": "data", 
+      "label": "Emer. Contact No",
+      "placeholder":""
+   },   
    {
       "fieldname": "", 
       "fieldtype": "section_break", 

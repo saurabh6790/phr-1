@@ -122,11 +122,11 @@ function render_dashboard(profile_id){
     	$('#tdlst').empty()
     	$wrap=$('#tdlst')
     	$.each(todo,function(i,todo){
-			pro_data={"desc": todo['description'], "todo_id": todo["name"],"date":todo["date"]}
+			//pro_data={"desc": todo['description'], "todo_id": todo["name"],"date":todo["date"]}
 			$(repl_str('<div class="list-group-item-side %(todo_id)s">\
 				<a noherf data-name=%(todo_id)s>%(desc)s</a>\
 				<p class="text-muted small">%(date)s </p>\
-				</div>', pro_data)).appendTo($wrap)
+				</div>', todo)).appendTo($wrap)
 		})
     }
     function render_ad(ads){
@@ -142,6 +142,7 @@ function render_dashboard(profile_id){
     function render_ed(data){
     	$wrap=$('#ed')
     	pro_data={"name": data['name'], "contact": data["contact"],"barcode":data["barcode"]}
+    	sessionStorage.setItem("barcode",pro_data["barcode"])
 		$(repl_str('<div>Name:%(name)s<br>Contact:%(contact)s<br>\
     	<img src="%(barcode)s"></div>',pro_data)).appendTo($wrap)
   	}
@@ -175,6 +176,7 @@ function render_dashboard(profile_id){
 	
     }
     function render_LPHR_name(){
+    	$('.linked-phr').empty()
     	name=sessionStorage.getItem('cname')
     	$('<a nohref class="list-group-item-side chome"><div><i class="icon-home"></i>'+name+'&nbsp</div></a>').appendTo('.linked-phr').unbind("click").click(function(){
 			$('.field-area').empty()

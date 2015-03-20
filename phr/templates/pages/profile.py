@@ -7,14 +7,14 @@ import json
 import requests
 import os
 from frappe.auth import _update_password
-from frappe import _
+from frappe import _,msgprint
 import binascii
 import base64
 from phr.templates.pages.login import create_profile_in_db,get_barcode,get_image_path
-from frappe.utils import cint, now, get_gravatar,cstr,get_site_path
+from frappe.utils import cint, now, get_gravatar,cstr,get_site_path,get_url
 from phr.phr.doctype.phr_activity_log.phr_activity_log import make_log
 import datetime
-from phr.templates.pages.patient import get_base_url,send_phrs_mail 
+from phr.templates.pages.patient import get_base_url,send_phrs_mail,get_data_to_render,get_formatted_date_time,formatted_date,get_sms_template 
 from erpnext.setup.doctype.sms_settings.sms_settings import send_sms
 import requests
 
@@ -188,7 +188,7 @@ def upload_image(profile_id,data=None):
 		update_user_image(file_path,profile_id)
 		return "Profile Image Uploaded Successfully"
 
-def update_user_image(path,profile_id):
+def update_user_image(path, profile_id):
 	ue=frappe.db.get_value("User",{"profile_id":profile_id},"user_image")
 	if ue:
 		user=frappe.get_doc("User",frappe.session.user)
@@ -214,9 +214,6 @@ def update_user_image(path,profile_id):
 			sub="Image Uploaded Successfully "+path
 			make_log(profile_id,"profile","Linked PHR Image Upload",sub)
 			return "Image Uploaded Successfully"
-
-
-
 
 def get_site_name():
 	return frappe.local.site_path.split('/')[1]
@@ -465,7 +462,7 @@ def build_medication_data(data):
    ]	
 	if (data):
 		for d in data:
-			rows.extend([[d["medicine_name"],d["dosage"],d["from_date_time"],d["to_date_time"],d["additional_info"]]])
+			rows.extend([[d["medicine_name"],d["dosage"],formatted_date(d["from_date_time"]),formatted_date(d["to_date_time"]),d["additional_info"]]])
 	else:
 		rows.extend([[" NO DATA","","","",""]])		
 	
@@ -482,7 +479,7 @@ def build_appointments_data(data):
    ]	
 	if (data):
 		for d in data:
-			rows.extend([[d["from_date_time"],d["provider_name"],d["reason"]]])
+			rows.extend([[get_formatted_date_time(d["from_date_time"]),d["provider_name"],d["reason"]]])
 	else:
 		rows.extend([["","NO DATA",""]])
 	appointments_dic={"fieldname":"appointments","fieldtype": "table","label": "Appointments","rows":rows}
@@ -516,7 +513,8 @@ def get_user_details(profile_id=None):
 		return{
 			"name":name,
 			"contact":contact,
-			"barcode":barcode
+			"barcode":barcode,
+			"user_image":user.user_image,
 		}
 
 
@@ -615,19 +613,77 @@ def verify_mobile():
 	pass	
 
 
-@frappe.whitelist(allow_guest=True)		
+@frappe.whitelist(allow_guest=True)	
 def get_phr_pdf(profile_id):
 	path = os.path.join(os.getcwd(), get_site_path().replace('.',"").replace('/', ""), 'public', 'files', profile_id)
 	solr_op='dms/getPhrPdfwithfilelocation'
 	url=get_base_url()+solr_op
 	request_type='POST'
+	path+="/"
 	data={"profileId":profile_id,"file_location": [path]}
 	from phr.phr.phr_api import get_response
 	response=get_response(url,json.dumps(data),request_type)
 	res=json.loads(response.text)
-	frappe.errprint(res)
+	if res:
+		#frappe.errprint(res['file_location'].split('/')[-1])
+		url = get_url()+"/files/%s/"%(profile_id)+cstr(res['file_location'].split('/')[-1])
+		res["url"]=url
+		response.headers['Content-Disposition'] = 'attachment; filename='+res["file_location"].split("/")[-1]
+		return res
+	else:
+		frappe.msgprint(_("Issue Downloading PDF"))
+
+
+@frappe.whitelist(allow_guest=True)	
+def get_pdf(profile_id,options=None):
+	import pdfkit, os, frappe
+	from frappe.utils import scrub_urls
+	if not options:
+		options = {}
+
+	options.update({
+		"print-media-type": None,
+		"background": None,
+		"images": None,
+		'margin-top': '15mm',
+		'margin-right': '15mm',
+		'margin-bottom': '15mm',
+		'margin-left': '15mm',
+		'encoding': "UTF-8",
+		'no-outline': None
+	})
+
+	user=get_user_details(profile_id)
+	frappe.errprint(user)
+	html="""<div style='border:1px solid black;width:400px;height:238px;align:center'><div>
+			<div width=20%% >Logo</div>
+			<div width=60%% >Name of Application</div></div><hr>
+			<div width=100%% ><div width=20%% >
+			<img src="%(user_image)s" ></div>
+			<div width=60%% >Name:%(name)s
+			</br>Blood Group: b+ve
+			</br>Contact No: %(contact)s
+			</br>Emer Contact:9860733789
+			<br><img src="%(barcode)s">
+			</div></div></div>"""%user
+
+	if not options.get("page-size"):
+		options['page-size'] = "A4"
+
+	html = scrub_urls(html)
+	fname=os.path.join(os.getcwd(), get_site_path().replace('.',"").replace('/', ""), 'public', 'files', profile_id, profile_id + ".pdf")
+	pdfkit.from_string(html, fname, options=options or {})
+
+	with open(fname, "rb") as fileobj:
+		filedata = fileobj.read()
+
+	li=fname.split('/')
+	url = get_url()+"/".join(["",li[-3],li[-2],li[-1]])
+	return url
+
+
+@frappe.whitelist(allow_guest=True)	
+def check_templates(profile_id):
+	msg=get_sms_template("appointments",{"doctor_name":"ahahha","appointment_time":"4.25"})
+	frappe.errprint(msg)
 	
-	# url = "http://localhost:9888/files/WO-00086.pdf"
-	# res = requests.get(url)
-	# res.headers['Content-Disposition'] = 'attachment; filename=WO-00086.pdf'
-	# return res.text

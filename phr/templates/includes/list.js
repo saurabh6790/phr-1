@@ -21,8 +21,8 @@
 
 // }
 
-function thumbnail(pdfURL, elementID, filename, display){
-    // console.log([pdfURL, 'test_pdf'])
+function thumbnail(pdfURL, elementID, filename, doc_list, display){
+    console.log(['pdfURL', 'test_pdf', doc_list])
     PDFJS.workerSrc="/assets/phr/pdfjs/build/pdf.worker.js";
     PDFJS.getDocument(pdfURL).then(function(pdf){
         pdf.getPage(1).then(function(page) {  //1 is the page number we want to retrieve
@@ -50,10 +50,27 @@ function thumbnail(pdfURL, elementID, filename, display){
         // console.log(img)
         $(elementID).html('<div>\
                             <input type="checkbox" style="display:'+display+'" value="'+pdfURL+'">\
-                        </div><img style="height:150px;" src="'+img+'"/><br>\
+                        </div><a class = "pdf_img" data-name="'+pdfURL+'" ><img style="height:150px;" src="'+img+'"/></a><br>\
                         <label style="width: 150px;word-wrap: break-word;">'+filename+'</label>');
-    });
-})
+
+        $('.pdf_img').unbind("click").click(function(){
+            window.open($(this).attr('data-name'))
+        })
+
+        $("input[type=checkbox]").unbind("click").click(function(){
+            if($(this).is(':checked')){
+                console.log(doc_list)
+                // file_path = $($(this).parents()[1]).find('img').attr('src')
+                file_path = $(this).val()
+                console.log(file_path)
+                doc_list.push(file_path.substring(7, file_path.length))
+                // me.doc_list.push( me.args['profile_id'] + '/' +  $('input[name="entityid"]').val() + '/' + me.folder + '/' +  me.sub_folder + '/' + $(this).val())
+            }
+        });
+        });
+
+    })
 
    })
+
 }

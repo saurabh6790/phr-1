@@ -46,6 +46,9 @@ $.extend(ThumbNails.prototype,{
 								aria-describedby="basic-addon2"></textarea>\
 						</div>\
 					</div>\
+					<button style="float:left;width:30%;margin-left:5%;margin-top:5%;" id="pdf_maker" class="btn btn-default" > \
+						<i class="icon-book"></i>\
+						Save as PDF </button>\
 				</div>\
 			</div>\
 			<hr>\
@@ -68,7 +71,7 @@ $.extend(ThumbNails.prototype,{
 			
 		})
 		
-		$('#convert_to_pdf').click(function(){
+		$('#pdf_maker').click(function(){
 			me.convert_txt_to_pdf($('[name="attch_desc"]').val())
 		})
 
@@ -92,20 +95,42 @@ $.extend(ThumbNails.prototype,{
 	            		"file_location": [
 	            			attachment['site_path'] +'/'+ me.args['profile_id'] + '/' +  $('input[name="entityid"]').val() + '/' + me.folder + '/' +  me.sub_folder + '/' + attachment['file_name']
 						],
-						"text_file_desc": $('[name="attch_desc"]').val() ? $('[name="attch_desc"]').val() : "" ,
-						"text_file_id": $('[name="attch_desc"]').val() ? me.folder+'_'+me.sub_folder+'.pdf' : "",
-						"text_file_loc": $('[name="attch_desc"]').val() ? attachment['site_path'] +'/'+ me.args['profile_id'] + '/' +  $('input[name="entityid"]').val() + '/' + me.folder + '/' +  me.sub_folder + '/' + me.folder+'_'+me.sub_folder+'.pdf' : ""
+						"text_file_desc":  "" ,
+						"text_file_id":  "",
+						"text_file_loc": ""
 				})
 				me.render_uploader_and_files();
 			}
 		});
 	},
 	convert_txt_to_pdf:function(desc){
-		frappe.require("/assets/phr/js/jspdf.js");
-		frappe.require("/assets/phr/js/libs/base64.js");
-		frappe.require("/assets/phr/js/libs/sprintf.js");
-		
-		var doc = new jsPDF();
+		var me = this;
+		if($('[name="attch_desc"]').val()){
+			frappe.call({
+				method:"phr.templates.pages.uploader.get_pdf_site_path",
+				args:{'profile_id': me.args['profile_id'], 'folder':me.folder, 
+				'sub_folder': me.sub_folder, 'event_id': $('input[name="entityid"]').val(), 'timestamp' : String(new Date().getTime())},
+				callback:function(r){
+					me.args['dms_file_list'] = me.args['dms_file_list'] ? me.args['dms_file_list'] : [];
+					me.args['dms_file_list'].push(			{
+						"tag_id": me.folder.split('-')[1]+''+me.sub_folder.split('_')[1],
+						"tag_name": me.folder.split('-')[0],
+			    		"sub_tag_name": me.sub_folder.split('_')[0],
+			    		"file_id": [],
+			    		"file_location": [],
+						"text_file_desc": $('[name="attch_desc"]').val() ? $('[name="attch_desc"]').val() : "" ,
+						"text_file_id": $('[name="attch_desc"]').val() ? r.message['timestamp']+'_'+ me.folder+'_'+me.sub_folder+'.pdf' : "",
+						"text_file_loc": $('[name="attch_desc"]').val() ? r.message['site_path'] +'/'+ me.args['profile_id'] + '/' +  $('input[name="entityid"]').val() + '/' + me.folder + '/' +  me.sub_folder + '/' + r.message['timestamp']+'_'+ me.folder+'_'+me.sub_folder+'.pdf' : ""
+					})
+					frappe.msgprint("Description added as pdf, click on save to make it as attachment")
+					$('[name="attch_desc"]').val('')
+				}
+			})
+		}
+		else{
+			frappe.msgprint("Please write description before converting it as pdf!!!")
+		}
+			
 	},
 	show_attachments:function(){
 		var me = this;
@@ -140,7 +165,8 @@ $.extend(ThumbNails.prototype,{
 			$td = $(repl('<td style="width:200px;\
 							height:200px;padding-right:20px;vertical-align:top;">\
 						',attachment)).appendTo(row)
-			thumbnail("/"+attachment['path']+"/"+attachment['file_name'], $td, attachment['file_name'], me.args['display'])
+			console.log(me.doc_list)
+			thumbnail("/"+attachment['path']+"/"+attachment['file_name'], $td, attachment['file_name'], me.doc_list, me.args['display'])
 		}
 		else if((/\.(gif|jpg|jpeg|tiff|png)$/i).test(attachment['file_name']) ){
 			$('<td style="width:200px;height:200px;padding-right:20px;vertical-align:top;">')
@@ -169,6 +195,7 @@ $.extend(ThumbNails.prototype,{
 			if($(this).is(':checked')){
 				// file_path = $($(this).parents()[1]).find('img').attr('src')
 				file_path = $(this).val()
+				console.log(file_path)
 				me.doc_list.push(file_path.substring(7, file_path.length))
 				// me.doc_list.push( me.args['profile_id'] + '/' +  $('input[name="entityid"]').val() + '/' + me.folder + '/' +  me.sub_folder + '/' + $(this).val())
 			}

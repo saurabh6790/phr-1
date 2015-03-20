@@ -4,7 +4,7 @@ from erpnext.setup.doctype.sms_settings.sms_settings import send_sms
 from frappe.utils.email_lib import sendmail
 import json
 from phr.templates.pages.profile import search_profile_data_from_solr
-from phr.templates.pages.patient import send_phrs_mail
+from phr.templates.pages.patient import send_phrs_mail,get_formatted_date_time,get_sms_template
 
 
 @frappe.whitelist()
@@ -25,9 +25,10 @@ def create_todo(data):
 @frappe.whitelist(allow_guest=True)
 def get_todo(profile_id):
 	todo_list = []
-	todo = frappe.db.sql("select name from tabToDo where profile_id = '%s' order by creation desc limit 5"%profile_id)
+	todo = frappe.db.sql("select name from tabToDo where profile_id = '%s' and date >= CURDATE() order by creation desc limit 5"%profile_id)
 	for td in todo:
-		todo_list.append(frappe.get_doc("ToDo", td[0]))
+		td=frappe.get_doc("ToDo", td[0])
+		todo_list.append({"desc": td.description, "todo_id": td.name,"date":get_formatted_date_time(td.date)})
 
 	return todo_list
 
@@ -46,14 +47,14 @@ def notify_to_do():
 			if pobj:
 				sms_recipients.append(pobj.contact)
 				email_list.append(pobj.name)
-				msg[pobj.contact]=todoobj.description
+				msg[pobj.contact]=get_sms_template("todo",{"to_do":todoobj.description})
 				email_msg[pobj.name]=todoobj.description
 				print pobj.name
 			else:
 				data=search_profile_data_from_solr(profile)
 				if data['mobile']:
 					sms_recipients.append(data["mobile"])
-					msg[data['mobile']]=todoobj.description
+					msg[data['mobile']]=get_sms_template("todo",{"to_do":todoobj.description})
 				if data['email']:
 					email_list.append(data["email"])
 					email_msg[data["email"]]=todoobj.description

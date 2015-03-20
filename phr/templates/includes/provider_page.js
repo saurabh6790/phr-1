@@ -15,6 +15,8 @@ frappe.provide("frappe");
 {% include "templates/includes/messages.js" %}
 {% include "templates/includes/custom_dialog.js" %}
 {% include "templates/includes/dashboard_renderer.js" %}
+{% include "templates/includes/todo.js" %}
+
 /*
   Format for method Classes
   ClassName.prototype.init(wrapper,name_of_json_file,entityid,operation_entity)
@@ -28,6 +30,10 @@ $(document).ready(function () {
 		window.location.href = "login";
 	}
 	else{
+		var db = new render_dashboard();
+		db.render_emer_details(sessionStorage.getItem("pid"))
+		db.render_to_do(sessionStorage.getItem("pid"))
+		db.render_advertisements(sessionStorage.getItem("pid"))
 		$("#home").on("click",function(){
 			$('#phr').addClass("hide");
 			$('.breadcrumb').empty()
@@ -42,6 +48,10 @@ $(document).ready(function () {
 			$('.field-area').empty()
 			$('#main-con').empty()
 			render_middle(profile_id);
+			var db = new render_dashboard();
+			db.render_emer_details(profile_id)
+			db.render_to_do(profile_id)
+			db.render_advertisements(profile_id)
 			NProgress.done();
 		})
 	
@@ -120,6 +130,12 @@ $(document).ready(function () {
 		}).appendTo('.breadcrumb');
 		DiseaseMonitoring.prototype.init($(document).find("#main-con"),'', sessionStorage.getItem("cid"))
 		NProgress.done();
+	})
+	$(".create_todo").unbind("click").click(function(){
+		NProgress.start();
+		ToDo.prototype.init($(document).find("#main-con"),
+			{"cmd":"make_todo"},sessionStorage.getItem("pid"),"")
+		NProgress.done();	
 	})
 
 })

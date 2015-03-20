@@ -122,8 +122,8 @@
      " ", 
      "Medicine Name", 
      "Dosage", 
-     "From Date time", 
-     "To Date time", 
+     "From Date", 
+     "To Date", 
      "Additional Info", 
      "Status"
     ]

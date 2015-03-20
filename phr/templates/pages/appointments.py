@@ -2,7 +2,7 @@ import frappe
 import json
 import os 
 from frappe.utils import get_site_path, get_hook_method, get_files_path, get_site_base_path,cstr
-from phr.templates.pages.patient import get_data_to_render
+from phr.templates.pages.patient import get_data_to_render,get_formatted_date_time,get_sms_template
 import datetime
 from phr.phr.doctype.phr_activity_log.phr_activity_log import make_log
 from erpnext.setup.doctype.sms_settings.sms_settings import send_sms
@@ -24,7 +24,7 @@ def get_appointments(data):
 	data=json.loads(data)
 	apts_list=fetch_values_from_db(data)
 	for d in apts_list:
-		rows.extend([["",d.from_date_time,d.provider_name,d.reason]])
+		rows.extend([["",get_formatted_date_time(d.from_date_time),d.provider_name,d.reason]])
 
 	return {
 		'rows': rows,
@@ -83,12 +83,12 @@ def send_notification(profile_list):
 			apobj=frappe.get_doc('Appointments',profile['name'])
 			if pobj:
 				sms_recipients.append(pobj.contact)
-				msg[pobj.contact]='Your appointment with Dr."%s" is at "%s" today'%(profile['provider_name'],profile['time'])
+				msg[pobj.contact]=get_sms_template("appointment",{"doctor_name":profile['provider_name'],"appointment_time":profile['time']})
 			else:
 				data=search_profile_data_from_solr(profile_id)
 				if data['mobile']:
 					sms_recipients.append(data["mobile"])
-				msg[data["mobile"]]='Your appointment with Dr."%s" is at "%s" today'%(profile['provider_name'],profile['time'])
+				msg[data["mobile"]]=get_sms_template("appointment",{"doctor_name":profile['provider_name'],"appointment_time":profile['time']})
 			
 		if sms_recipients:
 			for no in sms_recipients:

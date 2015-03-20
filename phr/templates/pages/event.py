@@ -96,13 +96,16 @@ def update_event(data):
 def clear_dms_list(dms_file_list):
 	import os
 	for loc in dms_file_list:
-		os.remove(loc.get('file_location')[0])
+		if len(loc.get('file_location')) > 0:
+			os.remove(loc.get('file_location')[0])
+		else:
+			os.remove(loc.get('text_file_loc'))
 
 def copy_files_to_visit(dms_file_list, visit_id):
 	import os, shutil, glob
 	for loc in dms_file_list:
 	
-		path_lst = loc.get('file_location')[0].split('/')
+		path_lst = loc.get('file_location')[0].split('/') if len(loc.get('file_location')) > 0 else loc.get('text_file_loc').split('/')
 		
 		file_path = os.path.join('/'.join(path_lst[0:len(path_lst)-1]), visit_id)
 		
@@ -188,7 +191,7 @@ def share_via_email(data):
 				'event': data.get('event_title'),
 				'provider_name': data.get('doctor_name')}
 	else:
-		frappe.msgprint('Please select file(s) for sharing')
+		return 'Please select file(s) for sharing'
 
 def share_via_providers_account(data):
 	# frappe.errprint([data.get('files'), not data.get('files')])
@@ -259,7 +262,7 @@ def make_sharing_request(event_data, data):
 	req.valid_upto = data.get('sharing_duration')
 	req.event_title = data.get("event_title")
 	req.doc_name = 'Event' 
-	req.save()
+	req.save(ignore_permissions=True)
 
 @frappe.whitelist(allow_guest=True)
 def get_visit_data(data):
@@ -450,7 +453,6 @@ def event_wise_count_dict(count_dict, event_dict,sub_event_count):
 			event_dict[main_folder] += count_dict[key]
 	
 		sub_event_count[folder] = count_dict[key]
-	
 
 @frappe.whitelist(allow_guest=True)
 def get_event_wise_count_dict(count_dict, event_count_dict):
@@ -502,7 +504,7 @@ def get_conditions(filters):
 
 def get_provider_info(cond):
 	if cond:
-		ret = frappe.db.sql("""select provider_id, provider_name, mobile_number, email from tabProvider where %s """%cond, as_dict=1)
+		ret = frappe.db.sql("""select provider_id, provider_name, mobile_number, email, specialization, city from tabProvider where %s """%cond, as_dict=1)
 		# frappe.errprint(ret)
 		return ((len(ret[0]) > 1) and ret) if ret else None
 	
@@ -519,3 +521,73 @@ def get_linked_providers(profile_id=None):
 			r.update({'label': r['name1'], 'value': r['name1']})
 		
 		return ret
+
+
+
+tag_dict = {'11': "consultancy-11", "12": "event_snap-12", "13": "lab_reports-13", "14":"prescription-14", "15": "cost_of_care-15"}
+sub_tag_dict = {
+	"11":{'51':"A_51", "52":"B_52", "53":"C_53"},
+	"12":{'51':"A_51", "52":"B_52"},
+	"13":{'51':"A_51", "52":"B_52"},
+	"14":{'51':"A_51", "52":"B_52", "53":"C_53"},
+	"15":{'51':"A_51"},
+}
+
+@frappe.whitelist()
+def image_writter(profile_id, event_id):
+	import os, base64
+	data = {"profile_id": profile_id, "event_id": event_id}
+	
+	filelist = get_image_details(data)
+
+	for file_obj in filelist:
+		
+		tags = file_obj.get('tag_id').split('-')[2]
+		folder = tag_dict.get(tags[:2])
+		sub_folder = sub_tag_dict.get(tags[:2]).get(tags[2:])
+		path = os.path.join(os.getcwd(), get_site_path().replace('.',"").replace('/', ""), 'public', 'files', data.get('profile_id'), data.get("event_id"),  folder, sub_folder, file_obj.get('visit_id'))
+		
+		wfile_name = file_obj.get('temp_file_id').split('.')[0] + '-watermark.' + file_obj.get('temp_file_id').split('.')[1]
+		if not os.path.exists(os.path.join(path, wfile_name)):
+			frappe.create_folder(path)
+			# filedata = file_obj.get('base64StringFile')
+			# # frappe.errprint(filedata)
+			# decoded_image = base64.b64decode(filedata)
+			# # decoded_image = filedata.decode('base64','strict')
+			# with open(img_path, 'wb') as f:
+			# 	f.write(filedata)
+
+			img_path = os.path.join(path,  wfile_name)
+			data = {
+				"entityid": file_obj.get('visit_id'),
+				"profile_id": data.get('profile_id'),
+				"event_id": data.get("event_id"),
+				"tag_id": file_obj.get('tag_id'),
+				"file_id": [
+					file_obj.get('temp_file_id')
+				],
+				"file_location": [
+					img_path
+				]
+			}
+			
+			res = write_file(data)
+			
+def write_file(data):
+	request_type="POST"
+	url="%sdms/getvisitsinglefile"%get_base_url()
+	
+	response=get_response(url, json.dumps(data), request_type)
+	res_data = json.loads(response.text)
+
+	return res_data
+
+def get_image_details(data):
+	request_type="POST"
+	url="%smobile/dms/getalleventfiles"%get_base_url()
+	
+	response=get_response(url, json.dumps({"profile_id":data.get('profile_id'), "event_id": data.get("event_id")}), request_type)
+	res_data = json.loads(response.text)
+
+	return res_data.get('filelist')
+

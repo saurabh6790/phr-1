@@ -17,44 +17,10 @@ var PatientDashboard = inherit(RenderFormFields, {
 		//this.get_linked_phrs(this.entityid)
 		this.get_enabled_notification(this.entityid)
 		this.get_enabled_dashboard(this.entityid)
-		this.download_phr(this.entityid)
+		//this.download_phr(this.entityid)
 	},
 	download_phr:function(profile_id){
-		$('<a nohref class="list-group-item-side chome"><div><i class="icon-download"></i>Download PHR</div></a>').appendTo('.linked-phr').unbind("click").click(function(){
-			//window.location.href="/home/prashant/workspace/phr/frappe-bench/sites/phr/public/files/1421241227143-350079.svg"
-			/*frappe.call({
-				method:"phr.templates.pages.profile.verify_mobile",
-				callback:function(r){
-					if(r.message){
-						$.each(r.message,function(i, val){
-							$option=$('<option>', { 
-								'value': val[0],
-								'text' : val[0] 
-							}).appendTo($('select[name="state"]'))
-						})
-					}
-					else{
-					
-					}
-				}
-				window.location.href = repl_str(frappe.request.url +
-				'?cmd=%(cmd)s', {
-				cmd: "phr.templates.pages.profile.verify_mobile",
-			});*/
-			args={
-				"cmd": "phr.templates.pages.profile.get_phr_pdf",
-				'profile_id': profile_id
-			}
-			//cmd="phr.templates.pages.profile.verify_mobile"
-			 $.ajax({
-        		url: '/',
-        		type: 'POST',
-        		data: args,
-        		success: function(data) {
-            		console.log(data)
-        		}
-    		});
-		})
+		
 	},
 	render_validations:function(profile_id){
 		
@@ -255,30 +221,25 @@ var PatientDashboard = inherit(RenderFormFields, {
   		$(".tab-pane.active form input[required],.tab-pane.active form textarea[required],.tab-pane.active form select[required]").each(function(i, obj) {
   			if ($(this).val()==""){
   				$(this).css({"border": "1px solid #999","border-color": "red" });
-  				//frappe.msgprint("Fields Marked as Red Are Mandatory")
-  				msg="Fields Marked as Red Are Mandatory"
   				fg=false
   			}
   		})
+  		if (fg==false){
+  			return {
+  				"fg":fg,
+  				"msg":"Fields Marked as Red Are Mandatory"
+  			}
+ 		}
   		if($('.tab-pane.active form input[name="mobile"]').val()){
   			if (!validate_mobile($('.tab-pane.active form input[name="mobile"]').val())) {
-  				//frappe.msgprint("Mobile No Invalid")
   				msg="Mobile No Invalid"
   				fg=false
   			}
   		}
-  		/*$('.tab-pane.active form input[name="str_date_of_birth"]').bind('change', function() { 
-			val=$(this).val()
-			if (diffDays(parseDate(val),new Date().setHours(0,0,0,0)) < 0) { 
-    			//frappe.msgprint("OOP's Date of Birth is not valid")
-    			msg="OOP's Date of Birth is not valid"
-			}
-		});*/	
   		return {
-  				"fg":fg,
-  				"msg":msg
-  			}	
-  		
+  			"fg":fg,
+  			"msg":msg
+  		}	
   	},
   	get_user_image:function(profile_id){
   		frappe.call({
@@ -286,7 +247,7 @@ var PatientDashboard = inherit(RenderFormFields, {
 			args:{"profile_id":profile_id},
 			callback: function(r) {
 				if (r.message["image"]){
-					$('<img src="'+r.message["image"]+'"alt="user image"><img>').appendTo($('.fileinput-preview'))
+					$('<img src="'+r.message["image"]+'"alt="user image">').appendTo($('.fileinput-preview'))
 				}
 			}
 		});
@@ -512,3 +473,5 @@ var PatientDashboard = inherit(RenderFormFields, {
 		}
 	}
 })
+
+

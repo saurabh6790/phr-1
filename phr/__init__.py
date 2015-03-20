@@ -163,8 +163,11 @@ def get_linked_provides(data):
 @frappe.whitelist(allow_guest=True)
 def searchProviders(data=None):
 	from templates.pages.event import get_providers
-	return get_providers(data)
-
+	providers_list = get_providers(data)
+	if providers_list:
+		return providers_list
+	else:
+		return []
 @frappe.whitelist(allow_guest=True)
 def linkSelectedProvider(data):
 	""" data = { 
@@ -186,54 +189,117 @@ def createProvider(data):
 	del res['actualdata']
 	return res
 
-"""Event/Visit Sharing via Provider"""
+""" Event/Visit Sharing """
 @frappe.whitelist(allow_guest=True)
-def sharingVaiProvider(data):
+def sharingViaProvider(data):
 	from templates.pages.event import share_via_providers_account
 	data = json.loads(data)
 	return share_via_providers_account(data)
 
+@frappe.whitelist(allow_guest=True)
+def sharingViaEmail(data):
+	from templates.pages.event import share_via_email
+	data=json.loads(data)
+	return share_via_email(data)
+
+"""Service to get all dropdown"""
+@frappe.whitelist(allow_guest=True)
+def getDropdownMenu():
+	return {
+		"gender": ["Male", "Female", "Trans Gender"],
+		"marital_status": ["Married", "Single"],
+		"state": get_states(),
+		"blood_group": ["O+","O-","A+","A-","B+","B-","AB+","AB-"],
+		"diet_type": ["Vegetarian", "Non-Vegetarian"],
+		"provider_type": get_provider_type(),
+		"specialization": get_specialization_list(),
+		"share_via": ["Email", "Provider Account"],
+		"reason_for_sharing": ["Consultation", "Follow Up", "Second Opinion"]
+	}
+
+def get_states():
+	return silgle_dlist(frappe.db.sql("""select name from tabState """, as_list=1))
+
+def get_provider_type():
+	return silgle_dlist(frappe.db.sql("select name from `tabProvider Type`", as_list=1))
+
+def get_specialization_list():
+	return silgle_dlist(frappe.db.sql("select name from `tabSpecialization`", as_list=1))	
+
+def silgle_dlist(multi_dlist):
+	return [i[0] for i in multi_dlist]
+
+
+"""image writer"""
+@frappe.whitelist(allow_guest=True)
+def image_writter(data):
+	from templates.pages.event import image_writter
+	return image_writter(data)
+
 """ Profile Image Calls """
 @frappe.whitelist(allow_guest=True)
 def setProfileImage():
-	from frappe.utils import get_site_path, get_hook_method, get_files_path, get_site_base_path, get_path, get_site_name
-	# return frappe.local.request
-	data = frappe.local.request.form
+	import os
+	from frappe.utils import  get_files_path
 
-	atr = ['content_length', 'content_type', 'filename', 'headers', 'mimetype', 'mimetype_params', 'name']
+	data = json.loads(frappe.local.request.data)
 
-	for key in frappe.local.request.files:
-		print "\n"
-		print frappe.local.request.files.get(key).content_type
-		print "\n"
-		print frappe.local.request.files.get(key).content_length
-		print "\n"
-		print frappe.local.request.files.get(key).filename
-		print "\n"
-		print frappe.local.request.files.get(key).headers
-		print "\n"
-		print frappe.local.request.files.get(key).mimetype
-		print "\n"
-		print frappe.local.request.files.get(key).mimetype_params
-		print "\n"
-		print frappe.local.request.files.get(key).name
-		print "\n"
-		print frappe.local.request.files.get(key).stream
-
-	file_path = "%(files_path)s/%(file_name)s"%{'files_path': get_files_path(), 
+	file_path = "%(files_path)s/%(profile_id)s/%(file_name)s"%{'files_path': get_files_path(), "profile_id": data.get('profile_id'),
 		'file_name': data.get('file_name')
 	}
+	path = os.path.join(os.getcwd(), get_files_path()[2:], data.get('profile_id'))
+	frappe.create_folder(path)
+	with open("%s/%s"%(path,data.get('file_name')), 'wb') as f:
+ 		f.write(base64.b64decode(data.get('bin_img')))
 
-	print file_path
-	open(file_path, 'wb').write(frappe.local.request.files.get(key).stream)
-	# with open(file_path, 'wb') as f:
- # 		f.write(data.get('file_content'))
-
- # 	update_profile_image(data.get('profile_id'), data.get('file_name'))
+ 	res = update_profile_image(data.get('profile_id'), data.get('file_name'))
+ 	return {"filestatus": res}
 
 def update_profile_image(profile_id, file_name):
+	# from templates.pages.profile import update_user_image
+	# return update_user_image("/files/%s/%s"%(profile_id, file_name), profile_id)
+
 	user_id = frappe.db.get_value('User', {'profile_id': profile_id}, 'name')
 	if user_id:
 		user = frappe.get_doc('User', user_id)
-		user.user_image = "/files/%s"%(file_name)
+		user.user_image = "/files/%s/%s"%(profile_id, file_name)
 		user.save(ignore_permissions=True)
+
+@frappe.whitelist(allow_guest=True)
+def getProfileImage(data):
+	import os
+	from frappe.utils import  get_files_path
+	data = json.loads(data)
+	user_id = frappe.db.get_value('User', {'profile_id': data.get('profile_id')}, 'name')
+	user_img = {}
+	bin_img = ''
+
+	if user_id:
+		user = frappe.get_doc('User', user_id)
+			
+		file_name = user.user_image.split('/')[-1:][0]
+
+		file_path = "%(files_path)s/%(profile_id)s/%(file_name)s"%{'files_path': get_files_path(), 
+			"profile_id": data.get('profile_id'),
+			'file_name': file_name
+		}
+		
+		if os.path.exists(file_path):
+			image = open(file_path,'rb').read()
+			bin_img = base64.b64encode(image)
+
+		else:
+			from templates.pages.profile import get_user_image
+			user_img = get_user_image(data.get('profile_id'))
+
+		return {
+			"profile_id": data.get('profile_id'),
+			"bin_img": bin_img,
+			"file_name": file_name,
+			"img_url": user_img.get('image')
+		}
+
+	else:
+		return {
+			'exe':"Profile Not Found"
+		}

@@ -103,6 +103,11 @@ def get_data():
 					"name": "Provider Type",
 					"description": _("Provider Types"),
 				},
+				{
+					"type": "doctype",
+					"name": "Message Templates",
+					"description": _("Manage SMS Templates"),
+				},
 			]
 		},
 		{

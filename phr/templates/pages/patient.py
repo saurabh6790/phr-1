@@ -2,10 +2,11 @@
 from __future__ import unicode_literals
 import frappe
 from frappe.core.doctype.user.user import STANDARD_USERS
-from frappe.utils import cint
+from frappe.utils import cint,cstr
 import json
 import requests
 import os
+import datetime
 
 
 """
@@ -127,7 +128,6 @@ def get_url(data):
 def get_base_url():
 	return "http://192.168.5.18:9090/phr-api/"
 	#return "http://88.198.52.49:7974/phr-api/"
-	#pass
 
 """
 Method to get name of method in solr database.contains dictionary or map.
@@ -170,3 +170,26 @@ def send_phrs_mail(recipient,subject, template, add_args):
 
 	frappe.sendmail(recipients=recipient, sender=sender, subject=subject,
 		message=frappe.get_template(template).render(args))
+
+@frappe.whitelist(allow_guest=True)
+def get_formatted_date_time(strdate=None):
+	if strdate:
+		return datetime.datetime.strptime(strdate,"%Y-%m-%d %H:%M:%S").strftime('%d/%m/%Y %H:%M')
+
+@frappe.whitelist(allow_guest=True)
+def formatted_date(strdate=None):
+	if strdate:
+		return datetime.datetime.strptime(strdate,"%Y-%m-%d").strftime('%d/%m/%Y')
+
+@frappe.whitelist(allow_guest=True)
+def get_sms_template(name,args):
+	import re
+	template=frappe.db.get_value("Message Templates",{"name":name},"message_body")
+	tempStr = ""
+	if template:
+		for key in re.findall(r"(?<=\[)(.*?)(?=\])",template):
+			old = "[%s]"%key
+			new = cstr(args.get(key))
+			template = template.replace(old, new)
+		return template
+

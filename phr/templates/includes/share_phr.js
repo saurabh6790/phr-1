@@ -39,7 +39,7 @@ $.extend(SharePhr.prototype,{
 	},
 	render_folder_section:function(event_id,method){
 		var me = this;
-
+		console.log(method)
 		//method=""
 		if (method=="visit"){
 			frappe.call({
@@ -47,17 +47,17 @@ $.extend(SharePhr.prototype,{
 				"args":{"visit_id":$('input[name="entityid"]').val(),"profile_id":sessionStorage.getItem("cid")},
 				callback:function(r){
 					TreeView.prototype.init({'profile_id': this.args['profile_id'], 'dms_file_list': me.dms_file_list, 
-						'display': 'initial', 'doc_list': this.doc_list,"event_dict":r.message.event_dict,"sub_event_count":r.message.sub_event_count})
+						'display': 'initial', 'doc_list': me.doc_list,"event_dict":r.message.event_dict,"sub_event_count":r.message.sub_event_count})
 				}
 			})
 		}
-		else if (method=="event"){
+		else{
 			frappe.call({
 				"method":"phr.templates.pages.event.get_individual_event_count_for_badges",
 				"args":{"event_id":event_id,"profile_id":sessionStorage.getItem("cid")},
 				callback:function(r){
 					TreeView.prototype.init({'profile_id': this.args['profile_id'], 'dms_file_list': me.dms_file_list, 
-						'display': 'initial', 'doc_list': this.doc_list,"event_dict":r.message.event_dict,"sub_event_count":r.message.sub_event_count})
+						'display': 'initial', 'doc_list': me.doc_list,"event_dict":r.message.event_dict,"sub_event_count":r.message.sub_event_count})
 				}
 			})
 		}

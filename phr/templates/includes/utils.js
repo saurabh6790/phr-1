@@ -71,6 +71,18 @@ $.arrayIntersect = function(a, b){
 	});
 };
 
+function disable_fields(fields){
+    if(typeof(fields) == 'string'){
+        $('[name="'+fields+'"]').attr('disabled', 'disabled')
+    }
+    else{
+        $.each(fields, function(i, field){
+            $('[name="'+field+'"]').attr('disabled', 'disabled')
+        })
+    }
+}
+
+var disable_field = disable_fields
 
 $.fn.pageMe = function(opts){
     var $this = this,

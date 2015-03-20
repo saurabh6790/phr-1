@@ -2,7 +2,7 @@ import frappe
 import json
 import os 
 from frappe.utils import get_site_path, get_hook_method, get_files_path, get_site_base_path,cstr,cint
-from phr.templates.pages.patient import get_data_to_render
+from phr.templates.pages.patient import get_data_to_render,formatted_date,get_sms_template
 import datetime
 from phr.phr.doctype.phr_activity_log.phr_activity_log import make_log
 from erpnext.setup.doctype.sms_settings.sms_settings import send_sms
@@ -26,9 +26,9 @@ def get_medication_data(data):
 	medication_list=fetch_values_from_db(data)
 	for d in medication_list:
 		if d.status=='Active':
-			rows.extend([["<a nohref class='medication' id='%s'><i class='icon-unlock' data-toggle='tooltip' data-placement='top' title='Deactivate'></i></a>"%d.name,d.medicine_name, d.dosage,d.from_date_time,d.to_date_time,d.additional_info,d.status]])
+			rows.extend([["<a nohref class='medication' id='%s'><i class='icon-unlock' data-toggle='tooltip' data-placement='top' title='Deactivate'></i></a>"%d.name,d.medicine_name, d.dosage,formatted_date(d.from_date_time),formatted_date(d.to_date_time),d.additional_info,d.status]])
 		else:
-			rows.extend([["<i class='icon-lock' data-toggle='tooltip' data-placement='top'>",d.medicine_name, d.dosage,d.from_date_time,d.to_date_time,d.additional_info,d.status]])	
+			rows.extend([["<i class='icon-lock' data-toggle='tooltip' data-placement='top'>",d.medicine_name, d.dosage,formatted_date(d.from_date_time),formatted_date(d.to_date_time),d.additional_info,d.status]])	
 
 	return {
 		'rows': rows,
@@ -133,6 +133,13 @@ def get_medictions_to_notify():
 		and status='Active'""")
 	return med_list
 
+@frappe.whitelist(allow_guest=True)
+def update_status_of_medication():
+	frappe.db.sql("""update `tabMedication` 
+		set status='Inactive'
+		where to_date_time < CURDATE() 
+		and status='Active'""")
+	return "done"
 def fetch_data_from_medications(med_list,recipient_list):
 	if med_list:
 		msg={}
@@ -157,12 +164,12 @@ def fetch_data_from_medications(med_list,recipient_list):
 					user=frappe.get_doc("User",frappe.db.get_value("User",{"profile_id":mobj.profile_id},"name"))
 					if user:
 						recipient_list.append(user.contact)
-						msg[user.contact]="Time for Medicine:"+mobj.get('medicine_name')
+						msg[user.contact]=get_sms_template("medication",{"medication":mobj.get('medicine_name')})
 					else:
 						data=search_profile_data_from_solr(mobj.profile_id)
 						if data['mobile']:
 							recipient_list.append(data["mobile"])
-							msg[data["mobile"]]="Time for Medicine:"+me.get('medicine_name')
+							msg[data["mobile"]]=get_sms_template("medication",{"medication":mobj.get('medicine_name')})
 							
 		return recipient_list,msg
 
