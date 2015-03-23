@@ -112,8 +112,7 @@ $.extend(ThumbNails.prototype,{
 			callback:function(attachment, r) {
 				NProgress.done();
 				me.args['dms_file_list'] = me.args['dms_file_list'] ? me.args['dms_file_list'] : [];
-				me.args['dms_file_list'].push(
-					{
+				me.args['dms_file_list'].push({
 						"tag_id": me.folder.split('-')[1]+''+me.sub_folder.split('_')[1],
 						"tag_name": me.folder.split('-')[0],
 	            		"sub_tag_name": me.sub_folder.split('_')[0],

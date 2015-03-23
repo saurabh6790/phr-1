@@ -1,6 +1,6 @@
 import frappe
 import json
-from frappe.utils import cstr
+from frappe.utils import cstr, get_site_path
 import base64
 
 """ Profile login calls """
@@ -200,7 +200,35 @@ def sharingViaProvider(data):
 def sharingViaEmail(data):
 	from templates.pages.event import share_via_email
 	data=json.loads(data)
+	res = write_docfile(data)
 	return share_via_email(data)
+
+def write_docfile(data):
+	import os
+	for file_path in data.get('files'):
+		base_dir_path = os.path.join(os.getcwd(), get_site_path().replace('.',"").replace('/', ""), 'public', 'files')
+		folder_lst = file_path.split('/')
+		file_path =  '/'.join(folder_lst[:-1]) 
+		doc_name = folder_lst[-1:][0]
+		doc_base_path = os.path.join(base_dir_path, file_path)
+
+		if not os.path.exists(doc_base_path + '/' +doc_name):
+			frappe.create_folder(doc_base_path)
+			data = {
+				"entityid": folder_lst[4],
+				"profile_id": folder_lst[0],
+				"event_id": folder_lst[1],
+				"tag_id": folder_lst[4] + '-' + cstr(folder_lst[2].split('-')[1]) + cstr(folder_lst[3].split('_')[1]),
+				"file_id": [
+					doc_name.replace('-watermark', '')
+				],
+				"file_location": [
+					doc_base_path + '/' + doc_name
+				]
+			}
+
+			from templates.pages.event import write_file
+			res = write_file(data)
 
 """Service to get all dropdown"""
 @frappe.whitelist(allow_guest=True)
@@ -299,6 +327,8 @@ def getProfileImage(data):
 		else:
 			from templates.pages.profile import get_user_image
 			user_img = get_user_image(data.get('profile_id'))
+			if not user_img.get('image'):
+				user_img['image'] = ''
 
 		return {
 			"profile_id": data.get('profile_id'),

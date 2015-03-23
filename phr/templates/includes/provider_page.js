@@ -31,7 +31,7 @@ $(document).ready(function () {
 	}
 	else{
 		var db = new render_dashboard();
-		db.render_emer_details(sessionStorage.getItem("pid"))
+		// db.render_emer_details(sessionStorage.getItem("pid"))
 		db.render_to_do(sessionStorage.getItem("pid"))
 		db.render_advertisements(sessionStorage.getItem("pid"))
 		$("#home").on("click",function(){
@@ -49,7 +49,7 @@ $(document).ready(function () {
 			$('#main-con').empty()
 			render_middle(profile_id);
 			var db = new render_dashboard();
-			db.render_emer_details(profile_id)
+			// db.render_emer_details(profile_id)
 			db.render_to_do(profile_id)
 			db.render_advertisements(profile_id)
 			NProgress.done();

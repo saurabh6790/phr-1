@@ -213,7 +213,7 @@ window.Events = inherit(ListView,{
 			</table>\
 		</div>").appendTo('.modal-body');
 
-		header = [["", 50], ["Provider Name", 170], ["Number", 100], ["Email", 100], ["Specialization", 100], ["City", 100]]
+		header = [["", 50], ["Provider Name", 170], ["Number", 100], ["Email", 100], ["Specialization", 100], ["Location", 100]]
 
 		if(result_set){
 			$.each(header, function(i, col) {
@@ -420,6 +420,7 @@ window.Events = inherit(ListView,{
 					complaints_array[i] = temp_var.html();
 				})
 				me.res['profile_id'] = me.profile_id;
+				me.res['pid'] = sessionStorage.getItem("pid")
 				me.res['dms_file_list'] = me.dms_file_list;
 				me.res['complaints'] = complaints_array;
 				frappe.call({

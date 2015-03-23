@@ -22,7 +22,7 @@ def create_update_event(data=None):
 
 		if res.get('returncode') == 116:
 			clear_dms_list(data.get('dms_file_list'))
-			copy_files_to_visit(data.get('dms_file_list'), res.get('visit').get('entityid'))
+			copy_files_to_visit(data.get('dms_file_list'), res.get('visit').get('entityid'), data.get('profile_id'), data.get('pid'))
 
 		res['entityid'] = res['event']['entityid']	
 
@@ -95,16 +95,17 @@ def update_event(data):
 
 def clear_dms_list(dms_file_list):
 	import os
+	import shutil
 	for loc in dms_file_list:
 		if len(loc.get('file_location')) > 0:
 			os.remove(loc.get('file_location')[0])
 		else:
 			os.remove(loc.get('text_file_loc'))
 
-def copy_files_to_visit(dms_file_list, visit_id):
+def copy_files_to_visit(dms_file_list, visit_id, profile_id, pid):
 	import os, shutil, glob
 	for loc in dms_file_list:
-	
+
 		path_lst = loc.get('file_location')[0].split('/') if len(loc.get('file_location')) > 0 else loc.get('text_file_loc').split('/')
 		
 		file_path = os.path.join('/'.join(path_lst[0:len(path_lst)-1]), visit_id)
@@ -113,6 +114,14 @@ def copy_files_to_visit(dms_file_list, visit_id):
 
 		for filename in glob.glob(os.path.join('/'.join(path_lst[0:len(path_lst)-1]), '*.*')):
 			print filename
+			print "\n\n id checker \n\n", profile_id, pid, "\n\n"
+			if profile_id != pid:
+				base_path = file_path.split('/files/')[1].split('/')
+				base_path[0] = pid
+				provider_path = os.path.join(file_path.split('/files/')[0], 'files', '/'.join(base_path)[:-1])
+				frappe.create_folder(provider_path)
+				shutil.copy(filename, provider_path)
+
 			shutil.move(filename, file_path)
 
 @frappe.whitelist(allow_guest=True)
@@ -574,6 +583,7 @@ def image_writter(profile_id, event_id):
 			res = write_file(data)
 			
 def write_file(data):
+	print "write_file"
 	request_type="POST"
 	url="%sdms/getvisitsinglefile"%get_base_url()
 	

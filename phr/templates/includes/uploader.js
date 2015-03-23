@@ -82,7 +82,6 @@ upload = {
 		// args["dialog"].hide();
 
 		delete args["dialog"];
-		
 
 		var dataurl = null;
 		var _upload_file = function() {
