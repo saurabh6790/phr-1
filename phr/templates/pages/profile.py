@@ -161,16 +161,19 @@ def get_user_image(profile_id):
 			}
 
 @frappe.whitelist(allow_guest=True)
-def upload_image(profile_id,data=None):
+def upload_image(profile_id,data=None,file_name=None):
 	from binascii import a2b_base64
 	import base64
+	print data
 	data_index = data.index('base64') + 7
 	filedata = data[data_index:len(data)]
 	decoded_image = base64.b64decode(filedata)
 	site_name = get_site_name()
 	path = os.path.abspath(os.path.join('.',site_name, 'public', 'files'))
-	image=path+'/'+profile_id+".jpg"
-	file_path='/files/'+profile_id+".jpg"
+	#image=path+'/'+profile_id+".jpg"
+	image=path+'/'+file_name
+	#file_path='/files/'+profile_id+".jpg"
+	file_path='/files/'+file_name
 	if os.path.exists(image):
 		try:
 			os.remove(image)
@@ -196,6 +199,7 @@ def update_user_image(path, profile_id):
 		user.save(ignore_permissions=True)
 		sub="Image Uploaded Successfully "+path
 		make_log(profile_id,"profile","Image Upload",sub)
+		frappe.local.cookie_manager.set_cookie("user_image", path or "")
 		return "Image Uploaded Successfully"
 	else:
 		cie=frappe.db.get_value("LinkedPHR Images",{"profile_id":profile_id},"profile_image")
@@ -659,7 +663,7 @@ def get_pdf(profile_id,options=None):
 			<div width=20%% >Logo</div>
 			<div width=60%% >Name of Application</div></div><hr>
 			<div width=100%% ><div width=20%% >
-			<img src="%(user_image)s" ></div>
+			<img class='user-picture' src='%(user_image)s' style='max-width: 50px; max-height: 50px; border-radius: 4px'/></div>
 			<div width=60%% >Name:%(name)s
 			</br>Blood Group: b+ve
 			</br>Contact No: %(contact)s

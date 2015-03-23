@@ -210,6 +210,25 @@
       "readonly":1,
       "placeholder":""
    },
+  {
+      "fieldname": "", 
+      "fieldtype": "section_break", 
+      "label": ""
+   },
+   {
+      "fieldname": "insurance", 
+      "fieldtype": "select", 
+      "label": "Insurance",
+      "options":["","Yes","No"],
+      "placeholder":""
+   },
+   {
+      "fieldname": "insurance_provider", 
+      "fieldtype": "data", 
+      "label": "Insurance Provider",
+      "placeholder":"",
+      "depends_on": "insurance:Yes" 
+   },
   
    {
       "fieldname": "password", 
