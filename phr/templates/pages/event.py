@@ -152,7 +152,7 @@ def send_shared_data(data):
 	data = json.loads(data)
 
 	if data.get('share_via') == 'Email':
-		share_via_email(data)
+		return share_via_email(data)
 
 	if data.get('share_via') == 'Provider Account':
 		return share_via_providers_account(data)

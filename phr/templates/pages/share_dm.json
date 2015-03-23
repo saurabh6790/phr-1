@@ -48,7 +48,8 @@
 		},
 		{
 			"fieldname":"reason",
-			"fieldtype":"text", 
+			"fieldtype":"select", 
+			"options":["", "Consultation", "Follow Up", "Second Opinion"],
 			"label":"Reason For Sharing",
 			"placeholder":""
 		}

@@ -155,6 +155,9 @@ var DiseaseMonitoring = inherit(RenderFormFields, {
 			 'profile_id':me.profile_id, 'disease':$('[name="disease"]').val()},
 			callback:function(r){
 				d.hide()
+				var $modal = $("#myModal").detach().modal();
+				$modal.modal("hide");
+				$modal.modal("destroy").remove();
 				NProgress.done();
 			}
 		})

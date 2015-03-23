@@ -31,7 +31,7 @@ var ToDo = inherit(ListView,{
     				frappe.msgprint("Date not Valid")
 				}
 		});
-		$('.modal-footer .btn-primary').click(function(){
+		$('.modal-footer .btn-primary').unbind('click').click(function(){
 			$(".modal-body form input, .modal-body form textarea, .modal-body form select").each(function(i, obj) {
 				me.res[obj.name] = $(obj).val();
 			})
@@ -46,6 +46,10 @@ var ToDo = inherit(ListView,{
 					frappe.msgprint('ToDo Record Created')
 					var db = new render_dashboard();
 					db.render_to_do(sessionStorage.getItem("pid"))
+					// d.hide()
+					// var $modal = $("#myModal").detach().modal();
+					// $modal.modal("hide");
+					// $modal.modal("destroy").remove();
 				}
 			})
 		})

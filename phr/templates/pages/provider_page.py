@@ -178,10 +178,10 @@ def get_request(target, provider_id):
 	return method_mapper.get(target)(target, provider_id)
 
 def get_myrequests(target, provider_id):
-	data = frappe.db.sql("""select name, provider_id, patient, event_id, date, patient_name, event_title, reason, valid_upto, payment
+	data = frappe.db.sql("""select name, provider_id, patient, event_id, DATE_FORMAT(date, '%s'), patient_name, event_title, reason, valid_upto, payment
 				 from `tabShared Requests`
 				 where ifnull(approval_status,'') not in ('Accept', 'Reject') 
-					and provider_id="%s" and doc_name = 'Event'  """%(provider_id), as_list=1)
+					and provider_id="%s" and doc_name = 'Event'  """%('%d/%m/%Y',provider_id), as_list=1)
 
 	for d in data:
 		d.append("""<button class="btn btn-success  btn-sm" 
@@ -219,10 +219,10 @@ def update_request_record(req_id, rej_reason):
 	sr.save()
 
 def get_acc_req(target, provider_id):
-	data = frappe.db.sql("""select name, provider_id, patient, event_id, date, patient_name, event_title, reason, valid_upto, payment
+	data = frappe.db.sql("""select name, provider_id, patient, event_id, DATE_FORMAT(date, '%s'), patient_name, event_title, reason, valid_upto, payment
 				 from `tabShared Requests`
 				 where ifnull(approval_status,'') = 'Accept'
-					and provider_id="%s" """%(provider_id), as_list=1)
+					and provider_id="%s" """%('%d/%m/%Y', provider_id), as_list=1)
 
 	for d in data:
 		d[6] = """<a nohref id="%(entityid)s" 
@@ -247,11 +247,11 @@ def get_acc_req(target, provider_id):
 
 
 def get_rej_req(target, provider_id):
-	data = frappe.db.sql("""select name, provider_id, patient, event_id, date, patient_name, 
+	data = frappe.db.sql("""select name, provider_id, patient, event_id, DATE_FORMAT(date, '%s'), patient_name, 
 				event_title, reason, valid_upto, payment, rej_reason
 				 from `tabShared Requests`
 				 where ifnull(approval_status,'') = 'Reject'
-					and provider_id="%s" """%(provider_id), as_list=1)
+					and provider_id="%s" """%('%d/%m/%Y',provider_id), as_list=1)
 
 	rows=[
 		["Date (Shared date)", "Patient Name", "Event Name",

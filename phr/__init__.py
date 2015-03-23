@@ -214,7 +214,15 @@ def getDropdownMenu():
 		"provider_type": get_provider_type(),
 		"specialization": get_specialization_list(),
 		"share_via": ["Email", "Provider Account"],
-		"reason_for_sharing": ["Consultation", "Follow Up", "Second Opinion"]
+		"reason_for_sharing": ["Consultation", "Follow Up", "Second Opinion"],
+		"tag_dict" : {'11': "consultancy-11", "12": "event_snap-12", "13": "lab_reports-13", "14":"prescription-14", "15": "cost_of_care-15"},
+		"sub_tag_dict" : {
+			"11":{'51':"A_51", "52":"B_52", "53":"C_53"},
+			"12":{'51':"A_51", "52":"B_52"},
+			"13":{'51':"A_51", "52":"B_52"},
+			"14":{'51':"A_51", "52":"B_52", "53":"C_53"},
+			"15":{'51':"A_51"},
+		}
 	}
 
 def get_states():

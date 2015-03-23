@@ -27,7 +27,7 @@ $.extend(SharePhr.prototype,{
 		$('<button id="share_data" class="btn btn-primary">Share Data</button></div>').appendTo($('.field-area'))
 		$('<div class="event_section"></div>').appendTo($('.field-area'))
 		$('#share_data').click(function(){
-			me.send_email();
+			me.share_phr();
 		})
 		this.bind_controller()
 		//console.log(["ss",me.args['event_id']])
@@ -132,7 +132,7 @@ $.extend(SharePhr.prototype,{
 				// me.render_uploader_and_files();
 			})	
 	},
-	send_email:function(){
+	share_phr:function(){
 		var me = this;
 		var uniqueNames = [];
 		me.res = {}
