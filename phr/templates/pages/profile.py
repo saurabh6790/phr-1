@@ -684,6 +684,7 @@ def get_pdf(profile_id,options=None):
 	#fname=os.path.join(os.getcwd(), get_site_path().replace('.',"").replace('/', ""), 'public', 'files', profile_id, profile_id +"ed"+ ".pdf")
 	# pdfkit.from_string(html, fname, options=options or {})
 	fname=os.path.join(get_files_path(), profile_id, profile_id +"ed"+".pdf")
+	print fname
 	pdfkit.from_string(html, fname, options=options or {})
 
 	li=fname.split('/')
