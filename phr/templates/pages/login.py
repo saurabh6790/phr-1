@@ -22,9 +22,7 @@ def create_profile(first_name,middle_name,last_name,email_id,contact,created_via
 		3.After Successful Profile Creation genarate link
 		4.Complete Registration 
 	"""
-	frappe.errprint("create profile for signed up user")
 	user = frappe.db.get("User", {"email": email_id})
-	print user
 	if user:
 		if user.disabled:
 			return {"returncode" : 410, "message_summary":"Registered but disabled.","msg_display":"Registered but disabled."}
