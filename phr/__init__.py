@@ -277,28 +277,28 @@ def image_writter(data):
 def setProfileImage():
 	import os
 	from frappe.utils import  get_files_path
-
 	data = json.loads(frappe.local.request.data)
 
-	file_path = "%(files_path)s/%(profile_id)s/%(file_name)s"%{'files_path': get_files_path(), "profile_id": data.get('profile_id'),
-		'file_name': data.get('file_name')
-	}
-	path = os.path.join(os.getcwd(), get_files_path()[2:], data.get('profile_id'))
-	frappe.create_folder(path)
-	with open("%s/%s"%(path,data.get('file_name')), 'wb') as f:
- 		f.write(base64.b64decode(data.get('bin_img')))
+	if data.get('file_name'):
+		file_path = "%(files_path)s/%(profile_id)s/%(file_name)s"%{'files_path': get_files_path(), "profile_id": data.get('profile_id'),
+			'file_name': data.get('file_name')
+		}
+		path = os.path.join(os.getcwd(), get_files_path()[2:], data.get('profile_id'))
+		frappe.create_folder(path)
+		with open("%s/%s"%(path,data.get('file_name')), 'wb') as f:
+	 		f.write(base64.b64decode(data.get('bin_img')))
 
  	res = update_profile_image(data.get('profile_id'), data.get('file_name'))
  	return {"filestatus": res}
 
-def update_profile_image(profile_id, file_name):
+def update_profile_image(profile_id, file_name=None):
 	# from templates.pages.profile import update_user_image
 	# return update_user_image("/files/%s/%s"%(profile_id, file_name), profile_id)
 
 	user_id = frappe.db.get_value('User', {'profile_id': profile_id}, 'name')
 	if user_id:
 		user = frappe.get_doc('User', user_id)
-		user.user_image = "/files/%s/%s"%(profile_id, file_name)
+		user.user_image = "/files/%s/%s"%(profile_id, file_name) if file_name else ''
 		user.save(ignore_permissions=True)
 
 @frappe.whitelist(allow_guest=True)
@@ -341,3 +341,11 @@ def getProfileImage(data):
 		return {
 			'exe':"Profile Not Found"
 		}
+
+
+"""Patient's Emergency Details"""
+@frappe.whitelist(allow_guest=True)
+def getEmergencyDetails(data):
+	data = json.loads(data)
+	from templates.pages.profile import get_user_details
+	return get_user_details(data.get('profile_id'))
