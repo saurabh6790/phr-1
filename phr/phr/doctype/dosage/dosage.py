@@ -42,11 +42,10 @@ class Dosage(Document):
 
 			fields.append(f_dic)
 		return fields
-		frappe.errprint(fields)
+		
 
 	def append_fields_to_json(self,doc,fields_dic):
 		list_view=doc["listview"]
-		frappe.errprint(type(list_view))
 		for d in reversed(fields_dic):
 			if not any(lv['fieldname'] == d["fieldname"] for lv in list_view):
 				doc["listview"].insert(2,d)

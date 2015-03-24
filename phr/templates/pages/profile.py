@@ -11,7 +11,7 @@ from frappe import _,msgprint
 import binascii
 import base64
 from phr.templates.pages.login import create_profile_in_db,get_barcode,get_image_path
-from frappe.utils import cint, now, get_gravatar,cstr,get_site_path,get_url
+from frappe.utils import cint, now, get_gravatar,cstr,get_site_path,get_url, get_files_path
 from phr.phr.doctype.phr_activity_log.phr_activity_log import make_log
 import datetime
 from phr.templates.pages.patient import get_base_url,send_phrs_mail,get_data_to_render,get_formatted_date_time,formatted_date,get_sms_template 
@@ -47,7 +47,6 @@ def update_profile_solr(data,dashboard=None):
 		update_user_details(p)
 		return "Profile Updated Successfully"
 	else:
-		frappe.errprint(res)
 		return "Error While Updating Profile"
 		
 def update_user_details(data):
@@ -55,8 +54,11 @@ def update_user_details(data):
 		first_name='%s',
 		middle_name='%s',
 		last_name='%s',
-		contact='%s' 
-		where profile_id='%s'"""%(data.get('person_firstname'),data.get('person_middlename'),data.get('person_lastname'),data.get('mobile'),data.get('entityid')))
+		contact='%s',
+		blood_group='%s',
+		emergemcy_contactno='%s' 
+		where profile_id='%s'"""%(data.get('person_firstname'),data.get('person_middlename'),data.get('person_lastname'),data.get('mobile'),data.get('blod_group'),data.get('emergemcy_contactno'),data.get('entityid')))
+	frappe.db.commit()	
 
 
 @frappe.whitelist(allow_guest=True)
@@ -161,16 +163,19 @@ def get_user_image(profile_id):
 			}
 
 @frappe.whitelist(allow_guest=True)
-def upload_image(profile_id,data=None):
+def upload_image(profile_id,data=None,file_name=None):
 	from binascii import a2b_base64
 	import base64
+	print data
 	data_index = data.index('base64') + 7
 	filedata = data[data_index:len(data)]
 	decoded_image = base64.b64decode(filedata)
 	site_name = get_site_name()
 	path = os.path.abspath(os.path.join('.',site_name, 'public', 'files'))
-	image=path+'/'+profile_id+".jpg"
-	file_path='/files/'+profile_id+".jpg"
+	#image=path+'/'+profile_id+".jpg"
+	image=path+'/'+file_name
+	#file_path='/files/'+profile_id+".jpg"
+	file_path='/files/'+file_name
 	if os.path.exists(image):
 		try:
 			os.remove(image)
@@ -196,6 +201,7 @@ def update_user_image(path, profile_id):
 		user.save(ignore_permissions=True)
 		sub="Image Uploaded Successfully "+path
 		make_log(profile_id,"profile","Image Upload",sub)
+		frappe.local.cookie_manager.set_cookie("user_image", path or "")
 		return "Image Uploaded Successfully"
 	else:
 		cie=frappe.db.get_value("LinkedPHR Images",{"profile_id":profile_id},"profile_image")
@@ -515,6 +521,8 @@ def get_user_details(profile_id=None):
 			"contact":contact,
 			"barcode":barcode,
 			"user_image":user.user_image,
+			"emergency_contact":user.emergemcy_contactno,
+			"blood_group":user.blood_group
 		}
 
 
@@ -654,36 +662,40 @@ def get_pdf(profile_id,options=None):
 	})
 
 	user=get_user_details(profile_id)
-	frappe.errprint(user)
-	html="""<div style='border:1px solid black;width:400px;height:238px;align:center'><div>
-			<div width=20%% >Logo</div>
-			<div width=60%% >Name of Application</div></div><hr>
-			<div width=100%% ><div width=20%% >
-			<img src="%(user_image)s" ></div>
-			<div width=60%% >Name:%(name)s
-			</br>Blood Group: b+ve
+	html="""<div style='border:1px solid black;width:400px;height:238px;align:center'>
+			<div width=100%% ><tr width=100%% >
+			<td width=30%% >Logo</td>
+			<td width=70%% >Name of Application</td></tr><table><hr>
+			</div><table width=100%% ><tr width=100%% ><td width=20%% >
+			<img class='user-picture' src='%(user_image)s' style='min-width:25px;max-width: 70px; min-width:25px; max-height: 70px; border-radius: 4px;margin-top:0%%;margin-left:20%%'/></td>
+			<td width=60%% >Name:%(name)s
+			</br>Blood Group: %(blood_group)s
 			</br>Contact No: %(contact)s
-			</br>Emer Contact:9860733789
+			</br>Emer Contact:%(emergency_contact)s
 			<br><img src="%(barcode)s">
-			</div></div></div>"""%user
+			</td></tr></table></div></div>"""%user
+	
+	
 
 	if not options.get("page-size"):
 		options['page-size'] = "A4"
 
 	html = scrub_urls(html)
-	fname=os.path.join(os.getcwd(), get_site_path().replace('.',"").replace('/', ""), 'public', 'files', profile_id, profile_id + ".pdf")
+	#fname=os.path.join(os.getcwd(), get_site_path().replace('.',"").replace('/', ""), 'public', 'files', profile_id, profile_id +"ed"+ ".pdf")
+	# pdfkit.from_string(html, fname, options=options or {})
+	fname=os.path.join(get_files_path(), profile_id, profile_id +"ed"+".pdf")
+	print fname
 	pdfkit.from_string(html, fname, options=options or {})
 
-	with open(fname, "rb") as fileobj:
-		filedata = fileobj.read()
-
 	li=fname.split('/')
+	print li
 	url = get_url()+"/".join(["",li[-3],li[-2],li[-1]])
+	print url
 	return url
 
 
 @frappe.whitelist(allow_guest=True)	
 def check_templates(profile_id):
 	msg=get_sms_template("appointments",{"doctor_name":"ahahha","appointment_time":"4.25"})
-	frappe.errprint(msg)
+	
 	

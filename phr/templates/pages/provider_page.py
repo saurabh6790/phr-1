@@ -165,7 +165,6 @@ def get_shared_request(profile_id):
 
 @frappe.whitelist()
 def update_flag(req_id, provider_id, profile_id, event_id):
-	frappe.errprint(['test update update_flag',req_id, provider_id, profile_id, event_id])
 	d = get_patient_data({'profile_id': provider_id, 
 		'other_param':{'patient_profile_id': profile_id, 'event_id': event_id}
 		})

@@ -174,6 +174,7 @@ var PatientDashboard = inherit(RenderFormFields, {
  		object = {};
  		$("input[type=file]").change(function(event) {
  			$.each(event.target.files, function(index, file) {
+ 				
 				var reader = new FileReader();
     			reader.onload = function(event) {  
       				object.filename = file.name;
@@ -256,7 +257,7 @@ var PatientDashboard = inherit(RenderFormFields, {
 	upload_image:function(object,profile_id){
 		frappe.call({
 			method:'phr.templates.pages.profile.upload_image',
-			args:{"profile_id":profile_id,"data":object.data},
+			args:{"profile_id":profile_id,"data":object.data,"file_name":object.filename},
 			callback: function(r) {
 				NProgress.done();
 				if(r.message) {

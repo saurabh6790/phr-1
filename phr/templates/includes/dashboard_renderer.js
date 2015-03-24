@@ -141,10 +141,10 @@ function render_dashboard(profile_id){
     }
     function render_ed(data){
     	$wrap=$('#ed')
-    	pro_data={"name": data['name'], "contact": data["contact"],"barcode":data["barcode"]}
+    	pro_data={"name": data['name'], "contact": data["contact"],"barcode":data["barcode"],"emer_con":data['emergency_contact'],"blood_group":data['blood_group']}
     	sessionStorage.setItem("barcode",pro_data["barcode"])
 		$(repl_str('<div>Name:%(name)s<br>Contact:%(contact)s<br>\
-    	<img src="%(barcode)s"></div>',pro_data)).appendTo($wrap)
+    	Emer Contact:%(emer_con)s<br>Blood Group:%(blood_group)s<br><img src="%(barcode)s"></div>',pro_data)).appendTo($wrap)
   	}
     function render_lphr(data){
     	$('#clphr').find('p.nophr').remove()

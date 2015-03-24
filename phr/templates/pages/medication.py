@@ -19,7 +19,7 @@ def get_medication_data(data):
 		if 'rows' in filed_dict.keys(): 
 			rows = filed_dict.get('rows')
 			break
-	frappe.errprint(type(data))
+	
 	if isinstance(data, unicode):
 		data=json.loads(data)
 
