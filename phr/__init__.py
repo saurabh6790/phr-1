@@ -1,6 +1,6 @@
 import frappe
 import json
-from frappe.utils import cstr, get_site_path
+from frappe.utils import cstr, get_site_path, get_url
 import base64
 
 """ Profile login calls """
@@ -348,4 +348,57 @@ def getProfileImage(data):
 def getEmergencyDetails(data):
 	data = json.loads(data)
 	from templates.pages.profile import get_user_details
-	return get_user_details(data.get('profile_id'))
+	user_details = get_user_details(data.get('profile_id'))
+	user_details['barcode'] = get_url() + user_details['barcode']
+
+	if 'files' in user_details['user_image']:
+		user_details['user_image'] = get_url() + user_details['user_image']
+
+	return user_details
+
+"""Notification Calls"""
+@frappe.whitelist(allow_guest=True)
+def getNotificationFields():
+	return {"fields": ["linked_phr", "to_do"]}
+
+@frappe.whitelist(allow_guest=True)
+def getEnabledNotification(data):
+	data = json.loads(data)
+	from templates.pages.profile import get_enabled_notification
+	notfr = get_enabled_notification(data.get('profile_id'))
+	if not notfr:
+		notfr = {}
+		fields = getNotificationFields().get('fields')
+		for field in fields:
+			notfr[field] = 0
+		return notfr
+	else:
+		return notfr[0]
+
+@frappe.whitelist(allow_guest=True)
+def setNotification(data):
+	data = json.loads(data)
+	from templates.pages.profile import manage_notifications
+	profile = {'entityid': data.get('profile_id')}
+	field_list = []
+	for field, val in data.get('fields').items():
+		if val == 1:
+			field_list.append(field)
+
+	msg = manage_notifications(json.dumps(profile), json.dumps(field_list))
+
+	return {
+		"res": msg,
+		"enabled_notification": getEnabledNotification(json.dumps(data))
+	}
+
+"""Update Password"""
+@frappe.whitelist(allow_guest=True)
+def updatePassword(data):
+	from frappe.auth import _update_password
+	data = json.loads(data)
+
+	user = frappe.db.get_value("User",{"profile_id":data.get('profile_id')})
+	_update_password(user, data.get('new_password'))
+
+	return "Password Updated Successfully"
