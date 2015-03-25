@@ -10,10 +10,10 @@ from phr.templates.pages.patient import get_base_url
 from phr.phr.doctype.phr_activity_log.phr_activity_log import make_log
 
 @frappe.whitelist(allow_guest=True)
-def create_update_event(data=None):
+def create_update_event(data=None, req_id=None):
 	# url="http://88.198.52.49:7974/phr/createEvent"
 	data = json.loads(data)
-
+	frappe.errprint(['req_id', req_id])
 	if not data.get('entityid'):
 		return create_event(data)
 
@@ -22,7 +22,7 @@ def create_update_event(data=None):
 
 		if res.get('returncode') == 116:
 			clear_dms_list(data.get('dms_file_list'))
-			copy_files_to_visit(data.get('dms_file_list'), res.get('visit').get('entityid'), data.get('profile_id'), data.get('pid'))
+			copy_files_to_visit(data.get('dms_file_list'), res.get('visit').get('entityid'), data.get('profile_id'), data.get('pid'), req_id)
 
 		res['entityid'] = res['event']['entityid']	
 
@@ -102,7 +102,7 @@ def clear_dms_list(dms_file_list):
 		else:
 			os.remove(loc.get('text_file_loc'))
 
-def copy_files_to_visit(dms_file_list, visit_id, profile_id, pid):
+def copy_files_to_visit(dms_file_list, visit_id, profile_id, pid, req_id):
 	import os, shutil, glob
 	for loc in dms_file_list:
 
@@ -118,6 +118,8 @@ def copy_files_to_visit(dms_file_list, visit_id, profile_id, pid):
 			if profile_id != pid:
 				base_path = file_path.split('/files/')[1].split('/')
 				base_path[0] = pid
+				if req_id:
+					base_path.insert(1, req_id)	
 				provider_path = os.path.join(file_path.split('/files/')[0], 'files', '/'.join(base_path)[:-1])
 				frappe.create_folder(provider_path)
 				shutil.copy(filename, provider_path)
@@ -125,13 +127,19 @@ def copy_files_to_visit(dms_file_list, visit_id, profile_id, pid):
 			shutil.move(filename, file_path)
 
 @frappe.whitelist(allow_guest=True)
-def get_attachments(profile_id, folder, sub_folder, event_id, visit_id=None):
+def get_attachments(profile_id, folder, sub_folder, event_id, visit_id=None, req_id=None):
 	files = []
-
+	frappe.errprint([visit_id, req_id])
 	if visit_id:
 		path = os.path.join(get_files_path(), profile_id, event_id, folder, sub_folder, visit_id)
+		if req_id:
+			path = os.path.join(get_files_path(), profile_id, req_id, event_id, folder, sub_folder, visit_id)
 	else:
 		path = os.path.join(get_files_path(), profile_id, event_id, folder, sub_folder, visit_id)
+		if req_id:
+			path = os.path.join(get_files_path(), profile_id, req_id, event_id, folder, sub_folder, visit_id)
+		frappe.errprint(path)
+		
 
 	if os.path.exists(path):
 		for root, dirc, filenames in os.walk(path):
@@ -219,8 +227,15 @@ def share_via_providers_account(data):
 					]
 				}
 
+		if data.get('event_id'):
+			for shared_meta in event_data.get('sharelist'):
+		 		shared_meta["visit_tag_id"] = data.get('entityid')
+		 	url="%s/sharephr/sharemultiplevisit"%get_base_url()
+
+		else:
+			url="%s/sharephr/sharemultipleevent"%get_base_url()
 		request_type="POST"
-		url="%s/sharephr/sharemultipleevent"%get_base_url()
+		
 
 		response=get_response(url, json.dumps(event_data), request_type)
 		
@@ -269,9 +284,18 @@ def make_sharing_request(event_data, data):
 	req.patient_name = frappe.db.get_value("User", {"profile_id":d.get("from_profile_id")}, 'concat(first_name, " ", last_name)')
 	req.reason = data.get('reason')
 	req.valid_upto = data.get('sharing_duration')
-	req.event_title = data.get("event_title")
+	if d.get("visit_tag_id"):
+		req.event_title = get_event_info(d.get("event_tag_id"))
+	else:
+		req.event_title = data.get("event_title")
 	req.doc_name = 'Event' 
 	req.save(ignore_permissions=True)
+
+def get_event_info(event_id):
+	request_type="POST"
+	url = "%ssearchEvent"%get_base_url()
+	response=get_response(url, json.dumps({"entityid":event_id}), request_type)
+	return json.loads(response.text)["list"][0].get('event_title')
 
 @frappe.whitelist(allow_guest=True)
 def get_visit_data(data):
@@ -513,7 +537,11 @@ def get_conditions(filters):
 
 def get_provider_info(cond):
 	if cond:
-		ret = frappe.db.sql("""select provider_id, provider_name, mobile_number, email, specialization, city from tabProvider where %s """%cond, as_dict=1)
+		ret = frappe.db.sql("""select provider_id, provider_name, 
+					mobile_number, email, specialization, 
+					concat(ifnull(address,'') , ', ' ,ifnull(address_2,''), ', ', ifnull(city,''), ', ', 
+					ifnull(state,''), ', ', ifnull(country,''), ', ', ifnull(pincode,'')) as addr
+					from tabProvider where %s """%cond, as_dict=1, debug=1)
 		# frappe.errprint(ret)
 		return ((len(ret[0]) > 1) and ret) if ret else None
 	

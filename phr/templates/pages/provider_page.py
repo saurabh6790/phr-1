@@ -117,6 +117,7 @@ def get_patient_data(data):
 						file_dict['file_location'] = [os.path.join(os.getcwd(), get_site_path().replace('.',"")
 													.replace('/', ""), 'public', 'files',
 													data_dict.get('to_profile_id'), 
+													data.get('other_param').get('req_id'),
 													event.get('entityid'), 
 													file_deatils.get('tag_name') + '-' + tags[:2],
 													file_deatils.get('sub_tag_name') + '_' + tags[-2:],
@@ -166,7 +167,7 @@ def get_shared_request(profile_id):
 @frappe.whitelist()
 def update_flag(req_id, provider_id, profile_id, event_id):
 	d = get_patient_data({'profile_id': provider_id, 
-		'other_param':{'patient_profile_id': profile_id, 'event_id': event_id}
+		'other_param':{'patient_profile_id': profile_id, 'event_id': event_id, 'req_id': req_id}
 		})
 	frappe.db.sql("update `tabShared Requests` set approval_status = 'Accept' where name = '%s'"%(req_id))
 	frappe.db.commit()
@@ -225,8 +226,8 @@ def get_acc_req(target, provider_id):
 
 	for d in data:
 		d[6] = """<a nohref id="%(entityid)s" 
-						onclick="Events.prototype.open_form('%(entityid)s', '%(event_title)s', '%(profile_id)s')"> 
-					%(event_title)s </a>"""%{'entityid':d[3], 'event_title': d[6], 'profile_id': d[2]}
+						onclick="Events.prototype.open_form('%(entityid)s', '%(event_title)s', '%(profile_id)s', '', '%(req_id)s')"> 
+					%(event_title)s </a>"""%{'entityid':d[3], 'event_title': d[6], 'profile_id': d[2], 'req_id': d[0]}
 
 	rows=[
 		["Date (Shared date)", "Patient Name", "Event Name",

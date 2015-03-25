@@ -111,7 +111,7 @@ $.extend(TreeView.prototype, {
 
 					ThumbNails.prototype.init(me.wrapper, {'folder':me.folder, 
 						'sub_folder':$(this).find('span').attr('id'), 'profile_id': me.args['profile_id'], 'display': me.disp, 
-						'dms_file_list': me.args['dms_file_list'], 'doc_list': me.doc_list})
+						'dms_file_list': me.args['dms_file_list'], 'doc_list': me.doc_list, 'req_id': me.args['req_id']})
 				})
 
 			});

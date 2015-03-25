@@ -10,7 +10,7 @@ def create_profile(data):
 	data = json.loads(data)
 	
 	res = create_profile(data.get('first_name'), data.get('middle_name'), 
-			data.get('last_name'), data.get('email'), data.get('contact'),data.get('received_from'))
+			data.get('last_name'), data.get('email'), data.get('mobile_no'), "Mobile")
 	
 	return res
 
@@ -123,10 +123,17 @@ def createDiseaseMonitoring(data, arg, fields, field_mapper, raw_fields=None):
 
 @frappe.whitelist(allow_guest=True)
 def getProfileDM(data):
-	from templates.pages.disease_monitoring import get_existing_records_from_solr
+	from templates.pages.disease_monitoring import get_existing_records_from_solr, get_disease_fields
 	data = json.loads(data)
-	res = get_existing_records_from_solr(data.get('profile_id'), data.get('event_master_id'))
-	return res
+	# res = get_existing_records_from_solr(data.get('profile_id'), data.get('event_master_id'))
+	disease_name = frappe.db.get_value("Disease Monitoring", {"event_master_id":data.get('event_master_id')}, "disease_name")
+	res = get_disease_fields(disease_name, data.get('profile_id'))
+	import re
+
+	TAG_RE = re.compile(r'<[^>]+>')
+
+	return eval(TAG_RE.sub('', cstr(res))).get('values')
+	# return res
 
 """Appointment services"""
 @frappe.whitelist(allow_guest=True)

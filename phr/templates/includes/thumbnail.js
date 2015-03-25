@@ -172,7 +172,8 @@ $.extend(ThumbNails.prototype,{
 			args:{'profile_id': sessionStorage.getItem("cid"), 'folder':me.folder, 
 				'sub_folder': me.sub_folder, 
 				'event_id': $('input[name="event_id"]').val() ? $('input[name="event_id"]').val() : $('input[name="entityid"]').val(),
-				'visit_id': $('input[name="event_id"]').val() ? $('input[name="entityid"]').val() : ''},
+				'visit_id': $('input[name="event_id"]').val() ? $('input[name="entityid"]').val() : '',
+				'req_id': me.args['req_id']},
 			callback:function(r){
 				me.create_attachement_renderer(r.message)
 			}
