@@ -57,6 +57,8 @@ def create_profile_solr(data):
 	if res and res.get('returncode')==101:
 		data=json.loads(data)
 		path=get_image_path(barcode,res['entityid'])
+		from phr.templates.pages.login import set_default_dashboard
+		set_default_dashboard(res['entityid'])		
 		print "============================="
 		print data
 		args={"entityid":res.get('entityid'),"linking_id":data["linking_id"],"relationship":data["relationship"],"received_from":"Desktop"}

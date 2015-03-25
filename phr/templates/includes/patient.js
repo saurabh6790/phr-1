@@ -60,7 +60,7 @@ $(document).ready(function () {
 		else{
 			
 		}	download_phr()
-		console.log([sessionStorage.getItem("cid"),sessionStorage.getItem("pid")])
+		
 		NProgress.start();
 		profile_id=sessionStorage.getItem("cid")
 		var db = new render_dashboard();

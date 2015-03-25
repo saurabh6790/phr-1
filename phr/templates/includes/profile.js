@@ -70,9 +70,10 @@ var PatientDashboard = inherit(RenderFormFields, {
 			var inches=$(this).val()/2.54
 			//var prod = one / 0.0254 / 100;
 			var ft = parseInt(inches / 12).toFixed(0);
-			var inch = (inches % 12).toFixed(0);
-			fts_inches=ft+"."+inch
-			$(".tab-pane.active form input[name='height_in_inches']").val(parseFloat(fts_inches))
+			var inch = (inches % 12).toFixed(2);
+			var inc=inch.toString().replace('.', '')
+			fts_inches=ft+"."+parseInt(inch,10)
+			$(".tab-pane.active form input[name='height_in_inches']").val(fts_inches)
 			
 		});
 		$('.tab-pane.active form input[name="weight"]').bind('change', function() { 
@@ -102,7 +103,10 @@ var PatientDashboard = inherit(RenderFormFields, {
 			$($('a[aria-controls="manage_phr"]').parent()).css("display", "none");
 			$($('#manage_phr')).css("display", "none");
 			$($('a[aria-controls="password"]').parent()).css("display", "none");
-			$($('#password')).css("display", "none");	
+			$($('#password')).css("display", "none");
+			$($('a[aria-controls="notification"]').parent()).css("display", "none");
+			$($('#notification')).css("display", "none");
+
 		}
 		if (sessionStorage.getItem("cid")==sessionStorage.getItem("pid")){
 			$($('input[name="relationship"]').parents()[3]).css("display", "none");

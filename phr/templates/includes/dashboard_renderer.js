@@ -155,7 +155,7 @@ function render_dashboard(profile_id){
 		sessionStorage.setItem("lphrs",data["list_size"])
 		$.each(meta,function(i,data){
 			$(repl_str('<a class="list-group-item-side v_lphr %(entityid)s" data-name=%(entityid)s>\
-			%(person_firstname)s</a>\
+			%(person_firstname)s %(person_lastname)s</a>\
 			</div>', data)).appendTo($wrap)
 		})
 		$(".v_lphr").unbind("click").click(function(){
