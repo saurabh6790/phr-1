@@ -68,67 +68,34 @@ def get_dm_profiles(rows, to_profile):
 
 @frappe.whitelist(allow_guest=True)
 def get_patient_data(data):
-	# fields, values, tab = get_data_to_render(data)
 	dms_files = []
-	file_dict = {}
-	print "\n\n--------------------------patient data------------------"
-	request_type="POST"
-	url="%s/sharephr/searchsharedeventdata"%get_base_url()
-	from phr.phr.phr_api import get_response
-	pos = 0
-	# for filed_dict in fields:
-	# 	print filed_dict 
-	# 	pos =+ 1
-	# 	if 'rows' in filed_dict.keys(): 
-	# 		rows = filed_dict.get('rows')
-	# 		break
-	# data=json.loads(data)
+	filelist = frappe.db.sql("select files_list from `tabShared Requests` where name = '%s'"%data.get('other_param').get('req_id'), as_list=1)[0][0]
+	filelist = json.loads(filelist)
+
 	data_dict ={"to_profile_id":data.get('profile_id'), 
-			"received_from": "desktop", "from_profile_id": data.get('other_param').get('patient_profile_id'), 
-			"event_tag_id": data.get('other_param').get('event_id')}
-	response=get_response(url, json.dumps(data_dict), request_type)
-	res_data = json.loads(response.text)
+		"received_from": "desktop", "from_profile_id": data.get('other_param').get('patient_profile_id'), 
+		"event_tag_id": data.get('other_param').get('event_id')}
 	
-	accepted_event_list =  get_accepted_event_list(data_dict.get('to_profile_id'))
-	if res_data.get('Jsoneventlist'):
-		for event_details in res_data.get('Jsoneventlist'):
-			event =  event_details.get('event')
-			# if [event['entityid']] in accepted_event_list:
-			# data = ["""<a nohref id="%(entityid)s" 
-			# 			onclick="Events.prototype.open_form('%(entityid)s', '%(event_title)s', '%(profile_id)s')"> 
-			# 		%(event_title)s </a>"""%{"entityid": event['entityid'],"event_title": event['event_title'], 
-			# 		"profile_id":data_dict.get('from_profile_id')}, 
-			# 		datetime.datetime.fromtimestamp(cint(event['event_date'])/1000.0).strftime('%d/%m/%Y'), 
-			# 		event['event_symptoms']]
+	for fl in filelist:
+		fl = fl.split('files/')[1].split('/')
+		file_dict = {"entityid": fl[4],
+			"profile_id": fl[0],
+			"event_id": fl[1]}
 
-			# rows.extend([data])
-			for visit_details in event_details.get('visitList'):
-				for file_deatils in visit_details.get('visit_files'):
-					for file_info in file_deatils.get('file_location'):
+		file_dict['tag_id'] = fl[4] + '-' +  fl[2].split('-')[1] + fl[3].split('_')[1]
+		file_dict["file_id"] = [fl[5].replace('-watermark', '')]
 
-						tags = file_deatils.get('entityid').split('-')[-1:][0]
+		file_dict['file_location'] = [os.path.join(os.getcwd(), get_site_path().replace('.',"")
+									.replace('/', ""), 'public', 'files',
+									data_dict.get('to_profile_id'), 
+									data.get('other_param').get('req_id'), fl[1], fl[2], fl[3], fl[4])]
 
-						file_dict = {"entityid": visit_details.get('entityid'),
-							"profile_id": visit_details.get('profile_id'),
-							"event_id": event.get('entityid')}
+		frappe.create_folder(file_dict['file_location'][0])
 
-						file_dict['tag_id'] = file_deatils.get('entityid')
-						file_dict["file_id"] = file_info.split('/')[-1:]
-						file_dict['file_location'] = [os.path.join(os.getcwd(), get_site_path().replace('.',"")
-													.replace('/', ""), 'public', 'files',
-													data_dict.get('to_profile_id'), 
-													data.get('other_param').get('req_id'),
-													event.get('entityid'), 
-													file_deatils.get('tag_name') + '-' + tags[:2],
-													file_deatils.get('sub_tag_name') + '_' + tags[-2:],
-													visit_details.get('entityid'))]
+		file_dict['file_location'] = [file_dict['file_location'][0] + '/' + file_dict["file_id"][0]]
 
-						frappe.create_folder(file_dict['file_location'][0])
-
-						file_dict['file_location'] = [file_dict['file_location'][0] + '/' + file_dict["file_id"][0]]
-
-						if not  os.path.exists(file_dict['file_location'][0]):
-							dms_files.append(file_dict)
+		if not  os.path.exists(file_dict['file_location'][0]):
+			dms_files.append(file_dict)
 
 		request_type="POST"
 		url="%s/dms/getvisitmultiplefile"%get_base_url()
@@ -181,7 +148,9 @@ def get_myrequests(target, provider_id):
 	data = frappe.db.sql("""select name, provider_id, patient, event_id, DATE_FORMAT(date, '%s'), patient_name, event_title, reason, valid_upto, payment
 				 from `tabShared Requests`
 				 where ifnull(approval_status,'') not in ('Accept', 'Reject') 
-					and provider_id="%s" and doc_name = 'Event'  """%('%d/%m/%Y',provider_id), as_list=1)
+					and provider_id="%s" and doc_name = 'Event' and 
+					DATE_FORMAT(STR_TO_DATE(valid_upto,'%s'), '%s') >= NOW()
+				 order by date desc, valid_upto asc """%('%d/%m/%Y',provider_id, '%d/%m/%Y', '%Y-%m-%d'), as_list=1)
 
 	for d in data:
 		d.append("""<button class="btn btn-success  btn-sm" 
@@ -222,7 +191,9 @@ def get_acc_req(target, provider_id):
 	data = frappe.db.sql("""select name, provider_id, patient, event_id, DATE_FORMAT(date, '%s'), patient_name, event_title, reason, valid_upto, payment
 				 from `tabShared Requests`
 				 where ifnull(approval_status,'') = 'Accept'
-					and provider_id="%s" """%('%d/%m/%Y', provider_id), as_list=1)
+					and provider_id="%s" and 
+					DATE_FORMAT(STR_TO_DATE(valid_upto,'%s'), '%s') >= NOW() 
+					order by date desc, valid_upto asc"""%('%d/%m/%Y', provider_id, '%d/%m/%Y', '%Y-%m-%d'), as_list=1)
 
 	for d in data:
 		d[6] = """<a nohref id="%(entityid)s" 

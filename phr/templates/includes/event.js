@@ -63,7 +63,7 @@ window.Events = inherit(ListView,{
 		this.profile_id = profile_id;
 		this.req_id = req_id;
 		$('#main-con').empty();
-		console.log(['req_id',req_id, 'res', res])
+		console.log(['req_id',req_id, 'res', res, 'event_id', event_id])
 		RenderFormFields.prototype.init(me.wrapper, {"file_name" : "event", "method": 'event'}, event_id)
 		this.set_values(res)
 		me.bind_save_event()
@@ -101,7 +101,7 @@ window.Events = inherit(ListView,{
 	},
 	set_values: function(res){
 		console.log(['setting visits details',res])
-		if(res){
+		if(res && res['entityid']){
 			$.each(res, function(field, value){
 				if(field!='event_symptoms') $('[name="'+field+'"]').val(value)
 			})
@@ -433,6 +433,7 @@ window.Events = inherit(ListView,{
 					method:"phr.templates.pages.event.create_update_event",
 					args:{"data":JSON.stringify(me.res), "req_id": me.req_id},
 					callback:function(r){
+						console.log(r.message)
 						$('.breadcrumb li:last').remove()
 						NProgress.done();
 						if(r.message.returncode == 103 || r.message.returncode == 116){

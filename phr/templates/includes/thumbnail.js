@@ -25,17 +25,19 @@ $.extend(ThumbNails.prototype,{
 		var me = this;
 		$('.thumb').empty();
 		$('.uploader').empty();
-		$(repl_str('<div class="uploader" >\
+		$(repl_str('<div class="uploader">\
 			<br>\
-			<button style="float:left;width:30%;" id="img" class="btn btn-primary" > \
-				<i class="icon-upload"></i>\
-				Upload Image </button>\
-			<button style="float:left;width:30%;margin-left:5%;" id="descr" class="btn btn-primary" > \
-				<i class="icon-file-text-alt"></i>\
-				Write Description </button>\
-			<button style="float:left;width:30%;margin-left:5%;" id="cp_img" class="btn btn-default" > \
-				<i class="icon-camera" data-toggle="tooltip" data-placement="top" title="Comming Soon...."></i>\
-				Capture Image </button>\
+			<div  style="display:%(uploader_display)s">\
+				<button style="float:left;width:30%;" id="img" class="btn btn-primary" > \
+					<i class="icon-upload"></i>\
+					Upload Image </button>\
+				<button style="float:left;width:30%;margin-left:5%;" id="descr" class="btn btn-primary" > \
+					<i class="icon-file-text-alt"></i>\
+					Write Description </button>\
+				<button style="float:left;width:30%;margin-left:5%;" id="cp_img" class="btn btn-default" > \
+					<i class="icon-camera" data-toggle="tooltip" data-placement="top" title="Comming Soon...."></i>\
+					Capture Image </button>\
+			</div>\
 			<hr>\
 			<h4> Uploaded Files </h4>\
 			<div id="uploaded_file" style="height:500px;overflow-x:auto;background-color:#F5F5F5;">\
@@ -167,6 +169,7 @@ $.extend(ThumbNails.prototype,{
 	},
 	show_attachments:function(){
 		var me = this;
+		console.log(['show_attachments', me.args['req_id']])
 		frappe.call({
 			method:"phr.templates.pages.event.get_attachments",
 			args:{'profile_id': sessionStorage.getItem("cid"), 'folder':me.folder, 

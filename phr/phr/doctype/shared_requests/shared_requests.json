@@ -184,6 +184,13 @@
    "label": "Rejection Reason", 
    "permlevel": 0, 
    "precision": ""
+  }, 
+  {
+   "fieldname": "files_list", 
+   "fieldtype": "Long Text", 
+   "label": "Files List", 
+   "permlevel": 0, 
+   "precision": ""
   }
  ], 
  "hide_heading": 0, 
@@ -194,7 +201,7 @@
  "is_submittable": 0, 
  "issingle": 0, 
  "istable": 0, 
- "modified": "2015-03-25 20:11:09.461161", 
+ "modified": "2015-03-27 20:43:22.650634", 
  "modified_by": "Administrator", 
  "module": "phr", 
  "name": "Shared Requests", 
