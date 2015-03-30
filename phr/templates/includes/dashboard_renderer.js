@@ -199,7 +199,7 @@ function render_dashboard(profile_id){
 			if (data['provider_type']=='Doctor') sal="Dr."
 			data['sal']=sal
 			$(repl_str('<div class="list-group-item-side %(entityid)s">\
-			<a noherf data-name=%(provider)s onclick="Provider.prototype.open_record(\'%(provider)s\')">%(sal)s %(name1)s </a>\
+			<a noherf data-name=%(provider)s onclick="Provider.prototype.open_record(\'%(provider)s\')">%(name1)s </a>\
 			</div>', data)).appendTo($wrap)
 		})
     }
