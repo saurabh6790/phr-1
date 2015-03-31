@@ -36,6 +36,13 @@
    "precision": ""
   }, 
   {
+   "fieldname": "visit_id", 
+   "fieldtype": "Data", 
+   "label": "Visit Id", 
+   "permlevel": 0, 
+   "precision": ""
+  }, 
+  {
    "fieldname": "event_title", 
    "fieldtype": "Data", 
    "label": "Event Title", 
@@ -201,7 +208,7 @@
  "is_submittable": 0, 
  "issingle": 0, 
  "istable": 0, 
- "modified": "2015-03-27 20:43:22.650634", 
+ "modified": "2015-03-30 13:11:26.255777", 
  "modified_by": "Administrator", 
  "module": "phr", 
  "name": "Shared Requests", 

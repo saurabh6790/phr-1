@@ -301,6 +301,7 @@ def make_sharing_request(event_data, data, files_list=None):
 	req.valid_upto = data.get('sharing_duration')
 	if d.get("visit_tag_id"):
 		req.event_title = get_event_info(d.get("event_tag_id"))
+		req.visit_id = d.get("visit_tag_id")
 	else:
 		req.event_title = data.get("event_title")
 	req.doc_name = 'Event'
@@ -316,7 +317,7 @@ def get_files_doc(event_data, data):
 		for d in event_data.get('sharelist'):
 			for key, values in tag_dict.items():
 				for sub_tab in ['A_51', 'B_52', 'C_53']:
-					attachments = get_attachments(d.get("from_profile_id"), values, sub_tab, d.get("event_tag_id"))
+					attachments = get_attachments(d.get("from_profile_id"), values, sub_tab, d.get("event_tag_id"), d.get("visit_tag_id"))
 					for att in attachments:
 						files_list.append(os.path.join(get_files_path(), att.get('path').split('files/')[1], att.get('file_name')))
 		return files_list
@@ -485,6 +486,7 @@ def get_individual_visit_count_for_badges(visit_id,profile_id):
 		jsonobj=json.loads(res)
 		if jsonobj["returncode"]==139:
 			for visit in json.loads(jsonobj["list"]):
+				frappe.errprint([visit['visit']['entityid'], visit_id])
 				if visit['visit']['entityid']==visit_id:
 					event_wise_count_dict(visit['visitFileMapCount'], event_dict,sub_event_count)
 					break

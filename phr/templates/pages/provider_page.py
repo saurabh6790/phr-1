@@ -188,7 +188,7 @@ def update_request_record(req_id, rej_reason):
 	sr.save()
 
 def get_acc_req(target, provider_id):
-	data = frappe.db.sql("""select name, provider_id, patient, event_id, DATE_FORMAT(date, '%s'), patient_name, event_title, reason, valid_upto, payment
+	data = frappe.db.sql("""select name, provider_id, patient, event_id, DATE_FORMAT(date, '%s'), patient_name, event_title, reason, valid_upto, payment, ifnull(visit_id, '')
 				 from `tabShared Requests`
 				 where ifnull(approval_status,'') = 'Accept'
 					and provider_id="%s" and 
@@ -197,8 +197,8 @@ def get_acc_req(target, provider_id):
 
 	for d in data:
 		d[6] = """<a nohref id="%(entityid)s" 
-						onclick="Events.prototype.open_form('%(entityid)s', '%(event_title)s', '%(profile_id)s', '', '%(req_id)s')"> 
-					%(event_title)s </a>"""%{'entityid':d[3], 'event_title': d[6], 'profile_id': d[2], 'req_id': d[0]}
+						onclick="Events.prototype.open_form('%(entityid)s', '%(event_title)s', '%(profile_id)s', '', '%(req_id)s', '%(visit_id)s')"> 
+					%(event_title)s </a>"""%{'entityid':d[3], 'event_title': d[6], 'profile_id': d[2], 'req_id': d[0], 'visit_id': d[10]}
 
 	rows=[
 		["Date (Shared date)", "Patient Name", "Event Name",

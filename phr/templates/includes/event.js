@@ -58,7 +58,7 @@ window.Events = inherit(ListView,{
 		this.render_spans()
 		this.get_linked_providers()
 	},
-	open_form:function(event_id, event_title, profile_id, res, req_id){
+	open_form:function(event_id, event_title, profile_id, res, req_id, visit_id){
 		var me = this;
 		this.profile_id = profile_id;
 		this.req_id = req_id;
@@ -93,7 +93,7 @@ window.Events = inherit(ListView,{
 
   		// me.bind_events()
   		this.write_visit_file(event_id, profile_id)
-  		this.make_tree_view(event_id)
+  		this.make_tree_view(event_id, visit_id)
   		this.get_linked_providers()
   		this.set_provider_details()
   		this.make_share_pannel(event_id)
@@ -140,16 +140,31 @@ window.Events = inherit(ListView,{
 			me.open_sharing_pannel(event_id)
 		})		
 	},
-	make_tree_view:function(event_id){
+	make_tree_view:function(event_id, visit_id){
 		var me = this;
+		console.log(['make tree view', visit_id])
 		me.dms_file_list = me.dms_file_list ? me.dms_file_list : [];
-		file_counts=me.get_file_counts(event_id,this.profile_id,me.dms_file_list)
+		if(visit_id) file_counts=me.get_visit_file_counts(visit_id,this.profile_id,me.dms_file_list)
+		else file_counts=me.get_event_file_counts(event_id,this.profile_id,me.dms_file_list)
 	},
-	get_file_counts:function(event_id, profile_id, dms_file_list){
+	get_event_file_counts:function(event_id, profile_id, dms_file_list){
 		var me = this;
 		frappe.call({
 			"method":"phr.templates.pages.event.get_individual_event_count_for_badges",
 			"args":{"event_id":event_id,"profile_id":profile_id},
+			callback:function(r){
+				TreeView.prototype.init({'profile_id': me.profile_id, 'dms_file_list':dms_file_list, 
+						'display': 'none',"event_dict":r.message.event_dict,"sub_event_count":r.message.sub_event_count, 
+						'req_id': me.req_id})
+			}
+		})
+	},
+	get_visit_file_counts:function(visit_id, profile_id, dms_file_list){
+		var me = this;
+		console.log(['calling visit file_counts', visit_id])
+		frappe.call({
+			"method":"phr.templates.pages.event.get_individual_visit_count_for_badges",
+			"args":{"visit_id":visit_id,"profile_id":profile_id},
 			callback:function(r){
 				TreeView.prototype.init({'profile_id': me.profile_id, 'dms_file_list':dms_file_list, 
 						'display': 'none',"event_dict":r.message.event_dict,"sub_event_count":r.message.sub_event_count, 
