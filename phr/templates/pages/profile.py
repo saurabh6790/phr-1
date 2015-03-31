@@ -515,14 +515,14 @@ def get_user_details(profile_id=None):
 	if user:
 		name=user.first_name+' '+cstr(user.last_name)
 		contact=user.contact
-		barcode=user.barcode
+		barcode=user.barcode or ""
 		return{
 			"name":name,
 			"contact":contact,
 			"barcode":barcode,
-			"user_image":user.user_image,
-			"emergency_contact":user.emergemcy_contactno,
-			"blood_group":user.blood_group
+			"user_image":user.user_image or "",
+			"emergency_contact":user.emergemcy_contactno or "",
+			"blood_group":user.blood_group or ""
 		}
 
 
@@ -671,7 +671,7 @@ def get_pdf(profile_id,options=None):
 			<td width=60%% >Name:%(name)s
 			</br>Blood Group: %(blood_group)s
 			</br>Contact No: %(contact)s
-			</br>Emer Contact:%(emergency_contact)s
+			</br>Emergency Contact:%(emergency_contact)s
 			<br><img src="%(barcode)s">
 			</td></tr></table></div></div>"""%user
 	

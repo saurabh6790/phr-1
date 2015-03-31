@@ -242,7 +242,7 @@ def share_via_phr(share_info, profile_id, disease):
 	dm_sharing.from_profile = profile_id
 	dm_sharing.to_profile = share_info.get('doctor_id')
 	dm_sharing.pdf_path = os.path.join(get_files_path(), profile_id, file_name)
-	dm_sharing.save()
+	dm_sharing.save(ignore_permissions=True)
 	make_sharing_request(share_info, disease, dm_sharing, profile_id)
 
 def make_sharing_request(event_data, disease, dm_sharing, profile_id):
@@ -256,4 +256,4 @@ def make_sharing_request(event_data, disease, dm_sharing, profile_id):
 	req.valid_upto = event_data.get('sharing_duration')
 	req.event_title = disease
 	req.doc_name = 'Disease Monitoring' 
-	req.save()
+	req.save(ignore_permissions=True)

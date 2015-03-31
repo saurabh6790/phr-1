@@ -2,6 +2,7 @@ import frappe
 import json
 from frappe.utils import cstr, get_site_path, get_url
 import base64
+import frappe
 
 """ Profile login calls """
 @frappe.whitelist(allow_guest=True)
@@ -409,3 +410,35 @@ def updatePassword(data):
 	_update_password(user, data.get('new_password'))
 
 	return "Password Updated Successfully"
+
+@frappe.whitelist(allow_guest=True)
+def shareDM(data):
+	share_info=json.loads(data)
+	share_data=build_dm_share_data(share_info)
+	from templates.pages.disease_monitoring import share_dm
+	share_dm(json.dumps(share_data["data_row"]),share_data["header"],json.dumps(share_info),share_info["profile_id"],share_info["event_title"])
+
+
+def build_dm_share_data(share_info):
+	dm_doc=frappe.get_doc("Disease Monitoring",share_info["event_id"])
+	field_dic={}
+	for d in dm_doc.get('parameters'):
+		field_dic[d.label]=d.fieldname
+	rows=[]
+	tr=""
+	for label in reversed(field_dic.keys()):
+		tr+="""<th>%s</th>"""%label
+	
+	header_row="""<tr>%s</tr>"""%tr	
+
+	for data in share_info["data"]:
+		row=""
+		for label in reversed(field_dic.keys()):
+			row_list=[]
+			row+="""<td>%s</td>"""%data[field_dic[label]]
+		rows.append(row)
+	
+	return {
+		"header":header_row,
+		"data_row":rows
+	}

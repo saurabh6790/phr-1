@@ -22,9 +22,7 @@ def create_profile(first_name,middle_name,last_name,email_id,contact,created_via
 		3.After Successful Profile Creation genarate link
 		4.Complete Registration 
 	"""
-	frappe.errprint("create profile for signed up user")
 	user = frappe.db.get("User", {"email": email_id})
-	print user
 	if user:
 		if user.disabled:
 			return {"returncode" : 410, "message_summary":"Registered but disabled.","msg_display":"Registered but disabled."}
@@ -41,12 +39,28 @@ def create_profile(first_name,middle_name,last_name,email_id,contact,created_via
 			path=get_image_path(barcode,response['entityid'])
 			file_path='/files/'+response['entityid']+'/'+response['entityid']+".svg"
 			res=create_profile_in_db(response['entityid'],args,response,file_path)
+			db=set_default_dashboard(response['entityid'])
 			print response
 			response['msg_display']='Profile created successfully, please check your email and complete signup process'
 			return response
 		else:
 			print response
 			return response
+
+@frappe.whitelist(allow_guest=True)
+def set_default_dashboard(profile_id):
+	sr = frappe.get_doc({
+		"doctype":"Shortcut",
+		"profile_id":profile_id,	
+		"created_via": "Web",
+		"visits":1,
+		"medications":1,
+		"disease_monitoring":1,
+		"events":1
+	})
+	sr.ignore_permissions = True
+	sr.insert()	
+
 
 @frappe.whitelist(allow_guest=True)
 def get_barcode():

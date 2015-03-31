@@ -11,6 +11,7 @@ login.bind_events = function() {
 	$(".form-login").on("submit", function(event) {
 		console.log("form-login")
 		event.preventDefault();
+		$('.btn-primary').prop("disabled", true);
 		var args = {};
 		args.cmd = "login";
 		args.usr = ($("#login_email").val() || "").trim();
@@ -24,7 +25,7 @@ login.bind_events = function() {
 
 	$(".form-signup").unbind("submit").submit(function(event) {
 		//event.preventDefault();
-		console.log("form-signup")
+		$('.btn-primary').prop("disabled", true);
 		var args = {};
 		args.first_name = ($("#signup_firstname").val() || "").trim();
 		args.middle_name = ($("#signup_middlename").val() || "").trim();
@@ -52,6 +53,7 @@ login.bind_events = function() {
 
 	$(".form-forgot").on("submit", function(event) {
 		event.preventDefault();
+		$('.btn-primary').prop("disabled", true);
 		var args = {};
 		args.cmd = "phr.templates.pages.login.reset_password";
 		args.user = ($("#forgot_email").val() || "").trim();
@@ -71,7 +73,6 @@ login.route = function() {
 }
 
 login.login = function() {
-	console.log("login")
 	$("form").toggle(false);
 	$(".form-login").toggle(true);
 }
@@ -82,14 +83,12 @@ login.forgot = function() {
 }
 
 login.signup = function() {
-	console.log("signup")
 	$("form").toggle(false);
 	$(".form-signup").toggle(true);
 }
 
 // Login
 login.call = function(args) {
-	console.log(".call method")
 	$('.btn-primary').prop("disabled", true);
 	$.ajax({
 		type: "POST",

@@ -360,6 +360,7 @@ window.Events = inherit(ListView,{
   			if ($(this).val()==""){
   				$(this).css({"border": "1px solid #999","border-color": "red" });
   				fg=false
+  				msg="Fields Marked As red Are Mandatory"
   			}
   		})
   		return {
@@ -475,6 +476,11 @@ window.Events = inherit(ListView,{
   				fg=false
   			}
   		})
+  		if($("form input[name='doctor_name']").val() && $("form input[name='doctor_id']").val()==''){
+  			frappe.msgprint("Please Select Appropriate Provider")
+  			fg=false
+  		}
+
   		return fg
   	},
 	render_folder_section: function(){
