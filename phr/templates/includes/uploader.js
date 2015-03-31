@@ -77,12 +77,12 @@ upload = {
 		
 		if(!fileobj && !args.file_url) {
 			frappe.msgprint(__("Please attach a file or set a URL"));
+			NProgress.done();
 			return;
 		}
 		// args["dialog"].hide();
 
 		delete args["dialog"];
-		
 
 		var dataurl = null;
 		var _upload_file = function() {

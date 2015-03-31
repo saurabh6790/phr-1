@@ -703,8 +703,7 @@ $.extend(RenderFormFields.prototype,{
     section_break_field_renderer: function(meta){
        	this.section = $('<div class="row sec %(fieldname)s" style="padding:2%""></div>')
     		.appendTo($(this.wrapper))
-    		.css("border-top", "1px solid #eee")
-    		.css("padding-top", "15px")
+    		.css("padding-top", "10px")
     	
     	if(meta){
     		if(meta['label']){

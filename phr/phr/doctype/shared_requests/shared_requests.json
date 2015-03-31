@@ -2,6 +2,7 @@
  "allow_copy": 0, 
  "allow_import": 0, 
  "allow_rename": 0, 
+ "autoname": "req.############", 
  "creation": "2014-12-13 20:23:37.847666", 
  "custom": 0, 
  "docstatus": 0, 
@@ -31,6 +32,13 @@
    "fieldname": "event_id", 
    "fieldtype": "Data", 
    "label": "Event Id", 
+   "permlevel": 0, 
+   "precision": ""
+  }, 
+  {
+   "fieldname": "visit_id", 
+   "fieldtype": "Data", 
+   "label": "Visit Id", 
    "permlevel": 0, 
    "precision": ""
   }, 
@@ -183,6 +191,13 @@
    "label": "Rejection Reason", 
    "permlevel": 0, 
    "precision": ""
+  }, 
+  {
+   "fieldname": "files_list", 
+   "fieldtype": "Long Text", 
+   "label": "Files List", 
+   "permlevel": 0, 
+   "precision": ""
   }
  ], 
  "hide_heading": 0, 
@@ -193,7 +208,7 @@
  "is_submittable": 0, 
  "issingle": 0, 
  "istable": 0, 
- "modified": "2015-02-20 20:51:17.475710", 
+ "modified": "2015-03-30 13:11:26.255777", 
  "modified_by": "Administrator", 
  "module": "phr", 
  "name": "Shared Requests", 

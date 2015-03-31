@@ -7,11 +7,6 @@
 			"options":"Provider Type"
 		},
 		{
-			"fieldname":"",
-			"fieldtype":"column_break", 
-			"label":""
-		},
-		{
 			"fieldname":"name", 
 			"fieldtype":"data",
 			"label":"Name",
@@ -19,19 +14,14 @@
 		},
 		{
 			"fieldname":"",
-			"fieldtype":"section_break", 
-			"label":""
+			"fieldtype":"column_break", 
+			"label":"" 
 		},
 		{
 			"fieldname":"specialization", 
 			"fieldtype":"select",
 			"label":"Specialization",
 			"options":"Specialization"
-		},
-		{
-			"fieldname":"",
-			"fieldtype":"column_break", 
-			"label":""
 		},
 		{
 			"fieldname":"provider_loc", 

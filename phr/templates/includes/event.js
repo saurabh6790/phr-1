@@ -58,17 +58,19 @@ window.Events = inherit(ListView,{
 		this.render_spans()
 		this.get_linked_providers()
 	},
-	open_form:function(event_id, event_title, profile_id, res){
+	open_form:function(event_id, event_title, profile_id, res, req_id, visit_id){
 		var me = this;
 		this.profile_id = profile_id;
+		this.req_id = req_id;
 		$('#main-con').empty();
+		console.log(['req_id',req_id, 'res', res, 'event_id', event_id])
 		RenderFormFields.prototype.init(me.wrapper, {"file_name" : "event", "method": 'event'}, event_id)
 		this.set_values(res)
 		me.bind_save_event()
 		$(repl_str('<li><a nohref>%(event_title)s</a></li>',{'event_title': event_title})).click(function(){
 			$(this).nextAll().remove()
 			$(this).remove()
-			me.open_form(event_id, event_title, me.profile_id)
+			me.open_form(event_id, event_title, me.profile_id, '', me.req_id)
 		}).appendTo('.breadcrumb');
 		
 		this.make_multi_select_div()
@@ -91,7 +93,7 @@ window.Events = inherit(ListView,{
 
   		// me.bind_events()
   		this.write_visit_file(event_id, profile_id)
-  		this.make_tree_view(event_id)
+  		this.make_tree_view(event_id, visit_id)
   		this.get_linked_providers()
   		this.set_provider_details()
   		this.make_share_pannel(event_id)
@@ -99,7 +101,7 @@ window.Events = inherit(ListView,{
 	},
 	set_values: function(res){
 		console.log(['setting visits details',res])
-		if(res){
+		if(res && res['entityid']){
 			$.each(res, function(field, value){
 				if(field!='event_symptoms') $('[name="'+field+'"]').val(value)
 			})
@@ -138,18 +140,35 @@ window.Events = inherit(ListView,{
 			me.open_sharing_pannel(event_id)
 		})		
 	},
-	make_tree_view:function(event_id){
+	make_tree_view:function(event_id, visit_id){
 		var me = this;
+		console.log(['make tree view', visit_id])
 		me.dms_file_list = me.dms_file_list ? me.dms_file_list : [];
-		file_counts=me.get_file_counts(event_id,this.profile_id,me.dms_file_list)
+		if(visit_id) file_counts=me.get_visit_file_counts(visit_id,this.profile_id,me.dms_file_list)
+		else file_counts=me.get_event_file_counts(event_id,this.profile_id,me.dms_file_list)
 	},
-	get_file_counts:function(event_id, profile_id, dms_file_list){
+	get_event_file_counts:function(event_id, profile_id, dms_file_list){
 		var me = this;
 		frappe.call({
 			"method":"phr.templates.pages.event.get_individual_event_count_for_badges",
 			"args":{"event_id":event_id,"profile_id":profile_id},
 			callback:function(r){
-				TreeView.prototype.init({'profile_id': me.profile_id, 'dms_file_list':dms_file_list, 'display': 'none',"event_dict":r.message.event_dict,"sub_event_count":r.message.sub_event_count})
+				TreeView.prototype.init({'profile_id': me.profile_id, 'dms_file_list':dms_file_list, 
+						'display': 'none',"event_dict":r.message.event_dict,"sub_event_count":r.message.sub_event_count, 
+						'req_id': me.req_id})
+			}
+		})
+	},
+	get_visit_file_counts:function(visit_id, profile_id, dms_file_list){
+		var me = this;
+		console.log(['calling visit file_counts', visit_id])
+		frappe.call({
+			"method":"phr.templates.pages.event.get_individual_visit_count_for_badges",
+			"args":{"visit_id":visit_id,"profile_id":profile_id},
+			callback:function(r){
+				TreeView.prototype.init({'profile_id': me.profile_id, 'dms_file_list':dms_file_list, 
+						'display': 'none',"event_dict":r.message.event_dict,"sub_event_count":r.message.sub_event_count, 
+						'req_id': me.req_id})
 			}
 		})
 	},
@@ -172,8 +191,9 @@ window.Events = inherit(ListView,{
 		var me = this;
 		this.filters = {}
 
-		$('#myModal').remove()
-		$('.modal').remove()
+		$('#myModal').remove();
+		$('.modal').remove();
+		$('.modal-backdrop').remove();;
 
 		d = new Dialog();
 		d.init({"file_name":"provider_search", "title":"Provider Search"})
@@ -213,7 +233,7 @@ window.Events = inherit(ListView,{
 			</table>\
 		</div>").appendTo('.modal-body');
 
-		header = [["", 50], ["Provider Name", 170], ["Number", 100], ["Email", 100], ["Specialization", 100], ["City", 100]]
+		header = [["", 50], ["Provider Name", 170], ["Number", 100], ["Email", 100], ["Specialization", 100], ["Location", 100]]
 
 		if(result_set){
 			$.each(header, function(i, col) {
@@ -228,7 +248,7 @@ window.Events = inherit(ListView,{
 				$('<td>').html(d['mobile_number']).appendTo(row)
 				$('<td>').html(d['email']).appendTo(row)
 				$('<td>').html(d['specialization']).appendTo(row)
-				$('<td>').html(d['city']).appendTo(row)
+				$('<td>').html(d['addr']).appendTo(row)
 			})
 			me.set_provider(d)
 		}
@@ -305,8 +325,9 @@ window.Events = inherit(ListView,{
 	},
 	create_provider_linking:function(filters, d){
 		var me = this;
-		$('#myModal').remove()
-		$('.modal').remove()
+		$('#myModal').remove();
+		$('.modal').remove();
+		$('.modal-backdrop').remove();
 
 		d.init({"file_name":"provider", "values": filters})
 		d.show()
@@ -421,12 +442,14 @@ window.Events = inherit(ListView,{
 					complaints_array[i] = temp_var.html();
 				})
 				me.res['profile_id'] = me.profile_id;
+				me.res['pid'] = sessionStorage.getItem("pid")
 				me.res['dms_file_list'] = me.dms_file_list;
 				me.res['complaints'] = complaints_array;
 				frappe.call({
 					method:"phr.templates.pages.event.create_update_event",
-					args:{"data":JSON.stringify(me.res)},
+					args:{"data":JSON.stringify(me.res), "req_id": me.req_id},
 					callback:function(r){
+						console.log(r.message)
 						$('.breadcrumb li:last').remove()
 						NProgress.done();
 						if(r.message.returncode == 103 || r.message.returncode == 116){

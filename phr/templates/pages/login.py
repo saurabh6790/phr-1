@@ -31,7 +31,7 @@ def create_profile(first_name,middle_name,last_name,email_id,contact,created_via
 	else:
 		barcode=get_barcode()
 		args={'person_firstname':first_name,'person_middlename':middle_name,'person_lastname':last_name,'email':email_id,'mobile':contact,'received_from':created_via,'provider':'false',"barcode":str(barcode)}
-		print args
+		# return args
 		profile_res=create_profile_in_solr(args)
 		response=json.loads(profile_res)
 		print response
