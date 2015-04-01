@@ -357,6 +357,9 @@ def getEmergencyDetails(data):
 	data = json.loads(data)
 	from templates.pages.profile import get_user_details
 	user_details = get_user_details(data.get('profile_id'))
+	if user_details.get('error'):
+		return user_details
+		
 	user_details['barcode'] = get_url() + user_details['barcode']
 
 	if 'files' in user_details['user_image']:
