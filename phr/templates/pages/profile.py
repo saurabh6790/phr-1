@@ -511,7 +511,16 @@ def build_logs_data(data):
 
 @frappe.whitelist(allow_guest=True)
 def get_user_details(profile_id=None):
-	user=frappe.get_doc("User",frappe.session.user)
+	print profile_id
+	if profile_id:
+		user = frappe.db.get_value("User", { "profile_id" : profile_id}, "name")
+		print user
+		if user:
+			user = frappe.get_doc("User", user)
+
+	else:
+		user=frappe.get_doc("User",frappe.session.user)
+
 	if user:
 		name=user.first_name+' '+cstr(user.last_name)
 		contact=user.contact
@@ -523,6 +532,10 @@ def get_user_details(profile_id=None):
 			"user_image":user.user_image or "",
 			"emergency_contact":user.emergemcy_contactno or "",
 			"blood_group":user.blood_group or ""
+		}
+	else:
+		return {
+			"error": "Requsted User is dissabled or removed"
 		}
 
 
