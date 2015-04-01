@@ -20,7 +20,7 @@ def get_medication_data(data):
 			rows = filed_dict.get('rows')
 			break
 	
-	if isinstance(data, unicode):
+	if isinstance(data, unicode) or  isinstance(data, str):
 		data=json.loads(data)
 
 	medication_list=fetch_values_from_db(data)
