@@ -359,7 +359,7 @@ def getEmergencyDetails(data):
 	user_details = get_user_details(data.get('profile_id'))
 	if user_details.get('error'):
 		return user_details
-		
+
 	user_details['barcode'] = get_url() + user_details['barcode']
 
 	if 'files' in user_details['user_image']:
@@ -445,3 +445,16 @@ def build_dm_share_data(share_info):
 		"header":header_row,
 		"data_row":rows
 	}
+
+@frappe.whitelist(allow_guest=True)
+def deactivateMedication(data):
+	from templates.pages.medication import update_status
+	data = json.loads(data)
+	
+	data['file_name']="medication"
+	data['param']="listview"
+
+	data = json.dumps(data)
+	
+	res = update_status(data)
+	return getProfileMedications(data)
