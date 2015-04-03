@@ -412,7 +412,7 @@ def shareDM(data):
 	share_info=json.loads(data)
 	share_data=build_dm_share_data(share_info)
 	from templates.pages.disease_monitoring import share_dm
-	share_dm(json.dumps(share_data["data_row"]),share_data["header"],json.dumps(share_info),share_info["profile_id"],share_info["event_title"])
+	return share_dm(json.dumps(share_data["data_row"]),share_data["header"],json.dumps(share_info),share_info["profile_id"],share_info["event_title"])
 
 
 def build_dm_share_data(share_info):
@@ -447,7 +447,16 @@ def deactivateMedication(data):
 	data['file_name']="medication"
 	data['param']="listview"
 
+	if not_matching_docname(data):
+		return "Maintioned medication docname is not matching with profile id"
+
 	data = json.dumps(data)
-	
+
 	res = update_status(data)
 	return getProfileMedications(data)
+
+def not_matching_docname(data):
+	medication_list = frappe.db.sql("select name from tabMedication where profile_id = '%s'"%data.get('profile_id'), as_list=1)
+	if [data.get('docname')] not in medication_list:
+		return True
+	return False
