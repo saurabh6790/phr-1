@@ -174,9 +174,9 @@ def share_dm(data, header, share_info, profile_id, disease=None):
 	save_pdf(data, header, profile_id, disease)
 
 	if share_info.get('share_via') == 'Email':
-		send_email(share_info, profile_id, disease)
+		return send_email(share_info, profile_id, disease)
 	else:
-		share_via_phr(share_info, profile_id, disease)
+		return share_via_phr(share_info, profile_id, disease)
 
 @frappe.whitelist()
 def save_pdf(data, header, profile_id, disease):
@@ -234,6 +234,7 @@ def send_email(share_info, profile_id, disease):
 
 		sendmail([share_info.get('email_id')], subject="PHR-Disease Monitoring Data", msg=cstr(msg),
 				attachments=attachments)
+		return "Disease Monitoring records has been shared"
 
 def share_via_phr(share_info, profile_id, disease):
 	dm_sharing = frappe.new_doc('Disease Sharing Log')
@@ -244,6 +245,7 @@ def share_via_phr(share_info, profile_id, disease):
 	dm_sharing.pdf_path = os.path.join(get_files_path(), profile_id, file_name)
 	dm_sharing.save(ignore_permissions=True)
 	make_sharing_request(share_info, disease, dm_sharing, profile_id)
+	return "Disease Monitoring records has been shared"
 
 def make_sharing_request(event_data, disease, dm_sharing, profile_id):
 	req = frappe.new_doc('Shared Requests')
