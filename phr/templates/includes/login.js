@@ -4,6 +4,7 @@ window.disable_signup = {{ disable_signup and "true" or "false" }};
 window.login = {};
 
 login.bind_events = function() {
+	console.log('bining events')
 	$(window).on("hashchange", function() {
 		login.route();
 	});
@@ -36,16 +37,25 @@ login.bind_events = function() {
 		cnf_contact = ($("#signup_contact_cnf").val() || "").trim();
 		args.cmd = "phr.templates.pages.login.create_profile";
 		args.created_via="Desktop";
+
+		if (!/^[0-9]+$/.test(args.contact) || !/^[0-9]+$/.test(cnf_contact)){
+			frappe.msgprint(__("Valid contact number required"));
+			$('.btn-primary').prop("disabled", false);
+			return false;
+		}
 		if(!args.email_id || !valid_email(args.email_id) || !valid_email(cnf_email_id)) {
 			frappe.msgprint(__("Valid email and name required"));
+			$('.btn-primary').prop("disabled", false);
 			return false;
 		}
 		else if(args.email_id != cnf_email_id){
 			frappe.msgprint(__("Email Addresses doesn't match"));
+			$('.btn-primary').prop("disabled", false);
 			return false;
 		}
 		else if(args.contact != cnf_contact){
 			frappe.msgprint(__("Contact Nos doesn't match"));
+			$('.btn-primary').prop("disabled", false);
 			return false;
 		}
 		login.call(args);

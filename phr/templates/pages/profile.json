@@ -300,7 +300,7 @@
    {
       "fieldname":"messages", 
       "fieldtype":"check", 
-      "label": "Messages" 
+      "label": "Shared History" 
    },
    {
       "fieldname": "image", 

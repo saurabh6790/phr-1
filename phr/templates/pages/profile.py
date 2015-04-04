@@ -505,7 +505,7 @@ def build_logs_data(data):
 	else:
 		rows.extend([["","NO","DATA"]])
 
-	logs_dic={"fieldname":"messages","fieldtype": "table","label": "Messages","rows":rows}
+	logs_dic={"fieldname":"messages","fieldtype": "table","label": "Shared History","rows":rows}
 	return logs_dic
 
 
