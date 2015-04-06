@@ -4,7 +4,6 @@ window.disable_signup = {{ disable_signup and "true" or "false" }};
 window.login = {};
 
 login.bind_events = function() {
-	console.log('bining events')
 	$(window).on("hashchange", function() {
 		login.route();
 	});
@@ -169,10 +168,15 @@ login.login_handlers = (function() {
 	return login_handlers;
 })();
 
+var pageInitialized = false;
+
 frappe.ready(function() {
-	window.location.hash = "#login";
-	login.bind_events();
-	login.login();
-	$(".form-signup, .form-forgot").removeClass("hide");
-	$(document).trigger('login_rendered');
+	if(!pageInitialized){
+		window.location.hash = "#login";
+		login.bind_events();
+		login.login();
+		$(".form-signup, .form-forgot").removeClass("hide");
+		$(document).trigger('login_rendered');
+		pageInitialized = true;
+	}
 });
