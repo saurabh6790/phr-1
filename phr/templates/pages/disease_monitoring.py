@@ -6,7 +6,6 @@ import datetime
 from phr.templates.pages.patient import get_base_url
 import time
 from phr.phr.phr_api import get_response
-# from datetime import datetime
 from frappe.utils import getdate, date_diff, nowdate, get_site_path, get_hook_method, get_files_path, \
 		get_site_base_path, cstr, cint, today
 from phr.phr.doctype.phr_activity_log.phr_activity_log import make_log
@@ -21,51 +20,37 @@ def get_diseases():
 @frappe.whitelist(allow_guest=True)
 def get_disease_fields(name,profile_id=None):
 	if name:
-		dm=frappe.get_doc("Disease Monitoring",
+		dm = frappe.get_doc("Disease Monitoring",
 			frappe.db.get_value("Disease Monitoring",{"disease_name":name},"name"))
 		if dm:
-			fields=[]
-			rows=[]
-			rows_raw=[]
-			r=[]
-			row_count=0
-			r.append("")
-			field_mapper=[]
-			raw_fields=[]
-			field_mapper.append("sr")
+			fields, rows, dm_cols, field_mapper = [], [], [""], ["sr"]
+			row_count = 0
+
 			for d in dm.get('parameters'):
-				row_count+=1
-				f_dic={"fieldname":d.fieldname,"fieldtype":d.fieldtype,"label":d.label,"placeholder":""}
+				row_count += 1
+				f_dic = {"fieldname":d.fieldname,"fieldtype":d.fieldtype,"label":d.label,"placeholder":""}
 				fields.append(f_dic)
-				raw_fields.append(f_dic)
-				r.append(d.label)
+				dm_cols.append(d.label)
 				field_mapper.append(d.fieldname)
+
 				if row_count==4:
 					row_count=0
 					f_dic={"fieldname":"","fieldtype":"column_break","label":""}
 					fields.append(f_dic)
-					raw_fields.append(f_dic)
-			s_break={"fieldname":"","fieldtype":"section_break","label":""}	
-			fields.append(s_break)
-			raw_fields.append(s_break)
-			rows.append(r)
-			rows_raw.append(r)	
-			row_dic_raw={"fieldname":"tab","fieldtype": "table","label": "Disease Monitoring","rows":rows_raw}
-			row_dic={"fieldname":"tab","fieldtype": "table","label": "Disease Monitoring","rows":rows}
-			raw_fields.append(row_dic_raw)
-			fields.append(row_dic)
 
+			s_break = {"fieldname":"","fieldtype":"section_break","label":""}	
+			fields.append(s_break)
+			rows.append(dm_cols)
+			row_dic={"fieldname":"tab","fieldtype": "table","label": "Disease Monitoring","rows":rows}
+			fields.append(row_dic)
 			values=get_values(profile_id, fields, dm.event_master_id, field_mapper)
+
 			return {
 				"fields":fields, 
 				"event_master_id":dm.event_master_id,
 				"values":values,
-				"field_mapper":field_mapper,
-				"raw_fields":raw_fields
+				"field_mapper":field_mapper
 			}
-	else:
-		return 
-		#values=get_existing_records_from_solr(profile_id,dm.event_master_id)
 
 def get_values(profile_id,fields,event_master_id,field_mapper,raw_fields=None, val_req=True):
 	res=get_existing_records_from_solr(profile_id,event_master_id)
@@ -88,12 +73,14 @@ def get_existing_records_from_solr(profile_id,event_master_id):
 			return dmlist[0]["disease_mtr_visit_List"]
 
 def build_options(dm_list,fields,field_mapper,raw_fields=None):
-	if isinstance(fields, list):
-		f_list=fields
-	else:
-		f_list=json.loads(raw_fields)
 	pos=0
-	for filed_dict in f_list:
+
+	if isinstance(fields, list):
+		fields_list=fields
+	else:
+		fields_list=json.loads(fields)
+	
+	for filed_dict in fields_list:
 		pos =+ 1
 		if 'rows' in filed_dict.keys(): 
 			rows = filed_dict.get('rows')
@@ -101,22 +88,21 @@ def build_options(dm_list,fields,field_mapper,raw_fields=None):
 
 	if dm_list:
 		for dm in dm_list:
-			v=[]
-			f_dic={}
-			
-			for d in dm["data"]:
-				val_list=d.split("=")
-				f_dic[val_list[0]]=val_list[1]
-			for f in field_mapper:
-				#if not f=='patient_notes':
-				if f=='sr':
-					v.append('<input type="checkbox" name="">')
+			dm_data = []
+			field_dict = {}
+
+			for str_data in dm["data"]:
+				val_list = str_data.split("=")
+				field_dict[val_list[0]] = val_list[1]
+
+			for field in field_mapper:
+				if field == 'sr':
+					dm_data.append('<input type="checkbox" name="">')
 				else:
-					v.append(f_dic[f])
-			rows.extend([v])
-	return f_list
+					dm_data.append(field_dict[field])
+			rows.extend([dm_data])
 
-
+	return fields_list
 
 @frappe.whitelist(allow_guest=True)
 def save_dm(data, arg, fields, field_mapper, raw_fields=None, val_req=True):
@@ -125,15 +111,17 @@ def save_dm(data, arg, fields, field_mapper, raw_fields=None, val_req=True):
 		datastr=key+'='+value
 		str_data.append(datastr)
 	args=json.loads(arg)
-	d=json.loads(data)
 	args["data"]=str_data
 	args["str_event_date"]=time.strftime('%d/%m/%Y')
+
 	if args.has_key("date"):
 		args["str_diseaseMonitoring_date"]=args['date']
 	else:
 		args["str_diseaseMonitoring_date"]=	time.strftime('%d/%m/%Y')
+	
 	res=save_data_to_solr(json.dumps(args))
 	values=get_values(args['profile_id'], fields, args['event_master_id'], json.loads(field_mapper), raw_fields, val_req) 
+	
 	return {
 		"fields":values, 
 		"event_master_id":args['event_master_id'],
@@ -141,21 +129,17 @@ def save_dm(data, arg, fields, field_mapper, raw_fields=None, val_req=True):
 		"field_mapper":field_mapper
 	}
 
-
 def save_data_to_solr(args):
-	request_type="POST"
-	url=get_base_url()+'updatedismonitoring'
-	response=get_response(url,args,request_type)
-	res=response.text
+	request_type = "POST"
+	url = get_base_url()+'updatedismonitoring'
+	response = get_response(url,args,request_type)
+	res = response.text
 	if res:
 		jsonobj=json.loads(res)
 		if jsonobj['returncode']==132 or jsonobj['returncode']==133:
 			dm=json.loads(args)
 			sub="Disease Monitoring created"
 			make_log(dm['profile_id'],"Disease Monitoring","create",sub)
-			return "true"			
-		else:
-			return "false"	
 
 @frappe.whitelist(allow_guest=True)
 def render_table_on_db(profile_id,event_master_id,name):

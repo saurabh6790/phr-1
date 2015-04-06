@@ -412,7 +412,8 @@ def shareDM(data):
 	share_info=json.loads(data)
 	share_data=build_dm_share_data(share_info)
 	from templates.pages.disease_monitoring import share_dm
-	return share_dm(json.dumps(share_data["data_row"]),share_data["header"],json.dumps(share_info),share_info["profile_id"],share_info["event_title"])
+	return share_dm(json.dumps(share_data["data_row"]), share_data["header"], json.dumps(share_info), \
+		share_info["profile_id"], share_info["event_title"])
 
 
 def build_dm_share_data(share_info):

@@ -29,6 +29,7 @@ function render_dashboard(profile_id){
 					render_lphr(r.message)
 				}
 				else{
+					sessionStorage.setItem("lphrs", 0)
 					$('#clphr').empty()
 					$('<p class="nophr">No Linked PHRs</p>').appendTo('#clphr')  
 					
