@@ -314,7 +314,7 @@ var PatientDashboard = inherit(RenderFormFields, {
 						<div class="form-group row" style="margin: 0px">\
 								<div class="col-xs-8">\
 								<div class="control-input">\
-									<input type="radio" class="chk_phr" name="%(entityid)s" value="%(entityid)s">\
+									<input type="radio" class="chk_phr" name="lnkd_phr" value="%(entityid)s">\
 									%(person_firstname)s &nbsp %(person_lastname)s\
 								</div>\
 							</div>\
@@ -328,16 +328,16 @@ var PatientDashboard = inherit(RenderFormFields, {
 				</button>\
 			</div>').appendTo($wrapper).unbind("click").click(function(){
 				selected=[]
-				BootstrapDialog.confirm('Are You Sure?', function(result){
-					if(result) {
-           				if ($('.chk_phr:checked').length>0){
+				if ($('.chk_phr:checked').length>0){
+					BootstrapDialog.confirm('Are You Sure?', function(result){
+						if(result) {
 							me.delink_phr(meta,$('.chk_phr:checked').val(),meta_dic,profile_id,me)
-						}
-            		}else {
-                			
-            		}
-        		});
-				
+	            		}
+	        		});					
+				}
+				else{
+					frappe.msgprint("Please Select record from the list to Delink")
+				}
 			})
 	},
 	delink_phr:function(meta,selected,meta_dic,profile_id,me){

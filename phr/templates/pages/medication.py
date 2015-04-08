@@ -1,7 +1,7 @@
 import frappe
 import json
 import os 
-from frappe.utils import get_site_path, get_hook_method, get_files_path, get_site_base_path,cstr,cint
+from frappe.utils import get_site_path, get_hook_method, get_files_path, get_site_base_path,cstr,cint, date_diff, today
 from phr.templates.pages.patient import get_data_to_render,formatted_date,get_sms_template
 import datetime
 from phr.phr.doctype.phr_activity_log.phr_activity_log import make_log
@@ -82,9 +82,18 @@ def save_data(data):
 		"status":"Active",
 		"created_via": "Web"
 	})
+
+	if past_dated(to_date):
+		med.status = "Inactive"
+
 	med.ignore_permissions = True
 	med.insert()
 	return med.name
+
+def past_dated(to_date):
+	if date_diff(cstr(to_date).split(' ')[0], today()) < 0:
+		return True
+	return False
 
 def get_formatted_date(strdate=None):
 	if strdate:

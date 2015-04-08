@@ -84,7 +84,7 @@ window.Events = inherit(ListView,{
 		$($('[name="visit_date"]').parents()[3]).css("display", "inherit")
 
 		$($('[name="diagnosis_desc"]').parents()[3]).css("display", "inherit");
-		
+		$($($('[name="event_symptoms"]').parents()[2]).find('p')).css("display", "none")
 		$("#provider_name").click(function(){
 			me.dialog_oprations()
 		})

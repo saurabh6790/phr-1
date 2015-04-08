@@ -34,7 +34,7 @@ $.extend(RenderFormFields.prototype,{
 
 		//crear rendering area
 		$(this.wrapper).empty()
-	
+
 		//initiate rendering
 		if(!modal_wrapper) this.render_top()
 		this.get_field_meta();

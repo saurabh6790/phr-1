@@ -22,7 +22,7 @@ var ToDo = inherit(ListView,{
 	make_todo:function(){
 		var me = this;
 		d = new Dialog();
-		d.init({"file_name":"todo", "title":"ToDo"})
+		d.init({"file_name":"todo", "title":"To Do"})
 		d.show()
 		$('.modal-body form input[name="due_date"]').bind('change', function() { 
 				val=$(this).val()
@@ -32,26 +32,48 @@ var ToDo = inherit(ListView,{
 				}
 		});
 		$('.modal-footer .btn-primary').unbind('click').click(function(){
-			$(".modal-body form input, .modal-body form textarea, .modal-body form select").each(function(i, obj) {
-				me.res[obj.name] = $(obj).val();
-			})
-			 
-			me.res['profile_id'] = sessionStorage.getItem("pid")
+			var validated=me.validate_form_model()
+			if (validated['fg']==true){
+				$('.modal-footer .btn-primary').prop("disabled", true);
+				$(".modal-body form input, .modal-body form textarea, .modal-body form select").each(function(i, obj) {
+					me.res[obj.name] = $(obj).val();
+				})
+				 
+				me.res['profile_id'] = sessionStorage.getItem("pid")
 
-			frappe.call({
-				method:"phr.templates.pages.todo.create_todo",
-				args: {'data':me.res},
-				callback:function(r){
-					d.hide()
-					frappe.msgprint('ToDo Record Created')
-					var db = new render_dashboard();
-					db.render_to_do(sessionStorage.getItem("pid"))
-					// d.hide()
-					// var $modal = $("#myModal").detach().modal();
-					// $modal.modal("hide");
-					// $modal.modal("destroy").remove();
-				}
-			})
+				frappe.call({
+					method:"phr.templates.pages.todo.create_todo",
+					args: {'data':me.res},
+					callback:function(r){
+						d.hide()
+						$('#myModal').remove();
+						$('.modal').remove();
+						$('.modal-backdrop').remove();
+						frappe.msgprint('ToDo Record Created')
+						var db = new render_dashboard();
+						db.render_to_do(sessionStorage.getItem("pid"))
+					}
+				})
+			}
+			else{
+				frappe.msgprint(validated["msg"])
+				return false
+			}
 		})
-	}
+	},
+	validate_form_model:function(){
+		var fg=true
+  		msg=""
+		$(".modal-body form input[required],.modal-body form textarea[required],.modal-body form select[required]").each(function(i, obj) {
+  			if ($(this).val()==""){
+  				$(this).css({"border": "1px solid #999","border-color": "red" });
+  				fg=false
+  				msg="Fields Marked As red Are Mandatory"
+  			}
+  		})
+  		return {
+  			"fg":fg,
+  			"msg":msg
+  		}
+	},
 })

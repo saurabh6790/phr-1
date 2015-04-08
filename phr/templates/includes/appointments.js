@@ -29,7 +29,7 @@ var Appointments = inherit(ListView,{
 		this.res = {}
 		this.result_set = {};
 		this.doc_list = [] 
-		$('form input[required],form textarea[required],form select[required]').bind('change', function() { 
+		$('form input[required],form textarea[required],form select[required]').unbind('change').bind('change', function() { 
    			if (!$(this).val()){
    				$(this).css({"border": "1px solid #999","border-color": "red" });
    			}
@@ -37,17 +37,17 @@ var Appointments = inherit(ListView,{
    				$(this).css({"border": "1px solid #999","border-color": "F3F2F5" });	
    			}
 		});
-		$('form input[name="from_date_time"]').bind('change', function() { 
+		$('form input[name="from_date_time"]').unbind('change').bind('change', function() { 
 			val=$(this).val()
 			if (diffDays(parseDate(val),new Date().setHours(0,0,0,0)) > 0) { 
 				$(this).val("")
-    			frappe.msgprint("Appointment Date Should not be less than  Cureent Date")
+    			frappe.msgprint("Appointment Date Should not be less than Current Date")
 			}
 		});
-		$('.update').bind('click',function(event) {
+		$('.update').unbind('click').bind('click',function(event) {
 			NProgress.start();
 			var validated=me.validate_form()
-			if (validated==true){
+			if (validated['fg']==true){
 			
 				$("form input, form textarea, form select").each(function(i, obj) {
 					me.res[obj.name] = $(obj).val();
@@ -74,7 +74,7 @@ var Appointments = inherit(ListView,{
 			}
 			else{
 				NProgress.done();
-				frappe.msgprint("Fields Marked as Red Are Mandatory")
+				frappe.msgprint(validated['msg'])
 				return false
 			}		
 						
@@ -86,10 +86,11 @@ var Appointments = inherit(ListView,{
   		$("form input[required],form textarea[required],form select[required]").each(function(i, obj) {
   			if ($(this).val()==""){
   				$(this).css({"border": "1px solid #999","border-color": "red" });
-  				fg=false
+  				fg = false
+  				msg = "Fields Marked as Red Are Mandatory"
   			}
   		})
-  		return fg	
+  		return {'fg':fg, 'msg':	msg}
   		
   	},
 	update_list_view:function(data){

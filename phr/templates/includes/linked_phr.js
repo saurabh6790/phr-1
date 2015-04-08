@@ -36,7 +36,7 @@ var LinkedPHR = inherit(RenderFormFields, {
 				me.res = {};
 				NProgress.start();
 				var validated=me.validate_form()
-				if (validated==true){	
+				if (validated['fg']==true){	
 					$("form input,form textarea,form select").each(function(i, obj) {
 						me.res[obj.name] = $(obj).val();
 					})	
@@ -49,7 +49,7 @@ var LinkedPHR = inherit(RenderFormFields, {
 				}
 				else{
 					NProgress.done();
-					frappe.msgprint("Fields Marked as Red Are Mandatory")
+					frappe.msgprint(validated['msg'])
 					return false
 				}
 			}
@@ -60,18 +60,32 @@ var LinkedPHR = inherit(RenderFormFields, {
 	},
   	validate_form:function(){
   		var me=this;
-  		var fg=true
+  		var fg=true;
+  		var msg = '';
   		$("form input[required],form textarea[required],form select[required]").each(function(i, obj) {
   			if ($(this).val()==""){
   				$(this).css({"border": "1px solid #999","border-color": "red" });
-  				fg=false
+  				fg=false;
+  				msg = "Fields Marked as Red Are Mandatory"
   			}
   		})
   		if ($('form input[name="mobile"]').val() && !validate_mobile($('form input[name="mobile"]').val())) {
-  			frappe.msgprint("Mobile No Invalid")
-  			fg=false
-  		}	
-  		return fg	
+  			fg = false
+  			msg = "Mobile Number is Invalid"
+  		}
+  		
+  		if ($('form input[name="email"]').val() && !valid_email($('form input[name="email"]').val())) {
+  			fg = false
+  			msg = "Email Id is Invalid"
+  		}
+  		$("form input[required],form textarea[required],form select[required]").each(function(i, obj) {
+  			if(!/^[a-zA-Z ]*$/.test($(this).val())){
+  				fg=false;
+  				msg = "Please input alphabet characters only"
+  			}
+  		})
+
+  		return {'fg':fg, 'msg':msg}	
   		
   	},
 	create_linkedphr:function(res,me){

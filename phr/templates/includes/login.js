@@ -4,74 +4,76 @@ window.disable_signup = {{ disable_signup and "true" or "false" }};
 window.login = {};
 
 login.bind_events = function() {
-	$(window).on("hashchange", function() {
-		login.route();
-	});
+	if(!pageInitialized){
+		$(window).on("hashchange", function() {
+			login.route();
+		});
+	
+		$(".form-login").on("submit", function(event) {
+			console.log("form-login")
+			event.preventDefault();
+			$('.btn-primary').prop("disabled", true);
+			var args = {};
+			args.cmd = "login";
+			args.usr = ($("#login_email").val() || "").trim();
+			args.pwd = $("#login_password").val();
+			if(!args.usr || !args.pwd) {
+				frappe.msgprint(__("Both login and password required"));
+				return false;
+			}
+			login.call(args);
+		});
 
-	$(".form-login").on("submit", function(event) {
-		console.log("form-login")
-		event.preventDefault();
-		$('.btn-primary').prop("disabled", true);
-		var args = {};
-		args.cmd = "login";
-		args.usr = ($("#login_email").val() || "").trim();
-		args.pwd = $("#login_password").val();
-		if(!args.usr || !args.pwd) {
-			frappe.msgprint(__("Both login and password required"));
-			return false;
-		}
-		login.call(args);
-	});
+		$(".form-signup").unbind("submit").submit(function(event) {
+			//event.preventDefault();
+			$('.btn-primary').prop("disabled", true);
+			var args = {};
+			args.first_name = ($("#signup_firstname").val() || "").trim();
+			args.middle_name = ($("#signup_middlename").val() || "").trim();
+			args.last_name = ($("#signup_lastname").val() || "").trim();
+			args.email_id = ($("#signup_email").val() || "").trim();
+			cnf_email_id = ($("#signup_email_cnf").val() || "").trim();
+			args.contact = ($("#signup_contact").val() || "").trim();
+			cnf_contact = ($("#signup_contact_cnf").val() || "").trim();
+			args.cmd = "phr.templates.pages.login.create_profile";
+			args.created_via="Desktop";
 
-	$(".form-signup").unbind("submit").submit(function(event) {
-		//event.preventDefault();
-		$('.btn-primary').prop("disabled", true);
-		var args = {};
-		args.first_name = ($("#signup_firstname").val() || "").trim();
-		args.middle_name = ($("#signup_middlename").val() || "").trim();
-		args.last_name = ($("#signup_lastname").val() || "").trim();
-		args.email_id = ($("#signup_email").val() || "").trim();
-		cnf_email_id = ($("#signup_email_cnf").val() || "").trim();
-		args.contact = ($("#signup_contact").val() || "").trim();
-		cnf_contact = ($("#signup_contact_cnf").val() || "").trim();
-		args.cmd = "phr.templates.pages.login.create_profile";
-		args.created_via="Desktop";
+			if (!/^[0-9]+$/.test(args.contact) || !/^[0-9]+$/.test(cnf_contact)){
+				frappe.msgprint(__("Valid contact number required"));
+				$('.btn-primary').prop("disabled", false);
+				return false;
+			}
+			if(!args.email_id || !valid_email(args.email_id) || !valid_email(cnf_email_id)) {
+				frappe.msgprint(__("Valid email and name required"));
+				$('.btn-primary').prop("disabled", false);
+				return false;
+			}
+			else if(args.email_id != cnf_email_id){
+				frappe.msgprint(__("Email Addresses doesn't match"));
+				$('.btn-primary').prop("disabled", false);
+				return false;
+			}
+			else if(args.contact != cnf_contact){
+				frappe.msgprint(__("Contact Nos doesn't match"));
+				$('.btn-primary').prop("disabled", false);
+				return false;
+			}
+			login.call(args);
+		});
 
-		if (!/^[0-9]+$/.test(args.contact) || !/^[0-9]+$/.test(cnf_contact)){
-			frappe.msgprint(__("Valid contact number required"));
-			$('.btn-primary').prop("disabled", false);
-			return false;
-		}
-		if(!args.email_id || !valid_email(args.email_id) || !valid_email(cnf_email_id)) {
-			frappe.msgprint(__("Valid email and name required"));
-			$('.btn-primary').prop("disabled", false);
-			return false;
-		}
-		else if(args.email_id != cnf_email_id){
-			frappe.msgprint(__("Email Addresses doesn't match"));
-			$('.btn-primary').prop("disabled", false);
-			return false;
-		}
-		else if(args.contact != cnf_contact){
-			frappe.msgprint(__("Contact Nos doesn't match"));
-			$('.btn-primary').prop("disabled", false);
-			return false;
-		}
-		login.call(args);
-	});
-
-	$(".form-forgot").on("submit", function(event) {
-		event.preventDefault();
-		$('.btn-primary').prop("disabled", true);
-		var args = {};
-		args.cmd = "phr.templates.pages.login.reset_password";
-		args.user = ($("#forgot_email").val() || "").trim();
-		if(!args.user) {
-			frappe.msgprint(__("Valid Login id required."));
-			return false;
-		}
-		login.call(args);
-	});
+		$(".form-forgot").on("submit", function(event) {
+			event.preventDefault();
+			$('.btn-primary').prop("disabled", true);
+			var args = {};
+			args.cmd = "phr.templates.pages.login.reset_password";
+			args.user = ($("#forgot_email").val() || "").trim();
+			if(!args.user) {
+				frappe.msgprint(__("Valid Login id required."));
+				return false;
+			}
+			login.call(args);
+		});
+	}
 }
 
 
@@ -171,12 +173,12 @@ login.login_handlers = (function() {
 var pageInitialized = false;
 
 frappe.ready(function() {
-	if(!pageInitialized){
-		window.location.hash = "#login";
-		login.bind_events();
-		login.login();
-		$(".form-signup, .form-forgot").removeClass("hide");
-		$(document).trigger('login_rendered');
-		pageInitialized = true;
-	}
+	window.location.hash = "login";
+	// if(!pageInitialized){
+	login.bind_events();
+	pageInitialized = true;
+	// }
+	login.login();
+	$(".form-signup, .form-forgot").removeClass("hide");
+	$(document).trigger('login_rendered');
 });

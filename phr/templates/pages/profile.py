@@ -34,21 +34,31 @@ def update_profile(data,id,dashboard=None):
 @frappe.whitelist(allow_guest=True)
 def update_profile_solr(data,dashboard=None):
 	request_type="POST"
-	#url="http://88.198.52.49:7974/phr-api/updateProfile"
-	url=get_base_url()+"/updateProfile"
-	from phr.phr.phr_api import get_response
-	response=get_response(url,data,request_type)
-	res=json.loads(response.text)
-	print res['returncode']
-	p=json.loads(data)
-	if res['returncode']==102:
-		sub="Profile Updated Successfully"
-		make_log(p.get('entityid'),"profile","update",sub)
-		update_user_details(p)
-		return "Profile Updated Successfully"
+	if not_duplicate_contact(json.loads(data)):
+		url=get_base_url()+"/updateProfile"
+		from phr.phr.phr_api import get_response
+		response=get_response(url,data,request_type)
+		res=json.loads(response.text)
+		print res['returncode']
+		p=json.loads(data)
+		if res['returncode']==102:
+			sub="Profile Updated Successfully"
+			make_log(p.get('entityid'),"profile","update",sub)
+			update_user_details(p)
+			return "Profile Updated Successfully"
+		else:
+			return "Error While Updating Profile"
 	else:
-		return "Error While Updating Profile"
-		
+		return "Maintioned contact number is already registered with another profile."
+
+def not_duplicate_contact(data):
+	if frappe.db.sql("""select count(*) from tabUser 
+		where contact = '%s' and name != "%s" 
+	"""%(data.get('mobile'), frappe.session.user), as_list=1)[0][0] == 0:
+		return True
+	else:
+		return False
+
 def update_user_details(data):
 	frappe.db.sql("""update `tabUser` set 
 		first_name='%s',
@@ -66,6 +76,10 @@ def update_password(data,dashboard=None):
 	usrobj=json.loads(data)
 	old_password=usrobj.get('old_password')
 	new_password=usrobj.get('new_password')
+
+	if new_password != usrobj.get('cnf_new_password'):
+		return " Cannot Update: New Password and Confirm Password fields are not matching "
+
 	user=frappe.db.get_value("User",{"profile_id":usrobj.get('entityid')})
 	print [user,old_password,new_password]
 	if not new_password:
@@ -450,7 +464,7 @@ def build_event_data(obj,profile_id):
 		data=json.loads(obj)
 		if data and data["eventList"]:
 			for d in data["eventList"]:
-				rows.extend([["""<a nohref id="%(entityid)s" onclick="Events.prototype.open_form('%(entityid)s', '%(event_title)s', '%(profile_id)s')"> %(event_title)s </a>"""%{"entityid": d['entityid'],"event_title": d['event_title'], "profile_id":profile_id},datetime.datetime.fromtimestamp(cint(d["event_date"])/1000.0),d["event_symptoms"],d["diagnosis_desc"]]])
+				rows.extend([["""<a nohref id="%(entityid)s" onclick="Events.prototype.open_form('%(entityid)s', '%(event_title)s', '%(profile_id)s')"> %(event_title)s </a>"""%{"entityid": d['entityid'],"event_title": d['event_title'], "profile_id":profile_id},datetime.datetime.fromtimestamp(cint(d["event_date"])/1000.0).strftime('%d/%m/%Y'),d["event_symptoms"],d["diagnosis_desc"]]])
 	else:
 		rows.extend([["","NO DATA","",""]])		
 	event_dic={"fieldname":"events","fieldtype": "table","label": "Events","rows":rows}
