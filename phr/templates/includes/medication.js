@@ -57,10 +57,19 @@ var Medications = inherit(ListView,{
 		});
 		$('form input[name="to_date_time"]').bind('change', function() { 
 			val=$(this).val()
-			//console.log(diffDays(parseDate(val),parseDate($('form input[name="to_date_time"]').val())))
 			if (diffDays(parseDate(val),parseDate($('form input[name="from_date_time"]').val())) > 0) { 
 				$(this).val("")
-    			frappe.msgprint("To Date Should be less than From date")
+    			frappe.msgprint("To Date Should not be less than From date")
+			}
+		}); 
+		$('form input[name="from_date_time"]').bind('change', function() { 
+			if($('form input[name="to_date_time"]').val()){
+				val = $('form input[name="to_date_time"]').val();
+				if (diffDays(parseDate(val),parseDate($('form input[name="from_date_time"]').val())) > 0) { 
+					$('form input[name="to_date_time"]').val("");
+					$(this).val("");
+	    			frappe.msgprint("To Date Should not be less than From date")
+				}
 			}
 		}); 
 		$('.update').bind('click',function(event) {
@@ -78,7 +87,7 @@ var Medications = inherit(ListView,{
 					args:{"data":JSON.stringify(me.res)},
 					callback:function(r){
 						NProgress.done();
-						if(r.message){
+						if(r.message && !r.message['exe']){
 							me.update_list_view(r.message)
 							me.bind_save_event()
 							email_msg='Linked PHR Has Created Medication'
@@ -86,7 +95,9 @@ var Medications = inherit(ListView,{
 							send_linkedphr_updates(email_msg,text_msg,"Medication")
 						}
 						else{
-						
+							if(r.message['exe']){
+								frappe.msgprint(r.message['exe'])
+							}
 						}
 					}
 				})

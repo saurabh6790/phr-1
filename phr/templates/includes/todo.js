@@ -28,7 +28,7 @@ var ToDo = inherit(ListView,{
 				val=$(this).val()
 				if (diffDays(parseDate(val),new Date().setHours(0,0,0,0)) > 0) { 
 					$(this).val("")
-    				frappe.msgprint("Date not Valid")
+    				frappe.msgprint("TO DO Date Should not be less than Current Date")
 				}
 		});
 		$('.modal-footer .btn-primary').unbind('click').click(function(){

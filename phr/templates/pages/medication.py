@@ -1,7 +1,8 @@
 import frappe
 import json
 import os 
-from frappe.utils import get_site_path, get_hook_method, get_files_path, get_site_base_path,cstr,cint, date_diff, today
+import sys
+from frappe.utils import get_site_path, get_hook_method, get_files_path, get_site_base_path,cstr,cint, date_diff, today, add_days, getdate
 from phr.templates.pages.patient import get_data_to_render,formatted_date,get_sms_template
 import datetime
 from phr.phr.doctype.phr_activity_log.phr_activity_log import make_log
@@ -41,24 +42,46 @@ def fetch_values_from_db(data):
 		where profile_id='%s' order by creation desc"""%(data["profile_id"]),as_dict=1)
 	return med_list
 
-
-
-
 @frappe.whitelist(allow_guest=True)
 def make_medication_entry(data):
-	c_medication=save_data(data)
-	response=get_medication_data(data)
-	medication=json.loads(data)
-	sub="Medication for"+" "+medication.get('medicine_name')+" created"
-	make_log(medication.get('profile_id'),"Medication","create",sub)
-	return response
+	if day_exists(data):
+		try:
+			c_medication=save_data(data)
+			response=get_medication_data(data)
+			medication=json.loads(data)
+			sub="Medication for"+" "+medication.get('medicine_name')+" created"
+			make_log(medication.get('profile_id'),"Medication","create",sub)
+			return response
+		except ValueError:
+			msg = "Unexpected error: Invalid Date"
+			return {"exe" : msg}
+		except :
+			msg = "Unexpected error: %s "% sys.exc_info()[0] 
+			return {"exe" : msg}
+	else:
+		return {'exe': 'Selected day is not in specified date range'}
 
+def day_exists(data):
+	data = json.loads(data)
+	if data.get('day'):
+		day_mapper = {'Monday': 0, 'Tuesday': 1, 'Wednesday': 2, 'Thursday': 3, 'Friday': 4, 'Saturday': 5, 'Sunday': 6}
+		
+		for i in range(0, date_diff(str_date(data.get('to_date_time')), str_date(data.get('from_date_time')))+1 ):
+			if day_mapper.get(data.get('day')) == getdate(add_days(str_date(data.get('from_date_time')), i)).weekday():
+				return True
+		return False
+
+	else:
+		return True
+
+def str_date(str_date):
+	import datetime
+	return datetime.datetime.strptime(str_date, '%d/%m/%Y').strftime('%Y-%m-%d')
 
 @frappe.whitelist(allow_guest=True)
 def get_dosage_types():
 	dt=frappe.db.sql("""select name from `tabDosage`""",as_list=1)
 	return dt
-
 
 def save_data(data):
 	print data

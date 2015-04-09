@@ -21,14 +21,14 @@ var Appointments = inherit(ListView,{
 			'profile_id':profile_id})
 		$('.new_controller').remove();
 		me.bind_save_event()
-		this.get_linked_providers(profile_id)
-
 	},
 	bind_save_event: function(){
 		var me = this;
 		this.res = {}
 		this.result_set = {};
 		this.doc_list = [] 
+		this.get_linked_providers(this.profile_id)
+
 		$('form input[required],form textarea[required],form select[required]').unbind('change').bind('change', function() { 
    			if (!$(this).val()){
    				$(this).css({"border": "1px solid #999","border-color": "red" });
@@ -37,13 +37,15 @@ var Appointments = inherit(ListView,{
    				$(this).css({"border": "1px solid #999","border-color": "F3F2F5" });	
    			}
 		});
-		$('form input[name="from_date_time"]').unbind('change').bind('change', function() { 
+
+		$('form input[name="from_date_time"]').bind('blur', function() { 
 			val=$(this).val()
 			if (diffDays(parseDate(val),new Date().setHours(0,0,0,0)) > 0) { 
 				$(this).val("")
     			frappe.msgprint("Appointment Date Should not be less than Current Date")
 			}
 		});
+
 		$('.update').unbind('click').bind('click',function(event) {
 			NProgress.start();
 			var validated=me.validate_form()
@@ -55,19 +57,25 @@ var Appointments = inherit(ListView,{
 				me.res['profile_id'] = me.profile_id;
 				me.res['file_name']="appointments";
 				me.res['param']="listview";
+
+				date =new Date()
+				me.res['curr_date_time'] = date.getFullYear() + '-' + (date.getMonth()+1) + '-' + date.getDate() + ' ' + date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds()
+				
 				frappe.call({
 					method:"phr.templates.pages.appointments.make_appomiments_entry",
 					args:{"data":JSON.stringify(me.res)},
 					callback:function(r){
 						NProgress.done();
-						if(r.message){
+						if(r.message && !r.message['exe']){
 							me.update_list_view(r.message)
 							email_msg='Linked PHR Has Created Appointment'
 							text_msg='Linked PHR Has Created Appointment'
 							send_linkedphr_updates(email_msg,text_msg,"Appointment")
 						}
 						else{
-							
+							if(r.message['exe']){
+								frappe.msgprint(r.message['exe'])	
+							}
 						}
 					}
 				})
@@ -83,6 +91,7 @@ var Appointments = inherit(ListView,{
   	validate_form:function(){
   		var me=this;
   		var fg=true
+  		var msg = '';
   		$("form input[required],form textarea[required],form select[required]").each(function(i, obj) {
   			if ($(this).val()==""){
   				$(this).css({"border": "1px solid #999","border-color": "red" });
