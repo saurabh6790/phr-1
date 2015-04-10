@@ -131,7 +131,7 @@ def save_dm(data, arg, fields, field_mapper, raw_fields=None, val_req=True):
 		}
 
 	else:
-		return {'exe': "Appointment Date/Time Should not be greater than Current Date/Time"}
+		return {'exe': "Disease Monitoring Date/Time Should not be greater than Current Date/Time"}
 
 def valide_date(arg, data):
 	arg = json.loads(arg)
@@ -144,6 +144,7 @@ def valide_date(arg, data):
 	frappe.errprint([from_date_time, curr_date_time])
 
 	if time_diff_in_seconds(from_date_time, curr_date_time) > 0:
+		frappe.errprint
 		return False
 	return True
 
