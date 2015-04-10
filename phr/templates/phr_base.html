@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <!--
 Built on Frappe.io. Free and Open Source Framework for the Web. https://frappe.io/
 -->
@@ -17,6 +17,18 @@ Built on Frappe.io. Free and Open Source Framework for the Web. https://frappe.i
 	<link rel="icon"
 		href="{{ favicon or "/assets/frappe/images/favicon.ico" }}"
 		type="image/x-icon">
+
+	<link rel="stylesheet" href="/assets/phr/vendor/bootstrap/css/bootstrap.min.css">
+	<link rel="stylesheet" href="/assets/phr/vendor/fontawesome/css/font-awesome.min.css">
+	<link rel="stylesheet" href="/assets/phr/vendor/themify-icons/themify-icons.min.css">
+	<link href="/assets/phr/vendor/animate.css/animate.min.css" rel="stylesheet" media="screen">
+	<link href="/assets/phr/vendor/perfect-scrollbar/perfect-scrollbar.min.css" rel="stylesheet" media="screen">
+	<link href="/assets/phr/vendor/switchery/switchery.min.css" rel="stylesheet" media="screen">
+
+	<link rel="stylesheet" href="assets/phr/css/styles.css">
+	<link rel="stylesheet" href="assets/phr/css/plugins.css">
+	<link rel="stylesheet" href="assets/phr/css/themes/theme-1.css" id="skin_color" />	
+
 	<script>
 		window.history.forward();
         function noBack() { 
@@ -36,8 +48,6 @@ Built on Frappe.io. Free and Open Source Framework for the Web. https://frappe.i
 		{%- block style %}
 			<style data-html-block="style">
 			{%- if style is defined -%}{{ style }}{%- endif -%}
-			{% include "templates/includes/dashboard.css" %}
-			{% include "templates/includes/theme.css" %}
 			{% include "templates/includes/bootstrap-table.css"%}
 			</style>
 			
@@ -49,57 +59,56 @@ Built on Frappe.io. Free and Open Source Framework for the Web. https://frappe.i
 	{%- endblock -%}
 </head>
 <body data-id="" onload="noBack();" onpageshow="if (event.persisted) noBack();" onunload="">
-	<div id="wrap">
-		{%- block navbar -%}{% include "templates/includes/navbar.html" %}{%- endblock -%}
-		<!--<header class="page-header">
-			<div class="container">
-				<div class="row">
-					<div class="col-sm-9 page-header-left">
-						<a class="visible-xs toggle-sidebar no-decoration pull-right">
-							<i class="icon-chevron-down"></i>
-						</a>
-						<div data-html-block="header">
-							{%- if header is defined -%}{{ header }}{%- endif -%}
-						</div>
-						<div class="page-breadcrumbs" data-html-block="breadcrumbs">
-							{%- if breadcrumbs is defined -%}{{ breadcrumbs }}{%- endif -%}
-						</div>
-					</div>
-					<div class="col-sm-3 text-right">
-						<div class="page-header-right"></div>
-					</div>
-				</div>
-			</div>
-		</header>-->
+	<div id="app">
 		<div class="content-body" data-html-block="content_body">
 			{{ content_body or "" }}
 		</div>
+		{% if phr_con is defined %}
+			<div class="sidebar app-aside" id="sidebar">
+				{%- block con_left -%}{% include "templates/includes/left_sidebar.html" %}{{ con_left or "" }}{%- endblock -%}
+			</div>
+			<div class="app-content">
+				{%- block navbar -%}{% include "templates/includes/navbar.html" %}{%- endblock -%}
+				<div class="main-content" >
+					<div class="wrap-content container" id="container">
+						  <!-- start: FIRST SECTION -->
+						<div class="container-fluid container-fullw padding-bottom-10 border0">
+							<div class="row">
+								<div class="col-sm-12">
+									<div class="row">
+										<div class="col-md-8 col-lg-9">
+											{%- block content_area -%}{{ content_area or "" }}{%- endblock -%}
+										</div>
+										<div class="col-md-4 col-lg-3">
+											{%- block con_right -%}{% include "templates/includes/right_sidebar.html" %}{{ con_right or "" }}{%- endblock -%}					
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<footer class="page-footer">
+					<div class="footer-inner">
+						<div class="pull-left">
+							&copy; <span class="current-year"></span> <span class="text-bold text-uppercase">Healthsnapp</span>. <span>All rights reserved</span>
+						</div>
+						<div class="pull-right">
+							<span class="go-top"><i class="ti-angle-up"></i></span>
+						</div>
+					</div>
+				</footer>
+			</div>	
+		{% else %}
 		<div class="container page-container fluid" id="page-{{ name or page_name }}">
 			<div class="row">
 				<div class="col-md-12" data-html-block="content">
-					{% if content_area is defined %}
-					<div class="col-md-2" style="padding:0">
-						{%- block con_left -%}{% include "templates/includes/left_sidebar.html" %}{{ con_left or "" }}{%- endblock -%}
-          			</div>
-          			<div class="col-md-8">
-          				{%- block content_area -%}{{ content_area or "" }}{%- endblock -%}	
-          			<div class="col-md-2" style="padding:0">
-          				{%- block con_right -%}{% include "templates/includes/right_sidebar.html" %}{{ con_right or "" }}{%- endblock -%}
-          			<div>
-          			{% else %}
-          			{%- block content -%}{{ content or "" }}{%- endblock -%}
-          			{% endif %}
+					{%- block navbar_basic -%}{% include "templates/includes/navbar.html" %}{%- endblock -%}
+					{%- block content -%}{{ content or "" }}{%- endblock -%}
 				</div>
 			</div>
 		</div>
-		<footer class="page-footer">
-			<div class="container" data-html-block="footer">
-				{%- if footer is defined -%}{{ footer }}{%- endif -%}
-			</div>
-		</footer>
-	</div>
-
-
+        {% endif %}
 	{%- block script %}
 		<script data-html-block="script">
 		{%- if script is defined -%}{{ script }}{%- endif -%}

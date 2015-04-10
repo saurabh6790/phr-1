@@ -242,8 +242,6 @@ def get_linked_phrs(profile_id):
 def delink_phr(selected,data,profile_id,res):
 	obj=json.loads(data)
 	id=selected
-	print obj
-	print id
 	if id:
 		print obj[id]
 		ret_res=delink_phr_solr(obj[id],id,profile_id,res)
@@ -316,6 +314,7 @@ def get_data_for_middle_section(profile_id):
 			data=get_diseases()
 			if data:
 				res_list=build_dm_data(data,res_list)
+
 		if obj.get('visits')==1 or obj.get('events')==1:
 			data=get_data_from_solr(profile_id)
 			#if data:
@@ -369,7 +368,6 @@ def get_data_from_solr(profile_id):
 	response=get_response(url,json.dumps(data),request_type)
 	res=json.loads(response.text)
 	if res['returncode']==105:
-		#frappe.errprint(res['actualdata'])
 		return res['actualdata']
 
 @frappe.whitelist(allow_guest=True)
@@ -387,7 +385,7 @@ def get_medications(profile_id):
 
 def build_response(data,obj,res_list,profile_id):
 	if obj.get('visits')==1:
-		visit_data=build_visit_data(data)
+		visit_data = build_visit_data(data)
 		res_list.append(visit_data)
 	if obj.get('events')==1:
 		event_data=build_event_data(data,profile_id)
@@ -395,7 +393,7 @@ def build_response(data,obj,res_list,profile_id):
 	return res_list
 
 def build_response_for_medications(data,obj,res_list):
-	medication_data=build_medication_data(data)
+	medication_data = build_medication_data(data)
 	res_list.append(medication_data)
 	return res_list
 	
@@ -431,8 +429,11 @@ def build_visit_data(obj):
 		if (data["visitList"]):
 			for d in data["visitList"]:
 				rows.extend([[d["str_visit_date"],d["visit_descripton"],d["doctor_name"]]])
+		else:
+			rows.extend([["NO DATA","",""]])
 	else:
-		rows.extend([["","NO DATA",""]])
+		rows.extend([["NO DATA","",""]])
+
 	visit_dic={"fieldname":"visits","fieldtype": "table","label": "Visits","rows":rows}
 	return visit_dic
 
@@ -446,13 +447,16 @@ def build_event_data(obj,profile_id):
     	]
    ]	
    #datetime.datetime.fromtimestamp(cint(visit['event_date'])/1000.0)
-   	if obj:
+	if obj:
 		data=json.loads(obj)
 		if data and data["eventList"]:
 			for d in data["eventList"]:
 				rows.extend([["""<a nohref id="%(entityid)s" onclick="Events.prototype.open_form('%(entityid)s', '%(event_title)s', '%(profile_id)s')"> %(event_title)s </a>"""%{"entityid": d['entityid'],"event_title": d['event_title'], "profile_id":profile_id},datetime.datetime.fromtimestamp(cint(d["event_date"])/1000.0),d["event_symptoms"],d["diagnosis_desc"]]])
+		else:
+			rows.extend([["	NO DATA","","",""]])
 	else:
-		rows.extend([["","NO DATA","",""]])		
+		rows.extend([["	NO DATA","","",""]])
+
 	event_dic={"fieldname":"events","fieldtype": "table","label": "Events","rows":rows}
 	return event_dic
 

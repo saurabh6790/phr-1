@@ -140,6 +140,7 @@ def update_status_of_medication():
 		where to_date_time < CURDATE() 
 		and status='Active'""")
 	return "done"
+	
 def fetch_data_from_medications(med_list,recipient_list):
 	if med_list:
 		msg={}

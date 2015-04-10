@@ -9,7 +9,6 @@ login.bind_events = function() {
 	});
 
 	$(".form-login").on("submit", function(event) {
-		console.log("form-login")
 		event.preventDefault();
 		$('.btn-primary').prop("disabled", true);
 		var args = {};
