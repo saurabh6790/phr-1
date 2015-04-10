@@ -40,6 +40,7 @@
 			"multiselect":"true",
 			"label": "Complaint",
 			"options": "Events",
+			"description": "Please choose a complaint from auto complete list. Else the event will be saved without a complaint.",
 			"placeholder":""
 		},
 		{

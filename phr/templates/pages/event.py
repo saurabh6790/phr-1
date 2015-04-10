@@ -54,9 +54,6 @@ def create_event(data):
 	return json.loads(response.text)
 
 def update_event(data):
-	print "---------------update event---------------------"
-	print data
-	print "------------------------------------------------"
 	response = ''
 	request_type="POST"
 	url="%s/createupdateevent"%get_base_url()

@@ -28,7 +28,7 @@ def get_disease_fields(name,profile_id=None):
 
 			for d in dm.get('parameters'):
 				row_count += 1
-				f_dic = {"fieldname":d.fieldname,"fieldtype":d.fieldtype,"label":d.label,"placeholder":""}
+				f_dic = {"fieldname":d.fieldname,"fieldtype":d.fieldtype,"label":d.label,"placeholder":"", "required": d.required or 0}
 				fields.append(f_dic)
 				dm_cols.append(d.label)
 				field_mapper.append(d.fieldname)
@@ -99,7 +99,7 @@ def build_options(dm_list,fields,field_mapper,raw_fields=None):
 				if field == 'sr':
 					dm_data.append('<input type="checkbox" name="">')
 				else:
-					dm_data.append(field_dict[field])
+					dm_data.append("<div style='word-wrap: break-word;width:80%%;'>%s</div>"%field_dict[field])
 			rows.extend([dm_data])
 
 	return fields_list

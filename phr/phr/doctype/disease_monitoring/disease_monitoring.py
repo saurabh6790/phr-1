@@ -5,6 +5,7 @@ from __future__ import unicode_literals
 import frappe
 from frappe.model.document import Document
 from random import randint
+import json
 
 
 class DiseaseMonitoring(Document):
@@ -16,6 +17,7 @@ class DiseaseMonitoring(Document):
 
 	def validate(self):
 		self.scrub_field_names()
+		self.add_date_field()
 
 	def scrub_field_names(self):
 		for d in self.get("parameters"):
@@ -25,6 +27,33 @@ class DiseaseMonitoring(Document):
 						d.fieldname = d.label.strip().lower().replace(' ','_')
 					else:
 						d.fieldname = d.fieldtype.lower().replace(" ","_") + "_" + str(d.idx)
+
+	def add_date_field(self):
+		date_flag = True
+		for d in self.get("parameters"):
+			if 'date' == d.fieldtype.lower() or 'datetime' == d.fieldtype.lower():
+				d.required = 1
+				date_flag = False
+
+		if date_flag:
+			field_list = self.get("parameters")
+			
+			child = frappe.new_doc("Event Parameters")
+
+			child.update({'label': "Date", 
+					"fieldtype": "date", 
+					"fieldname": "date", 
+					"required": 1, 
+					"parent": self.name, 
+					"parentfield":'parameters',	
+					"parenttype": 'Disease Monitoring',
+					"idx":1
+				})
+
+			for d in field_list:
+				d.idx += 1
+
+			field_list.insert(0, child)
 
 	def on_update(self):
 		self.event_master_id=self.name

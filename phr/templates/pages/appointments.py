@@ -39,12 +39,26 @@ def fetch_values_from_db(data):
 
 @frappe.whitelist(allow_guest=True)
 def make_appomiments_entry(data):
-	c_medication=save_data(data)
-	response=get_appointments(data)
-	appointment=json.loads(data)
-	sub="Appointment created with"+" "+appointment.get('provider')
-	make_log(appointment.get('profile_id'),"Appointment","create",sub)
-	return response
+	if valide_date(data):
+		c_medication=save_data(data)
+		response=get_appointments(data)
+		appointment=json.loads(data)
+		sub="Appointment created with"+" "+appointment.get('provider')
+		make_log(appointment.get('profile_id'),"Appointment","create",sub)
+		return response
+	else:
+		return {'exe': "Appointment Date Should not be less than Current Date"}
+
+def valide_date(data):
+	obj = json.loads(data)
+	from frappe.utils import time_diff_in_seconds
+	
+	from_date_time = datetime.datetime.strptime(obj.get('from_date_time'), '%d/%m/%Y %H:%M').strftime('%Y-%m-%d %H:%M:%S')
+	curr_date_time = datetime.datetime.strptime(obj.get('curr_date_time'), '%Y-%m-%d %H:%M:%S').strftime('%Y-%m-%d %H:%M:%S')
+
+	if time_diff_in_seconds(from_date_time, curr_date_time) < 0:
+		return False
+	return True
 
 def save_data(data):
 	obj=json.loads(data)

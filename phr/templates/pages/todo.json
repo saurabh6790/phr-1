@@ -10,12 +10,14 @@
 			"fieldname":"description", 
 			"fieldtype":"text", 
 			"label":"Description",
+			"required":1,
 			"placeholder":""
 		},
 		{
 			"fieldname":"due_date", 
 			"fieldtype":"datetime", 
 			"label":"Due Date",
+			"required":1,
 			"placeholder":""
 		}
 	]

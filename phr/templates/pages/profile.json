@@ -97,7 +97,7 @@
    {
       "fieldname": "emergemcy_contactno", 
       "fieldtype": "data", 
-      "label": "Emer. Contact No",
+      "label": "Emergency Contact No",
       "placeholder":""
    },   
    {

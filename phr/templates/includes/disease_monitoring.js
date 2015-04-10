@@ -76,45 +76,82 @@ var DiseaseMonitoring = inherit(RenderFormFields, {
 
 	},
 	bind_save_event:function(me,event_id,profile_id,value,fields,field_mapper,raw_fields){
-			$('.save_controller').bind('click',function(event) {
-				NProgress.start();
-				var $id=$('.tab-pane.active').attr('id')
-				me.res = {};
-				selected=[]
-				var $id=$('.tab-pane.active').attr('id')
-				$("form input,form textarea,form select").each(function(i, obj) {
-					me.res[obj.name] = $(obj).val();
-				})
-				var date=""
-				if ($('input[data-fieldtype="DateTime"]') || $('input[data-fieldtype="Date"]')){
-					var date=$('input[data-fieldtype="DateTime"]').val() || $('input[data-fieldtype="Date"]').val()
-				}
-				console.log(["s",date,$('input[data-fieldtype="DateTime"]')])
-				arg={"profile_id":profile_id,"received_from":"Desktop","event_master_id":event_id,"event_title":value,"date":date}
-				me.save_dm(me.res,arg,fields,field_mapper,raw_fields,me,value,profile_id)
+		$('.save_controller').bind('click',function(event) {
+			NProgress.start();
+			var $id=$('.tab-pane.active').attr('id')
+			me.res = {};
+			selected=[]
+			var $id=$('.tab-pane.active').attr('id')
+			$("form input,form textarea,form select").each(function(i, obj) {
+				me.res[obj.name] = $(obj).val();
 			})
-	},
-	save_dm:function(data,arg,fields,field_mapper,raw_fields,me,event_title,profile_id){
-		frappe.call({
-			method:"phr.templates.pages.disease_monitoring.save_dm",
-			args:{"data":data,"arg":arg,"fields":fields,"field_mapper":field_mapper,"raw_fields":raw_fields},
-			callback:function(r){
-				data=r.message
-				if (r.message){
-					NProgress.done();
-					RenderFormFields.prototype.init($("#main-con"), {'fields':data["fields"]})
-					me.add_share_event()
-					me.render_disease_fields(event_title,profile_id,me)
-					email_msg='Linked PHR Has Created DiseaseMonitoring'
-					text_msg='Linked PHR Has Created DiseaseMonitoring'
-					send_linkedphr_updates(email_msg,text_msg,"DiseaseMonitoring")
-				}
-				else{
-						
-				}
+			var date=""
+			if ($('input[data-fieldtype="DateTime"]') || $('input[data-fieldtype="Date"]')){
+				var date=$('input[data-fieldtype="DateTime"]').val() || $('input[data-fieldtype="Date"]').val()
 			}
+			console.log(["s",date,$('input[data-fieldtype="DateTime"]')])
+			arg={"profile_id":profile_id,"received_from":"Desktop","event_master_id":event_id,"event_title":value,"date":date}
+			me.save_dm(me.res,arg,fields,field_mapper,raw_fields,me,value,profile_id)
 		})
 	},
+	save_dm:function(data,arg,fields,field_mapper,raw_fields,me,event_title,profile_id){
+		validate = this.validate_form()
+		if(validate['fg']){
+			frappe.call({
+				method:"phr.templates.pages.disease_monitoring.save_dm",
+				args:{"data":data,"arg":arg,"fields":fields,"field_mapper":field_mapper,"raw_fields":raw_fields},
+				callback:function(r){
+					data=r.message
+					if (r.message){
+						NProgress.done();
+						RenderFormFields.prototype.init($("#main-con"), {'fields':data["fields"]})
+						me.add_share_event()
+						me.render_disease_fields(event_title,profile_id,me)
+						email_msg='Linked PHR Has Created DiseaseMonitoring'
+						text_msg='Linked PHR Has Created DiseaseMonitoring'
+						send_linkedphr_updates(email_msg,text_msg,"DiseaseMonitoring")
+					}
+					else{
+							
+					}
+				}
+			})	
+		}
+		else{
+			NProgress.done();
+			frappe.msgprint(validate['msg'])
+		}
+		
+	},
+	validate_form:function(){
+  		var me=this;
+  		var fg=true
+  		var msg = ''
+  		$("form input[required],form textarea[required],form select[required]").each(function(i, obj) {
+  			if ($(this).val()==""){
+  				$(this).css({"border": "1px solid #999","border-color": "red" });
+  				fg=false
+  				msg = "Filed(s) marked as red are Mandetory"
+  			}
+  		})
+  		if(fg){
+  			$("form input, form textarea").each(function(i, obj) {
+				if (obj.name != "date" && obj.name != "") {
+	  				if ($(obj).val() && $(obj).val()!=""){
+	  					console.log([obj.name, $(obj).val()])
+	  					fg = true;
+	  					return false;
+	  				}
+	  				else{
+	  					fg = false;
+	  					msg = "Except the 'DATE Field' which is mandatory, minimum one field should be filled.";
+	  				}
+	  			}
+			})
+  		}
+  		
+  		return {'fg': fg, 'msg': msg}  		
+  	},
 	add_share_event:function(){
 		var me = this;
 		this.selected_dm = []
