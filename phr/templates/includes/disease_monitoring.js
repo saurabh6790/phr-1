@@ -76,6 +76,15 @@ var DiseaseMonitoring = inherit(RenderFormFields, {
 
 	},
 	bind_save_event:function(me,event_id,profile_id,value,fields,field_mapper,raw_fields){
+
+		$('form input[name="date"]').bind('blur', function() { 
+			val=$(this).val()
+			if (diffDays(parseDate(val),new Date().setHours(0,0,0,0)) < 0) { 
+				$(this).val("")
+    			frappe.msgprint("Appointment Date/Time Should not be greater than Current Date/Time")
+			}
+		});
+
 		$('.save_controller').bind('click',function(event) {
 			NProgress.start();
 			var $id=$('.tab-pane.active').attr('id')
@@ -97,12 +106,16 @@ var DiseaseMonitoring = inherit(RenderFormFields, {
 	save_dm:function(data,arg,fields,field_mapper,raw_fields,me,event_title,profile_id){
 		validate = this.validate_form()
 		if(validate['fg']){
+
+			date =new Date()
+			arg['curr_date_time'] = date.getFullYear() + '-' + (date.getMonth()+1) + '-' + date.getDate() + ' ' + date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds()
+
 			frappe.call({
 				method:"phr.templates.pages.disease_monitoring.save_dm",
 				args:{"data":data,"arg":arg,"fields":fields,"field_mapper":field_mapper,"raw_fields":raw_fields},
 				callback:function(r){
 					data=r.message
-					if (r.message){
+					if (r.message && !r.message['exe']){
 						NProgress.done();
 						RenderFormFields.prototype.init($("#main-con"), {'fields':data["fields"]})
 						me.add_share_event()
@@ -112,7 +125,10 @@ var DiseaseMonitoring = inherit(RenderFormFields, {
 						send_linkedphr_updates(email_msg,text_msg,"DiseaseMonitoring")
 					}
 					else{
-							
+						if(r.message['exe']){
+							NProgress.done();
+							frappe.msgprint(r.message['exe'])
+						}
 					}
 				}
 			})	
@@ -127,6 +143,7 @@ var DiseaseMonitoring = inherit(RenderFormFields, {
   		var me=this;
   		var fg=true
   		var msg = ''
+
   		$("form input[required],form textarea[required],form select[required]").each(function(i, obj) {
   			if ($(this).val()==""){
   				$(this).css({"border": "1px solid #999","border-color": "red" });
@@ -134,6 +151,7 @@ var DiseaseMonitoring = inherit(RenderFormFields, {
   				msg = "Filed(s) marked as red are Mandetory"
   			}
   		})
+
   		if(fg){
   			$("form input, form textarea").each(function(i, obj) {
 				if (obj.name != "date" && obj.name != "") {

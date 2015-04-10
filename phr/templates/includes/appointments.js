@@ -42,7 +42,7 @@ var Appointments = inherit(ListView,{
 			val=$(this).val()
 			if (diffDays(parseDate(val),new Date().setHours(0,0,0,0)) > 0) { 
 				$(this).val("")
-    			frappe.msgprint("Appointment Date Should not be less than Current Date")
+    			frappe.msgprint("Appointment Date/Time Should not be less than Current Date/Time")
 			}
 		});
 

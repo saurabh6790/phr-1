@@ -106,28 +106,46 @@ def build_options(dm_list,fields,field_mapper,raw_fields=None):
 
 @frappe.whitelist(allow_guest=True)
 def save_dm(data, arg, fields, field_mapper, raw_fields=None, val_req=True):
-	str_data=[]
-	for key,value in json.loads(data).items():
-		datastr=key+'='+value
-		str_data.append(datastr)
-	args=json.loads(arg)
-	args["data"]=str_data
-	args["str_event_date"]=time.strftime('%d/%m/%Y')
+	if valide_date(arg, data):
+		str_data=[]
+		for key,value in json.loads(data).items():
+			datastr=key+'='+value
+			str_data.append(datastr)
+		args=json.loads(arg)
+		args["data"]=str_data
+		args["str_event_date"]=time.strftime('%d/%m/%Y')
 
-	if args.has_key("date"):
-		args["str_diseaseMonitoring_date"]=args['date']
+		if args.has_key("date"):
+			args["str_diseaseMonitoring_date"]=args['date']
+		else:
+			args["str_diseaseMonitoring_date"]=	time.strftime('%d/%m/%Y')
+		
+		res=save_data_to_solr(json.dumps(args))
+		values=get_values(args['profile_id'], fields, args['event_master_id'], json.loads(field_mapper), raw_fields, val_req) 
+		
+		return {
+			"fields":values, 
+			"event_master_id":args['event_master_id'],
+			"values":values,
+			"field_mapper":field_mapper
+		}
+
 	else:
-		args["str_diseaseMonitoring_date"]=	time.strftime('%d/%m/%Y')
+		return {'exe': "Appointment Date/Time Should not be greater than Current Date/Time"}
+
+def valide_date(arg, data):
+	arg = json.loads(arg)
+	obj = json.loads(data)
+	from frappe.utils import time_diff_in_seconds
 	
-	res=save_data_to_solr(json.dumps(args))
-	values=get_values(args['profile_id'], fields, args['event_master_id'], json.loads(field_mapper), raw_fields, val_req) 
-	
-	return {
-		"fields":values, 
-		"event_master_id":args['event_master_id'],
-		"values":values,
-		"field_mapper":field_mapper
-	}
+	from_date_time = datetime.datetime.strptime(obj.get('date'), '%d/%m/%Y %H:%M').strftime('%Y-%m-%d %H:%M:%S')
+	curr_date_time = datetime.datetime.strptime(arg.get('curr_date_time'), '%Y-%m-%d %H:%M:%S').strftime('%Y-%m-%d %H:%M:%S')
+
+	frappe.errprint([from_date_time, curr_date_time])
+
+	if time_diff_in_seconds(from_date_time, curr_date_time) > 0:
+		return False
+	return True
 
 def save_data_to_solr(args):
 	request_type = "POST"

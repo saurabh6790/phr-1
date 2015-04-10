@@ -47,7 +47,7 @@ def make_appomiments_entry(data):
 		make_log(appointment.get('profile_id'),"Appointment","create",sub)
 		return response
 	else:
-		return {'exe': "Appointment Date Should not be less than Current Date"}
+		return {'exe': "Appointment Date/Time Should not be less than Current Date/Time"}
 
 def valide_date(data):
 	obj = json.loads(data)

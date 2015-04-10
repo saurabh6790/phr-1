@@ -41,7 +41,7 @@ class DiseaseMonitoring(Document):
 			child = frappe.new_doc("Event Parameters")
 
 			child.update({'label': "Date", 
-					"fieldtype": "date", 
+					"fieldtype": "datetime", 
 					"fieldname": "date", 
 					"required": 1, 
 					"parent": self.name, 
