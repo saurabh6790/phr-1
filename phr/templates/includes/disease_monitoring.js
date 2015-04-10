@@ -81,7 +81,7 @@ var DiseaseMonitoring = inherit(RenderFormFields, {
 			val=$(this).val()
 			if (diffDays(parseDate(val),new Date().setHours(0,0,0,0)) < 0) { 
 				$(this).val("")
-    			frappe.msgprint("Appointment Date/Time Should not be greater than Current Date/Time")
+    			frappe.msgprint("Disease Monitoring Date/Time Should not be greater than Current Date/Time")
 			}
 		});
 

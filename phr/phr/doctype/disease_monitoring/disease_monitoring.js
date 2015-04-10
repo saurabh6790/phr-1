@@ -8,7 +8,7 @@ add_date_field = function(doc, dt, dn){
 	chld = frappe.model.add_child(doc, 'Event Parameters', 'parameters');
 		
 	chld.label =  "Date"
-	chld.fieldtype = "date"
+	chld.fieldtype = "datetime"
 	chld.fieldname = "date"
 	chld.required = 1
 
