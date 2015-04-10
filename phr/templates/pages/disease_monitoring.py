@@ -28,7 +28,7 @@ def get_disease_fields(name,profile_id=None):
 
 			for d in dm.get('parameters'):
 				row_count += 1
-				f_dic = {"fieldname":d.fieldname,"fieldtype":d.fieldtype,"label":d.label,"placeholder":""}
+				f_dic = {"fieldname":d.fieldname,"fieldtype":d.fieldtype,"label":d.label,"placeholder":"", "required": d.required or 0}
 				fields.append(f_dic)
 				dm_cols.append(d.label)
 				field_mapper.append(d.fieldname)

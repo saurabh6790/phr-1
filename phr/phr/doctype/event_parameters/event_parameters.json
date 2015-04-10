@@ -43,6 +43,13 @@
    "options": "\ndate\ntime\ndatetime\ndata\ntext", 
    "permlevel": 0, 
    "precision": ""
+  }, 
+  {
+   "fieldname": "required", 
+   "fieldtype": "Check", 
+   "label": "Required", 
+   "permlevel": 0, 
+   "precision": ""
   }
  ], 
  "hide_heading": 0, 
@@ -52,7 +59,7 @@
  "is_submittable": 0, 
  "issingle": 0, 
  "istable": 1, 
- "modified": "2015-01-28 17:31:20.568042", 
+ "modified": "2015-04-10 12:06:17.354818", 
  "modified_by": "Administrator", 
  "module": "phr", 
  "name": "Event Parameters", 
