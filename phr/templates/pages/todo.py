@@ -28,7 +28,7 @@ def get_todo(profile_id):
 	todo = frappe.db.sql("select name from tabToDo where profile_id = '%s' and date >= CURDATE() order by creation desc limit 5"%profile_id)
 	for td in todo:
 		td=frappe.get_doc("ToDo", td[0])
-		todo_list.append({"desc": td.description, "todo_id": td.name,"date":get_formatted_date_time(td.date)})
+		todo_list.append({"desc": td.description, "todo_id": td.name,"date":get_formatted_date_time(td.date),"priority":td.priority})
 
 	return todo_list
 

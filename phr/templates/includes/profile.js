@@ -79,6 +79,7 @@ var PatientDashboard = inherit(RenderFormFields, {
 			
 		});
 		$('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+			
 			attr=$(e.target).attr('href')
 			if (attr=='#notification' && (sessionStorage.getItem("cid")!=sessionStorage.getItem("pid"))){
 				$($('input[name="linked_phr"]').parents()[3]).css("display", "none");  				

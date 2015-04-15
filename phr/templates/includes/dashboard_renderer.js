@@ -119,16 +119,17 @@ function render_dashboard(profile_id){
         render_LPHR_name:render_LPHR_name
     }
     function render_td(todo){
+    	class_mapper={"High":"danger","Medium":"warning","Low":"info"}
     	$('#tdlst').empty()
     	$wrap=$('#tdlst')
     	$.each(todo,function(i,todo){
-			//pro_data={"desc": todo['description'], "todo_id": todo["name"],"date":todo["date"]}
+			pro_data={"desc": todo['desc'], "todo_id": todo["name"],"date":todo["date"],"tdclass":class_mapper[todo["priority"]]}
 			
-			$(repl_str('<li class="timeline-item">\
+			$(repl_str('<li class="timeline-item %(tdclass)s">\
                 <div class="margin-left-15">\
                     <div class="text-muted text-small">%(date)s</div>\
                     <p>%(desc)s</p>\
-                </div></li>', todo)).appendTo($wrap)
+                </div></li>', pro_data)).appendTo($wrap)
 		})
     }
     function render_ad(ads){

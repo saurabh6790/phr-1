@@ -107,8 +107,8 @@ def get_url(data):
 """
 @frappe.whitelist(allow_guest=True)
 def get_base_url():
-	#return "http://192.168.5.18:9090/phr-api/"
-	return "http://88.198.52.49:7974/phr-api/"
+	return "http://192.168.5.18:9090/phr-api/"
+	#return "http://88.198.52.49:7974/phr-api/"
 
 """
 Method to get name of method in solr database.contains dictionary or map.
