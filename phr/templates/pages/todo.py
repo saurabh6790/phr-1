@@ -34,7 +34,6 @@ def get_todo(profile_id):
 
 @frappe.whitelist(allow_guest=True)
 def notify_to_do():
-	print "############################~~~~~~~~~~~~todo~~~~~~~~~~~~~~~~~~~############"
 	profile_ids=get_profile_ids()
 	if profile_ids:
 		email_list=[]
@@ -49,7 +48,6 @@ def notify_to_do():
 				email_list.append(pobj.name)
 				msg[pobj.contact]=get_sms_template("todo",{"to_do":todoobj.description})
 				email_msg[pobj.name]=todoobj.description
-				print pobj.name
 			else:
 				data=search_profile_data_from_solr(profile)
 				if data['mobile']:
@@ -65,7 +63,6 @@ def notify_to_do():
 				send_sms(sms_recipients,msg=msg[no])
 		if email_list:
 			for email in email_list:
-				print email_msg[email]
 				send_phrs_mail(email,"PHR:To Do Alert","templates/emails/todo.html",{"todo":email_msg[email]})
 
 def get_profile_ids():

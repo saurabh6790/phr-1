@@ -39,7 +39,6 @@ def update_profile_solr(data,dashboard=None):
 	from phr.phr.phr_api import get_response
 	response=get_response(url,data,request_type)
 	res=json.loads(response.text)
-	print res['returncode']
 	p=json.loads(data)
 	if res['returncode']==102:
 		sub="Profile Updated Successfully"
@@ -67,7 +66,7 @@ def update_password(data,dashboard=None):
 	old_password=usrobj.get('old_password')
 	new_password=usrobj.get('new_password')
 	user=frappe.db.get_value("User",{"profile_id":usrobj.get('entityid')})
-	print [user,old_password,new_password]
+	
 	if not new_password:
 		return _("Cannot Update: Please Enter Valid Password")
 	if old_password:
@@ -81,7 +80,7 @@ def update_password(data,dashboard=None):
 
 @frappe.whitelist(allow_guest=True)
 def manage_phr(data,dashboard=None):
-	frappe.errprint(data)
+	pass
 
 @frappe.whitelist(allow_guest=True)
 def manage_notifications(data,dashboard=None):
@@ -161,12 +160,16 @@ def get_user_image(profile_id):
 			return{
 				"image":up	
 			}
+		else:
+			return{
+				"image":get_gravatar(profile_id)	
+			}
+
 
 @frappe.whitelist(allow_guest=True)
 def upload_image(profile_id,data=None,file_name=None):
 	from binascii import a2b_base64
 	import base64
-	print data
 	data_index = data.index('base64') + 7
 	filedata = data[data_index:len(data)]
 	decoded_image = base64.b64decode(filedata)
@@ -234,7 +237,6 @@ def get_linked_phrs(profile_id):
 	from phr.phr.phr_api import get_response
 	response=get_response(url,json.dumps(data),request_type)
 	res=json.loads(response.text)
-	print res
 	if res['returncode']==120:
 		return res
 
@@ -243,9 +245,7 @@ def delink_phr(selected,data,profile_id,res):
 	obj=json.loads(data)
 	id=selected
 	if id:
-		print obj[id]
 		ret_res=delink_phr_solr(obj[id],id,profile_id,res)
-		print ret_res
 		return {
 			"message":"Profile Delinked Successfully",
 			"response":ret_res
@@ -265,7 +265,6 @@ def delink_phr_solr(data,id,profile_id,res):
 	from phr.phr.phr_api import get_response
 	response=get_response(url,json.dumps(jsonobj),request_type)
 	res=json.loads(response.text)
-	print res
 	if res['returncode']==121:
 		return res
 
@@ -637,7 +636,6 @@ def get_phr_pdf(profile_id):
 	response=get_response(url,json.dumps(data),request_type)
 	res=json.loads(response.text)
 	if res:
-		#frappe.errprint(res['file_location'].split('/')[-1])
 		url = get_url()+"/files/%s/"%(profile_id)+cstr(res['file_location'].split('/')[-1])
 		res["url"]=url
 		response.headers['Content-Disposition'] = 'attachment; filename='+res["file_location"].split("/")[-1]
@@ -692,9 +690,7 @@ def get_pdf(profile_id,options=None):
 	pdfkit.from_string(html, fname, options=options or {})
 
 	li=fname.split('/')
-	print li
 	url = get_url()+"/".join(["",li[-3],li[-2],li[-1]])
-	print url
 	return url
 
 

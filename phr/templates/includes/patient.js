@@ -59,13 +59,13 @@ $(document).ready(function () {
 		}
 		else{
 			
-		}	download_phr()
+		}	//download_phr()
 		
 		NProgress.start();
 		profile_id=sessionStorage.getItem("cid")
 		var db = new render_dashboard();
 		db.render_providers(profile_id)
-		db.render_linked_phr(profile_id)
+		db.render_linked_phr(sessionStorage.getItem("pid"))
 		db.render_middle_section(profile_id)
 		db.render_emer_details(profile_id)
 		db.render_to_do(profile_id)
@@ -88,7 +88,6 @@ function download_phr(){
 					type: 'POST',
 					data: args,
 					success: function(data) {
-						console.log(data)
 						window.open(data['message']['url'], '_blank')
 					}
 				});
@@ -102,7 +101,9 @@ function bind_events(){
 	profile_id=sessionStorage.getItem("cid")
 	$("#home").on("click",function(){
 		$('.breadcrumb').empty()
-		$('.linked-phr').empty()
+		//$('.linked-phr').empty()
+		$('#cphrname').empty()
+		$('.cdd').addClass('hide')
 		$('.save_controller').hide()
 		$('.new_controller').hide()
 		NProgress.start();
@@ -113,7 +114,7 @@ function bind_events(){
 		var db = new render_dashboard();
 		$('.field-area').empty()
 		$('#main-con').empty()
-		download_phr()
+		//download_phr()
 		db.render_providers(profile_id)
 		db.render_linked_phr(profile_id)
 		db.render_middle_section(profile_id)
@@ -121,6 +122,27 @@ function bind_events(){
 		db.render_advertisements(profile_id)
 		NProgress.done();
 	})
+	$(".cprofile").on("click",function(){
+		NProgress.start();
+		PatientDashboard.prototype.init($(document).find("#main-con"),
+				{"file_name" : "profile", "method": "profile"},sessionStorage.getItem('pid'))	
+		NProgress.done();
+	})	
+	$(".pprofile").on("click",function(){
+		$('.cdd').addClass('hide')
+		$('#cphrname').empty()
+		NProgress.start();
+		PatientDashboard.prototype.init($(document).find("#main-con"),
+				{"file_name" : "profile", "method": "profile"},sessionStorage.getItem('cid'))	
+		NProgress.done();
+	})
+	$(".cdb").on("click",function(){
+		var db = new render_dashboard();
+		$('.field-area').empty()
+		$('#main-con').empty()
+		db.render_middle_section(sessionStorage.getItem('cid'))
+	})	
+
 	$("#profile").unbind("click").click(function(){
 		profile_id=sessionStorage.getItem("cid")
 		$('.breadcrumb').empty()

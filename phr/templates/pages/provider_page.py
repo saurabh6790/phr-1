@@ -10,14 +10,7 @@ import os
 
 @frappe.whitelist(allow_guest=True)
 def get_profile_list(data):
-	print "in provider page p1"
-	print data
-
-	# fields, values, tab = get_data_to_render(data)
-
-	# print fields
-
-
+	
 	request_type="POST"
 	url="%s/sharephr/getprofilelistSharedFrom"%get_base_url()
 	from phr.phr.phr_api import get_response

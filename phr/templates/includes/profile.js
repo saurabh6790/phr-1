@@ -23,9 +23,6 @@ var PatientDashboard = inherit(RenderFormFields, {
 		
 	},
 	render_validations:function(profile_id){
-		
-
-
 		var me=this;
 		$('.chk').bind('click',function(event){
 			var $id=$('.tab-pane.active').attr('id')
@@ -78,12 +75,11 @@ var PatientDashboard = inherit(RenderFormFields, {
 		});
 		$('.tab-pane.active form input[name="weight"]').bind('change', function() { 
 			var pounds=$(this).val()/0.45359237
-			console.log(pounds)
 			$(".tab-pane.active form input[name='weight_in_pounds']").val(pounds.toFixed(2))
 			
 		});
 		$('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
-  			attr=$(e.target).attr('href')
+			attr=$(e.target).attr('href')
 			if (attr=='#notification' && (sessionStorage.getItem("cid")!=sessionStorage.getItem("pid"))){
 				$($('input[name="linked_phr"]').parents()[3]).css("display", "none");  				
   			}
@@ -141,6 +137,8 @@ var PatientDashboard = inherit(RenderFormFields, {
 	},
 	render_field: function(profile_id){
 		var me = this;
+		frappe.require("assets/phr/jasny-bootstrap/js/jasny-bootstrap.js");
+		frappe.require("assets/phr/jasny-bootstrap/js/jasny-bootstrap.min.js");
 		$('.fileinput').fileinput()
 				
 		$('.save_controller').bind('click',function(event) {
@@ -305,10 +303,8 @@ var PatientDashboard = inherit(RenderFormFields, {
 		var me=this;
 		var $wrapper=$('#manage_phr').find('form')		
 		meta = data['list']
-		console.log(data)
 		meta_dic={}
 		$wrapper.empty();
-		console.log([meta,data])
 		$.each(meta,function(i,data){
 			$input=$(repl_str('<div class="form-horizontal frappe-control" style="max-width: 600px;margin-top:10px;">\
 						<div class="form-group row" style="margin: 0px">\

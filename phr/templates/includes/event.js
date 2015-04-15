@@ -63,7 +63,6 @@ window.Events = inherit(ListView,{
 		this.profile_id = profile_id;
 		this.req_id = req_id;
 		$('#main-con').empty();
-		console.log(['req_id',req_id, 'res', res, 'event_id', event_id])
 		RenderFormFields.prototype.init(me.wrapper, {"file_name" : "event", "method": 'event'}, event_id)
 		this.set_values(res)
 		me.bind_save_event()
@@ -100,7 +99,6 @@ window.Events = inherit(ListView,{
 		this.make_comment_section(event_title, profile_id)
 	},
 	set_values: function(res){
-		console.log(['setting visits details',res])
 		if(res && res['entityid']){
 			$.each(res, function(field, value){
 				if(field!='event_symptoms') $('[name="'+field+'"]').val(value)
@@ -161,7 +159,6 @@ window.Events = inherit(ListView,{
 	},
 	get_visit_file_counts:function(visit_id, profile_id, dms_file_list){
 		var me = this;
-		console.log(['calling visit file_counts', visit_id])
 		frappe.call({
 			"method":"phr.templates.pages.event.get_individual_visit_count_for_badges",
 			"args":{"visit_id":visit_id,"profile_id":profile_id},

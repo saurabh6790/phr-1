@@ -62,7 +62,7 @@ function render_dashboard(profile_id){
 		})
 	}
 	function bind_ids(profile_id){
-		console.log("ids")
+		
 	}
 	function render_middle_section(profile_id){
 		frappe.call({
@@ -161,17 +161,17 @@ function render_dashboard(profile_id){
 		$.each(meta,function(i,data){
 			$(repl_str('<li><a nohref class="v_lphr %(entityid)s" data-name=%(entityid)s>\
 				<div class="item-content"><div class="item-media"></div>\
-				<div class="item-inner"><span class="title">%(person_firstname)s %(person_lastname)s</span></div>\
+				<div class="item-inner"><span class="title cn">%(person_firstname)s %(person_lastname)s</span></div>\
 				</div></a></li>',data)).appendTo($wrap)
 			/*$(repl_str('<a class="list-group-item-side v_lphr %(entityid)s" data-name=%(entityid)s>\
 			%(person_firstname)s %(person_lastname)s</a>\
 			</div>', data)).appendTo($wrap)*/
 		})
 		$(".v_lphr").unbind("click").click(function(){
-			var name=$(this).html()
+			var name=$(this).find('.cn').html()
 			sessionStorage.setItem("cname",name)
-			render_LPHR_name()
 			sessionStorage.setItem("cid",$(this).attr('data-name'))
+			render_LPHR_name()
 			$('.field-area').empty()
 			$('#main-con').empty()
 			$('.breadcrumb').empty()
@@ -185,9 +185,25 @@ function render_dashboard(profile_id){
 	
     }
     function render_LPHR_name(){
-    	$('.linked-phr').empty()
+    	//if $( "#mydiv" ).hasClass( "foo" )
+    	$('.cdd').removeClass('hide')
+    	$('#cphrname').empty()
+    	$('#cimage').empty()
     	name=sessionStorage.getItem('cname')
-    	$('<a nohref class="chome"><div class="item-inner"><i class="icon-home"></i>'+name+'&nbsp</div></a>').appendTo('.linked-phr').unbind("click").click(function(){
+    	$('.cdd .linked-phr #cphrname').append(name)
+    	frappe.call({
+			method:'phr.templates.pages.profile.get_user_image',
+			args:{"profile_id":sessionStorage.getItem("cid")},
+			callback: function(r) {
+				if (r.message["image"]){
+					//$('.cdd .linked-phr #cphrimg').attr("src",r.message["image"])
+					$('<img style="min-width: 40px; max-height: 30px; border-radius: 4px" src="'+r.message["image"]+'" class="img-rounded"  id="cphrimg" title="'+name+'" alt="'+name+'">').appendTo($('.cdd .linked-phr #cimage'))
+				}
+			}
+		});
+
+
+    	/*$('<a nohref class="chome"><div class="item-inner"><i class="icon-home"></i>'+name+'&nbsp</div></a>').appendTo('.linked-phr').unbind("click").click(function(){
 			$('.field-area').empty()
 			$('#main-con').empty()
 			$('.breadcrumb').empty()
@@ -196,7 +212,7 @@ function render_dashboard(profile_id){
 			render_providers(sessionStorage.getItem('cid'))
 			$('#linkedphr').hide()
 			render_middle_section(sessionStorage.getItem('cid'))
-		})
+		})*/
     }
     function render_provider(data){
     	$('#hps').find('p.nohp').remove()

@@ -89,7 +89,7 @@ var DiseaseMonitoring = inherit(RenderFormFields, {
 				if ($('input[data-fieldtype="DateTime"]') || $('input[data-fieldtype="Date"]')){
 					var date=$('input[data-fieldtype="DateTime"]').val() || $('input[data-fieldtype="Date"]').val()
 				}
-				console.log(["s",date,$('input[data-fieldtype="DateTime"]')])
+				
 				arg={"profile_id":profile_id,"received_from":"Desktop","event_master_id":event_id,"event_title":value,"date":date}
 				me.save_dm(me.res,arg,fields,field_mapper,raw_fields,me,value,profile_id)
 			})

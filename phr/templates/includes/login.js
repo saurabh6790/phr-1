@@ -139,7 +139,6 @@ login.login_handlers = (function() {
 					window.location.href = "/index";
 				}
 			} else if(["#signup", "#forgot"].indexOf(window.location.hash)!==-1) {
-				console.log(data)
 				if (data.message["returncode"]==101){
 					frappe.msgprint(data.message.msg_display);
 					setTimeout("window.location.href = '/login'", 5000);

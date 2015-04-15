@@ -34,17 +34,13 @@ def create_profile(first_name,middle_name,last_name,email_id,contact,created_via
 		# return args
 		profile_res=create_profile_in_solr(args)
 		response=json.loads(profile_res)
-		print response
 		if response['returncode']==101:
 			path=get_image_path(barcode,response['entityid'])
 			file_path='/files/'+response['entityid']+'/'+response['entityid']+".svg"
 			res=create_profile_in_db(response['entityid'],args,response,file_path)
 			db=set_default_dashboard(response['entityid'])
-			print response
 			response['msg_display']='Profile created successfully, please check your email and complete signup process'
-			return response
 		else:
-			print response
 			return response
 
 @frappe.whitelist(allow_guest=True)
@@ -122,7 +118,6 @@ def create_profile_in_solr(args):
 	request_type="POST"
 	url = "%s/createProfile"%get_base_url()
 	data=json.dumps(args)
-	print data
 	from phr.phr.phr_api import get_response
 	response=get_response(url,data,request_type)
 	print response

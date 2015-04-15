@@ -268,7 +268,6 @@ $.extend(RenderFormFields.prototype,{
 				data: {'doctype': field_meta['options']},
 				async: false,
 				success: function(r) {
-					console.log(r)
 					$option=$('<option>', { 
 								'value': "",
 								'text' : "" 

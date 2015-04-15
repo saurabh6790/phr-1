@@ -12,7 +12,6 @@ from phr.templates.pages.profile import search_profile_data_from_solr
 
 @frappe.whitelist(allow_guest=True)
 def get_appointments(data):
-	print "################################################################################"
 	fields, values, tab = get_data_to_render(data)
 
 	pos = 0

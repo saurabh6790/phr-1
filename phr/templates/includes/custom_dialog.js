@@ -17,7 +17,6 @@ $.extend(Dialog.prototype,{
 	},
 	make:function(){
 		this.$wrapper = this.get_diloag();
-		console.log(this.$wrapper)
 		this.render_filed_dict()
 	},
 	get_diloag:function(){
