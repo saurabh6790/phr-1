@@ -226,7 +226,8 @@ $.extend(ThumbNails.prototype,{
 			val=$(this).attr('data-name')
 			d = new Dialog();
 			d.init({"title":"Image Preview"+' ('+title+')'})
-			d.show()
+			d.show();
+			$('.modal-footer .btn-primary').hide();
 			$('<div><img style="position: relative; width: 100%; height: 60%; top: 10px" src="'+val+'">\
 				<p style="position: absolute; top: 100px; left: 10%; width: 80%; padding: 4px; background-color: transparent; font-weight: bold; color: #0AD5F5; font-weight: 600; font-size: 2em;">\
 				'+title+'</p></div>').appendTo($('.modal-body'))

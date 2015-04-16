@@ -183,14 +183,16 @@ def fetch_data_from_medications(med_list,recipient_list):
 				time_diff=0
 				if d.fieldtype=="time":
 					time_now = datetime.datetime.strftime(datetime.datetime.now(),'%H:%M')
-					med_time=datetime.datetime.strptime(options[d.fieldname], '%I:%M %p').strftime('%H:%M')
-					time_diff=(datetime.datetime.strptime(med_time,'%H:%M')-datetime.datetime.strptime(time_now,'%H:%M')).total_seconds()/60
+					if options[d.fieldname]:
+						med_time=datetime.datetime.strptime(options[d.fieldname], '%I:%M %p').strftime('%H:%M')
+						time_diff=(datetime.datetime.strptime(med_time,'%H:%M')-datetime.datetime.strptime(time_now,'%H:%M')).total_seconds()/60
 		
 				elif d.fieldname=="datetime":
 					now_time=datetime.datetime.strftime(datetime.datetime.now(), '%Y-%m-%d %H:%M:%S.%f')
 					now_time_str= datetime.datetime.strptime(now_time, '%Y-%m-%d %H:%M:%S.%f')
-					med_time = datetime.datetime.strptime(options[d.fieldname], '%Y-%m-%d %H:%M:%S.%f')
-					time_diff=(med_time-time_now).total_seconds()/60
+					if options[d.fieldname]:
+						med_time = datetime.datetime.strptime(options[d.fieldname], '%Y-%m-%d %H:%M:%S.%f')
+						time_diff=(med_time-time_now).total_seconds()/60
 
 				if time_diff and (time_diff > 0 and time_diff < 6):
 					user=frappe.get_doc("User",frappe.db.get_value("User",{"profile_id":mobj.profile_id},"name"))

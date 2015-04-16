@@ -21,13 +21,17 @@ window.Events = inherit(ListView,{
 		var me = this;
 		this.selected_files = [];
 		this.dms_file_list = [];
-		this.profile_id = profile_id
+		this.profile_id = profile_id;
+		this.doc_list = [];
+		
 		ListView.prototype.init(this.wrapper, {"file_name" : "event",
 			'cmd':"event.get_event_data",
 			'tab_at': 4,
 			'profile_id':profile_id})
 
 		$("<button class='btn btn-primary'> Share </button>").click(function(){
+			var fg = false;
+
 			$('.table').find('thead').each(function(){
 				var row = $(this);
 				$('th', row).map(function(index, th) {
@@ -42,17 +46,23 @@ window.Events = inherit(ListView,{
 				$('td', row).map(function(index, td) {
 					if ($(td).find('input[name="event"]').is(':checked')) {
 						me.selected_files.push($(td).find('input[name="event"]').attr('id'))
+						fg = true;
 					}
 				});
 			})
+			if (fg){
+				SharePhr.prototype.init(me.wrapper, {"file_name" : "share_phr", 
+					"method": "event", 
+					'event_id': $(me.selected_files).last()[0], 
+					'selected_files':me.selected_files, 
+					'doc_list': me.doc_list, 
+					"profile_id":me.profile_id
+				})	
+			}
+			else{
+				frappe.msgprint("Please first select an event. ")
+			}
 			
-			SharePhr.prototype.init(me.wrapper, {"file_name" : "share_phr", 
-						"method": "event", 
-						'event_id': $(me.selected_files).last()[0], 
-						'selected_files':me.selected_files, 
-						'doc_list': me.doc_list, 
-						"profile_id":me.profile_id
-					})
 			
 		}).appendTo($('.field-area'))
 		this.render_spans()
@@ -450,17 +460,21 @@ window.Events = inherit(ListView,{
 					args:{"data":JSON.stringify(me.res), "req_id": me.req_id},
 					callback:function(r){
 						console.log(r.message)
-						$('.breadcrumb li:last').remove()
-						NProgress.done();
-						if(r.message.returncode == 103 || r.message.returncode == 116){
-							me.dms_file_list = [];
-							me.open_form(r.message.entityid, $('[name="event_title"]').val(), me.profile_id, me.res);	
-							frappe.msgprint("Saved")
+						if(!r.message['exe']){
+							$('.breadcrumb li:last').remove()
+							NProgress.done();
+							if(r.message.returncode == 103 || r.message.returncode == 116){
+								me.dms_file_list = [];
+								me.open_form(r.message.entityid, $('[name="event_title"]').val(), me.profile_id, me.res);	
+								frappe.msgprint("Saved")
+							}
+							else{
+								frappe.msgprint(r.message.message_summary);
+							}
 						}
 						else{
-							frappe.msgprint(r.message.message_summary);
+							NProgress.done();
 						}
-
 					}
 				})
 			}			

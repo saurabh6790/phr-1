@@ -73,7 +73,7 @@ def getMedicationFields():
 	for dosage in frappe.db.sql("select name from `tabDosage`", as_list=1):
 		dosage_details = {'dosage_type': dosage[0]}
 		dosage_details['fields'] = frappe.db.sql(""" select label, fieldtype, fieldname, replace(ifnull(options,''), '\n', ', ') as options
-				from `tabDosage Fields` where parent = '%s' """%(dosage[0]), as_dict=1)
+				from `tabDosage Fields` where parent = '%s' order by idx"""%(dosage[0]), as_dict=1)
 		dosage_list.append(dosage_details)
 
 	return dosage_list
@@ -104,7 +104,7 @@ def getDiseaseMonitoringFields():
 		disease_details = {'event_master_id': disease[0], 'disease_name': disease[1]}
 
 		dm_fields = frappe.db.sql(""" select label, fieldtype, fieldname 
-				from `tabEvent Parameters` where parent = '%s' """%(disease[0]), as_dict=1)
+				from `tabEvent Parameters` where parent = '%s' order by idx"""%(disease[0]), as_dict=1)
 
 		for field_dict in dm_fields:
 			field_mapper.append(field_dict['fieldname'])			

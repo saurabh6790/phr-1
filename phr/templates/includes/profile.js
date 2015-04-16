@@ -78,7 +78,7 @@ var PatientDashboard = inherit(RenderFormFields, {
 		});
 		$('.tab-pane.active form input[name="weight"]').bind('change', function() { 
 			var pounds=$(this).val()/0.45359237
-			console.log(pounds)
+			// console.log(pounds)
 			$(".tab-pane.active form input[name='weight_in_pounds']").val(pounds.toFixed(2))
 			
 		});
@@ -292,11 +292,22 @@ var PatientDashboard = inherit(RenderFormFields, {
 			args:{'profile_id':profile_id},
 			callback: function(r) {
 				if(r.message) {
+					// console.log(['get linked phr', r.message])
 					me.render_phrs(r.message,profile_id)
 				}
 				else{
+					// console.log(["if non linked phr"])
 					var $wrapper=$('#manage_phr').find('form')
 					$wrapper.empty();
+					$input=$('<div class="form-horizontal frappe-control" style="max-width: 600px;margin-top:10px;">\
+						<div class="form-group row" style="margin: 0px">\
+								<div class="col-xs-8">\
+								<div class="control-input">\
+									No linked PHRs\
+								</div>\
+							</div>\
+						</div>\
+				</div>').appendTo($wrapper)	
 				}
 			}
 		})
@@ -305,10 +316,10 @@ var PatientDashboard = inherit(RenderFormFields, {
 		var me=this;
 		var $wrapper=$('#manage_phr').find('form')		
 		meta = data['list']
-		console.log(data)
-		meta_dic={}
+		// console.log(data)
+		this.meta_dic={}
 		$wrapper.empty();
-		console.log([meta,data])
+		// console.log(['Render PHRs', meta, data])
 		$.each(meta,function(i,data){
 			$input=$(repl_str('<div class="form-horizontal frappe-control" style="max-width: 600px;margin-top:10px;">\
 						<div class="form-group row" style="margin: 0px">\
@@ -320,7 +331,8 @@ var PatientDashboard = inherit(RenderFormFields, {
 							</div>\
 						</div>\
 				</div>', data)).appendTo($wrapper)	
-			meta_dic[data.entityid]=data
+			me.meta_dic[data.entityid]=data
+			// console.log(['meta rendering', me.meta_dic])
 		})
 		$('<div class="update" style="width:45%;display:inline-block;text-align:right;">\
 				<button class="btn btn-primary">\
@@ -331,7 +343,8 @@ var PatientDashboard = inherit(RenderFormFields, {
 				if ($('.chk_phr:checked').length>0){
 					BootstrapDialog.confirm('Are You Sure?', function(result){
 						if(result) {
-							me.delink_phr(meta,$('.chk_phr:checked').val(),meta_dic,profile_id,me)
+							// console.log(['sure meta dict', me.meta_dic])
+							me.delink_phr(meta,$('.chk_phr:checked').val(),me.meta_dic,profile_id,me)
 	            		}
 	        		});					
 				}
@@ -371,11 +384,12 @@ var PatientDashboard = inherit(RenderFormFields, {
 					method:'phr.templates.pages.profile.check_existing',
 					args:{'email':res['email']},
 					callback: function(r) {
-						console.log(r)
+						// console.log(r)
 						if (r.message){
 							frappe.msgprint('Email Already Used')
 						}
 						else{
+							// console.log(['delink_phr', meta_dic])
 							me.delink_profile(meta,selected,meta_dic,profile_id,me,res)
 							var $modal = $("#myModal").detach().modal();
 							 $modal.modal("hide");

@@ -132,10 +132,12 @@ def get_shared_request(profile_id):
 					and provider_id="%s" """%(profile_id), as_list=1)
 
 @frappe.whitelist()
-def update_flag(req_id, provider_id, profile_id, event_id):
-	d = get_patient_data({'profile_id': provider_id, 
-		'other_param':{'patient_profile_id': profile_id, 'event_id': event_id, 'req_id': req_id}
-		})
+def update_flag(req_id, provider_id, profile_id, event_id, doc_name):
+	frappe.errprint(['update_flag',doc_name])
+	if doc_name == 'Event' or doc_name == 'Visit':
+		d = get_patient_data({'profile_id': provider_id, 
+			'other_param':{'patient_profile_id': profile_id, 'event_id': event_id, 'req_id': req_id}
+			})
 	frappe.db.sql("update `tabShared Requests` set approval_status = 'Accept' where name = '%s'"%(req_id))
 	frappe.db.commit()
 
@@ -145,24 +147,24 @@ def get_request(target, provider_id):
 	return method_mapper.get(target)(target, provider_id)
 
 def get_myrequests(target, provider_id):
-	data = frappe.db.sql("""select name, provider_id, patient, event_id, DATE_FORMAT(date, '%s'), patient_name, event_title, reason, valid_upto, payment
+	data = frappe.db.sql("""select name, provider_id, patient, event_id, doc_name, DATE_FORMAT(date, '%s'), patient_name, event_title, reason, valid_upto, payment
 				 from `tabShared Requests`
 				 where ifnull(approval_status,'') not in ('Accept', 'Reject') 
-					and provider_id="%s" and doc_name = 'Event' and 
+					and provider_id="%s" and doc_name in ('Event', 'Disease Monitoring') and 
 					DATE_FORMAT(STR_TO_DATE(valid_upto,'%s'), '%s') >= NOW()
 				 order by date desc, valid_upto asc """%('%d/%m/%Y',provider_id, '%d/%m/%Y', '%Y-%m-%d'), as_list=1)
 
 	for d in data:
 		d.append("""<button class="btn btn-success  btn-sm" 
-						onclick="accept_request('%(req_id)s', '%(provider_id)s', '%(patient)s', '%(event_id)s')">
+						onclick="accept_request('%(req_id)s', '%(provider_id)s', '%(patient)s', '%(event_id)s', '%(doc_name)s')">
 							<i class='icon-ok' data-toggle='tooltip' data-placement='top' 
 							title='Accept'></i>
 					</button>
 					<button class="btn btn-warning  btn-sm" 
-						onclick="reject_request('%(req_id)s')">
+						onclick="reject_request('%(req_id)s','%(provider_id)s')">
 							<i class='icon-remove' data-toggle='tooltip' data-placement='top' 
 							title='Reject'></i>
-					</button>"""%{'req_id':d[0], 'provider_id': d[1], 'patient': d[2], 'event_id': d[3]})
+					</button>"""%{'req_id':d[0], 'provider_id': d[1], 'patient': d[2], 'event_id': d[3], 'doc_name': d[4]})
 
 	rows=[
 		["Date (Shared date)", "Patient Name", "Event Name",
@@ -172,7 +174,7 @@ def get_myrequests(target, provider_id):
 
 	if data:
 		for d in data:
-			rows.append(d[4:])
+			rows.append(d[5:])
 	else:
 		rows.extend([["","NO DATA",""]])
 
@@ -188,7 +190,7 @@ def update_request_record(req_id, rej_reason):
 	sr.save()
 
 def get_acc_req(target, provider_id):
-	data = frappe.db.sql("""select name, provider_id, patient, event_id, DATE_FORMAT(date, '%s'), patient_name, event_title, reason, valid_upto, payment, ifnull(visit_id, '')
+	data = frappe.db.sql("""select name, provider_id, patient, event_id, doc_name, DATE_FORMAT(date, '%s'), patient_name, event_title, reason, valid_upto, payment, ifnull(visit_id, '')
 				 from `tabShared Requests`
 				 where ifnull(approval_status,'') = 'Accept'
 					and provider_id="%s" and 
@@ -196,10 +198,18 @@ def get_acc_req(target, provider_id):
 					order by date desc, valid_upto asc"""%('%d/%m/%Y', provider_id, '%d/%m/%Y', '%Y-%m-%d'), as_list=1)
 
 	for d in data:
-		d[6] = """<a nohref id="%(entityid)s" 
-						onclick="Events.prototype.open_form('%(entityid)s', '%(event_title)s', '%(profile_id)s', '', '%(req_id)s', '%(visit_id)s')"> 
-					%(event_title)s </a>"""%{'entityid':d[3], 'event_title': d[6], 'profile_id': d[2], 'req_id': d[0], 'visit_id': d[10]}
+		if d[4] == 'Event':
+			d[7] = """<a nohref id="%(entityid)s" 
+							onclick="Events.prototype.open_form('%(entityid)s', '%(event_title)s', '%(profile_id)s', '', '%(req_id)s', '%(visit_id)s')"> 
+						%(event_title)s </a>"""%{'entityid':d[3], 'event_title': d[7], 'profile_id': d[2], 'req_id': d[0], 'visit_id': d[11]}
+		else:
+			dm_info = frappe.db.sql("""select dsl.disease_name, dsl.pdf_path 
+				from `tabDisease Sharing Log` dsl
+				where dsl.name = '%s' """%d[3], as_dict=1)[0]
 
+			file_path = '/'.join(dm_info.get('pdf_path').split('/')[3:])
+			d[7] = '<a target="_blank" href="/%s"> %s </a>' % ( file_path, dm_info['disease_name'])
+					
 	rows=[
 		["Date (Shared date)", "Patient Name", "Event Name",
 				"Reason for Sharing",  "Period of Sharing", 

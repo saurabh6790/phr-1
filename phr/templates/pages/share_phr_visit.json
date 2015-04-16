@@ -72,14 +72,12 @@
 			"fieldtype":"data", 
 			"label":"Provider id",
 			"display":"none",
-			"depends_on":"share_via:Provider Account",
 			"placeholder":""
 		},
 		{
 			"fieldname":"doctor_name",
 			"fieldtype":"data", 
 			"label":"Provider Name",
-			"depends_on":"share_via:Provider Account",
 			"placeholder":""
 		},
 		{
