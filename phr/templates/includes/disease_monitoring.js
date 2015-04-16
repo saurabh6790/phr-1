@@ -148,7 +148,7 @@ var DiseaseMonitoring = inherit(RenderFormFields, {
   			if ($(this).val()==""){
   				$(this).css({"border": "1px solid #999","border-color": "red" });
   				fg=false
-  				msg = "Filed(s) marked as red are Mandetory"
+  				msg = "Field(s) marked as red are Mandatory"
   			}
   		})
 
@@ -194,6 +194,15 @@ var DiseaseMonitoring = inherit(RenderFormFields, {
 		d.show()
 		this.res = {}
 		Events.prototype.get_linked_providers(this.profile_id)
+
+		$('.modal-body form input[name="sharing_duration"]').bind('change', function() { 
+			val=$(this).val()
+			if (diffDays(parseDate(val),new Date().setHours(0,0,0,0)) >= 0) { 
+				$(this).val("")
+    			frappe.msgprint("Sharing Duration date should not be less than or equal Current Date")
+			}
+		});
+
 		$('.modal-footer .btn-primary').unbind("click").click(function(){
 			$(".modal-body form input, .modal-body form textarea, .modal-body form select").each(function(i, obj) {
 				me.res[obj.name] = $(obj).val();
@@ -203,20 +212,49 @@ var DiseaseMonitoring = inherit(RenderFormFields, {
 	},
 	share_data:function(d){
 		var me = this;
+		me.res['lphr_name'] = sessionStorage.getItem("cname")
 		NProgress.start();
-		frappe.call({
-			method:"phr.templates.pages.disease_monitoring.share_dm",
-			args:{'data':me.selected_dm, 'header': $('.fixed-table-header').find('thead').html(), 'share_info':me.res,
-			 'profile_id':me.profile_id, 'disease':$('[name="disease"]').val()},
-			callback:function(r){
-				d.hide()
-				$('#myModal').remove();
-				$('.modal').remove();
-				$('.modal-backdrop').remove();;
-				NProgress.done();
-				console.log(r)
-				frappe.msgprint(r.message)
-			}
-		})
-	}
+		if(me.validate_sharing_modal()){
+			frappe.call({
+				method:"phr.templates.pages.disease_monitoring.share_dm",
+				args:{'data':me.selected_dm, 'header': $('.fixed-table-header').find('thead').html(), 'share_info':me.res,
+				 'profile_id':me.profile_id, 'disease':$('[name="disease"]').val()},
+				callback:function(r){
+					d.hide()
+					$('#myModal').remove();
+					$('.modal').remove();
+					$('.modal-backdrop').remove();;
+					NProgress.done();
+					console.log(r)
+					frappe.msgprint(r.message)
+				}
+			})
+		}
+		else{
+			NProgress.done();
+		}
+	},
+	validate_sharing_modal:function(){
+  		var me=this;
+  		var fg=true
+  		$(".modal-body form input[required], .modal-body form textarea[required], .modal-body form select[required]").each(function(i, obj) {
+  			if ($(this).val()=="" && $(this).is(':visible')){
+  				$(this).css({"border": "1px solid #999","border-color": "red" });
+  				frappe.msgprint("Fields Marked as Red Are Mandatory")
+  				fg=false
+  			}
+  		})
+  		if(fg){
+  			if(!$(".modal-body form input[name='doctor_name']").val() || $(" .modal-body form input[name='doctor_id']").val() == ''){
+  				frappe.msgprint("Please Select Appropriate Provider")
+  				fg=false
+  			}
+
+  			if($(" .modal-body form select[name='share_via']").val() == 'Email' && !$(" .modal-body form input[name='email_id']").val()){
+  				frappe.msgprint("Please mention Provider's Email Id")
+  				fg=false	
+  			}
+  		} 
+  		return fg
+  	}
 })

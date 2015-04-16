@@ -178,19 +178,19 @@ request_renderer = function(target, profile_id){
 	})
 }
 
-accept_request=function(request_id, provider_id, profile_id, event_id){
+accept_request=function(request_id, provider_id, profile_id, event_id, doc_name){
 	NProgress.start();
-	console.log([request_id, provider_id, profile_id, event_id])
 	frappe.call({
 		method:"phr.templates.pages.provider_page.update_flag",
-		args:{"req_id": request_id, 'provider_id': provider_id, 'profile_id': profile_id, 'event_id': event_id},
+		args:{"req_id": request_id, 'provider_id': provider_id, 'profile_id': profile_id, 'event_id': event_id, 'doc_name': doc_name},
 		callback:function(r){
+			request_renderer('#my_req', provider_id)
 			NProgress.done();
 		}
 	})
 }
 
-reject_request = function(request_id){
+reject_request = function(request_id, provider_id){
 	var d = new Dialog();
 	var res = []
 	d.init({'fields':[{"fieldname": "rej_reason", "fieldtype": "text", "label": "Reason", "placeholder":''}], 'title':'Rejection Reason'})
@@ -200,12 +200,13 @@ reject_request = function(request_id){
 				res[obj.name] = $(obj).val();
 			})
 			res["received_from"]="Desktop";
-			update_rejected_request(request_id, d, res)
+			update_rejected_request(request_id, d, res, provider_id)
+
 		})
 		
 }
 
-update_rejected_request = function(request_id, d, res){
+update_rejected_request = function(request_id, d, res, provider_id){
 	NProgress.start();
 	frappe.call({
 		method:"phr.templates.pages.provider_page.update_request_record",
@@ -213,6 +214,7 @@ update_rejected_request = function(request_id, d, res){
 		callback:function(r){
 			NProgress.done();
 			d.hide()
+			request_renderer('#my_req', provider_id)
 		}
 	})
 }

@@ -17,7 +17,7 @@ import datetime
 from phr.templates.pages.patient import get_base_url,send_phrs_mail,get_data_to_render,get_formatted_date_time,formatted_date,get_sms_template 
 from erpnext.setup.doctype.sms_settings.sms_settings import send_sms
 import requests
-
+from frappe.utils.email_lib import sendmail
 
 @frappe.whitelist(allow_guest=True)
 def update_profile(data,id,dashboard=None):
@@ -87,7 +87,7 @@ def update_password(data,dashboard=None):
 	if old_password:
 		if not frappe.db.sql("""select user from __Auth where password=password(%s)
 			and user=%s""", (old_password, user)):
-			return "Cannot Update: Incorrect Password"
+			return "Cannot Update: Old Password is Incorrect"
 	_update_password(user, new_password)
 	sub="Password Updated Successfully"
 	make_log(usrobj.get('entityid'),"profile","update Password",sub)
@@ -595,6 +595,7 @@ def get_mobile_nos():
 
 @frappe.whitelist(allow_guest=True)
 def notify_about_linked_phrs(profile_id,email_msg=None,text_msg=None,entity=None):
+	frappe.errprint(['notify_about_linked_phrs'])
 	linked_phr=("""select profile_id from `tabNotification Configuration` where linked_phr=1""")
 	if linked_phr:
 		user=frappe.get_doc('User',frappe.db.get_value("User",{"profile_id":profile_id},"name"))

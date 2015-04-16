@@ -86,6 +86,7 @@ def update_lphr_barcode(path,profile_id):
 		lp=frappe.new_doc("LinkedPHR Images")
 		lp.profile_id=profile_id
 		lp.barcode=file_path
+		lp.profile_image = uimage
 		lp.save(ignore_permissions=True)
 		sub="Barcode Uploaded Successfully "+file_path
 		make_log(profile_id,"profile","Linked PHR Image Upload",sub)

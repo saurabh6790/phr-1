@@ -214,7 +214,7 @@
             return 'Search';
         },
         formatNoMatches: function () {
-            return 'No matching records found';
+            return 'No records found';
         },
         formatPaginationSwitch: function () {
             return 'Hide/Show pagination';

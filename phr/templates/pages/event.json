@@ -88,6 +88,7 @@
 			"fieldname":"doctor_name", 
 			"fieldtype":"data", 
 			"label":"Provider Name",
+			"required":1,
 			"description": "<a id='provider_name' style='color:#17329E;'>Add New Provider</a>",
 			"placeholder":""
 		},

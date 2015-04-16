@@ -24,7 +24,8 @@ def create_update_event(data=None, req_id=None):
 			clear_dms_list(data.get('dms_file_list'))
 			copy_files_to_visit(data.get('dms_file_list'), res.get('visit').get('entityid'), data.get('profile_id'), data.get('pid'), req_id)
 
-		res['entityid'] = res['event']['entityid']	
+		if not res.get('exe'):
+			res['entityid'] = res['event']['entityid']	
 
 		return res
 
@@ -45,7 +46,8 @@ def create_event(data):
 	event_date = datetime.datetime.strptime(event_data.get('str_event_date'), "%d/%m/%Y").strftime('%Y-%m-%d')
 	
 	if date_diff(event_date, nowdate()) > 0:
-		frappe.msgprint("Event Date should be past or current",raise_exception=1)
+		frappe.msgprint("Event Date should be past or current")
+		return {"exe":"Event Date should be past or current"}
 
 	else:
 		response=get_response(url, json.dumps(event_data), request_type)
@@ -80,9 +82,14 @@ def update_event(data):
 
 	import datetime
 	event_date = datetime.datetime.strptime(event_data.get('str_event_date'), "%d/%m/%Y").strftime('%Y-%m-%d')
-	
+	visit_date = datetime.datetime.strptime(event_data.get('str_visit_date'), "%d/%m/%Y").strftime('%Y-%m-%d')
+
 	if date_diff(event_date, nowdate()) > 0:
 		frappe.msgprint("Please sect valid date")
+
+	if date_diff(visit_date, event_date) < 0:
+		frappe.msgprint("Visit Date should not be less than Event Date")
+		return {"exe":"Event Date should be past or current"}
 
 	else:
 		response=get_response(url, json.dumps(event_data), request_type)
@@ -293,7 +300,7 @@ def make_sharing_request(event_data, data, files_list=None):
 	req.provider_id = d.get("to_profile_id")
 	req.date = today()
 	req.patient = d.get("from_profile_id")
-	req.patient_name = frappe.db.get_value("User", {"profile_id":d.get("from_profile_id")}, 'concat(first_name, " ", last_name)')
+	req.patient_name = frappe.db.get_value("User", {"profile_id":d.get("from_profile_id")}, 'concat(first_name, " ", last_name)') or  data.get('lphr_name')
 	req.reason = data.get('reason')
 	req.valid_upto = data.get('sharing_duration')
 	if d.get("visit_tag_id"):

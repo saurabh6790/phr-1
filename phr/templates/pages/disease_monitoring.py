@@ -158,7 +158,7 @@ def save_data_to_solr(args):
 		if jsonobj['returncode']==132 or jsonobj['returncode']==133:
 			dm=json.loads(args)
 			sub="Disease Monitoring created"
-			make_log(dm['profile_id'],"Disease Monitoring","create",sub)
+			make_log(dm['profile_id'],"Disease Monitoring (CR)","create",sub)
 
 @frappe.whitelist(allow_guest=True)
 def render_table_on_db(profile_id,event_master_id,name):
@@ -237,6 +237,8 @@ def send_email(share_info, profile_id, disease):
 
 		sendmail([share_info.get('email_id')], subject="PHR-Disease Monitoring Data", msg=cstr(msg),
 				attachments=attachments)
+
+		make_log(profile_id, "Disease Monitoring", "Shared Via Email to provider %s"% share_info.get('doctor_name') , "Shared Via Email to provider %s"% share_info.get('doctor_name'))
 		return "Disease Monitoring records has been shared"
 
 def share_via_phr(share_info, profile_id, disease):
@@ -248,6 +250,7 @@ def share_via_phr(share_info, profile_id, disease):
 	dm_sharing.pdf_path = os.path.join(get_files_path(), profile_id, file_name)
 	dm_sharing.save(ignore_permissions=True)
 	make_sharing_request(share_info, disease, dm_sharing, profile_id)
+	make_log(profile_id, "Disease Monitoring", "Shared over PHR account to provider %s"% share_info.get('doctor_name') , "Shared over PHR account to provider %s"% share_info.get('doctor_name'))
 	return "Disease Monitoring records has been shared"
 
 def make_sharing_request(event_data, disease, dm_sharing, profile_id):
@@ -256,7 +259,7 @@ def make_sharing_request(event_data, disease, dm_sharing, profile_id):
 	req.provider_id = event_data.get('doctor_id')
 	req.date = today()
 	req.patient = profile_id
-	req.patient_name = frappe.db.get_value("User", {"profile_id": profile_id}, 'concat(first_name, " ", last_name)')
+	req.patient_name = frappe.db.get_value("User", {"profile_id": profile_id}, 'concat(first_name, " ", last_name)') or event_data.get('lphr_name')
 	req.reason = event_data.get('reason')
 	req.valid_upto = event_data.get('sharing_duration')
 	req.event_title = disease

@@ -35,7 +35,13 @@ $.extend(SharePhr.prototype,{
 		Events.prototype.get_linked_providers(this.args['profile_id'])
 	},
 	bind_controller: function(){
-		
+		$('form input[name="sharing_duration"]').bind('change', function() { 
+			val=$(this).val()
+			if (diffDays(parseDate(val),new Date().setHours(0,0,0,0)) >= 0) { 
+				$(this).val("")
+    			frappe.msgprint("Sharing Duration date should not be less or equal than Current Date")
+			}
+		});
 	},
 	render_folder_section:function(event_id,method){
 		var me = this;
@@ -153,17 +159,42 @@ $.extend(SharePhr.prototype,{
 		me.res['profile_id'] = me.args['profile_id'];
 		me.res['folder'] = me.folder;
 		me.res['sub_folder'] = me.sub_folder;
+		me.res['lphr_name'] = sessionStorage.getItem("cname")
 
 		// console.log(me.res)
-		NProgress.start();
-		frappe.call({
-			method:"phr.templates.pages.event.send_shared_data",
-			args:{"data":me.res},
-			callback:function(r){
-				NProgress.done();
-				frappe.msgprint(r.message)
-			}
-		})
-	}
+		if(me.validate_form()){
+			NProgress.start();
+			frappe.call({
+				method:"phr.templates.pages.event.send_shared_data",
+				args:{"data":me.res},
+				callback:function(r){
+					NProgress.done();
+					frappe.msgprint(r.message)
+				}
+			})
+		}
+	},
+	validate_form:function(){
+  		var me=this;
+  		var fg=true
+  		$("form input[required], form textarea[required], form select[required]").each(function(i, obj) {
+  			if ($(this).val()=="" && $(this).is(':visible')){
+  				$(this).css({"border": "1px solid #999","border-color": "red" });
+  				frappe.msgprint("Fields Marked as Red Are Mandatory")
+  				fg=false
+  			}
+  		})
+  		if(fg){
+  			if(!$("form input[name='doctor_name']").val() || $("form input[name='doctor_id']").val() == ''){
+  				frappe.msgprint("Please Select Appropriate Provider")
+  				fg=false
+  			}
 
+  			if($("form select[name='share_via']").val() == 'Email' && !$("form input[name='email_id']").val()){
+  				frappe.msgprint("Please mention Provider's Email Id")
+  				fg=false	
+  			}
+  		} 
+  		return fg
+  	}
 })
