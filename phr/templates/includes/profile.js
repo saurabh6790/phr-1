@@ -106,7 +106,7 @@ var PatientDashboard = inherit(RenderFormFields, {
 
 		}
 		if (sessionStorage.getItem("cid")==sessionStorage.getItem("pid")){
-			$($('input[name="relationship"]').parents()[3]).css("display", "none");
+			$($('input[name="relationship"]').parents()[1]).css("display", "none");
 			if ($('input[name="email"]').val()){
 				$('input[name="email"]').prop('disabled',true)
 			}

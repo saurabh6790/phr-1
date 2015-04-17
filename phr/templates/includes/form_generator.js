@@ -143,25 +143,19 @@ $.extend(RenderFormFields.prototype,{
 	},
 	data_field_renderer: function(field_meta){
 		var me=this;
-		$input=$(repl_str('<div class="form-horizontal frappe-control" style="max-width: 600px;margin-top:10px;">\
-						<div class="form-group row" style="margin: 0px">\
-							<label class="control-label small col-xs-4" style="padding-right: 0px;">%(label)s</label>\
-							<div class="col-xs-8">\
-								<div class="control-input">\
-									<input type="text" class="form-control" \
-										placeholder="%(placeholder)s" name="%(fieldname)s" value="%(value)s" \
-										data-toggle="tooltip" data-placement="top" title="%(label)s"\
-										aria-describedby="basic-addon2"><span id="valid"></span>\
-								</div>\
-							</div>\
-						</div>\
-				</div>', field_meta)).appendTo($(this.column))
+		$input=$(repl_str('<div class="form-group">\
+			<label class="col-sm-2 control-label">%(label)s</label>\
+			<div class="col-sm-10 control-input">\
+			<input type="text" class="form-control" placeholder="%(placeholder)s" name="%(fieldname)s" \
+			value="%(value)s" data-toggle="tooltip" data-placement="top" title="%(label)s">\
+			<span id="valid"></span></div>\
+			<div class="clearfix"></div></div>', field_meta)).appendTo($(this.column))
+		
 		var val = field_meta['value'];
 		if(field_meta['required']==1){
-			$input.find("input").prop('required',true)
-			$input.find("label").addClass('required')
-			$('<style>.required:after{content:" *";color:red;font-size:20px;}</style>').appendTo($input)
-		}
+
+		}	
+
 		if(field_meta['display']){
 			$($('[name="'+field_meta['fieldname']+'"]').parents()[3]).css("display", field_meta['display']);
 		}
@@ -173,19 +167,15 @@ $.extend(RenderFormFields.prototype,{
 	},
 	password_field_renderer: function(field_meta){
 		var me=this;
-		$input=$(repl_str('<div class="form-horizontal frappe-control" style="max-width: 600px;margin-top:10px;">\
-						<div class="form-group row" style="margin: 0px">\
-							<label class="control-label small col-xs-4" style="padding-right: 0px;">%(label)s</label>\
-							<div class="col-xs-8">\
-								<div class="control-input">\
-									<input type="password" class="form-control disable" \
-										placeholder="%(placeholder)s" name="%(fieldname)s"\
-										data-toggle="tooltip" data-placement="top" title="%(label)s"\
-										aria-describedby="basic-addon2">\
-								</div>\
-							</div>\
-						</div>\
-				</div>', field_meta)).appendTo($(this.column))
+		$input = $(repl_str('<div class="form-group">\
+			<label class="col-sm-2 control-label">%(label)s</label>\
+			<div class="col-sm-10 control-input">\
+				<input type="password" class="form-control disable" \
+				placeholder="%(placeholder)s" name="%(fieldname)s" \
+				value="%(value)s" data-toggle="tooltip" data-placement="top" title="%(label)s">\
+				<span id="valid"></span></div>\
+			<div class="clearfix"></div></div>', field_meta)).appendTo($(this.column))
+
 		var val = field_meta['value'];
 		if(field_meta['required']==1){
 		    $input.find("input").prop('required',true)
@@ -217,19 +207,14 @@ $.extend(RenderFormFields.prototype,{
 	},
 	email_field_renderer: function(field_meta){
 		var me=this;
-		$input=$(repl_str('<div class="form-horizontal frappe-control" style="max-width: 600px;margin-top:10px;">\
-						<div class="form-group row" style="margin: 0px">\
-							<label class="control-label small col-xs-4" style="padding-right: 0px;">%(label)s</label>\
-							<div class="col-xs-8">\
-								<div class="control-input">\
-									<input type="email" class="form-control" \
-										placeholder="%(placeholder)s" name="%(fieldname)s" value="%(value)s"\
-										data-toggle="tooltip" data-placement="top" title="%(label)s"\
-										aria-describedby="basic-addon2">\
-								</div>\
-							</div>\
-						</div>\
-				</div>', field_meta)).appendTo($(this.column))
+		$input=$(repl_str('<div class="form-group">\
+			<label class="col-sm-2 control-label">%(label)s<span class="symbol required"></span></label>\
+			<div class="col-sm-10 control-input"><input type="email" class="form-control" \
+			placeholder="%(placeholder)s" name="%(fieldname)s" value="%(value)s" \
+			data-toggle="tooltip" data-placement="top" title="%(label)s">\
+			<span id="valid"></span></div>\
+			<div class="clearfix"></div></div>', field_meta)).appendTo($(this.column))
+
 		var val = field_meta['value'];
 		if(field_meta['required']==1){
 			$input.find("input").prop('required',true)
@@ -246,18 +231,11 @@ $.extend(RenderFormFields.prototype,{
 		this.set_description($input.find('.control-input'), field_meta)
 	},
 	select_field_renderer: function(field_meta){
-		$input = $(repl_str('<div class="form-horizontal frappe-control" style="max-width: 600px;margin-top:10px;">\
-						<div class="form-group row" style="margin: 0px">\
-							<label class="control-label small col-xs-4" style="padding-right: 0px;">%(label)s</label>\
-							<div class="col-xs-8">\
-								<div class="control-input">\
-									<select type="text" class="form-control" \
-									data-toggle="tooltip" data-placement="top" title="%(label)s"\
-										name="%(fieldname)s" >\
-								</div>\
-							</div>\
-						</div>\
-				</div>', field_meta)).appendTo($(this.column))
+		$input = $(repl_str('<div class="form-group">\
+			<label class="col-sm-2 control-label">%(label)s</label>\
+			<label class="col-md-10 dp_lbl"><select class="form-control" \
+			data-toggle="tooltip" data-placement="top" title="%(label)s" name="%(fieldname)s"></label>\
+			<div class="clearfix"></div></div>', field_meta)).appendTo($(this.column))
 
 
 		if (typeof(field_meta['options']) === "string"){

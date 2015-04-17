@@ -107,8 +107,8 @@ def get_url(data):
 """
 @frappe.whitelist(allow_guest=True)
 def get_base_url():
-	#return "http://192.168.5.18:9090/phr-api/"
-	return "http://88.198.52.49:7974/phr-api/"
+	return "http://192.168.5.18:9090/phr-api/"
+	#return "http://88.198.52.49:7974/phr-api/"
 
 """
 Method to get name of method in solr database.contains dictionary or map.
@@ -130,7 +130,6 @@ def get_master_details(doctype):
 @frappe.whitelist(allow_guest=True)
 def send_phrs_mail(recipient,subject, template, add_args):
 
-	"""send mail with login details"""
 	from frappe.utils.user import get_user_fullname
 	from frappe.utils import get_url
 
