@@ -619,7 +619,7 @@ $.extend(RenderFormFields.prototype,{
 	table_field_renderer:function(field_meta){
 		var me = this;
 		$input = $(repl_str('<table class="table table-striped" data-pagination="true" data-search="true"\
-						data-height="550"  style="padding=0px;" >\
+						data-height="550"  style="padding=0px; " >\
 						<thead><tr></tr></thead>\
 						<tbody></tbody>\
 					</table>\

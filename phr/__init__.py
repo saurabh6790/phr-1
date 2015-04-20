@@ -3,6 +3,8 @@ import json
 from frappe.utils import cstr, get_site_path, get_url
 import base64
 import frappe
+from templates.pages.patient import get_base_url
+from phr.phr_api import get_response
 
 """ Profile login calls """
 @frappe.whitelist(allow_guest=True)
@@ -65,6 +67,20 @@ def getProfileEventData(data):
 
 	return eval(TAG_RE.sub('', cstr(res.get('rows')[1:])))
 
+@frappe.whitelist(allow_guest=True)
+def searchEvent(data):
+	data = json.loads(data)
+
+	from templates.pages.event import get_individual_event_count_for_badges
+	
+	request_type="POST"
+	url=get_base_url()+'/searchEvent'
+	args={"entityid":data.get("entityid")}
+	response=get_response(url,json.dumps(args),request_type)
+	res = response.text
+	res1 = get_individual_event_count_for_badges(data.get("entityid"), data.get("profile_id"))
+
+	return res, res1
 
 """Medication Calls"""
 @frappe.whitelist(allow_guest=True)

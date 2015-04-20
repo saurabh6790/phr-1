@@ -330,6 +330,20 @@ def get_files_doc(event_data, data):
 			files_list.append(os.path.join(get_files_path(), fl))
 		return 	files_list
 
+@frappe.whitelist(allow_guest=True)
+def marked_files_doc(event_data, data):
+	if isinstance(event_data, basestring):
+		event_data = json.loads(event_data)
+
+	if isinstance(data, basestring):
+		data = json.loads(data)
+
+	file_list = []
+	for fl in get_files_doc(event_data, data):
+		file_list.append('/'.join(fl.split('/')[4:]))
+
+	return file_list
+	
 def get_event_info(event_id):
 	request_type="POST"
 	url = "%ssearchEvent"%get_base_url()

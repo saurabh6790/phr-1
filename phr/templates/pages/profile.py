@@ -302,6 +302,11 @@ def add_profile_to_db(data,profile_id):
 	ret_res=create_profile_in_db(res['entityid'],args,res,path)
 	user=frappe.get_doc("User",frappe.session.user)
 	send_phrs_mail(user.email,"PHR:Linked PHR Account Delinked","templates/emails/delink_phr.html",{"name":args['person_firstname']})
+	msg=get_sms_template("delink",{"phr_name":args['person_firstname']})
+	if user.contact:
+		rec_list=[]
+		rec_list.append(user.contact)
+		send_sms(rec_list,msg=msg)
 	sub=dt['person_firstname']+" "+dt['person_lastname']+" "+"Profile Created Successfully"
 	make_log(profile_id,"profile","create",sub)
 	return ret_res
