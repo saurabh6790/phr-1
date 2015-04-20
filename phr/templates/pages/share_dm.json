@@ -4,7 +4,8 @@
 			"fieldname":"doctor_name",
 			"fieldtype":"data", 
 			"label":"Provider Name",
-			"placeholder":""
+			"placeholder":"",
+			"required":1 
 		},
 		{
 			"fieldname": "share_via", 

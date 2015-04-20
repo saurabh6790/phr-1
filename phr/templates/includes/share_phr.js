@@ -35,6 +35,7 @@ $.extend(SharePhr.prototype,{
 		Events.prototype.get_linked_providers(this.args['profile_id'])
 	},
 	bind_controller: function(){
+		var me = this;
 		$('form input[name="sharing_duration"]').bind('change', function() { 
 			val=$(this).val()
 			if (diffDays(parseDate(val),new Date().setHours(0,0,0,0)) >= 0) { 
@@ -42,6 +43,43 @@ $.extend(SharePhr.prototype,{
     			frappe.msgprint("Sharing Duration date should not be less or equal than Current Date")
 			}
 		});
+		$('form select[name="share_via"]').bind('change', function(){
+			if($(this).val() == 'Provider Account'){
+				me.select_all_docs()
+				frappe.msgprint("All Files has been selected for sharing")
+			}
+			else{
+				me.doc_list = [];
+				me.render_folder_section(me.args['event_id'], me.args['method'])
+				frappe.msgprint("Please select files First then move with sharing")	
+			}
+		})
+	},
+	select_all_docs: function(){
+		var me = this;
+		entityid = $('form input[name="entityid"]').val();
+		event_id = $('form input[name="event_id"]').val();
+
+		profile_id = this.args['profile_id'];
+		event_tag_id = event_id ? event_id : entityid;
+		visit_tag_id = event_id ? entityid : null;
+
+		event_data = {
+			"sharelist": [{
+				"from_profile_id": profile_id, 
+				"event_tag_id": event_tag_id,
+            	"visit_tag_id": visit_tag_id 
+			}]	
+		}
+
+		frappe.call({
+			"method":"phr.templates.pages.event.marked_files_doc",
+			"args":{"event_data": event_data, "data": {}},
+			callback:function(r){
+				me.doc_list = r.message;
+				me.render_folder_section(me.args['event_id'], me.args['method'])
+			}
+		})
 	},
 	render_folder_section:function(event_id,method){
 		var me = this;
@@ -52,7 +90,7 @@ $.extend(SharePhr.prototype,{
 				"method":"phr.templates.pages.event.get_individual_visit_count_for_badges",
 				"args":{"visit_id":$('input[name="entityid"]').val(),"profile_id":sessionStorage.getItem("cid")},
 				callback:function(r){
-					TreeView.prototype.init({'profile_id': this.args['profile_id'], 'dms_file_list': me.dms_file_list, 
+					TreeView.prototype.init({'profile_id': me.args['profile_id'], 'dms_file_list': me.dms_file_list, 
 						'display': 'initial', 'doc_list': me.doc_list,"event_dict":r.message.event_dict,"sub_event_count":r.message.sub_event_count})
 				}
 			})
@@ -62,7 +100,7 @@ $.extend(SharePhr.prototype,{
 				"method":"phr.templates.pages.event.get_individual_event_count_for_badges",
 				"args":{"event_id":event_id,"profile_id":sessionStorage.getItem("cid")},
 				callback:function(r){
-					TreeView.prototype.init({'profile_id': this.args['profile_id'], 'dms_file_list': me.dms_file_list, 
+					TreeView.prototype.init({'profile_id': me.args['profile_id'], 'dms_file_list': me.dms_file_list, 
 						'display': 'initial', 'doc_list': me.doc_list,"event_dict":r.message.event_dict,"sub_event_count":r.message.sub_event_count})
 				}
 			})

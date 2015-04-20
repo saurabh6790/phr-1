@@ -184,6 +184,7 @@ accept_request=function(request_id, provider_id, profile_id, event_id, doc_name)
 		method:"phr.templates.pages.provider_page.update_flag",
 		args:{"req_id": request_id, 'provider_id': provider_id, 'profile_id': profile_id, 'event_id': event_id, 'doc_name': doc_name},
 		callback:function(r){
+			frappe.msgprint("Request has been Accepted")
 			request_renderer('#my_req', provider_id)
 			NProgress.done();
 		}

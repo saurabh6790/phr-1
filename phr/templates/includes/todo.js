@@ -24,7 +24,7 @@ var ToDo = inherit(ListView,{
 		d = new Dialog();
 		d.init({"file_name":"todo", "title":"To Do"})
 		d.show()
-		$('.modal-body form input[name="due_date"]').bind('change', function() { 
+		$('.modal-body form input[name="due_date"]').bind('blur', function() { 
 				val=$(this).val()
 				if (diffDays(parseDate(val),new Date().setHours(0,0,0,0)) > 0) { 
 					$(this).val("")

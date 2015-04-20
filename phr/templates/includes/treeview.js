@@ -41,6 +41,8 @@ $.extend(TreeView.prototype, {
 	},
 	make_tree_base: function(){
 		var me = this;
+		$('.event_section').empty();
+
 		$('<div class="event_tree" style="width=100%;">\
 				<div class="tree" style="width:40%;float:left;min-height:500px;">\
 					<ul>\

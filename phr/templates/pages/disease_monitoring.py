@@ -172,7 +172,7 @@ def render_table_on_db(profile_id,event_master_id,name):
 
 @frappe.whitelist()
 def share_dm(data, header, share_info, profile_id, disease=None):
-	share_info = eval(share_info)
+	share_info = json.loads(share_info)
 	frappe.create_folder(os.path.join(get_files_path() , profile_id))
 	save_pdf(data, header, profile_id, disease)
 
