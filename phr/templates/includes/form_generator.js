@@ -44,13 +44,16 @@ $.extend(RenderFormFields.prototype,{
 		var me = this;
 		$('.new_controller').remove();
 		$('.save_controller').remove();
+		$('<div class="pull-right margin-left-20 save_controller">\
+			<button class="btn btn-primary"><i class="fa fa-save"></i> Save</button></div>').appendTo($('.top-btns-bar')).addClass(me.operation)
+		//$('<button class="btn btn-primary pull-right margin-left-20 new_controller"><i class="fa fa-plus-square"></i> New</button>').appendTo($('top-btns-bar')).addClass(me.operation)
 
-		$('<div class="save_controller" style="width:45%;display:inline-block;text-align:right;">\
+		/*$('<div class="save_controller" style="width:45%;display:inline-block;text-align:right;">\
 				<button class="btn btn-primary">\
 					<i class="icon-save"></i> Save \
 				</button>\
 			</div>').appendTo($('.sub-top-bar')).addClass(me.operation)
-			
+		*/	
 
 	},
 	get_field_meta:function(){

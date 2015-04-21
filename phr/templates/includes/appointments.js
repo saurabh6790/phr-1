@@ -44,7 +44,7 @@ var Appointments = inherit(ListView,{
     			frappe.msgprint("Appointment Date Should not be less than  Current Date")
 			}
 		});
-		$('.update').bind('click',function(event) {
+		$('.save_controller').bind('click',function(event) {
 			NProgress.start();
 			var validated=me.validate_form()
 			if (validated==true){
@@ -96,7 +96,7 @@ var Appointments = inherit(ListView,{
 		var me = this;
 		RenderFormFields.prototype.init($(".field-area"), {'fields': data['listview']})
 		me.bind_save_event()
-		$('.save_controller').remove();
+		//$('.save_controller').remove();
 	},
 	get_linked_providers:function(profile_id){
 		var me = this;

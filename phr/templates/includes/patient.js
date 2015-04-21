@@ -52,15 +52,13 @@ $(document).ready(function () {
 	}
 	else{
 		if (sessionStorage.getItem("cid")!=sessionStorage.getItem("pid")){
-
 			$('#linkedphr').hide()
 			var db = new render_dashboard();
 			db.render_LPHR_name()
 		}
-		else{
-			
-		}	//download_phr()
-		
+		download_phr()
+		$('.save_controller').hide()
+		$('.new_controller').hide()
 		NProgress.start();
 		profile_id=sessionStorage.getItem("cid")
 		var db = new render_dashboard();
@@ -77,7 +75,8 @@ $(document).ready(function () {
 	}
 })
 function download_phr(){
-	$('<a nohref class="list-group-item-side chome"><div><i class="icon-download"></i> Download PHR</div></a>').appendTo('.linked-phr').unbind("click").click(function(){
+	$('.link-phr').empty()
+	$('<a class="btn btn-primary" href="#"><div><i class="fa fa-arrow-circle-down"></i> Download PHR</div></a> ').appendTo('.link-phr').unbind("click").click(function(){
 				args={
 					"cmd": "phr.templates.pages.profile.get_phr_pdf",
 					'profile_id': sessionStorage.getItem("pid")
@@ -114,7 +113,7 @@ function bind_events(){
 		var db = new render_dashboard();
 		$('.field-area').empty()
 		$('#main-con').empty()
-		//download_phr()
+		download_phr()
 		db.render_providers(profile_id)
 		db.render_linked_phr(profile_id)
 		db.render_middle_section(profile_id)

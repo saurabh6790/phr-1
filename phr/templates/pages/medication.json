@@ -99,21 +99,6 @@
    "label": ""
   }, 
   {
-   "fieldname": "", 
-   "fieldtype": "button", 
-   "label": ""
-  }, 
-  {
-   "fieldname": "", 
-   "fieldtype": "column_break", 
-   "label": ""
-  }, 
-  {
-   "fieldname": "", 
-   "fieldtype": "section_break", 
-   "label": ""
-  }, 
-  {
    "fieldname": "tab", 
    "fieldtype": "table", 
    "label": "Medications", 

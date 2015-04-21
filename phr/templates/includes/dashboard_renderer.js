@@ -178,6 +178,7 @@ function render_dashboard(profile_id){
 			$('.breadcrumb').empty()
 			$('.new_controller').hide()
 			$('.save_controller').hide()
+			$('.link-phr').empty()
 			render_providers($(this).attr('data-name'))
 			$('#linkedphr').hide()
 			render_middle_section($(this).attr('data-name'))

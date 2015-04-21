@@ -75,13 +75,10 @@ var ListView = inherit(RenderFormFields,{
 	render_top_section: function(){
 		var me = this;
 		$('.new_controller').remove();
-		$('.save_controller').remove();
-		$('<div class="new_controller" style="width:45%;display:inline-block;text-align:right;">\
-				<button class="btn btn-primary">\
-					<i class="icon-plus"></i> New \
-				</button>\
-			</div>')
-			.appendTo($('.sub-top-bar'))
+		//$('.save_controller').remove();
+		$('<div class="pull-right margin-left-20 new_controller">\
+			<button class="btn btn-primary pull-right new_controller">\
+			<i class="fa fa-plus-square"></i> New</button></div>').appendTo($('.top-btns-bar'))
 			.bind('click',function(){
 				me.new_form()
 				if(me.args['file_name'] == "event"){

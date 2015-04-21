@@ -103,16 +103,17 @@ def build_options(dm_list,fields,field_mapper,raw_fields=None):
 		for dm in dm_list:
 			v=[]
 			f_dic={}
-			
+			print dm["data"]
 			for d in dm["data"]:
 				val_list=d.split("=")
 				f_dic[val_list[0]]=val_list[1]
+
 			for f in field_mapper:
 				#if not f=='patient_notes':
 				if f=='sr':
 					v.append('<input type="checkbox" name="">')
 				else:
-					v.append(f_dic[f])
+					v.append(f_dic.get(f))
 			rows.extend([v])
 	return f_list
 

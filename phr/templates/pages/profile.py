@@ -17,7 +17,7 @@ import datetime
 from phr.templates.pages.patient import get_base_url,send_phrs_mail,get_data_to_render,get_formatted_date_time,formatted_date,get_sms_template 
 from erpnext.setup.doctype.sms_settings.sms_settings import send_sms
 import requests
-
+from frappe.utils.email_lib import sendmail
 
 @frappe.whitelist(allow_guest=True)
 def update_profile(data,id,dashboard=None):
