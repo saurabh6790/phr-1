@@ -175,6 +175,7 @@ header .dropdown-off-sidebar {
 }
 #sidebar nav > ul > li.active > a .item-inner {
   color: #ffffff !important;
+  font-size: 15px;
 }
 #sidebar nav > ul > li.active > a .item-media > i {
   color: #ffffff !important;
@@ -211,11 +212,7 @@ header .dropdown-off-sidebar {
   color: #89c148 !important;
 }
 
-@media (min-width: 992px) {
-  .app-sidebar-closed .app-aside .search-form {
-    background: #dddde8 !important;
-    border-bottom-color: #c8c7cc !important;
-  }
+@media (min-width: 992px) { 
   .app-sidebar-closed .app-aside .search-form > a {
     color: #777;
   }

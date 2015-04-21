@@ -75,7 +75,7 @@ $(document).ready(function () {
 		NProgress.done();
 	})
 	$(".patients").unbind("click").click(function(){
-		profile_id=sessionStorage.getItem("cid")
+		profile_id=sessionStorage.getItem("pid")
 		$('.breadcrumb').empty()
 		$('#main-con').empty()
 		NProgress.start();

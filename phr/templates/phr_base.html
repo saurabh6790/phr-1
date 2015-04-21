@@ -70,6 +70,9 @@ Built on Frappe.io. Free and Open Source Framework for the Web. https://frappe.i
 			<div class="app-content">
 				{%- block navbar -%}{% include "templates/includes/navbar.html" %}{%- endblock -%}
 				<div class="main-content" >
+					{%- block topbar -%}
+						{{ topbar or "" }}
+					{%- endblock -%}
 					<div class="wrap-content container" id="container">
 						  <!-- start: FIRST SECTION -->
 						<div class="container-fluid container-fullw padding-bottom-10 border0">

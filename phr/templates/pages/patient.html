@@ -4,7 +4,7 @@
 {% block phr_con %}
 {% endblock %}
 {% block con_left %}
-  <div class="sidebar-container perfect-scrollbar">
+<div class="sidebar-container perfect-scrollbar">
     <nav>
     <ul class="main-navigation-menu">
       <li class="active open">
@@ -56,12 +56,12 @@
                
             </div>
             <div class="item-inner">
-              <span class="title"> My Health Records </span>
+              <span class="title"> My Health Records </span><i class="icon-arrow"></i>
             </div>
           </div>
         </a> 
-      </li>
-    <li>
+        <ul class="sub-menu">
+          <li>
           <a nohref class="event">
               <div class="item-content">
                   <div class="item-media events">
@@ -71,71 +71,89 @@
                   </div>
               </div>  
           </a>
-      </li>               
-      <li>
-          <a nohref class="visit">
-              <div class="item-content">
-                  <div class="item-media visits">
-                       
-                  </div>
-                  <div class="item-inner">
-                      <span class="title"> Visits </span>
-                  </div>
-              </div>  
-          </a>
+          </li>               
+          <li>
+              <a nohref class="visit">
+                  <div class="item-content">
+                      <div class="item-media visits">
+                           
+                      </div>
+                      <div class="item-inner">
+                          <span class="title"> Visits </span>
+                      </div>
+                  </div>  
+              </a>
+          </li>
+          <li>
+              <a nohref class="medications">
+                  <div class="item-content">
+                      <div class="item-media medications">
+                           
+                      </div>
+                      <div class="item-inner">
+                          <span class="title"> Medications </span>
+                      </div>
+                  </div>   
+              </a>
+          </li>
+          <li>
+              <a nohref class="dmonit">
+                  <div class="item-content">
+                      <div class="item-media disease_monitoring">
+                           
+                      </div>
+                      <div class="item-inner">
+                          <span class="title"> Disease Monitoring </span>
+                      </div>
+                  </div>   
+              </a>
+          </li>
+          <li>
+              <a nohref class="appoint">
+                  <div class="item-content">
+                      <div class="item-media appointments">
+                           
+                      </div>
+                      <div class="item-inner">
+                          <span class="title"> Appointments </span>
+                      </div>
+                  </div>   
+              </a>
+          </li>
+          <li>
+              <a nohref class="msg">
+                  <div class="item-content">
+                      <div class="item-media msgs">
+                      </div>
+                      <div class="item-inner">
+                          <span class="title">Shared History</span>
+                          <span class="msg_count pull-right"></span>
+                      </div>
+                  </div>   
+              </a>
+          </li>
+        </ul>  
       </li>
-      <li>
-          <a nohref class="medications">
-              <div class="item-content">
-                  <div class="item-media medications">
-                       
-                  </div>
-                  <div class="item-inner">
-                      <span class="title"> Medications </span>
-                  </div>
-              </div>   
-          </a>
-      </li>
-      <li>
-          <a nohref class="dmonit">
-              <div class="item-content">
-                  <div class="item-media disease_monitoring">
-                       
-                  </div>
-                  <div class="item-inner">
-                      <span class="title"> Disease Monitoring </span>
-                  </div>
-              </div>   
-          </a>
-      </li>
-      <li>
-          <a nohref class="appoint">
-              <div class="item-content">
-                  <div class="item-media appointments">
-                       
-                  </div>
-                  <div class="item-inner">
-                      <span class="title"> Appointments </span>
-                  </div>
-              </div>   
-          </a>
-      </li>
-      <li>
-          <a nohref class="msg">
-              <div class="item-content">
-                  <div class="item-media msgs">
-                  </div>
-                  <div class="item-inner">
-                      <span class="title">Shared History</span>
-                      <span class="msg_count pull-right"></span>
-                  </div>
-              </div>   
-          </a>
-      </li> 
+       
     </ul>
             <!-- end: MAIN NAVIGATION MENU --> 
   </nav>
 </div>
+{% endblock %}
+{% block topbar %}
+   <div class="top-btns-bar clearfix">
+      <div class="page-breadcrumbs pull-left">
+        <ul class="breadcrumb"><li><a nohref="">Messages</a></li></ul>
+      </div>
+      
+      <button class="btn btn-primary pull-right margin-left-20"><i class="fa fa-save"></i> Save</button>
+      
+      <button class="btn btn-primary pull-right margin-left-20"><i class="fa fa-plus-square"></i> New</button>
+      
+      <div class="linked-phr pull-right margin-left-20">
+        <a class="btn btn-primary" href="#"><div><i class="fa fa-arrow-circle-down"></i> Download PHR</div></a> 
+      </div>
+  </div>
 {% endblock %}
 {% block content_area %}
 <script src="/assets/phr/vendor/jquery/jquery.min.js"></script>
@@ -178,7 +196,7 @@
         </li>
     </ul>
 </div>
-<div class="field-area" style="padding-top:5%"></div>
+<div class="field-area"></div>
 <div id="main-con"></div>
 {% endblock %}
 {% block con_right %}
