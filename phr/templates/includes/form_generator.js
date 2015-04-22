@@ -509,6 +509,7 @@ $.extend(RenderFormFields.prototype,{
 						dateFormat: "dd/mm/yy"
 					})
 			var val = field_meta['value'];
+
 			if(val){
 				if (typeof(val)=="string"){
 					dt = val.split("/");

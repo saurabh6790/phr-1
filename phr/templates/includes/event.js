@@ -163,7 +163,7 @@ window.Events = inherit(ListView,{
 			"method":"phr.templates.pages.event.get_individual_event_count_for_badges",
 			"args":{"event_id":event_id,"profile_id":profile_id},
 			callback:function(r){
-				TreeView.prototype.init({'profile_id': me.profile_id, 'dms_file_list':dms_file_list, 
+				TreeView.prototype.init({'profile_id': profile_id, 'dms_file_list':dms_file_list, 
 						'display': 'none',"event_dict":r.message.event_dict,"sub_event_count":r.message.sub_event_count, 
 						'req_id': me.req_id})
 			}
@@ -174,7 +174,7 @@ window.Events = inherit(ListView,{
 		console.log(['calling visit file_counts', visit_id])
 		frappe.call({
 			"method":"phr.templates.pages.event.get_individual_visit_count_for_badges",
-			"args":{"visit_id":visit_id,"profile_id":profile_id},
+			"args":{"visit_id":visit_id,"profile_id":me.profile_id},
 			callback:function(r){
 				TreeView.prototype.init({'profile_id': me.profile_id, 'dms_file_list':dms_file_list, 
 						'display': 'none',"event_dict":r.message.event_dict,"sub_event_count":r.message.sub_event_count, 
