@@ -77,10 +77,11 @@ def searchEvent(data):
 	url=get_base_url()+'/searchEvent'
 	args={"entityid":data.get("entityid")}
 	response=get_response(url,json.dumps(args),request_type)
-	res = response.text
-	res1 = get_individual_event_count_for_badges(data.get("entityid"), data.get("profile_id"))
+	event_data = response.text
+	bucket_count = get_individual_event_count_for_badges(data.get("entityid"), data.get("profile_id"))
+	linked_provider = get_linked_provides(json.dumps(data))
 
-	return {"event":json.loads(res), "bucket_codes": res1}
+	return {"event":json.loads(event_data), "bucket_count": bucket_count, "linked_provider": linked_provider}
 
 """Medication Calls"""
 @frappe.whitelist(allow_guest=True)
