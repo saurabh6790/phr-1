@@ -131,6 +131,8 @@ body.bg_style_5 {
   background: url("../images/bg_5.png") transparent !important;
 }
 
+
+
 ::-moz-selection {
   background: #5F8295;
   text-shadow: none;
@@ -5783,7 +5785,7 @@ input[type="radio"], input[type="checkbox"] {
 /* ---------------------------------------------------------------------- */
 /*  Buttons
 /* ---------------------------------------------------------------------- */
-.btn {
+#app .btn {
   transition: all 0.3s ease 0s !important;
   background-image: none !important;
   box-shadow: none !important;
@@ -5791,14 +5793,14 @@ input[type="radio"], input[type="checkbox"] {
   position: relative;
 }
 
-.btn:after {
+#app .btn:after {
   content: "";
   position: absolute;
   transition: all 0.3s ease 0s;
   z-index: -1;
 }
 
-.btn-wide {
+#app .btn-wide {
   min-width: 120px;
 }
 
@@ -5813,16 +5815,16 @@ input[type="radio"], input[type="checkbox"] {
   box-shadow: none;
 }
 
-.btn-o {
+#app .btn-o {
   background: none !important;
 }
 
-.btn-default {
+#app .btn-default {
   background-color: #ffffff;
   border-color: #c8c7cc;
   color: #8e8e93;
 }
-.btn-default:hover {
+#app .btn-default:hover {
   background-color: #ffffff;
   border-color: #bbbac0;
   color: #8e8e93 !important;
@@ -5849,7 +5851,7 @@ input[type="radio"], input[type="checkbox"] {
   border-bottom: 4px solid #8e8e93;
 }
 
-.btn-primary {
+#app.btn-primary {
   background-color: #89c148;
   border-color: #89c148;
   color: #ffffff;
