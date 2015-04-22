@@ -80,7 +80,7 @@ def searchEvent(data):
 	res = response.text
 	res1 = get_individual_event_count_for_badges(data.get("entityid"), data.get("profile_id"))
 
-	return res, res1
+	return {"event":json.loads(res), "bucket_codes": res1}
 
 """Medication Calls"""
 @frappe.whitelist(allow_guest=True)
