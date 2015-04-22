@@ -84,10 +84,11 @@ def update_event(data):
 	event_date = datetime.datetime.strptime(event_data.get('str_event_date'), "%d/%m/%Y").strftime('%Y-%m-%d')
 	visit_date = datetime.datetime.strptime(event_data.get('str_visit_date'), "%d/%m/%Y").strftime('%Y-%m-%d')
 
-	if date_diff(event_date, nowdate()) > 0:
-		frappe.msgprint("Please sect valid date")
+	if date_diff(visit_date, nowdate()) > 0:
+		frappe.msgprint("Visit Date could not be greater than current date")
+		return {"exe":"Visit Date could not be greater than current date"}
 
-	if date_diff(visit_date, event_date) < 0:
+	elif date_diff(visit_date, event_date) < 0:
 		frappe.msgprint("Visit Date should not be less than Event Date")
 		return {"exe":"Event Date should be past or current"}
 
@@ -314,8 +315,13 @@ def make_sharing_request(event_data, data, files_list=None):
 		
 	req.save(ignore_permissions=True)
 
-def get_files_doc(event_data, data):
+def get_files_doc(event_data, data, selected_files=None):
+	frappe.errprint([selected_files])
 	tag_dict = {'11': "consultancy-11", "12": "event_snap-12", "13": "lab_reports-13", "14":"prescription-14", "15": "cost_of_care-15"}
+
+	if selected_files:
+		tag_dict = {k: tag_dict[k] for k in selected_files[:-1]}
+
 	files_list = []
 	if not data.get('files'):
 		for d in event_data.get('sharelist'):
@@ -331,15 +337,19 @@ def get_files_doc(event_data, data):
 		return 	files_list
 
 @frappe.whitelist(allow_guest=True)
-def marked_files_doc(event_data, data):
+def marked_files_doc(event_data, data, selected_files=None):
+	frappe.errprint([selected_files])
 	if isinstance(event_data, basestring):
 		event_data = json.loads(event_data)
 
 	if isinstance(data, basestring):
 		data = json.loads(data)
 
+	if isinstance(selected_files, basestring):
+		selected_files = json.loads(selected_files)
+
 	file_list = []
-	for fl in get_files_doc(event_data, data):
+	for fl in get_files_doc(event_data, data, selected_files):
 		file_list.append('/'.join(fl.split('/')[4:]))
 
 	return file_list

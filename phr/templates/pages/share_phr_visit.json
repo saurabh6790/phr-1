@@ -72,7 +72,7 @@
 			"fieldtype":"data", 
 			"label":"Provider id",
 			"display":"none",
-			"placeholder":"",
+			"placeholder":""
 		},
 		{
 			"fieldname":"doctor_name",

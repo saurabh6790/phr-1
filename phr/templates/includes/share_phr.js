@@ -19,7 +19,7 @@ $.extend(SharePhr.prototype,{
 		$(this.wrapper).empty()
 		$('.field-area').empty()
 		var me = this;
-		this.selected_files = args.selected_files
+		this.selected_files = args['selected_files']
 		this.doc_list = args.doc_list;
 		RenderFormFields.prototype.init(this.wrapper, {'file_name':args['file_name'], 
 			'values': args['values'], 'method': args['method']}, args['event_id'])
@@ -43,6 +43,11 @@ $.extend(SharePhr.prototype,{
     			frappe.msgprint("Sharing Duration date should not be less or equal than Current Date")
 			}
 		});
+
+		if(me.selected_files.length > 1){
+			me.select_all_docs(me.args['event_id'], me.args['method'])
+		}
+
 		$('form select[name="share_via"]').bind('change', function(){
 			if($(this).val() == 'Provider Account'){
 				me.select_all_docs()
@@ -71,10 +76,10 @@ $.extend(SharePhr.prototype,{
             	"visit_tag_id": visit_tag_id 
 			}]	
 		}
-
+		
 		frappe.call({
 			"method":"phr.templates.pages.event.marked_files_doc",
-			"args":{"event_data": event_data, "data": {}},
+			"args":{"event_data": event_data, "data": {}, "selected_files": me.selected_files},
 			callback:function(r){
 				me.doc_list = r.message;
 				me.render_folder_section(me.args['event_id'], me.args['method'])
@@ -83,12 +88,12 @@ $.extend(SharePhr.prototype,{
 	},
 	render_folder_section:function(event_id,method){
 		var me = this;
-		console.log(method)
+		console.log([method, me.args['profile_id'], $('input[name="entityid"]').val()])
 		//method=""
 		if (method=="visit"){
 			frappe.call({
 				"method":"phr.templates.pages.event.get_individual_visit_count_for_badges",
-				"args":{"visit_id":$('input[name="entityid"]').val(),"profile_id":sessionStorage.getItem("cid")},
+				"args":{"visit_id": $('input[name="entityid"]').val(),"profile_id": me.args['profile_id']},
 				callback:function(r){
 					TreeView.prototype.init({'profile_id': me.args['profile_id'], 'dms_file_list': me.dms_file_list, 
 						'display': 'initial', 'doc_list': me.doc_list,"event_dict":r.message.event_dict,"sub_event_count":r.message.sub_event_count})
@@ -98,7 +103,7 @@ $.extend(SharePhr.prototype,{
 		else{
 			frappe.call({
 				"method":"phr.templates.pages.event.get_individual_event_count_for_badges",
-				"args":{"event_id":event_id,"profile_id":sessionStorage.getItem("cid")},
+				"args":{"event_id":event_id,"profile_id": me.args['profile_id']},
 				callback:function(r){
 					TreeView.prototype.init({'profile_id': me.args['profile_id'], 'dms_file_list': me.dms_file_list, 
 						'display': 'initial', 'doc_list': me.doc_list,"event_dict":r.message.event_dict,"sub_event_count":r.message.sub_event_count})
