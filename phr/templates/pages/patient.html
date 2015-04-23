@@ -167,12 +167,26 @@
 <!-- end: JAVASCRIPTS REQUIRED FOR THIS PAGE ONLY -->
 <!-- start: JAVASCRIPTS -->
 <script src="assets/phr/js/main.js"></script>
+<script src="assets/phr/js/index.js"></script>
 <!-- start: JavaScript Event Handlers for this page -->
 
     <script>
+     
       jQuery(document).ready(function() {
-        Main.init();
+        // Sidebar Acive Menu
+        $('.main-navigation-menu > li > a').click(function(){           
+          $('.main-navigation-menu li ul').slideUp();             
+          $('.main-navigation-menu li a').removeClass('active');             
+          $(this).addClass('active');
+        });
         
+        $('.main-navigation-menu > li > ul > li > a').click(function(){     
+          $('.main-navigation-menu li ul li a').removeClass('active');             
+          $(this).addClass('active');
+        });
+        
+        Main.init();
+
       });
     </script>
   <!-- end: MAIN JAVASCRIPTS -->

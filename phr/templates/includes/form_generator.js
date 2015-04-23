@@ -80,7 +80,7 @@ $.extend(RenderFormFields.prototype,{
 		var me = this;
 		if(tab==1) me.tab_field_renderer()
 		$.each(fields,function(indx, meta){
-			!me.section && meta['fieldtype'] !== 'section_break' && me.section_break_field_renderer()
+			!me.section && meta['fieldtype'] !== 'section_break' && tab!=1 && me.section_break_field_renderer()
 			!me.column && me.column_break_field_renderer()
 			meta['value']=values[meta['fieldname']] || meta['value'] || "";
 			me[meta['fieldtype'] + "_field_renderer"].call(me, meta);
@@ -686,25 +686,23 @@ $.extend(RenderFormFields.prototype,{
 			.addClass("col-md-" + colspan);
     },
     section_break_field_renderer: function(meta){
-       	this.section = $('<div class="row sec %(fieldname)s" style="padding:2%""></div>')
-    		.appendTo($(this.wrapper))
-    		.css("padding-top", "10px")
-    	
-    	if(meta){
-    		if(meta['label']){
-    			this.labelled_section_count++;
-	    		var head = $('<h4 class="col-md-12">'
-						+ (meta['options'] ? (' <i class="icon-fixed-width text-muted '+meta['options']+'"></i> ') : "")
-						+ meta['label']
-						+ "</h4>")
-						.css({"margin":"15px 0px"})
-						.appendTo(this.section);	
-    		}
-    		if(meta['display']){
-				$(this.section).css("display", meta['display']);
-				$(this.section).addClass(meta['fieldname'])
-			}	
-    	}
+       	$input = $('<div class="panel panel-white no-radius events row sec %(fieldname)s"><div class="panel-heading border-light he"></div><div class="panel-body margin-top-15 bod"> </div>').appendTo($(this.wrapper))
+  		this.section=$input.find($('.bod'))
+        
+      	if(meta){
+        	if(meta['label']){
+          		this.labelled_section_count++;
+          		var $head = $('<h4 class="panel-title">'
+            	+ (meta['options'] ? ('<img src="assets/images/events.png" alt="Events" title="Events">') : "")
+            	+ meta['label']
+            	+ "</h4>")
+            	.appendTo($input.find($('.he')));
+	        }
+    	    if(meta['display']){
+        		$(this.section).css("display", meta['display']);
+        		$(this.section).addClass(meta['fieldname'])
+      		} 
+      	}      
     	
     	this.column = null;
     		
