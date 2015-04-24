@@ -117,8 +117,8 @@ var DiseaseMonitoring = inherit(RenderFormFields, {
 	add_share_event:function(){
 		var me = this;
 		this.selected_dm = []
-		$('.share').remove();
-		$("<button class='btn btn-primary share'> Share </button>").click(function(){
+		//$('.share').remove();
+		$("#share").click(function(){
 			me.make_sharing_dialog();
 			$('.table').find('tr').each(function () {
 				var row = $(this);

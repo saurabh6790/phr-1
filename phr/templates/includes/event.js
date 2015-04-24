@@ -117,7 +117,8 @@ window.Events = inherit(ListView,{
 	},
 	make_share_pannel: function(event_id){
 		var me = this;
-		$('<button class="btn btn-primary" id="share"> Share Data </button>').appendTo($('.save_controller'))
+		//$('<button class="btn btn-primary" id="share"> Share Data </button>').appendTo($('.save_controller'))
+		$('<div class="pull-right margin-left-20 new_controller"><button class="btn btn-primary pull-right new_controller"><i class="fa fa-plus-square"></i> New</button></div>').appendTo($('.top-btns-bar'))
 
 		$('#share').click(function(){
 			$("form input, form textarea").each(function(i, obj) {
