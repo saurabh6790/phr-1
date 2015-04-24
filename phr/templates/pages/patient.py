@@ -38,6 +38,7 @@ def get_data_to_render(data=None,entityid=None):
 		fields = json_data.get(data.get('param')) if json_data.get(data.get('param')) else json_data.get('fields')
 		
 		tab = json_data.get('tab')
+		#section_info = json_data.get('section_info')
 		values = get_values(data,entityid) if not json_data.get('values') else json_data.get('values')
 
 		
@@ -107,8 +108,8 @@ def get_url(data):
 """
 @frappe.whitelist(allow_guest=True)
 def get_base_url():
-	#return "http://192.168.5.18:9090/phr-api/"
-	return "http://88.198.52.49:7974/phr-api/"
+	return "http://192.168.5.18:9090/phr-api/"
+	#return "http://88.198.52.49:7974/phr-api/"
 
 """
 Method to get name of method in solr database.contains dictionary or map.

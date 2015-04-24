@@ -1,6 +1,11 @@
 {
 	"listview":[
 		{
+			"fieldname":"", 
+			"fieldtype":"section_break", 
+			"label":"Visit Dates"
+		},
+		{
 			"fieldname":"from_date",
 			"fieldtype":"date",
 			"label":"From Date",
@@ -20,7 +25,7 @@
 		{
 			"fieldname":"", 
 			"fieldtype":"section_break", 
-			"label":""
+			"label":"Visit Logs"
 		},
 		{
 			"fieldname":"tab",

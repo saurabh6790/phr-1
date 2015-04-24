@@ -1,6 +1,12 @@
 {
    "listview": [
         {
+            "fieldname": "", 
+            "fieldtype": "section_break", 
+            "label": "Shared History Logs",
+            "options":"<i class='icon-fixed-width text-muted icon-calendar'></i>"
+        },
+        {
             "fieldname": "tab",
             "fieldtype": "table",
             "label": "Message Logs",

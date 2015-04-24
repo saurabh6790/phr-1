@@ -9409,7 +9409,7 @@ nav.links a {
 /*  Login
 /* ---------------------------------------------------------------------- */
 .main-login {
-  margin: 0 auto;
+  margin: 90px auto;
   position: relative;
   float: none !important;
 }
@@ -9419,7 +9419,8 @@ nav.links a {
   }
 }
 .main-login .logo {
-  padding: 0 10px;
+    padding: 0 10px;
+    text-align: center;
 }
 .main-login .box-login, .main-login .box-forgot, .main-login .box-register {
   background: #FFFFFF;
@@ -11461,10 +11462,14 @@ td.small-width {
 .panel-title img { margin: -4px 8px 0 0; }
 .to_do_lists .panel-scroll { padding: 0 10px 0 5px !important; }
 .to_do_lists .panel-body { padding: 15px 5px 20px 15px !important }
+.advertise img { display: inline !important; }
+.wt_mngnt_main { margin-top: -5px; }
 .advertise ul { list-style-type: none; margin: 0; padding: 0; }
 .advertise ul li { padding-bottom: 10px; border-bottom: 1px solid #dedede; margin-bottom: 10px; }
 .advertise ul li:last-child { border: 0; padding-bottom: 0; margin-bottom: 0; }
 #add_list { background: url(../images/add-list.png) no-repeat center center; width: 20px; height: 20px; float: right; }
+#emer_ico{width: 20px; height: 20px; float: right; }
+ i.fa-print { color: #89c148; font-size: 18px; }
 .disease_monitorg { border: 0 !important; }
 .disease_monitorg .panel-heading { border-width: 1px 1px 0px 1px; border-style: solid; border-color: #dedede; }
 .table-bordered { border: 1px solid rgba(0, 0, 0, 0.07) !important; margin-bottom: 0; border-collapse: collapse; }

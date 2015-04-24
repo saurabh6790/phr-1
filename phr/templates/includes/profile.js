@@ -78,8 +78,11 @@ var PatientDashboard = inherit(RenderFormFields, {
 			$(".tab-pane.active form input[name='weight_in_pounds']").val(pounds.toFixed(2))
 			
 		});
-		$('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
-			
+		
+		frappe.require("assets/phr/vendor/bootstrap/js/bootstrap.js")
+		console.log("hiii")
+		$('a[data-toggle="tab"]').on('show.bs.tab', function (e) {
+			console.log("hiiidsasdas")
 			attr=$(e.target).attr('href')
 			if (attr=='#notification' && (sessionStorage.getItem("cid")!=sessionStorage.getItem("pid"))){
 				$($('input[name="linked_phr"]').parents()[3]).css("display", "none");  				

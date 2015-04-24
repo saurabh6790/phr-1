@@ -44,6 +44,7 @@ $.extend(RenderFormFields.prototype,{
 		var me = this;
 		$('.new_controller').remove();
 		$('.save_controller').remove();
+		$('#share').remove()
 		$('<div class="pull-right margin-left-20 save_controller">\
 			<button class="btn btn-primary"><i class="fa fa-save"></i> Save</button></div>').appendTo($('.top-btns-bar')).addClass(me.operation)
 		//$('<button class="btn btn-primary pull-right margin-left-20 new_controller"><i class="fa fa-plus-square"></i> New</button>').appendTo($('top-btns-bar')).addClass(me.operation)
@@ -78,6 +79,7 @@ $.extend(RenderFormFields.prototype,{
 	},
 	render_fields:function(fields, values, tab){
 		var me = this;
+		//console.log(section_info)
 		if(tab==1) me.tab_field_renderer()
 		$.each(fields,function(indx, meta){
 			!me.section && meta['fieldtype'] !== 'section_break' && tab!=1 && me.section_break_field_renderer()
@@ -310,7 +312,7 @@ $.extend(RenderFormFields.prototype,{
 									<input type="text" class="form-control autocomplete" \
 										placeholder="%(placeholder)s" name="%(fieldname)s" value="%(value)s" \
 										data-toggle="tooltip" data-placement="top" title="%(label)s"\
-										aria-describedby="basic-addon2" style="width:150px;">\
+										aria-describedby="basic-addon2" >\
 								</div>\
 							</div>\
 						</div>\
@@ -643,7 +645,7 @@ $.extend(RenderFormFields.prototype,{
 	},
 	tab_field_renderer: function(){
 		$('<div role="tabpanel">\
-				<ul class="nav nav-tabs tab-ui" role="tablist"></ul>\
+				<ul class="nav nav-tabs tab-ui" role="tablist" data-tabs="tabs"></ul>\
 				<div class="tab-content tab-div"></div>\
 			</div>').appendTo($(this.wrapper))
 
@@ -652,7 +654,7 @@ $.extend(RenderFormFields.prototype,{
 		if(field_meta['default']==1){
 			$(repl_str('<li role="presentation" class="active">\
 						<a href="#%(fieldname)s" aria-controls="%(fieldname)s"\
-							role="tab" data-toggle="tab">%(label)s</a>\
+							role="tab" data-toggle="tab">%(section_title)s</a>\
 					</li>',field_meta)).appendTo($(".tab-ui"))
 	
 			$(repl_str('<div role="tabpanel" class="tab-pane active" id="%(fieldname)s">\
@@ -661,7 +663,7 @@ $.extend(RenderFormFields.prototype,{
 		else{
 			$(repl_str('<li role="presentation">\
 						<a href="#%(fieldname)s" aria-controls="%(fieldname)s"\
-							role="tab" data-toggle="tab">%(label)s</a>\
+							role="tab" data-toggle="tab">%(section_title)s</a>\
 					</li>',field_meta)).appendTo($(".tab-ui"))
 	
 			$(repl_str('<div role="tabpanel" class="tab-pane " id="%(fieldname)s">\
@@ -693,7 +695,8 @@ $.extend(RenderFormFields.prototype,{
         	if(meta['label']){
           		this.labelled_section_count++;
           		var $head = $('<h4 class="panel-title">'
-            	+ (meta['options'] ? ('<img src="assets/images/events.png" alt="Events" title="Events">') : "")
+            	+ (meta['options'] ? (meta['options']) : "")
+            	+" "
             	+ meta['label']
             	+ "</h4>")
             	.appendTo($input.find($('.he')));

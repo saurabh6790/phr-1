@@ -4,7 +4,8 @@
 			"fieldname":"", 
 			"fieldtype":"section_break", 
 			"label":"Event Details",
-			"options": "icon-calendar"
+			"options": "<i class='icon-fixed-width text-muted icon-calendar'></i>"
+
 		},
 		{
 			"fieldname":"entityid", 
@@ -52,8 +53,9 @@
 			"fieldname":"visit_details", 
 			"fieldtype":"section_break", 
 			"label":"Visit Details",
-			"options": "icon-user-md",
+			"options": "<i class='icon-fixed-width text-muted icon-user-md'></i>",
 			"display": "none"
+			
 		},
 		{
 			"fieldname":"visit_date", 
@@ -114,11 +116,18 @@
 			"fieldname":"upload_files", 
 			"fieldtype":"section_break", 
 			"label":"Upload Files",
-			"options": "icon-cloud-upload",
+			"options": "<i class='icon-fixed-width text-muted icon-cloud-upload'></i>",
 			"display":"none"
 		}
 	], 
 	"listview":[
+		{
+			"fieldname":"", 
+			"fieldtype":"section_break", 
+			"label":"Event Date",
+			"options": "<i class='icon-fixed-width text-muted icon-calendar'></i>"
+
+		},
 		{
 			"fieldname":"from_date", 
 			"fieldtype":"date", 
@@ -139,7 +148,7 @@
 		{
 			"fieldname":"",
 			"fieldtype":"section_break",
-			"label":""
+			"label":"Event Logs"
 		},
 		{
 			"fieldname":"tab",

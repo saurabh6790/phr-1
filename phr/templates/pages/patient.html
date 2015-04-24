@@ -7,8 +7,8 @@
 <div class="sidebar-container perfect-scrollbar">
     <nav>
     <ul class="main-navigation-menu">
-      <li class="active open">
-        <a nohref id="home">
+      <li class="open">
+        <a nohref id="home" class="active">
           <div class="item-content">
             <div class="item-media dashboard">
                
@@ -147,6 +147,9 @@
       </div>
       <div class="linked-phr pull-right margin-left-20 link-phr">
       </div>
+      <div class="pull-right margin-left-20" id="share">
+          <button class="btn btn-primary"><i class="fa fa-share-square"></i>Share Data</button>
+      </div>  
        <div class="pull-right margin-left-20 save_controller">
         <button class="btn btn-primary"><i class="fa fa-save"></i> Save</button>
       </div>
@@ -164,6 +167,8 @@
 <script src="/assets/phr/vendor/switchery/switchery.min.js"></script>
 <script src="/assets/phr/vendor/Chart.js/Chart.min.js"></script>
 <script src="assets/phr/vendor/jquery.sparkline/jquery.sparkline.min.js"></script>
+
+
 <!-- end: JAVASCRIPTS REQUIRED FOR THIS PAGE ONLY -->
 <!-- start: JAVASCRIPTS -->
 <script src="assets/phr/js/main.js"></script>
@@ -216,7 +221,7 @@
 {% block con_right %}
 <div class="panel panel-white no-radius">
     <div class="panel-heading border-bottom">
-      <h4 class="panel-title"><img src="assets/phr/images/emergency-dtls.png" alt="Emergency Details" title="Emergency Details"> Emergency Details </h4>
+      <h4 class="panel-title"><img src="assets/phr/images/emergency-dtls.png" alt="Emergency Details" title="Emergency Details"> Emergency Details<a nohref class="ped"><span id="emer_ico" data-toggle="tooltip" data-placement="top" title="Print Emergency Details"><i class="fa fa-print"></i></span></a> </h4>
     </div>
     <div class="panel-body" id="ed">
         

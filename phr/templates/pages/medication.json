@@ -1,6 +1,12 @@
 {
  "listview": [
   {
+   "fieldname": "", 
+   "fieldtype": "section_break", 
+   "label": "Medicine details",
+   "options":"<i class='icon-fixed-width text-muted icon-calendar'></i>"
+  },
+  {
    "fieldname": "medicine_name", 
    "fieldtype": "data", 
    "label": "Medicine Name", 
@@ -96,7 +102,8 @@
   {
    "fieldname": "", 
    "fieldtype": "section_break", 
-   "label": ""
+   "label": "Medication logs",
+   "options": "<i class='icon-fixed-width text-muted icon-calendar'></i>"
   }, 
   {
    "fieldname": "tab", 

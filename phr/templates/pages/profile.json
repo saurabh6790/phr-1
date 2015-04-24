@@ -4,7 +4,8 @@
    {
       "fieldname": "basic_info", 
       "fieldtype": "section", 
-      "label": "Profile",
+      "section_title":"Profile",
+      "label": "Personal Info",
       "default":1
    },
    {
@@ -61,7 +62,7 @@
    {
       "fieldname": "", 
       "fieldtype": "section_break", 
-      "label": ""
+      "label": " Contact Details"
    },
    {
       "fieldname": "mobile", 
@@ -103,7 +104,7 @@
    {
       "fieldname": "", 
       "fieldtype": "section_break", 
-      "label": ""
+      "label": " Address"
    },
    {
       "fieldname": "address1", 
@@ -153,7 +154,7 @@
    {
       "fieldname": "", 
       "fieldtype": "section_break", 
-      "label": ""
+      "label": "Health Details"
    },
    {
       "fieldname": "blod_group", 
@@ -213,7 +214,7 @@
   {
       "fieldname": "", 
       "fieldtype": "section_break", 
-      "label": ""
+      "label": "Insurance Details"
    },
    {
       "fieldname": "insurance", 
@@ -232,8 +233,9 @@
   
    {
       "fieldname": "password", 
-      "fieldtype": "section", 
-      "label": "Update Password" 
+      "fieldtype": "section",
+      "section_title":"Update Password", 
+      "label": "Change Password" 
 
    },
    {
@@ -259,13 +261,15 @@
    },
    {
       "fieldname": "manage_phr", 
-      "fieldtype": "section", 
-      "label": "Manage LinkedPHR" 
+      "fieldtype": "section",
+      "section_title":"Manage LinkedPHR",  
+      "label": "LinkedPHR List" 
    },
    {
       "fieldname": "dashboard", 
-      "fieldtype": "section", 
-      "label": "Manage Dashboard"
+      "fieldtype": "section",
+      "section_title":"Manage Dashboard", 
+      "label": "Dashboard Settings"
    },
    {
       "fieldname": "events", 
@@ -304,8 +308,9 @@
    },
    {
       "fieldname": "image", 
-      "fieldtype": "section", 
-      "label": "Profile Image" 
+      "fieldtype": "section",
+      "section_title":"Profile Image", 
+      "label": "User Image" 
    },
    {
       "fieldname":"", 
@@ -314,8 +319,9 @@
    },
    {
       "fieldname": "notification", 
-      "fieldtype": "section", 
-      "label": "Manage Notifications" 
+      "fieldtype": "section",
+      "section_title":"Manage Notifications", 
+      "label": "Notifications List" 
    },
    {
       "fieldname": "linked_phr", 
