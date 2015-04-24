@@ -54,9 +54,11 @@ $.extend(SharePhr.prototype,{
 				frappe.msgprint("All Files has been selected for sharing")
 			}
 			else{
-				me.doc_list = [];
-				me.render_folder_section(me.args['event_id'], me.args['method'])
-				frappe.msgprint("Please select files First then move with sharing")	
+				if(!me.selected_files.length > 1){
+					me.doc_list = [];
+					me.render_folder_section(me.args['event_id'], me.args['method'])
+					frappe.msgprint("Please select files First then move with sharing")		
+				}
 			}
 		})
 	},

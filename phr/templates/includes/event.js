@@ -556,7 +556,7 @@ window.Events = inherit(ListView,{
 	},
 	open_sharing_pannel: function(event_id){
 		var me = this;
-		SharePhr.prototype.init(me.wrapper, {"file_name" : "share_phr", 'values': me.result_set, 'doc_list': me.doc_list, "profile_id":me.profile_id,"event_id":event_id})
+		SharePhr.prototype.init(me.wrapper, {"file_name" : "share_phr", 'values': me.result_set, 'doc_list': me.doc_list, "profile_id":me.profile_id,"event_id":event_id, "selected_files": me.selected_files})
 	},
 	bind_events: function(){
 		var me = this;
