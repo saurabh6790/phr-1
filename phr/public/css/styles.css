@@ -327,6 +327,17 @@ h5.over-title {
   }
 }
 
+.top-btns-bar {
+    background: none repeat scroll 0 0 #fff;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.07) !important;
+    padding: 20px 30px 20px 290px;
+    position: fixed;
+    right: 0;
+    top: 65px;
+    width: 100%;
+    z-index: 999;
+}
+
 .app-content-loading {
   background: #000;
   border-radius: 10px;
@@ -1558,7 +1569,7 @@ ul.sub-menu li ul.sub-menu li ul.sub-menu li a {
     margin-left: 260px;
   }
   .app-navbar-fixed .main-content {
-    margin-top: 0;
+    margin-top: 75px;
   }
   .app-navbar-fixed .main-content:before, .app-navbar-fixed .main-content:after {
     content: " ";
@@ -11522,5 +11533,5 @@ td.small-width {
 .events_tbl a:hover { color: #89c148; } 
 
 /* Save, New, Download PHR Buttons CSS */
-.top-btns-bar { background: #fff; border-bottom: 1px solid rgba(0, 0, 0, 0.07) !important; padding: 20px 30px; }
+
 .breadcrumb { background: none !important;  border-radius: 4px; margin: 0 !important; padding: 8px 10px 8px 0px !important; }

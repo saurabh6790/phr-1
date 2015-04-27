@@ -229,7 +229,7 @@ function render_dashboard(profile_id){
 			var sal=""
 			data['img']=image_mapper[data["provider_type"]]
 			$(repl_str('<li><a nohref data-name=%(provider)s onclick="Provider.prototype.open_record(\'%(provider)s\')">\
-				<div class="item-content"><div class="item-media"></div>\
+				<div class="item-content"><div class="item-media">%(img)s</div>\
 				<div class="item-inner"><span class="title">%(name1)s</span></div>\
 				</div></a></li>', data)).appendTo($wrap)
 			/*$(repl_str('<a noherf data-name=%(provider)s onclick="Provider.prototype.open_record(\'%(provider)s\')"><div class="item-inner">%(name1)s</div></a>', data)).appendTo($wrap)*/
