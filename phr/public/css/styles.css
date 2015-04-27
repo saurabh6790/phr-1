@@ -109,7 +109,7 @@ body {
   overflow-x: hidden;
   height: 100%;
   font-family: 'pluto_sanslight';
-  font-size: 11px;
+  font-size: 12px;
   padding: 0;
   margin: 0;
   background: #fafafa;
@@ -1012,8 +1012,14 @@ ul.sub-menu li a .item-content .item-media {
 #sidebar .item-content .healthcare_provider {
   background: url("../images/healthcare-providers.png") no-repeat scroll 6px center;
 }
+#sidebar .active .item-content .healthcare_provider {
+    background: url("../images/white-healthcare-providers.png") no-repeat scroll 6px center rgba(0, 0, 0, 0);
+}
 #sidebar .item-content .health_records {
   background: url("../images/health-records.png") no-repeat scroll 20px center;
+}
+#sidebar .active .item-content .health_records {
+    background: url("../images/white-health-records.png") no-repeat scroll 20px center rgba(0, 0, 0, 0);
 }
 #sidebar .item-content .events {
   background: url("../images/events.png") no-repeat scroll 20px center;
@@ -3396,9 +3402,12 @@ a.text-light:hover {
 }
 
 .tab-content {
-  background-color: #FFFFFF;
+  background-color: #eee;
   position: relative;
 }
+.nav-tabs > li.active > a, .nav-tabs > li.active > a:hover, .nav-tabs > li.active > a:focus { background: #eee !important; }
+
+
 
 .tab-content > .tab-pane, .pill-content > .pill-pane {
   display: none;
@@ -11469,7 +11478,8 @@ td.small-width {
 .advertise ul li:last-child { border: 0; padding-bottom: 0; margin-bottom: 0; }
 #add_list { background: url(../images/add-list.png) no-repeat center center; width: 20px; height: 20px; float: right; }
 #emer_ico{width: 20px; height: 20px; float: right; }
- i.fa-print { color: #89c148; font-size: 18px; }
+ .fa{ color: #89c148; font-size: 18px; }
+ #app .btn .fa { color: #fff; }
 .disease_monitorg { border: 0 !important; }
 .disease_monitorg .panel-heading { border-width: 1px 1px 0px 1px; border-style: solid; border-color: #dedede; }
 .table-bordered { border: 1px solid rgba(0, 0, 0, 0.07) !important; margin-bottom: 0; border-collapse: collapse; }

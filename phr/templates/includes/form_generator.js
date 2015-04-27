@@ -153,7 +153,7 @@ $.extend(RenderFormFields.prototype,{
 		var me=this;
 		$input=$(repl_str('<div class="form-horizontal frappe-control" style="max-width: 600px;margin-top:10px;">\
 			<div class="form-group row" style="margin: 0px">\
-			<label class="control-label small col-xs-4" style="padding-right: 0px;">%(label)s</label>\
+			<label class="control-label col-xs-4" style="padding-right: 0px;">%(label)s</label>\
 			<div class="col-xs-8"><div class="control-input ">\
 			<input type="text" class="form-control" placeholder="%(placeholder)s" \
 			name="%(fieldname)s" value="%(value)s" data-toggle="tooltip" \
@@ -182,7 +182,7 @@ $.extend(RenderFormFields.prototype,{
 		var me=this;
 		$input = $(repl_str('<div class="form-horizontal frappe-control" style="max-width: 600px;margin-top:10px;">\
 			<div class="form-group row" style="margin: 0px">\
-			<label class="control-label small col-xs-4" style="padding-right: 0px;">%(label)s</label>\
+			<label class="control-label col-xs-4" style="padding-right: 0px;">%(label)s</label>\
 			<div class="col-xs-8"><div class="control-input">\
 			<input type="password" class="form-control disable" placeholder="%(placeholder)s" \
 			name="%(fieldname)s" data-toggle="tooltip" data-placement="top" title="%(label)s" \
@@ -225,7 +225,7 @@ $.extend(RenderFormFields.prototype,{
 		var me=this;
 		$input=$(repl_str('<div class="form-horizontal frappe-control" style="max-width: 600px;margin-top:10px;">\
 			<div class="form-group row" style="margin: 0px">\
-			<label class="control-label small col-xs-4" style="padding-right: 0px;">%(label)s</label>\
+			<label class="control-label col-xs-4" style="padding-right: 0px;">%(label)s</label>\
 			<div class="col-xs-8"><div class="control-input">\
 			<input type="email" class="form-control" placeholder="%(placeholder)s" \
 			name="%(fieldname)s" value="%(value)s" data-toggle="tooltip" data-placement="top" title="%(label)s" \
@@ -249,7 +249,7 @@ $.extend(RenderFormFields.prototype,{
 	select_field_renderer: function(field_meta){
 		$input = $(repl_str('<div class="form-horizontal frappe-control" style="max-width: 600px;margin-top:10px;">\
 			<div class="form-group row" style="margin: 0px">\
-			<label class="control-label small col-xs-4" style="padding-right: 0px;">%(label)s</label>\
+			<label class="control-label col-xs-4" style="padding-right: 0px;">%(label)s</label>\
 			<div class="col-xs-8"><div class="control-input">\
 			<select type="text" class="form-control" data-toggle="tooltip" \
 			data-placement="top" title="%(label)s" name="%(fieldname)s" ></div></div></div></div>', field_meta)).appendTo($(this.column))
@@ -313,7 +313,7 @@ $.extend(RenderFormFields.prototype,{
 		var me = this;
 		var $input = $(repl_str('<div class="form-horizontal frappe-control" style="max-width: 600px;margin-top:10px;">\
 						<div class="form-group row" style="margin: 0px">\
-							<label class="control-label small col-xs-4" style="padding-right: 0px;">%(label)s</label>\
+							<label class="control-label col-xs-4" style="padding-right: 0px;">%(label)s</label>\
 							<div class="col-xs-8">\
 								<div class="control-input">\
 									<input type="text" class="form-control autocomplete" \
@@ -386,7 +386,7 @@ $.extend(RenderFormFields.prototype,{
 		var me = this;
 		$input=$(repl_str('<div class="form-horizontal frappe-control" style="max-width: 600px;margin-top:10px;">\
 						<div class="form-group row" style="margin: 0px">\
-							<label class="control-label small col-xs-4" style="padding-right: 0px;">%(label)s</label>\
+							<label class="control-label col-xs-4" style="padding-right: 0px;">%(label)s</label>\
 							<div class="col-xs-8">\
 								<div class="control-input">\
 									<textarea type="text" class="form-control" \
@@ -444,7 +444,7 @@ $.extend(RenderFormFields.prototype,{
 		var me = this;
 		$input = $(repl_str('<div class="form-horizontal frappe-control" style="max-width: 600px;margin-top:10px;">\
 						<div class="form-group row" style="margin: 0px">\
-							<label class="control-label small col-xs-4" style="padding-right: 0px;">%(label)s</label>\
+							<label class="control-label col-xs-4" style="padding-right: 0px;">%(label)s</label>\
 							<div class="col-xs-8">\
 								<div class="control-input">\
 									<input type="text" class="form-control" \
@@ -486,7 +486,7 @@ $.extend(RenderFormFields.prototype,{
 		var me = this;
 		$input = $(repl_str('<div class="form-horizontal frappe-control" style="max-width: 600px;margin-top:10px;">\
 						<div class="form-group row" style="margin: 0px">\
-							<label class="control-label small col-xs-4" style="padding-right: 0px;">%(label)s</label>\
+							<label class="control-label col-xs-4" style="padding-right: 0px;">%(label)s</label>\
 							<div class="col-xs-8">\
 								<div class="control-input">\
 									<input type="text" class="form-control" \
@@ -532,7 +532,7 @@ $.extend(RenderFormFields.prototype,{
 		var me = this;
 		$input = $(repl_str('<div class="form-horizontal frappe-control" style="max-width: 600px;margin-top:10px;">\
 						<div class="form-group row" style="margin: 0px">\
-							<label class="control-label small col-xs-4" style="padding-right: 0px;">%(label)s</label>\
+							<label class="control-label col-xs-4" style="padding-right: 0px;">%(label)s</label>\
 							<div class="col-xs-8">\
 								<div class="control-input">\
 									<input type="text" class="form-control" \
@@ -574,7 +574,7 @@ $.extend(RenderFormFields.prototype,{
 		var me = this;
 		$input = $(repl_str('<div class="form-horizontal frappe-control" style="max-width: 600px;margin-top:10px;">\
 						<div class="form-group row" style="margin: 0px">\
-							<label class="control-label small col-xs-4" style="padding-right: 0px;">%(label)s</label>\
+							<label class="control-label col-xs-4" style="padding-right: 0px;">%(label)s</label>\
 							<div class="col-xs-8">\
 								<div class="control-input">\
 									<input type="text" class="form-control" \

@@ -416,7 +416,7 @@ var Main = function() {
 			perfectScrollbarHandler();
 			switcheryHandler();
 			resizeHandler();
-			showTabHandler();
+			//showTabHandler();
 			panelScrollHandler();
 			panelToolsHandler();
 			customSelectHandler();
