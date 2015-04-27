@@ -24,6 +24,7 @@ var Visit = inherit(ListView,{
 			'profile_id':profile_id})
 
 		$('.new_controller').hide()
+		$('.save_controller').remove();
 
 		$('<tr>\
 			<td></td>\
@@ -38,7 +39,7 @@ var Visit = inherit(ListView,{
 			<td align="center"><input type="checkbox" id="cost_of_care"  value="Cost Of Care" ></td>\
 		</tr>').insertBefore('table > thead > tr:first')
 
-		$("<button class='btn btn-primary'> Share </button>").click(function(){
+		$("#share").click(function(){
 			$('.table').find('thead').each(function(){
 				var row = $(this);
 				$('th', row).map(function(index, th) {
@@ -78,8 +79,7 @@ var Visit = inherit(ListView,{
 				"profile_id":me.profile_id
 			})
 			
-		}).appendTo($('.field-area'))
-
+		})
 		
 	},
 	render_spans: function(){
@@ -163,7 +163,7 @@ var Visit = inherit(ListView,{
 						<a href='#' class='active'>%(id)s</a>\
 					",{'id':$(this).attr('id')})).appendTo('.breadcrumb');
 
-				$('.event_section').empty();
+				//$('.event_section').empty();
 				me.folder = $(this).attr('id');
 				me.render_sub_sections();
 			})

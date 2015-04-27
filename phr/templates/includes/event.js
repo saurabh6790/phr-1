@@ -26,8 +26,9 @@ window.Events = inherit(ListView,{
 			'cmd':"event.get_event_data",
 			'tab_at': 4,
 			'profile_id':profile_id})
+		$('.save_controller').remove();
 
-		$("<button class='btn btn-primary'> Share </button>").click(function(){
+		$("#share").click(function(){
 			$('.table').find('thead').each(function(){
 				var row = $(this);
 				$('th', row).map(function(index, th) {
@@ -54,7 +55,7 @@ window.Events = inherit(ListView,{
 						"profile_id":me.profile_id
 					})
 			
-		}).appendTo($('.field-area'))
+		})
 		this.render_spans()
 		this.get_linked_providers()
 	},
@@ -74,9 +75,11 @@ window.Events = inherit(ListView,{
 		
 		this.make_multi_select_div()
 
-		$('<div class="event_section" style="margin-top:-10%;"></div>').appendTo($('.field-area'))
+		//$('<div class="event_section" style="margin-top:-10%;"></div>').appendTo($('.field-area'))
 		$('.visit_details').css("display","inherit")
 		$('.upload_files').css("display","inherit")
+		$('.files_section').css("display","inherit")
+		$('.comment_section').css("display","inherit")
 
 		disable_fields(['event_title', 'event_date', 'event_symptoms'])
 
@@ -118,7 +121,6 @@ window.Events = inherit(ListView,{
 	make_share_pannel: function(event_id){
 		var me = this;
 		//$('<button class="btn btn-primary" id="share"> Share Data </button>').appendTo($('.save_controller'))
-		$('<div class="pull-right margin-left-20 new_controller"><button class="btn btn-primary pull-right new_controller"><i class="fa fa-plus-square"></i> New</button></div>').appendTo($('.top-btns-bar'))
 
 		$('#share').click(function(){
 			$("form input, form textarea").each(function(i, obj) {
@@ -141,7 +143,6 @@ window.Events = inherit(ListView,{
 	},
 	make_tree_view:function(event_id, visit_id){
 		var me = this;
-		console.log(['make tree view', visit_id])
 		me.dms_file_list = me.dms_file_list ? me.dms_file_list : [];
 		if(visit_id) file_counts=me.get_visit_file_counts(visit_id,this.profile_id,me.dms_file_list)
 		else file_counts=me.get_event_file_counts(event_id,this.profile_id,me.dms_file_list)
@@ -172,7 +173,7 @@ window.Events = inherit(ListView,{
 	},
 	make_comment_section: function(){
 		var me = this;
-		PHRComments.prototype.init({"wrapper":$('.field-area'), 
+		PHRComments.prototype.init({"wrapper":$('.comments'), 
 				"provider_id" : frappe.get_cookie("profile_id"), 
 				"profile_id": me.profile_id,
 				"event_id": $("[name='entityid']").val(),

@@ -40,7 +40,7 @@ $.extend(Dialog.prototype,{
 		return $dialog;
 	},
 	render_filed_dict:function(){
-		RenderFormFields.prototype.init('', this.field_list, '', '', this.$wrapper)
+		if (this.field_list['file_name']) RenderFormFields.prototype.init('', this.field_list, '', '', this.$wrapper)
 	},
 	make_head: function() {
 		var me = this;

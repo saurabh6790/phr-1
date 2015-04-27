@@ -22,7 +22,7 @@ function render_dashboard(profile_id){
 	}
 	function render_linked_phr(profile_id){
 		frappe.call({
-			method:'phr.templates.pages.profile.get_linked_phrs',
+			method:'phr.templates.pages.profile.get_linked_phrs_with_img',
 			args:{'profile_id':profile_id},
 			callback: function(r) {
 				if(r.message) {
@@ -156,12 +156,15 @@ function render_dashboard(profile_id){
     	$('#clphr').find('p.nophr').remove()
 		$('#clphr').empty()
 		$wrap=$('#clphr')
-		meta= data['list']
+		meta= data
 		meta_dic={}
 		sessionStorage.setItem("lphrs",data["list_size"])
+		//<img style="border-radius: 4px" src="'+r.message["image"]+'" title="'+name+'" alt="'+name+'">
 		$.each(meta,function(i,data){
+			
 			$(repl_str('<li><a nohref class="v_lphr %(entityid)s" data-name=%(entityid)s>\
-				<div class="item-content"><div class="item-media"></div>\
+				<div class="item-content"><div class="item-media">\
+				<img style="border-radius: 4px;min-width: 40px; max-height: 20px;padding-left:2px" class="user-picture" src="%(user_image)s" title="%(person_firstname)s" alt="%(person_firstname)s"></div>\
 				<div class="item-inner"><span class="title cn">%(person_firstname)s %(person_lastname)s</span></div>\
 				</div></a></li>',data)).appendTo($wrap)
 			/*$(repl_str('<a class="list-group-item-side v_lphr %(entityid)s" data-name=%(entityid)s>\
@@ -217,14 +220,14 @@ function render_dashboard(profile_id){
 		})*/
     }
     function render_provider(data){
+    	image_mapper={"Pathology Lab":'<i class="fa fa-eyedropper"></i>',"Doctor":'<i class="fa fa-stethoscope"></i>',"Hospital":'<i class="fa fa-plus-square"></i>'}
     	$('#hps').find('p.nohp').remove()
 		$wrap=$('#hps')
 		$('#hps').empty()
 		meta=data
 		$.each(meta,function(i,data){
 			var sal=""
-			if (data['provider_type']=='Doctor') sal="Dr."
-			data['sal']=sal
+			data['img']=image_mapper[data["provider_type"]]
 			$(repl_str('<li><a nohref data-name=%(provider)s onclick="Provider.prototype.open_record(\'%(provider)s\')">\
 				<div class="item-content"><div class="item-media"></div>\
 				<div class="item-inner"><span class="title">%(name1)s</span></div>\

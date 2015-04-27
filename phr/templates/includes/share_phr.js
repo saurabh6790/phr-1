@@ -24,9 +24,9 @@ $.extend(SharePhr.prototype,{
 		RenderFormFields.prototype.init(this.wrapper, {'file_name':args['file_name'], 
 			'values': args['values'], 'method': args['method']}, args['event_id'])
 
-		$('<button id="share_data" class="btn btn-primary">Share Data</button></div>').appendTo($('.field-area'))
-		$('<div class="event_section"></div>').appendTo($('.field-area'))
-		$('#share_data').click(function(){
+		//$('<button id="share_data" class="btn btn-primary">Share Data</button></div>').appendTo($('.field-area'))
+		//$('<div class="event_section"></div>').appendTo($('.field-area'))
+		$('#share').click(function(){
 			me.share_phr();
 		})
 		this.bind_controller()
@@ -39,7 +39,6 @@ $.extend(SharePhr.prototype,{
 	},
 	render_folder_section:function(event_id,method){
 		var me = this;
-		console.log(method)
 		//method=""
 		if (method=="visit"){
 			frappe.call({
@@ -56,6 +55,7 @@ $.extend(SharePhr.prototype,{
 				"method":"phr.templates.pages.event.get_individual_event_count_for_badges",
 				"args":{"event_id":event_id,"profile_id":sessionStorage.getItem("cid")},
 				callback:function(r){
+					console.log("sharing.........")
 					TreeView.prototype.init({'profile_id': this.args['profile_id'], 'dms_file_list': me.dms_file_list, 
 						'display': 'initial', 'doc_list': me.doc_list,"event_dict":r.message.event_dict,"sub_event_count":r.message.sub_event_count})
 				}

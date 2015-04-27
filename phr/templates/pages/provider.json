@@ -113,6 +113,11 @@
             "fieldname": "",
             "fieldtype": "section_break",
             "label": "Secondary Address(es)"
+        },
+        {
+            "fieldname": "sec_address",
+            "fieldtype": "html",
+            "label": ""
         }
     ]
 }

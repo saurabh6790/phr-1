@@ -71,6 +71,7 @@ $(document).ready(function () {
 		$('#profile').attr('data-name',profile_id)
 		$('#home').attr('data-name',profile_id)
 		bind_events(db)
+		$('#share').remove()
 		NProgress.done();
 	}
 })
@@ -113,6 +114,7 @@ function bind_events(){
 		var db = new render_dashboard();
 		$('.field-area').empty()
 		$('#main-con').empty()
+		$('#share').remove()
 		download_phr()
 		db.render_providers(profile_id)
 		db.render_linked_phr(profile_id)
@@ -216,19 +218,24 @@ function bind_events(){
 		NProgress.done();
 	})
 	$('.create_linkphr').unbind("click").click(function(){
-		if (!(sessionStorage.getItem("lphrs")>=10)){
-			$('.breadcrumb').empty()
-			NProgress.start();
-			$('<li><a nohref>New Linked PHR</a></li>').click(function(){
+		if (sessionStorage.getItem("cid")==sessionStorage.getItem("pid")){
+			if (!(sessionStorage.getItem("lphrs")>=10)){
+				$('.breadcrumb').empty()
+				NProgress.start();
+				$('<li><a nohref>New Linked PHR</a></li>').click(function(){
+					LinkedPHR.prototype.init($(document).find("#main-con"),
+					{"file_name" : "linked_patient"},"","create_linkphr")
+				}).appendTo('.breadcrumb');
 				LinkedPHR.prototype.init($(document).find("#main-con"),
-				{"file_name" : "linked_patient"},"","create_linkphr")
-			}).appendTo('.breadcrumb');
-			LinkedPHR.prototype.init($(document).find("#main-con"),
-				{"file_name" : "linked_patient"},"","create_linkphr")
-			NProgress.done();
+					{"file_name" : "linked_patient"},"","create_linkphr")
+				NProgress.done();
+			}
+			else{
+				frappe.msgprint("Linked PHR's Limit Exceeded.Please Contact Admin or Delink One of Existing PHR")
+			}
 		}
 		else{
-			frappe.msgprint("Linked PHR's Limit Exceeded.Please Contact Admin or Delink One of Existing PHR")
+			frappe.msgprint("Switch User to Account Holder to Link PHR")
 		}
 	})
 	$(".create_provider").unbind("click").click(function(){

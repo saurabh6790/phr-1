@@ -17,6 +17,7 @@ var PatientDashboard = inherit(RenderFormFields, {
 		//this.get_linked_phrs(this.entityid)
 		this.get_enabled_notification(this.entityid)
 		this.get_enabled_dashboard(this.entityid)
+		$('#share').remove()
 		//this.download_phr(this.entityid)
 	},
 	download_phr:function(profile_id){
@@ -341,7 +342,13 @@ var PatientDashboard = inherit(RenderFormFields, {
 			})
 	},
 	delink_phr:function(meta,selected,meta_dic,profile_id,me){
-	fields=[{
+	fields=[
+			{
+            	"fieldname": "",
+            	"fieldtype": "section_break",
+            	"label": "Enter Valid Email and Mobile for Linked PHR"
+        	},
+			{
    				"fieldname": "email", 
 				"fieldtype": "data", 
    				"label": "Email", 

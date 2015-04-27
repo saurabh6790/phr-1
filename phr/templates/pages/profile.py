@@ -238,7 +238,22 @@ def get_linked_phrs(profile_id):
 	response=get_response(url,json.dumps(data),request_type)
 	res=json.loads(response.text)
 	if res['returncode']==120:
+		#linked_phr_list=get_lphrs_with_img(res)
 		return res
+
+@frappe.whitelist(allow_guest=True)		
+def get_linked_phrs_with_img(profile_id):
+	data=get_linked_phrs(profile_id)
+	return get_lphrs_with_img(data)
+
+@frappe.whitelist(allow_guest=True)
+def get_lphrs_with_img(data):
+	linked_phr_list=[]
+	for profile in data["list"]:
+		user_image=get_user_image(profile["entityid"])
+		linked_phr_list.append({"entityid":profile["entityid"],"person_firstname":profile["person_firstname"],"person_lastname":profile["person_lastname"],"user_image":user_image["image"]})
+	return linked_phr_list
+
 
 @frappe.whitelist(allow_guest=True)
 def delink_phr(selected,data,profile_id,res):

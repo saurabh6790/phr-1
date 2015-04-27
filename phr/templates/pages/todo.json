@@ -1,6 +1,11 @@
 {
 	"fields":[
 		{
+            "fieldname": "",
+            "fieldtype": "section_break",
+            "label": "TO DO Details"
+        },
+		{
 			"fieldname":"priority", 
 			"fieldtype":"select", 
 			"label":"Priority",

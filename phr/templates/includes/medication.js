@@ -20,6 +20,7 @@ var Medications = inherit(ListView,{
 			'cmd':"medication.get_medication_data",
 			'profile_id':profile_id})
 		$('.new_controller').hide();
+		$('#share').remove()
 		//me.update_select_options()
 		me.bind_save_event()
 

@@ -53,8 +53,11 @@ $.extend(RenderFormFields.prototype,{
 				<button class="btn btn-primary">\
 					<i class="icon-save"></i> Save \
 				</button>\
-			</div>').appendTo($('.sub-top-bar')).addClass(me.operation)
-		*/	
+			</div>').appendTo($('.sub-top-bar')).addClass(me.operation)*/
+		
+		$('<div class="pull-right margin-left-20" id="share">\
+			<button class="btn btn-primary">\
+			<i class="fa fa-share-square"></i>Share Data</button></div>').appendTo($('.top-btns-bar')).addClass(me.operation)
 
 	},
 	get_field_meta:function(){
@@ -213,6 +216,10 @@ $.extend(RenderFormFields.prototype,{
         });
 
 		this.set_description($input.find('.control-input'), field_meta)
+	},
+	html_field_renderer: function(field_meta){
+		var me=this;
+		$input=$(repl_str('<div class="%(fieldname)s"></div>', field_meta)).appendTo($(this.column))
 	},
 	email_field_renderer: function(field_meta){
 		var me=this;
@@ -688,7 +695,7 @@ $.extend(RenderFormFields.prototype,{
 			.addClass("col-md-" + colspan);
     },
     section_break_field_renderer: function(meta){
-       	$input = $('<div class="panel panel-white no-radius events row sec %(fieldname)s"><div class="panel-heading border-light he"></div><div class="panel-body margin-top-15 bod"> </div>').appendTo($(this.wrapper))
+       	$input = $('<div class="panel panel-white no-radius events  sec %(fieldname)s"><div class="panel-heading border-light he"></div><div class="panel-body margin-top-15 bod"> </div>').appendTo($(this.wrapper))
   		this.section=$input.find($('.bod'))
         
       	if(meta){

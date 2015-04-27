@@ -129,7 +129,7 @@ var DiseaseMonitoring = inherit(RenderFormFields, {
 				});
 
 			})
-		}).appendTo('.field-area')
+		})
 	},
 	make_sharing_dialog: function(){
 		var me = this;

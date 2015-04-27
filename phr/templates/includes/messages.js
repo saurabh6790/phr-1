@@ -20,6 +20,7 @@ var Messages = inherit(ListView,{
 			'profile_id':this.profile_id})
 		$('.new_controller').hide();
 		$('.save_controller').hide();
+		$('#share').remove()
 
 	},
 	

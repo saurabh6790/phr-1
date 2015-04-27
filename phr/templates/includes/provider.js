@@ -64,6 +64,9 @@ var Provider = inherit(RenderFormFields, {
 		RenderFormFields.prototype.init(this.wrapper, {"file_name" : "provider", "method": 'provider'}, provider_id)
 		this.get_addr(provider_id)
 		this.add_address(provider_id)
+		$('#share').remove()
+		$('.save_controller').remove()
+
 	},
 	get_addr: function(provider_id){
 		var me =this;
@@ -101,7 +104,7 @@ var Provider = inherit(RenderFormFields, {
 				<div class='description' style='padding-top:2%'>\
 					<p>%(description)s</p>\
 					<hr>\
-				</div>", {'description':addr})).appendTo($("#main-con"))
+				</div>", {'description':addr})).appendTo($(".sec_address"))
 		});
 	},
 	add_address:function(provider_id){
@@ -109,7 +112,7 @@ var Provider = inherit(RenderFormFields, {
 		$('<button class="btn btn-primary">\
 			<i class="icon-plus"></i> Add New Address \
 		</button>')
-		.appendTo($("#main-con"))
+		.appendTo($(".sec_address"))
 		.click(function(){
 			me.make_address(provider_id)
 		})

@@ -20,6 +20,7 @@ var Appointments = inherit(ListView,{
 			'cmd':"appointments.get_appointments",
 			'profile_id':profile_id})
 		$('.new_controller').remove();
+		$('#share').remove()
 		me.bind_save_event()
 		this.get_linked_providers(profile_id)
 

@@ -1,6 +1,11 @@
 {
 	"fields":[
 		{
+            "fieldname": "",
+            "fieldtype": "section_break",
+            "label": "Search Provider"
+        },
+		{
 			"fieldname":"provider_type", 
 			"fieldtype":"select", 
 			"label":"Type",
