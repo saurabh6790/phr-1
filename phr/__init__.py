@@ -5,7 +5,7 @@ import base64
 import frappe
 from templates.pages.patient import get_base_url
 from phr.phr_api import get_response
-from frappe.templates.pages.login import update_oauth_user
+# from frappe.templates.pages.login import update_oauth_user
 
 """ Profile login calls """
 @frappe.whitelist(allow_guest=True)
