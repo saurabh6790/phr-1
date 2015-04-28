@@ -106,6 +106,7 @@ def create_profile_in_db(id,args,response,path=None):
 		"middle_name": args["person_middlename"],
 		"last_name": args["person_lastname"],
 		"enabled": 1,
+		"user_image": args.get('user_image'), 
 		"contact":args["mobile"],
 		"new_password": password,
 		"user_type": "Website User",

@@ -172,7 +172,7 @@ def save_file_on_filesystem(fname, content, content_type=None):
 	}
 
 def check_max_file_size(content):
-	max_file_size = conf.get('max_file_size') or 3145728
+	max_file_size = conf.get('max_file_size') or 20971520
 	file_size = len(content)
 
 	if file_size > max_file_size:
@@ -268,7 +268,7 @@ def get_content_hash(content):
 	return hashlib.md5(content).hexdigest()
 
 def get_file_name(fname, optional_suffix):
-	n_records = frappe.db.sql("select name from `tabFile Data` where file_name=%s", fname)
+	n_records = frappe.db.sql("select name from `tabFile Data` where file_name=%s", fname, debug=1)
 	if len(n_records) > 0 or os.path.exists(get_files_path(fname).encode('utf-8')):
 		f = fname.rsplit('.', 1)
 		if len(f) == 1:

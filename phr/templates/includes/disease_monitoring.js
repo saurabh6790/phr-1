@@ -175,22 +175,27 @@ var DiseaseMonitoring = inherit(RenderFormFields, {
 		this.selected_dm = []
 		$('.share').remove();
 		$("<button class='btn btn-primary share'> Share </button>").click(function(){
-			me.make_sharing_dialog();
+			var flag = false;
+
 			$('.table').find('tr').each(function () {
 				var row = $(this);
 				$('td', row).map(function(index, td) {
 				    if ($(td).find('input[type="checkbox"]').is(':checked')) {
 						me.selected_dm.push($(row[0]).html())
+						flag = true
 					}
 				});
 
 			})
+
+			if (flag) me.make_sharing_dialog();
+			else frappe.msgprint("Please select atleast one record for sharing")
 		}).appendTo('.field-area')
 	},
 	make_sharing_dialog: function(){
 		var me = this;
 		d = new Dialog();
-		d.init({"file_name":"share_dm", "title":"Linked Providers"})
+		d.init({"file_name":"share_dm", "title":"Sharing Pannel"})
 		d.show()
 		this.res = {}
 		Events.prototype.get_linked_providers(this.profile_id)

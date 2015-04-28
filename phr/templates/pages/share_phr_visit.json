@@ -20,6 +20,12 @@
 			"display":"none"
 		},
 		{
+			"fieldname":"event_title",
+			"fieldtype":"data", 
+			"label":"Event Title",
+			"placeholder":""
+		},
+		{
 			"fieldname":"str_visit_date", 
 			"fieldtype":"date", 
 			"label":"Date",

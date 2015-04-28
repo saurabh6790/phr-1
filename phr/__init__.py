@@ -5,6 +5,7 @@ import base64
 import frappe
 from templates.pages.patient import get_base_url
 from phr.phr_api import get_response
+from frappe.templates.pages.login import update_oauth_user
 
 """ Profile login calls """
 @frappe.whitelist(allow_guest=True)
@@ -23,6 +24,28 @@ def validate_mobile_code(data):
 	data = json.loads(data)
 	res = verify_mobile(data.get('profile_id'),data.get('verification_code'))
 	return res
+
+""" Social Login """
+@frappe.whitelist(allow_guest=True)
+def socialLogin(data, provider=None):
+	data = json.loads(data)
+	login_oauth_user(data.get('response'), data.get('provider'))
+
+	return frappe.response
+
+def login_oauth_user(data, provider=None):
+	if data.has_key("email"):
+		user = data["email"]
+		try:
+			update_oauth_user(user, data, provider)
+		except SignupDisabledError:
+			return frappe.respond_as_web_page("Signup is Disabled", "Sorry. Signup from Website is disabled.",
+				success=False, http_status_code=403)
+
+		frappe.local.login_manager.user = user
+		frappe.local.login_manager.post_login()
+		frappe.db.commit()
+
 
 """ Event Calls """
 @frappe.whitelist(allow_guest=True)

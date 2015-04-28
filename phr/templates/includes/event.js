@@ -277,7 +277,7 @@ window.Events = inherit(ListView,{
 	},
 	set_provider:function(d){
 		var me = this;
-		$('.modal-footer .btn-primary').click(function(){
+		$('.modal-footer .btn-primary').unbind("click").click(function(){
 			$('.table').find('tr').each(function () {
 				var row = $(this);
 				var $td = $('td', row);
@@ -415,6 +415,7 @@ window.Events = inherit(ListView,{
 			method:"phr.templates.pages.event.get_linked_providers",
 			args:{'profile_id':this.profile_id},
 			callback:function(r){
+				var flag = false;
 				$('[name="doctor_name"]').autocomplete({
 					open: function(){
 						setTimeout(function () {
@@ -424,10 +425,19 @@ window.Events = inherit(ListView,{
 					source: r.message,
 					multiselect: false,
 					select: function( event, obj) {
-						$('[name="email_id"]').val(obj['item']['email'])
-						$('[name="number"]').val(obj['item']['mobile'])
-						$('[name="doctor_id"]').val(obj['item']['provider'])
-						$('[name="provider_type"]').val(obj['item']['provider_type'])
+						$('[name="email_id"]').val(obj['item']['email']);
+						$('[name="number"]').val(obj['item']['mobile']);
+						$('[name="doctor_id"]').val(obj['item']['provider']);
+						$('[name="provider_type"]').val(obj['item']['provider_type']);
+						flag = true;
+					},
+					change: function( event, ui ) {
+						if(!flag) {
+							$('[name="doctor_id"]').val("");
+							$('[name="email_id"]').val("");
+							$('[name="provider_type"]').val("");
+						}
+						flag = false;
 					}
 				})
 			}

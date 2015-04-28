@@ -78,11 +78,12 @@ $.extend(SharePhr.prototype,{
             	"visit_tag_id": visit_tag_id 
 			}]	
 		}
-		
+		console.log(event_data)
 		frappe.call({
 			"method":"phr.templates.pages.event.marked_files_doc",
 			"args":{"event_data": event_data, "data": {}, "selected_files": me.selected_files},
 			callback:function(r){
+				console.log(r.message)
 				me.doc_list = r.message;
 				me.render_folder_section(me.args['event_id'], me.args['method'])
 			}
@@ -91,7 +92,6 @@ $.extend(SharePhr.prototype,{
 	render_folder_section:function(event_id,method){
 		var me = this;
 		console.log([method, me.args['profile_id'], $('input[name="entityid"]').val()])
-		//method=""
 		if (method=="visit"){
 			frappe.call({
 				"method":"phr.templates.pages.event.get_individual_visit_count_for_badges",

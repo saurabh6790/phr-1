@@ -205,7 +205,7 @@ $.extend(ThumbNails.prototype,{
 			console.log(me.doc_list)
 			thumbnail("/"+attachment['path']+"/"+attachment['file_name'], $td, attachment['file_name'], me.doc_list, me.args['display'])
 		}
-		else if((/\.(gif|jpg|jpeg|tiff|png)$/i).test(attachment['file_name']) ){
+		else if((/\.(gif|jpg|jpeg|tiff|png)$/i).test(attachment['file_name'].toLowerCase()) ){
 			$('<td style="width:200px;height:200px;padding-right:20px;vertical-align:top;padding-left:5%;padding-top:5%;">')
 				.html($(repl('<div>\
 						<input type="checkbox" name="image" style="display:%(display)s" value="/%(path)s/%(file_name)s" >\
