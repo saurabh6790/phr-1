@@ -134,12 +134,15 @@ def copy_files_to_visit(dms_file_list, visit_id, profile_id, pid, req_id):
 @frappe.whitelist(allow_guest=True)
 def get_attachments(profile_id, folder, sub_folder, event_id, visit_id=None, req_id=None):
 	files = []
+	frappe.errprint([profile_id, folder, sub_folder, event_id, visit_id, req_id])
 	# frappe.errprint([visit_id, req_id])
 	if visit_id:
+		frappe.errprint([visit_id])
 		path = os.path.join(get_files_path(), profile_id, event_id, folder, sub_folder, visit_id)
 		if req_id:
 			path = os.path.join(get_files_path(), profile_id, req_id, event_id, folder, sub_folder, visit_id)
 	else:
+		frappe.errprint(os.path.join(get_files_path(), profile_id, event_id, folder, sub_folder))
 		path = os.path.join(get_files_path(), profile_id, event_id, folder, sub_folder)
 		if req_id:
 			path = os.path.join(get_files_path(), profile_id, req_id, event_id, folder, sub_folder)
@@ -147,22 +150,26 @@ def get_attachments(profile_id, folder, sub_folder, event_id, visit_id=None, req
 		
 	# frappe.errprint(['path', path])
 	if os.path.exists(path):
-		# frappe.errprint(['path1', path])
+		frappe.errprint(['path1', path])
 		for root, dirc, filenames in os.walk(path):
 			for di in dirc:
 				for fl in os.listdir(os.path.join(path,di)):
-					# frappe.errprint([fl, di])
-					if fl.split('.')[-1:][0] in ['jpg','jpeg','pdf','png', 'PDF']:
+					frappe.errprint([fl, di, fl.split('.')[-1:][0]])
+
+					if fl.split('.')[-1:][0].lower() in ['jpg','jpeg','pdf','png', 'PDF']:
+						frappe.errprint(fl.split('.')[-1:][0])
 						if req_id:
 							files.append({'file_name': fl, 'type':fl.split('.')[-1:][0], 
 								'path': os.path.join('files', profile_id, req_id, event_id, folder, sub_folder, di)})
 
 						else:
+							frappe.errprint({'file_name': fl, 'type':fl.split('.')[-1:][0], 
+								'path': os.path.join('files', profile_id, event_id, folder, sub_folder, di)})
 							files.append({'file_name': fl, 'type':fl.split('.')[-1:][0], 
 								'path': os.path.join('files', profile_id, event_id, folder, sub_folder, di)})
 
 		for fl in os.listdir(path):
-			if fl.split('.')[-1:][0] in ['jpg','jpeg','pdf','png', 'PDF']:
+			if fl.split('.')[-1:][0].lower() in ['jpg','jpeg','pdf','png', 'PDF']:
 				if req_id:
 					files.append({'file_name': fl, 'type':fl.split('.')[-1:][0], 
 						'path': os.path.join('files', profile_id, req_id, event_id, folder, sub_folder, visit_id)})
@@ -170,7 +177,7 @@ def get_attachments(profile_id, folder, sub_folder, event_id, visit_id=None, req
 					files.append({'file_name': fl, 'type':fl.split('.')[-1:][0], 
 						'path': os.path.join('files', profile_id, event_id, folder, sub_folder, visit_id)})
 					
-
+	frappe.errprint(files)
 	return files
 
 @frappe.whitelist(allow_guest=True)
@@ -209,7 +216,7 @@ def share_via_email(data):
 				<hr>
 					%(event_body)s <br>
 					Please find below attachment(s) <br>
-			"""%{'event': data.get('event_title'), 'event_date': data.get('event_date'), 
+			"""%{'event': data.get('event_title'), 'event_date': data.get('event_date') or data.get("str_visit_date"), 
 				'provider_name': data.get('doctor_name'), 'event_body': data.get('email_body'), 'reason': data.get('reason')}
 		
 		from frappe.utils.email_lib import sendmail
@@ -319,7 +326,7 @@ def get_files_doc(event_data, data, selected_files=None):
 	frappe.errprint([selected_files])
 	tag_dict = {'11': "consultancy-11", "12": "event_snap-12", "13": "lab_reports-13", "14":"prescription-14", "15": "cost_of_care-15"}
 
-	if selected_files:
+	if selected_files and len(selected_files) > 1:
 		tag_dict = {k: tag_dict[k] for k in selected_files[:-1]}
 
 	files_list = []

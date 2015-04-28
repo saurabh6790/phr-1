@@ -186,10 +186,8 @@ def upload_image(profile_id,data=None,file_name=None):
 	decoded_image = base64.b64decode(filedata)
 	site_name = get_site_name()
 	path = os.path.abspath(os.path.join('.',site_name, 'public', 'files'))
-	#image=path+'/'+profile_id+".jpg"
-	image=path+'/'+file_name
-	#file_path='/files/'+profile_id+".jpg"
-	file_path='/files/'+file_name
+	image=path+'/'+profile_id+'/'+file_name
+	file_path='/files/'+profile_id+'/'+file_name
 	if os.path.exists(image):
 		try:
 			os.remove(image)
@@ -293,12 +291,20 @@ def add_profile_to_db(data,profile_id):
 	sub=dt['person_firstname']+" "+dt['person_lastname']+" "+"delinked Successfully"
 	make_log(profile_id,"profile","delink",sub)
 	args={'person_firstname':dt['person_firstname'],'person_middlename':dt['person_middlename'],'person_lastname':dt['person_lastname'],'email':dt['email'],'mobile':dt['mobile'],'received_from':'Desktop','provider':'false'}
-	cie=frappe.db.get_value("LinkedPHR Images",{"profile_id":res['entityid']},"barcode")
+	
+	cie=frappe.db.get_value("LinkedPHR Images",{"profile_id":res['entityid']}, ["barcode", "profile_image"], as_dict=1)
+
 	path=""
-	if cie:
-		path=cie
+	if cie.get('barcode'):
+		path=cie.get('barcode')
 	else:
-		path=""	
+		path=""
+
+	if cie.get('profile_image'):
+		args['user_image'] = cie.get('profile_image')
+	else:
+		args['user_image']= ""
+
 	ret_res=create_profile_in_db(res['entityid'],args,res,path)
 	user=frappe.get_doc("User",frappe.session.user)
 	send_phrs_mail(user.email,"PHR:Linked PHR Account Delinked","templates/emails/delink_phr.html",{"name":args['person_firstname']})
