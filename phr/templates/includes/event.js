@@ -210,7 +210,7 @@ window.Events = inherit(ListView,{
 		d.show()
 		$('<button class ="btn btn-success btn-sm" style="float:left;"> search </button>')
 			.click(function(){
-				$(".modal-body form input").each(function(i, obj) {
+				$(".modal-body form input, .modal-body form select").each(function(i, obj) {
 					me.filters[obj.name] = $(obj).val();
 				})
 				me.render_result_table(me.filters, d)

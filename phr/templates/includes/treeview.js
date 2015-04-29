@@ -61,7 +61,7 @@ $.extend(TreeView.prototype, {
 				</div>\
 			</div>\
 			<br style="clear:both" />').appendTo($('.event_section'))
-
+		
 		$.each(me.parent_mapper, function(i, dic){
 			$li = $(repl_str('<li>\
 				<span id="%(id)s"><i class="%(icon)s"></i> %(label)s <span class="badge" style="background-color:#1094A0;">%(count)s</span> </span> <a href=""></a>\
@@ -74,6 +74,11 @@ $.extend(TreeView.prototype, {
 				</li>', chld_dic)).appendTo($li.find('ul'))
 			})
 		})
+
+		if(me.args['req_id']){
+			$('.tree .badge').remove()
+		}
+	
 	},
 	add_tree_events:function(){
 		var me = this;
