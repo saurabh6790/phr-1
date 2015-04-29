@@ -195,7 +195,7 @@ var DiseaseMonitoring = inherit(RenderFormFields, {
 	make_sharing_dialog: function(){
 		var me = this;
 		d = new Dialog();
-		d.init({"file_name":"share_dm", "title":"Sharing Pannel"})
+		d.init({"file_name":"share_dm", "title":"Sharing Panel"})
 		d.show()
 		this.res = {}
 		Events.prototype.get_linked_providers(this.profile_id)
@@ -232,6 +232,7 @@ var DiseaseMonitoring = inherit(RenderFormFields, {
 					$('.modal').remove();
 					$('.modal-backdrop').remove();;
 					NProgress.done();
+					me.selected_dm = [];
 					console.log(r)
 					frappe.msgprint(r.message)
 				}
