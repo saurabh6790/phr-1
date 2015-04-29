@@ -230,7 +230,7 @@ $.extend(SharePhr.prototype,{
   			}
   		})
   		if(fg){
-  			if(!$("form input[name='doctor_name']").val() || $("form input[name='doctor_id']").val() == ''){
+  			if($("form select[name='share_via']").val() == 'Provider Account' && (!$("form input[name='doctor_name']").val() || $("form input[name='doctor_id']").val() == '')){
   				frappe.msgprint("Please Select Appropriate Provider")
   				fg=false
   			}

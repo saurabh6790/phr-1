@@ -253,13 +253,18 @@ var DiseaseMonitoring = inherit(RenderFormFields, {
   			}
   		})
   		if(fg){
-  			if(!$(".modal-body form input[name='doctor_name']").val() || $(" .modal-body form input[name='doctor_id']").val() == ''){
+  			if($("form select[name='share_via']").val() == 'Provider Account' && (!$(".modal-body form input[name='doctor_name']").val() || $(" .modal-body form input[name='doctor_id']").val() == '')){
   				frappe.msgprint("Please Select Appropriate Provider")
   				fg=false
   			}
 
   			if($(" .modal-body form select[name='share_via']").val() == 'Email' && !$(" .modal-body form input[name='email_id']").val()){
   				frappe.msgprint("Please mention Provider's Email Id")
+  				fg=false	
+  			}
+
+  			if($("form select[name='share_via']").val() == 'Provider Account' && !$("form input[name='sharing_duration']").val()){
+  				frappe.msgprint("Please mention sharing duration")
   				fg=false	
   			}
   		} 
