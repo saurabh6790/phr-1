@@ -153,6 +153,7 @@ function render_dashboard(profile_id){
     		<p><span class="light"><img src="%(barcode)s"></span></p>',pro_data)).appendTo($wrap)
   	}
     function render_lphr(data){
+    	class_mapper={"Male":"phr-male","Female":"phr-female"}
     	$('#clphr').find('p.nophr').remove()
 		$('#clphr').empty()
 		$wrap=$('#clphr')
@@ -161,10 +162,10 @@ function render_dashboard(profile_id){
 		sessionStorage.setItem("lphrs",data["list_size"])
 		//<img style="border-radius: 4px" src="'+r.message["image"]+'" title="'+name+'" alt="'+name+'">
 		$.each(meta,function(i,data){
-			
+			data["gender"]=class_mapper[data["gender"]]
 			$(repl_str('<li><a nohref class="v_lphr %(entityid)s" data-name=%(entityid)s>\
-				<div class="item-content"><div class="item-media">\
-				<img style="border-radius: 4px;min-width: 40px; max-height: 20px;padding-left:2px" class="user-picture" src="%(user_image)s" title="%(person_firstname)s" alt="%(person_firstname)s"></div>\
+				<div class="item-content"><div class="item-media %(gender)s">\
+				</div>\
 				<div class="item-inner"><span class="title cn">%(person_firstname)s %(person_lastname)s</span></div>\
 				</div></a></li>',data)).appendTo($wrap)
 			/*$(repl_str('<a class="list-group-item-side v_lphr %(entityid)s" data-name=%(entityid)s>\
@@ -200,6 +201,7 @@ function render_dashboard(profile_id){
 			method:'phr.templates.pages.profile.get_user_image',
 			args:{"profile_id":sessionStorage.getItem("cid")},
 			callback: function(r) {
+				console.log(r.message)
 				if (r.message["image"]){
 					//$('.cdd .linked-phr #cphrimg').attr("src",r.message["image"])
 					$('<img style="min-width: 40px; max-height: 30px; border-radius: 4px" src="'+r.message["image"]+'" class="img-rounded"  id="cphrimg" title="'+name+'" alt="'+name+'">').appendTo($('.cdd .linked-phr #cimage'))
@@ -220,7 +222,7 @@ function render_dashboard(profile_id){
 		})*/
     }
     function render_provider(data){
-    	image_mapper={"Pathology Lab":'<i class="fa fa-eyedropper"></i>',"Doctor":'<i class="fa fa-stethoscope"></i>',"Hospital":'<i class="fa fa-plus-square"></i>'}
+    	image_mapper={"Pathology Lab":'pathology',"Doctor":'doctor',"Hospital":'hospital'}
     	$('#hps').find('p.nohp').remove()
 		$wrap=$('#hps')
 		$('#hps').empty()
@@ -229,7 +231,7 @@ function render_dashboard(profile_id){
 			var sal=""
 			data['img']=image_mapper[data["provider_type"]]
 			$(repl_str('<li><a nohref data-name=%(provider)s onclick="Provider.prototype.open_record(\'%(provider)s\')">\
-				<div class="item-content"><div class="item-media">%(img)s</div>\
+				<div class="item-content"><div class="item-media %(img)s"></div>\
 				<div class="item-inner"><span class="title">%(name1)s</span></div>\
 				</div></a></li>', data)).appendTo($wrap)
 			/*$(repl_str('<a noherf data-name=%(provider)s onclick="Provider.prototype.open_record(\'%(provider)s\')"><div class="item-inner">%(name1)s</div></a>', data)).appendTo($wrap)*/

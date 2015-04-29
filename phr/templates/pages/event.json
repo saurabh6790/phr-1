@@ -4,8 +4,7 @@
 			"fieldname":"", 
 			"fieldtype":"section_break", 
 			"label":"Event Details",
-			"options": "<i class='icon-fixed-width text-muted icon-calendar'></i>"
-
+			"options": "<img src='assets/phr/images/events.png' alt='Events' title='Events'>"
 		},
 		{
 			"fieldname":"entityid", 
@@ -53,7 +52,7 @@
 			"fieldname":"visit_details", 
 			"fieldtype":"section_break", 
 			"label":"Visit Details",
-			"options": "<i class='icon-fixed-width text-muted icon-user-md'></i>",
+			"options": "<img src='assets/phr/images/visits.png' alt='Visit Details' title='Visit Details'>",
 			"display": "none"
 			
 		},
@@ -115,7 +114,7 @@
 			"fieldname":"files_section", 
 			"fieldtype":"section_break", 
 			"label":"Upload Files",
-			"options": "<i class='icon-fixed-width text-muted icon-cloud-upload'></i>",
+			"options": "<i class='fa fa-upload green font20 padding-right-10'></i>",
 			"display":"none"
 		},
 		{
@@ -140,8 +139,8 @@
 		{
 			"fieldname":"", 
 			"fieldtype":"section_break", 
-			"label":"Event Date",
-			"options": "<i class='icon-fixed-width text-muted icon-calendar'></i>"
+			"label":"Event Search",
+			"options": "<i class='fa fa-filter'></i>"
 
 		},
 		{
@@ -164,7 +163,8 @@
 		{
 			"fieldname":"",
 			"fieldtype":"section_break",
-			"label":"Event Logs"
+			"label":"Event Logs",
+			"options":"<i class='fa fa-list-alt'></i>"
 		},
 		{
 			"fieldname":"tab",

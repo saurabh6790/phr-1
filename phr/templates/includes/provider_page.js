@@ -37,7 +37,9 @@ $(document).ready(function () {
 		$("#home").on("click",function(){
 			$('#phr').addClass("hide");
 			$('.breadcrumb').empty()
-			$('.linked-phr').empty()
+			//$('.linked-phr').empty()
+			$('#cphrname').empty()
+			$('.cdd').addClass('hide')
 			$('.save_controller').hide()
 			$('.new_controller').hide()
 			NProgress.start();
@@ -62,6 +64,22 @@ $(document).ready(function () {
 			LinkedPHR.prototype.init('',{"file_name" : "linked_patient"},"","create_linkphr")
 		})	
 	}
+
+	$("#pprofile").unbind("click").click(function(){
+		$('.cdd').addClass('hide')
+		$('#cphrname').empty()
+		NProgress.start();
+		PatientDashboard.prototype.init($(document).find("#main-con"),
+				{"file_name" : "profile", "method": "profile"},sessionStorage.getItem('pid'))	
+		NProgress.done();
+	})
+	$(".cdb").on("click",function(){
+		var db = new render_dashboard();
+		$('.field-area').empty()
+		$('#main-con').empty()
+		db.render_middle_section(sessionStorage.getItem('cid'))
+	})	
+
 	$("#profile").unbind("click").click(function(){
 		profile_id=sessionStorage.getItem("cid")
 		$('.breadcrumb').empty()
@@ -87,6 +105,14 @@ $(document).ready(function () {
 			ListView.prototype.init($(document).find(".field-area"), {"file_name" : "patients",
 			'cmd':"provider.get_patient_data",
 			'profile_id':profile_id})
+		
+		$(".cprofile").unbind("click").click(function(){
+			NProgress.start();
+			$('#main-con').empty()
+			PatientDashboard.prototype.init($(document).find("#main-con"),
+			{"file_name" : "profile", "method": "profile"},sessionStorage.getItem('cid'))	
+			NProgress.done();
+		})	
 		NProgress.done();
 
 	})
@@ -158,7 +184,7 @@ open_patient=function(profile_id,name){
 render_middle = function(profile_id){
 	$(".field-area").empty()
 	RenderFormFields.prototype.init($("#main-con"), {'file_name':'provider_page'})
-	$('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+	$('a[data-toggle="tab"]').unbind("click").click(function (e) {
 		e.target // newly activated tab
 		e.relatedTarget // previous active tab
 	 		// alert(e.target)

@@ -4,7 +4,7 @@
             "fieldname": "", 
             "fieldtype": "section_break", 
             "label": "Shared History Logs",
-            "options":"<i class='icon-fixed-width text-muted icon-calendar'></i>"
+            "options":"<i class='fa fa-list-alt'></i>"
         },
         {
             "fieldname": "tab",

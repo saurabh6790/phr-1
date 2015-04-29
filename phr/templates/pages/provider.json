@@ -4,7 +4,8 @@
         {
             "fieldname": "",
             "fieldtype": "section_break",
-            "label": "Basic Info"
+            "options":"<i class='fa fa-user-secret'></i>",
+            "label": "Personal Info"
         },
         {
             "fieldname": "provider_type",
@@ -58,6 +59,7 @@
         {
             "fieldname": "",
             "fieldtype": "section_break",
+            "options":"<i class='fa fa-hand-o-down'></i>",
             "label": "Primary Address"
         },
         {
@@ -112,6 +114,7 @@
         {
             "fieldname": "",
             "fieldtype": "section_break",
+            "options":"<i class='fa fa-hand-o-down'></i>",
             "label": "Secondary Address(es)"
         },
         {

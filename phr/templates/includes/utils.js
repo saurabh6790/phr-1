@@ -40,6 +40,12 @@ function validate_mobile(mobile){
     }
 }
 
+function scroll_top(){
+    $("html, body").animate({
+        scrollTop: 0
+    }, "slow");
+}
+
 function validate_email(id) {
     return (id.toLowerCase().search("[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?")==-1) ? 0 : 1;
 

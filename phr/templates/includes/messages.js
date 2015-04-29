@@ -21,6 +21,7 @@ var Messages = inherit(ListView,{
 		$('.new_controller').hide();
 		$('.save_controller').hide();
 		$('#share').remove()
+		scroll_top()
 
 	},
 	

@@ -4,7 +4,7 @@
             "fieldname":"", 
             "fieldtype":"section_break", 
             "label":"Appointment Details",
-            "options": "<i class='icon-fixed-width text-muted icon-calendar'></i>"
+            "options": "<i class='fa fa-calendar-o'></i>"
 
          },
          {
@@ -41,7 +41,7 @@
             "fieldname": "",
             "fieldtype": "section_break",
             "label": "Appointment logs",
-            "options": "<i class='icon-fixed-width text-muted icon-calendar'></i>"
+            "options":"<i class='fa fa-list-alt'></i>"
 
         },
         {

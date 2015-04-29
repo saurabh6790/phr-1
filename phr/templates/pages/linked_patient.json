@@ -5,7 +5,7 @@
             "fieldname": "", 
             "fieldtype": "section_break", 
             "label": " Linked PHR details",
-            "options":"<i class='icon-fixed-width text-muted icon-calendar'></i>"
+            "options":"<i class='fa fa-user-plus'></i>"
          },
          {
             "fieldname": "person_firstname", 

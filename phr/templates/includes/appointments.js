@@ -23,6 +23,7 @@ var Appointments = inherit(ListView,{
 		$('#share').remove()
 		me.bind_save_event()
 		this.get_linked_providers(profile_id)
+		scroll_top()
 
 	},
 	bind_save_event: function(){
@@ -97,6 +98,7 @@ var Appointments = inherit(ListView,{
 		var me = this;
 		RenderFormFields.prototype.init($(".field-area"), {'fields': data['listview']})
 		me.bind_save_event()
+		$('#share').remove()
 		//$('.save_controller').remove();
 	},
 	get_linked_providers:function(profile_id){

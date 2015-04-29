@@ -14,6 +14,7 @@ var LinkedPHR = inherit(RenderFormFields, {
 		RenderFormFields.prototype.init(this.wrapper,this.args,this.entityid,this.operation)
 		this.render_field(this.entityid)
 		$('#share').remove()
+		scroll_top()	
 	},
 	render_field: function(profile_id){
 		$('form input[required],form textarea[required],form select[required]').bind('input', function() { 

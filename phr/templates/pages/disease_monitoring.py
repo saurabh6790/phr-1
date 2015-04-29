@@ -34,7 +34,7 @@ def get_disease_fields(name,profile_id=None):
 			raw_fields=[]
 			field_mapper.append("sr")
 			sec_label=name+' Readings'
-			fields.append({"fieldname":"","fieldtype":"section_break","label":sec_label,"options":"<i class='icon-fixed-width text-muted icon-calendar'></i>"})
+			fields.append({"fieldname":"","fieldtype":"section_break","label":sec_label,"options":"<i class='fa fa-pencil-square-o'></i>"})
 			for d in dm.get('parameters'):
 				row_count+=1
 				f_dic={"fieldname":d.fieldname,"fieldtype":d.fieldtype,"label":d.label,"placeholder":""}
@@ -48,7 +48,7 @@ def get_disease_fields(name,profile_id=None):
 					fields.append(f_dic)
 					raw_fields.append(f_dic)
 			sec_label=name+' Monitoring Logs'		
-			fields.append({"fieldname":"","fieldtype":"section_break","label":sec_label,"options":"<i class='icon-fixed-width text-muted icon-calendar'></i>"})
+			fields.append({"fieldname":"","fieldtype":"section_break","label":sec_label,"options":"<i class='fa fa-list-alt'></i>"})
 			#raw_fields.append(s_break)
 			rows.append(r)
 			rows_raw.append(r)	
@@ -105,7 +105,6 @@ def build_options(dm_list,fields,field_mapper,raw_fields=None):
 		for dm in dm_list:
 			v=[]
 			f_dic={}
-			print dm["data"]
 			for d in dm["data"]:
 				val_list=d.split("=")
 				f_dic[val_list[0]]=val_list[1]

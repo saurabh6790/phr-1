@@ -26,7 +26,7 @@ web_include_js = ["assets/phr/bootstrap3-dialog-master/bootstrap-dialog.js",
 					"assets/js/frappe-web.min.js", "website_script.js", 
 					"assets/phr/jasny-bootstrap/js/jasny-bootstrap.js", 
 					"assets/phr/jasny-bootstrap/js/jasny-bootstrap.min.js",
-					"assets/phr/bootstrap-table.js","frappe/public/css/nprogress.css", "frappe/public/js/lib/nprogress.js","public/js/frappe/misc/datetime.js"
+					"assets/phr/bootstrap-table.js","assets/phr/js/nprogress.js","public/js/frappe/misc/datetime.js"
 				]
 
 fixtures=["Disease Monitoring","Dosage"]

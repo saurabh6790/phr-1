@@ -2,8 +2,9 @@
 	"listview":[
 		{
 			"fieldname":"", 
-			"fieldtype":"section_break", 
-			"label":"Visit Dates"
+			"fieldtype":"section_break",
+			"label":"Visit Search",
+			"options": "<i class='fa fa-filter'></i>"
 		},
 		{
 			"fieldname":"from_date",
@@ -25,6 +26,7 @@
 		{
 			"fieldname":"", 
 			"fieldtype":"section_break", 
+			"options":"<i class='fa fa-list-alt'></i>",
 			"label":"Visit Logs"
 		},
 		{

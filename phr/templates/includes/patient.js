@@ -78,19 +78,19 @@ $(document).ready(function () {
 function download_phr(){
 	$('.link-phr').empty()
 	$('<a class="btn btn-primary" href="#"><div><i class="fa fa-arrow-circle-down"></i> Download PHR</div></a> ').appendTo('.link-phr').unbind("click").click(function(){
-				args={
-					"cmd": "phr.templates.pages.profile.get_phr_pdf",
-					'profile_id': sessionStorage.getItem("pid")
-				}
-				//cmd="phr.templates.pages.profile.verify_mobile"
-				$.ajax({
-					url: '/',
-					type: 'POST',
-					data: args,
-					success: function(data) {
-						window.open(data['message']['url'], '_blank')
-					}
-				});
+		args={
+			"cmd": "phr.templates.pages.profile.get_phr_pdf",
+			'profile_id': sessionStorage.getItem("pid")
+		}
+		//cmd="phr.templates.pages.profile.verify_mobile"
+		$.ajax({
+			url: '/',
+			type: 'POST',
+			data: args,
+			success: function(data) {
+				window.open(data['message']['url'], '_blank')
+			}
+		});
 	})
 	
 }
@@ -106,6 +106,7 @@ function bind_events(){
 		$('.cdd').addClass('hide')
 		$('.save_controller').hide()
 		$('.new_controller').hide()
+		$('.edit_profile').remove()
 		NProgress.start();
 		profile_id=sessionStorage.getItem("pid")
 		$('#linkedphr').show()
@@ -123,18 +124,22 @@ function bind_events(){
 		db.render_advertisements(profile_id)
 		NProgress.done();
 	})
-	$(".cprofile").on("click",function(){
+	$("#cprofile").unbind("click").click(function(){
 		NProgress.start();
+		$('#main-con').empty()
 		PatientDashboard.prototype.init($(document).find("#main-con"),
-				{"file_name" : "profile", "method": "profile"},sessionStorage.getItem('pid'))	
+				{"file_name" : "profile", "method": "profile"},sessionStorage.getItem('cid'))	
+		$('<ul class="dropdown-menu dropdown-dark"><li><a nohref class="cdb">Dashboard</a></li><li><a nohref id="cprofile">Profile</li></ul>').appendTo($('.cdd'))
 		NProgress.done();
 	})	
-	$(".pprofile").on("click",function(){
+	$("#pprofile").unbind("click").click(function(){
 		$('.cdd').addClass('hide')
 		$('#cphrname').empty()
 		NProgress.start();
+		profile_id=sessionStorage.getItem('pid')
+		sessionStorage.setItem("cid",profile_id)
 		PatientDashboard.prototype.init($(document).find("#main-con"),
-				{"file_name" : "profile", "method": "profile"},sessionStorage.getItem('cid'))	
+				{"file_name" : "profile", "method": "profile"},profile_id)	
 		NProgress.done();
 	})
 	$(".cdb").on("click",function(){

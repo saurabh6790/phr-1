@@ -58,6 +58,7 @@ window.Events = inherit(ListView,{
 		})
 		this.render_spans()
 		this.get_linked_providers()
+		scroll_top()
 	},
 	open_form:function(event_id, event_title, profile_id, res, req_id, visit_id){
 		var me = this;

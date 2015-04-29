@@ -23,6 +23,7 @@ var Medications = inherit(ListView,{
 		$('#share').remove()
 		//me.update_select_options()
 		me.bind_save_event()
+		scroll_top()
 
 	},
 	/*update_select_options:function(){
@@ -145,6 +146,7 @@ var Medications = inherit(ListView,{
   	},
 	update_list_view:function(data){
 		RenderFormFields.prototype.init($(".field-area"), {'fields': data['listview']})
+		$('#share').remove()
 		//$('.save_controller').remove();
 	}
 })

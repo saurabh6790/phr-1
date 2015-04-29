@@ -208,6 +208,39 @@
   </nav>
 </div>
 {% endblock %}
+{% block topbar %}
+   <div class="top-btns-bar clearfix">
+      <div class="user_dp dropdown current-user cdd hide pull-left margin-right-20">
+          <a data-toggle="dropdown" class="dropdown-toggle linked-phr" nohref>
+              <span id="cimage"></span><span class="username margin-left-5"><span id="cphrname"></span><i class="ti-angle-down margin-left-5 green"></i></span>
+          </a>
+          <ul class="dropdown-menu dropdown-dark">
+              <li>
+                  <a nohref class="cdb">
+                      Dashboard
+                  </a>
+              </li> 
+              <li>
+                  <a nohref class="cprofile">
+                      Profile
+                  </a>
+              </li>
+          </ul>
+      </div>
+      <div class="page-breadcrumbs pull-left">
+        <ul class="breadcrumb"><li><a nohref=""></a></li></ul>
+      </div>
+      <div class="linked-phr pull-right margin-left-20 link-phr">
+      </div>
+      
+       <div class="pull-right margin-left-20 save_controller">
+        <button class="btn btn-primary"><i class="fa fa-save"></i> Save</button>
+      </div>
+      <div class="pull-right margin-left-20 new_controller">
+        <button class="btn btn-primary pull-right new_controller"><i class="fa fa-plus-square"></i> New</button>
+      </div>  
+  </div>
+{% endblock %}
 
 {% block content_area %}
 <script src="/assets/phr/vendor/jquery/jquery.min.js"></script>
@@ -218,13 +251,26 @@
 <script src="/assets/phr/vendor/switchery/switchery.min.js"></script>
 <script src="/assets/phr/vendor/Chart.js/Chart.min.js"></script>
 <script src="assets/phr/vendor/jquery.sparkline/jquery.sparkline.min.js"></script>
+
+
 <!-- end: JAVASCRIPTS REQUIRED FOR THIS PAGE ONLY -->
 <!-- start: JAVASCRIPTS -->
 <script src="assets/phr/js/main.js"></script>
+<script src="assets/phr/js/index.js"></script>
 <!-- start: JavaScript Event Handlers for this page -->
 
     <script>
       jQuery(document).ready(function() {
+         $('.main-navigation-menu > li > a').click(function(){           
+          $('.main-navigation-menu li ul').slideUp();             
+          $('.main-navigation-menu li a').removeClass('active');             
+          $(this).addClass('active');
+        });
+        
+        $('.main-navigation-menu > li > ul > li > a').click(function(){     
+          $('.main-navigation-menu li ul li a').removeClass('active');             
+          $(this).addClass('active');
+        });
         Main.init();
         
       });
@@ -233,24 +279,7 @@
 
 <script src="http://jqueryvalidation.org/files/dist/jquery.validate.min.js"></script>
 <script src="http://jqueryvalidation.org/files/dist/additional-methods.min.js"></script>
-<div class="user_dp dropdown current-user margin-bottom-15 cdd hide">
-    <a data-toggle="dropdown" class="dropdown-toggle linked-phr" nohref>
-        <span id="cimage"></span><span class="username margin-left-5"><span id="cphrname"></span><i class="ti-angle-down margin-left-5 green"></i></span>
-    </a>
-    <ul class="dropdown-menu dropdown-dark">
-        <li>
-            <a nohref class="cdb">
-                Dashboard
-            </a>
-        </li> 
-        <li>
-            <a nohref class="cprofile">
-                Profile
-            </a>
-        </li>
-    </ul>
-</div>
-<div class="field-area" style="padding-top:5%"></div>
+<div class="field-area"></div>
 <div id="main-con"></div>
 {% endblock %}
 {% block con_right %}

@@ -4,7 +4,7 @@
    "fieldname": "", 
    "fieldtype": "section_break", 
    "label": "Medicine details",
-   "options":"<i class='icon-fixed-width text-muted icon-calendar'></i>"
+   "options":"<i class='fa fa-hospital-o'></i>"
   },
   {
    "fieldname": "medicine_name", 
@@ -103,7 +103,7 @@
    "fieldname": "", 
    "fieldtype": "section_break", 
    "label": "Medication logs",
-   "options": "<i class='icon-fixed-width text-muted icon-calendar'></i>"
+    "options":"<i class='fa fa-list-alt'></i>"
   }, 
   {
    "fieldname": "tab", 

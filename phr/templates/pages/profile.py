@@ -251,7 +251,7 @@ def get_lphrs_with_img(data):
 	linked_phr_list=[]
 	for profile in data["list"]:
 		user_image=get_user_image(profile["entityid"])
-		linked_phr_list.append({"entityid":profile["entityid"],"person_firstname":profile["person_firstname"],"person_lastname":profile["person_lastname"],"user_image":user_image["image"]})
+		linked_phr_list.append({"entityid":profile["entityid"],"person_firstname":profile["person_firstname"],"person_lastname":profile["person_lastname"],"user_image":user_image["image"],"gender":profile["gender"]})
 	return linked_phr_list
 
 

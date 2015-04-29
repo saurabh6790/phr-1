@@ -327,6 +327,12 @@ h5.over-title {
   }
 }
 
+#app textarea[disabled], #app input[disabled], #app select[disabled] {
+    background: none repeat scroll 0 0 #fff !important;
+    border: 0 none !important;
+    color: #808080 !important;
+} 
+
 .top-btns-bar {
     background: none repeat scroll 0 0 #fff;
     border-bottom: 1px solid rgba(0, 0, 0, 0.07) !important;
@@ -1049,6 +1055,21 @@ ul.sub-menu li a .item-content .item-media {
 }
 #sidebar .item-content .msgs {
   background: url("../images/message.png") no-repeat scroll 18px center;
+}
+#sidebar .item-content .phr-male {
+  background: url("../images/phr-male.png") no-repeat scroll 18px center;
+}
+#sidebar .item-content .phr-female {
+  background: url("../images/phr-female.png") no-repeat scroll 18px center;
+} 
+#sidebar .item-content .doctor {
+  background: url("../images/doctor.png") no-repeat scroll 18px center;
+}
+#sidebar .item-content .hospital {
+  background: url("../images/hospital.png") no-repeat scroll 18px center;
+} 
+#sidebar .item-content .pathology {
+  background: url("../images/pathology.png") no-repeat scroll 18px center;
 }
 #sidebar .item-content .item-inner { 
   padding: 0 10px 0 0;  
@@ -11489,7 +11510,7 @@ td.small-width {
 .advertise ul li:last-child { border: 0; padding-bottom: 0; margin-bottom: 0; }
 #add_list { background: url(../images/add-list.png) no-repeat center center; width: 20px; height: 20px; float: right; }
 #emer_ico{width: 20px; height: 20px; float: right; }
- .fa{ color: #89c148; font-size: 18px; }
+ .fa{ color: #89c148; font-size: 20px !important; padding-right: 10px !important;}
  #app .btn .fa { color: #fff; }
 .disease_monitorg { border: 0 !important; }
 .disease_monitorg .panel-heading { border-width: 1px 1px 0px 1px; border-style: solid; border-color: #dedede; }
@@ -11535,3 +11556,7 @@ td.small-width {
 /* Save, New, Download PHR Buttons CSS */
 
 .breadcrumb { background: none !important;  border-radius: 4px; margin: 0 !important; padding: 8px 10px 8px 0px !important; }
+
+.font20 { font-size: 20px !important; }
+
+#sidebar > div nav > ul li a.active .icon-arrow { color: #fff !important; } 

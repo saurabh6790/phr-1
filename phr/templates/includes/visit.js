@@ -80,6 +80,7 @@ var Visit = inherit(ListView,{
 			})
 			
 		})
+		scroll_top()
 		
 	},
 	render_spans: function(){

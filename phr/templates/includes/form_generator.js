@@ -45,6 +45,7 @@ $.extend(RenderFormFields.prototype,{
 		$('.new_controller').remove();
 		$('.save_controller').remove();
 		$('#share').remove()
+		$('.edit_profile').remove()
 		$('<div class="pull-right margin-left-20 save_controller">\
 			<button class="btn btn-primary"><i class="fa fa-save"></i> Save</button></div>').appendTo($('.top-btns-bar')).addClass(me.operation)
 		//$('<button class="btn btn-primary pull-right margin-left-20 new_controller"><i class="fa fa-plus-square"></i> New</button>').appendTo($('top-btns-bar')).addClass(me.operation)
@@ -303,7 +304,7 @@ $.extend(RenderFormFields.prototype,{
 			}*/
 		}
 		if(field_meta['readonly']==1){
-			$input.find("input").prop('disabled',true)
+			$input.find("select").prop('disabled',true)
 		}
 
 		this.set_description($input.find('.control-input'), field_meta)
@@ -372,6 +373,9 @@ $.extend(RenderFormFields.prototype,{
 			})
 			
 		}
+		if(field_meta['readonly']==1){
+			$input.find("input").prop('disabled',true)
+		}
 
 		// $($input.find('.autocomplete')).autocomplete({
   //       source: function(request, response){
@@ -412,7 +416,7 @@ $.extend(RenderFormFields.prototype,{
 			$($('[name="'+field_meta['fieldname']+'"]').parents()[3]).css("display", field_meta['display']);
 		}
 		if(field_meta['readonly']==1){
-			$input.find("input").prop('disabled',true)
+			$input.find("textarea").prop('disabled',true)
 		}
 
 		this.set_description($input.find('.control-input'), field_meta)
@@ -703,7 +707,7 @@ $.extend(RenderFormFields.prototype,{
           		this.labelled_section_count++;
           		var $head = $('<h4 class="panel-title">'
             	+ (meta['options'] ? (meta['options']) : "")
-            	+" "
+            	+"  "
             	+ meta['label']
             	+ "</h4>")
             	.appendTo($input.find($('.he')));

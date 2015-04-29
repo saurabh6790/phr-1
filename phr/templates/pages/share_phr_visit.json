@@ -2,7 +2,8 @@
 	"fields":[
 		{
 			"fieldname":"",
-			"fieldtype":"section_break", 
+			"fieldtype":"section_break",
+			"options": "<img src='assets/phr/images/visits.png' alt='Visit Details' title='Visit Details'>", 
 			"label":"Visit Details"
 		},
 		{
@@ -38,7 +39,8 @@
 		},
 		{
 			"fieldname":"",
-			"fieldtype":"section_break", 
+			"fieldtype":"section_break",
+			"options":"<i class='fa fa-share-alt-square'></i>",
 			"label":"Sharing Details"
 		},
 		{

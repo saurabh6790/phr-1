@@ -18,6 +18,7 @@ Built on Frappe.io. Free and Open Source Framework for the Web. https://frappe.i
 		href="{{ favicon or "/assets/frappe/images/favicon.ico" }}"
 		type="image/x-icon">
 
+	<link rel="stylesheet" href="/assets/phr/css/nprogress.css">	
 	<link rel="stylesheet" href="/assets/phr/vendor/bootstrap/css/bootstrap.min.css">
 	<link rel="stylesheet" href="/assets/phr/vendor/fontawesome/css/font-awesome.min.css">
 	<link rel="stylesheet" href="/assets/phr/vendor/themify-icons/themify-icons.min.css">
@@ -106,7 +107,7 @@ Built on Frappe.io. Free and Open Source Framework for the Web. https://frappe.i
 		<div class="page-container fluid" id="page-{{ name or page_name }}">
 			<div class="row">
 				<div class="col-md-12" data-html-block="content">
-					{%- block navbar_basic -%}{% include "templates/includes/navbar.html" %}{%- endblock -%}
+					{%- block navbar_basic -%}{% include "templates/includes/phr_navbar.html" %}{%- endblock -%}
 					{%- block content -%}{{ content or "" }}{%- endblock -%}
 				</div>
 			</div>

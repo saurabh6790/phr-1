@@ -20,7 +20,7 @@ var DiseaseMonitoring = inherit(RenderFormFields, {
 		var me = this;
 		$('.field-area').empty()
 		$input = $('<div class="panel panel-white no-radius events sec">\
-			<div class="panel-heading border-light he"><h4 class="panel-title"> Disease Selection</h4></div>\
+			<div class="panel-heading border-light he"><h4 class="panel-title"><i class="fa fa-heartbeat"></i>Disease Selection</h4></div>\
 			<div class="panel-body margin-top-15 bod">\
 			<div class="form-column col-md-12" style="margin-top:10px;">\
 			<form><div class="form-horizontal frappe-control" style="max-width: 600px;margin-top:10px;margin-bottom:5px">\
