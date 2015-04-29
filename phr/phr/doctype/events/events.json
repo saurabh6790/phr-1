@@ -1,6 +1,6 @@
 {
  "allow_copy": 0, 
- "allow_import": 0, 
+ "allow_import": 1, 
  "allow_rename": 0, 
  "creation": "2014-12-13 19:27:40.172154", 
  "custom": 0, 
@@ -55,7 +55,7 @@
  "is_submittable": 0, 
  "issingle": 0, 
  "istable": 0, 
- "modified": "2015-02-17 17:45:38.212776", 
+ "modified": "2015-04-29 18:52:56.580421", 
  "modified_by": "Administrator", 
  "module": "phr", 
  "name": "Events", 
