@@ -239,6 +239,10 @@ $.extend(SharePhr.prototype,{
   				frappe.msgprint("Please mention Provider's Email Id")
   				fg=false	
   			}
+  			if($("form select[name='share_via']").val() == 'Provider Account' && !$("form input[name='sharing_duration']").val()){
+  				frappe.msgprint("Please mention sharing duration")
+  				fg=false	
+  			}
   		} 
   		return fg
   	}

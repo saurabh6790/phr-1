@@ -171,7 +171,7 @@ def render_table_on_db(profile_id,event_master_id,name):
 			}
 
 @frappe.whitelist()
-def share_dm(data, header, share_info, profile_id, disease=None):
+def share_dm(data, header, share_info, profile_id, disease):
 	share_info = json.loads(share_info)
 	frappe.create_folder(os.path.join(get_files_path() , profile_id))
 	save_pdf(data, header, profile_id, disease)
@@ -184,26 +184,43 @@ def share_dm(data, header, share_info, profile_id, disease=None):
 @frappe.whitelist()
 def save_pdf(data, header, profile_id, disease):
 	import pdfkit
-
+	frappe.errprint(header)
 	data = eval(data)
 	rows = ''
 	for row in data:
-		rows += "<tr>%s<tr>"%row
+		rows += "<tr style='border: 1px solid black; border-collapse: collapse;''>%s</tr>"%('</td>'.join(row.split('</td>')[1:][:-1]))
 
 	html_str = """
 		<html>
 			<body>
+				<style type="text/css">
+					.table {
+						border-collapse: collapse;
+					}
+					.table th,
+					.table td {
+						border: 1px solid black;
+						text-align: center;
+					}
+					.table-striped tbody > tr:nth-child(odd) > td,
+					.table-striped tbody > tr:nth-child(odd) > th {
+						background-color: #FFFFFF;
+					}
+				</style>
 				<table class="table table-striped">
 					<thead>
 						%(header)s
 					</thead>
-					%(data_rows)s
+					<tbody>
+						%(data_rows)s
+					</tbody>
 				</table>
 			</body>
 		</html>
 
-	"""%{'data_rows': rows, 'header': header}
+	"""%{'data_rows': rows, 'header': ('</th>'.join(header.split('</th>')[1:][:-1]))}
 	file_name = disease + '.pdf'
+
 	pdfkit.from_string(html_str, os.path.join(get_files_path(), profile_id, file_name))
 
 

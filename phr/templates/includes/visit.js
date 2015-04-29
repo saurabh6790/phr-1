@@ -39,6 +39,8 @@ var Visit = inherit(ListView,{
 		</tr>').insertBefore('table > thead > tr:first')
 
 		$("<button class='btn btn-primary'> Share </button>").click(function(){
+			var fg = false;
+
 			$('.table').find('thead').each(function(){
 				var row = $(this);
 				$('th', row).map(function(index, th) {
@@ -52,6 +54,7 @@ var Visit = inherit(ListView,{
 				$('td', row).map(function(index, td) {
 					if ($(td).find('input[name="visit"]').is(':checked')) {
 						me.selected_files.push($(td).find('input[name="visit"]').attr('id'))
+						fg = true;
 					}
 				});
 			})
@@ -69,14 +72,19 @@ var Visit = inherit(ListView,{
 					})
 					
 			}).appendTo('.breadcrumb');
-
-			SharePhr.prototype.init(me.wrapper, {"file_name" : "share_phr_visit", 
-				"method": "visit", 
-				'event_id': $(me.selected_files).last()[0], 
-				'selected_files':me.selected_files, 
-				'doc_list': me.doc_list, 
-				"profile_id":me.profile_id
-			})
+			
+			if (fg){
+				SharePhr.prototype.init(me.wrapper, {"file_name" : "share_phr_visit", 
+					"method": "visit", 
+					'event_id': $(me.selected_files).last()[0], 
+					'selected_files':me.selected_files, 
+					'doc_list': me.doc_list, 
+					"profile_id":me.profile_id
+				})
+			}
+			else{
+				frappe.msgprint("Please first select a Visit. ")
+			}
 			
 		}).appendTo($('.field-area'))
 
