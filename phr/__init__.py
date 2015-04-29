@@ -5,7 +5,7 @@ import base64
 import frappe
 from templates.pages.patient import get_base_url
 from phr.phr_api import get_response
-# from frappe.templates.pages.login import update_oauth_user
+from templates.pages.login import create_profile_in_solr,get_barcode,get_image_path
 
 """ Profile login calls """
 @frappe.whitelist(allow_guest=True)
@@ -33,6 +33,10 @@ def socialLogin(data, provider=None):
 
 	return frappe.response
 
+class SignupDisabledError(frappe.PermissionError): pass
+
+no_cache = True
+
 def login_oauth_user(data, provider=None):
 	if data.has_key("email"):
 		user = data["email"]
@@ -45,6 +49,112 @@ def login_oauth_user(data, provider=None):
 		frappe.local.login_manager.user = user
 		frappe.local.login_manager.post_login()
 		frappe.db.commit()
+
+
+def update_oauth_user(user, data, provider):
+	if isinstance(data.get("location"), dict):
+		data["location"] = data.get("location").get("name")
+
+	save = False
+	barcode=get_barcode()
+	args={
+		"person_firstname":data.get("first_name") or data.get("given_name") or data.get("name"),
+		"person_middlename":"add",
+		"person_lastname": data.get("last_name") or data.get("family_name"),
+		"email":data.get("email"),
+		"mobile":"",
+		"received_from":"Desktop",
+		"provider":"false",
+		"barcode":str(barcode)
+	}
+
+	if not frappe.db.exists("User", user):
+
+		# is signup disabled?
+		if frappe.utils.cint(frappe.db.get_single_value("Website Settings", "disable_signup")):
+			raise SignupDisabledError
+		
+		
+		profile_res=create_profile_in_solr(args)
+		response=json.loads(profile_res)
+		if response['returncode']==101:
+			path=get_image_path(barcode,response['entityid'])
+			file_path='/files/'+response['entityid']+'/'+response['entityid']+".svg"
+			save = True
+			user = frappe.new_doc("User")
+			user.update({
+				"doctype":"User",
+				"profile_id":response['entityid'],
+				"first_name": data.get("first_name") or data.get("given_name") or data.get("name"),
+				"last_name": data.get("last_name") or data.get("family_name"),
+				"email": data["email"],
+				"gender": (data.get("gender") or "").title(),
+				"enabled": 1,
+				"new_password": frappe.generate_hash(data["email"]),
+				"location": data.get("location"),
+				"user_type": "Website User",
+				"access_type":"Patient",
+				"user_image": data.get("picture") or data.get("avatar_url"),
+				"created_via":"Desktop",
+				"barcode":file_path
+			})
+		else:
+			save = True
+			user = frappe.new_doc("User")
+			user.update({
+				"doctype":"User",
+				"first_name": data.get("first_name") or data.get("given_name") or data.get("name"),
+				"last_name": data.get("last_name") or data.get("family_name"),
+				"email": data["email"],
+				"gender": (data.get("gender") or "").title(),
+				"enabled": 1,
+				"new_password": frappe.generate_hash(data["email"]),
+				"location": data.get("location"),
+				"user_type": "Website User",
+				"user_image": data.get("picture") or data.get("avatar_url")
+			})
+
+	else:
+		user = frappe.get_doc("User", user)
+		save = True
+		if not user.profile_id and not user.access_type=="Provider":
+			profile_res=create_profile_in_solr(args)
+			if response['returncode']==101:
+				path=get_image_path(barcode,response['entityid'])
+				file_path='/files/'+response['entityid']+'/'+response['entityid']+".svg"
+				if not barcode:
+					user.update({
+						"barcode":file_path,
+						"profile_id":response['entityid']
+					})
+				else:
+					user.update({
+						"profile_id":response['entityid']
+					}) 
+
+
+	if provider=="facebook" and not user.get("fb_userid"):
+		save = True
+		user.update({
+			"fb_username": data.get("username"),
+			"fb_userid": data["id"],
+			"user_image": "https://graph.facebook.com/{id}/picture".format(id=data["id"])
+		})
+
+	elif provider=="google" and not user.get("google_userid"):
+		save = True
+		user.google_userid = data["id"]
+
+	elif provider=="github" and not user.get("github_userid"):
+		save = True
+		user.github_userid = data["id"]
+		user.github_username = data["login"]
+
+	if save:
+		user.ignore_permissions = True
+		user.no_welcome_mail = True
+		user.save()
+
 
 
 """ Event Calls """
