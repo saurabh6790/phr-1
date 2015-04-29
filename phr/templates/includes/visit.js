@@ -58,8 +58,9 @@ var Visit = inherit(ListView,{
 					}
 				});
 			})
-
-			$('<li><a nohref>Share Pannel</a></li>').click(function(){
+			
+			if (fg){
+				$('<li><a nohref>Share Pannel</a></li>').click(function(){
 					$(this).nextAll().remove()
 					// $(this).remove()
 					$('.uploader').remove();
@@ -71,9 +72,8 @@ var Visit = inherit(ListView,{
 						"profile_id":me.profile_id
 					})
 					
-			}).appendTo('.breadcrumb');
-			
-			if (fg){
+				}).appendTo('.breadcrumb');	
+
 				SharePhr.prototype.init(me.wrapper, {"file_name" : "share_phr_visit", 
 					"method": "visit", 
 					'event_id': $(me.selected_files).last()[0], 
