@@ -658,13 +658,6 @@ def image_writter(profile_id, event_id):
 		wfile_name = file_obj.get('temp_file_id').split('.')[0] + '-watermark.' + file_obj.get('temp_file_id').split('.')[1]
 		if not os.path.exists(os.path.join(path, wfile_name)):
 			frappe.create_folder(path)
-			# filedata = file_obj.get('base64StringFile')
-			# # frappe.errprint(filedata)
-			# decoded_image = base64.b64decode(filedata)
-			# # decoded_image = filedata.decode('base64','strict')
-			# with open(img_path, 'wb') as f:
-			# 	f.write(filedata)
-
 			img_path = os.path.join(path,  wfile_name)
 			data = {
 				"entityid": file_obj.get('visit_id'),

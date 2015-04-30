@@ -37,15 +37,11 @@ def upload():
 	# elif file_url:
 	# 	filedata = save_url(file_url, dt, dn)
 
-
-	# if dt and dn:
-	# 	comment = frappe.get_doc(dt, dn).add_comment("Attachment",
-	# 		_("Added {0}").format("<a href='{file_url}' target='_blank'>{file_name}</a>".format(**filedata.as_dict())))
-	# frappe.errprint(['test',filename, get_site_base_path(), get_path(), os.getcwd(), get_site_path().split('.')])
+	frappe.errprint(["testing image uploader", filedata])
 	return {
 		"site_path" : os.path.join(os.getcwd(), get_site_path().replace('.',"").replace('/', ""), 'public', 'files'),
-		"file_name": filename,
-		"success_meg": filedata
+		"file_name": filedata['fname'],
+		"success_meg": filedata['msg']
 	}
 
 def save_uploaded():
@@ -126,7 +122,7 @@ def save_file(fname, content, decode=False):
 	method = get_hook_method('write_file', fallback=save_file_on_filesystem)
 	file_data = method(fname, content, content_type=content_type)
 	file_data = copy(file_data)
-	return "Attachment Successful"
+	return {"msg":"Attachment Successful", "fname": fname}
 
 	# # file_data.update({
 	# # 	"doctype": "File Data",
@@ -268,15 +264,10 @@ def get_content_hash(content):
 	return hashlib.md5(content).hexdigest()
 
 def get_file_name(fname, optional_suffix):
-	n_records = frappe.db.sql("select name from `tabFile Data` where file_name=%s", fname, debug=1)
-	if len(n_records) > 0 or os.path.exists(get_files_path(fname).encode('utf-8')):
-		f = fname.rsplit('.', 1)
-		if len(f) == 1:
-			partial, extn = f[0], ""
-		else:
-			partial, extn = f[0], "." + f[1]
-		return '{partial}{suffix}{extn}'.format(partial=partial, extn=extn, suffix=optional_suffix)
-	return fname
+	import time
+	f = fname.rsplit('.', 1)
+	extn = "." + f[1]
+	return 'HLSNP-{filename}{extn}'.format(filename=str(int(round(time.time() * 1000))), extn=extn)
 
 @frappe.whitelist()
 def get_pdf_site_path(profile_id, folder, sub_folder, event_id, timestamp):

@@ -131,7 +131,7 @@ def get_base_url():
 	return "http://115.113.66.90:8989/phr-api/"
 
 """
-Method to get name of method in solr database.contains dictionary or map.
+Method to get name of service in solr database.contains dictionary or map.
 """
 def get_method(data):
 	method_dic={"profile":"searchProfile", "event":"searchEvent", "visit":"searchVisit", "provider":"searchProvider"}

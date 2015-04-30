@@ -99,9 +99,6 @@ window.Events = inherit(ListView,{
 			me.dialog_oprations()
 		})
 		
-		// me.render_folder_section()
-
-  		// me.bind_events()
   		this.write_visit_file(event_id, profile_id)
   		this.make_tree_view(event_id, visit_id)
   		this.get_linked_providers()
@@ -138,13 +135,11 @@ window.Events = inherit(ListView,{
 			
 			$('<li><a nohref>Share Panel</a></li>').click(function(){
 					$(this).nextAll().remove()
-					// $(this).remove()
 					$('.uploader').remove();
 					$("form input, form textarea").each(function(i, obj) {
 						me.result_set[obj.name] = $(obj).val();
 
 					})
-					// me.render_folder_section()
 					me.open_sharing_pannel(event_id)
 			}).appendTo('.breadcrumb');			
 			me.open_sharing_pannel(event_id)
@@ -223,11 +218,7 @@ window.Events = inherit(ListView,{
 			"method":"phr.templates.pages.event.get_providers",
 			"args":{"filters":filters},
 			callback:function(r){
-				me.generate_table(r.message, d, filters)	
-				// else{
-				// 	d.hide()
-				// 	me.create_provider_linking(filters, d)
-				// }
+				me.generate_table(r.message, d, filters)
 			}
 		})
 	},
@@ -287,10 +278,6 @@ window.Events = inherit(ListView,{
 					$('[name="email_id"]').val($($td[3]).html())
 					$('[name="number"]').val($($td[2]).html())
 					me.check_existing($td.find('input[name="provider"]').attr('id'),$($td[3]).html(),$($td[2]).html(),$($td[1]).html(),d)
-					/*if (!me.check_existing($td.find('input[name="provider"]').attr('id'))==true){
-						me.attach_provider({'entityid': $td.find('input[name="provider"]').attr('id')},
-							{'email': $($td[3]).html(),'mobile': $($td[2]).html(),'name': $($td[1]).html()}, d)
-					}*/
 				}
 			})
 		})
@@ -404,8 +391,7 @@ window.Events = inherit(ListView,{
 		var me = this;
 		$('.new_controller').bind('click',function(event) {
 			me.bind_save_event()
-			$('<li><a nohref> New Event </a></li>').appendTo('.breadcrumb');
-			// me.render_folder_section()		
+			$('<li><a nohref> New Event </a></li>').appendTo('.breadcrumb');	
 		})
 	},
 	get_linked_providers:function(profile_id){
@@ -475,7 +461,7 @@ window.Events = inherit(ListView,{
 							NProgress.done();
 							if(r.message.returncode == 103 || r.message.returncode == 116){
 								me.dms_file_list = [];
-								me.open_form(r.message.entityid, $('[name="event_title"]').val(), me.profile_id, me.res);	
+								me.open_form(r.message.entityid, $('[name="event_title"]').val(), me.profile_id, me.res, me.req_id);	
 								frappe.msgprint("Saved")
 							}
 							else{
@@ -507,146 +493,9 @@ window.Events = inherit(ListView,{
 
   		return fg
   	},
-	render_folder_section: function(){
-		var me = this;
-		$('.event_section').empty()
-		$('.uploader').remove()
-		$('<button class="btn btn-primary" id="share"> Share Data </button>').appendTo($('.save_controller'))
-		$('<div class="event_section1" style = "margin:10%; 10%;">\
-			<div class="btn btn-success" id = "consultancy-11" \
-				style = "margin:5%; 5%;height:80px;text-align: center !important;"> \
-				<i class="icon-folder-close-alt icon-large"></i> <br> Consultation\
-			</div>\
-			<div class="btn btn-success" id = "event_snap-12" \
-				style = "margin:5%; 5%;height:80px;text-align: center !important;"> \
-				<i class="icon-folder-close-alt icon-large"></i> <br> Event Snaps \
-			</div>\
-			<div class="btn btn-success" id = "lab_reports-13" \
-				style = "margin:5%; 5%;height:80px;text-align: center !important;"> \
-				<i class="icon-folder-close-alt icon-large"></i> <br> Lab Reports \
-			</div>\
-		</div>\
-		<div class="event_section2" style="margin:10%; 10%;">\
-			<div class="btn btn-success" id = "prescription-14" \
-				style = "margin:5%; 5%;height:80px;text-align: center !important;"> \
-				<i class="icon-folder-close-alt icon-large"></i>  <br> Prescription \
-			</div>\
-			<div class="btn btn-success" id = "cost_of_care-15" \
-				style = "margin:5%; 5%;height:80px;text-align: center !important;">\
-				<i class="icon-folder-close-alt icon-large"></i>  <br> Cost of Care \
-			</div>\
-		</div>\
-	    ').appendTo($('.event_section'))
-		PHRComments.prototype.init({"wrapper":$('.event_section'), 
-				"provider_id" : frappe.get_cookie("profile_id"), 
-				"profile_id": me.profile_id,
-				"event_id": $("[name='entityid']").val(),
-				"event_title":$("[name='event_title']").val()
-
-		});
-
-		$('#share').click(function(){
-			$("form input, form textarea").each(function(i, obj) {
-				me.result_set[obj.name] = $(obj).val();
-			})
-			
-			$('<li><a nohref>Share Panel</a></li>').click(function(){
-					$(this).nextAll().remove()
-					// $(this).remove()
-					$('.uploader').remove();
-					$("form input, form textarea").each(function(i, obj) {
-						me.result_set[obj.name] = $(obj).val();
-
-					})
-					// me.render_folder_section()
-					me.open_sharing_pannel($("[name='entityid']").val())
-				}).appendTo('.breadcrumb');			
-			me.open_sharing_pannel($("[name='entityid']").val())
-		})
-	},
 	open_sharing_pannel: function(event_id){
 		var me = this;
 		SharePhr.prototype.init(me.wrapper, {"file_name" : "share_phr", 'values': me.result_set, 'doc_list': me.doc_list, "profile_id":me.profile_id,"event_id":event_id, "selected_files": me.selected_files})
-	},
-	bind_events: function(){
-		var me = this;
-		me.mapper = {'consultancy-11':[{'label' : 'DOCTORS  CLINICAL NOTES', 'id':'A_51'}, 
-									{'label' : 'TEST / INVESTIGATION ADVISED', 'id': 'B_52'}, 
-									{'label' : 'REFERAL NOTE', 'id': 'C_53'}],
-					'event_snap-12':[{'label' : 'PATIENT SNAPS', 'id' : 'A_51'},
-							{'label':'CLINICAL SNAPS', 'id': 'B_52'}],
-					'lab_reports-13':[{'label': 'TEST REPORTS', 'id':'A_51'}, 
-							{'label':'TEST IMAGES', 'id':'B_52'}],
-					'prescription-14':[{'label':'PRESCRIBED MEDICATION', 'id':'A_51'},
-							{'label':'PRISCRIBED ADVICE','id':'B_52'},
-							{'label':'DISCHARGE SUMMERY', 'id': 'C_53'}],
-					'cost_of_care-15':[{'label': 'MEDICAL BILLS', 'id': 'A_51'}]
-				}
-		$('#consultancy-11, #event_snap-12, #lab_reports-13, #prescription-14, #cost_of_care-15')
-			.bind('click',function(){
-				// $('.breadcrumb').empty();
-				$(repl_str('<li id="%(event_id)s"><a nohref>%(event_id)s</a></li>',{'event_id': $(this).attr('id')})).click(function(){
-					$(this).nextAll().remove()
-					// $(this).remove()
-					$('.uploader').remove();
-					me.render_sub_sections(me.mapper[$(this).attr('id')])
-					// me.bind_sub_section_events()
-				}).appendTo('.breadcrumb');
-				
-				// $(repl_str("<li><a nohref>%(id)s</a></li>\
-				// 	",{'id':$(this).attr('id')})).appendTo('.breadcrumb');
-
-				$('.event_section').empty();
-				me.folder = $(this).attr('id');
-				me.render_sub_sections(me.mapper[$(this).attr('id')]);
-			})
-	},
-	render_sub_sections: function(sub_folders){
-		var me = this;
-		$('.event_section').empty()
-		// $('<div class="event_sub_section" style = "margin:10%; 10%;">\
-		// 		<div class="btn btn-success" id = "A" \
-		// 			style = "margin:5%; 5%;height:80px;text-align: center !important;"> \
-		// 			<i class="icon-folder-close-alt icon-large"></i> <br> A\
-		// 		</div>\
-		// 		<div class="btn btn-success" id = "B" \
-		// 			style = "margin:5%; 5%;height:80px;text-align: center !important;"> \
-		// 			<i class="icon-folder-close-alt icon-large"></i> <br> B \
-		// 		</div>\
-		// 		<div class="btn btn-success" id = "C" \
-		// 			style = "margin:5%; 5%;height:80px;text-align: center !important;"> \
-		// 			<i class="icon-folder-close-alt icon-large"></i> <br> C \
-		// 		</div>\
-		// 	</div>\
-		// ').appendTo($('.event_section'));
-	
-		$('<div class="event_sub_section" style = "margin:10%; 10%;"></div>').appendTo($('.event_section'));
-
-		$.each(sub_folders, function(i, sub_folder){
-			$(repl_str('<div class="btn btn-success" id = "%(id)s" \
-		 			style = "margin:5%; 5%;height:80px;text-align: center !important;"> \
-		 			<i class="icon-folder-close-alt icon-large"></i> <br> %(label)s\
-		 		</div>', sub_folder)).appendTo($('.event_sub_section'));
-		})
-		
-		me.bind_sub_section_events();
-	},
-	bind_sub_section_events: function(){
-		var me = this;
-		me.dms_file_list = me.dms_file_list ? me.dms_file_list : []
-		$('#A_51, #B_52, #C_53').bind('click',function(){
-				$(".breadCrumb").last().remove();
-				$(repl_str("<li class=active'>%(id)s</li>\
-					",{'id':$(this).attr('id')})).appendTo('.breadcrumb');
-				$('.uploader').remove();
-				me.sub_folder = $(this).attr('id');
-				ThumbNails.prototype.init(me.wrapper, {'folder':me.folder, 
-						'sub_folder':me.sub_folder, 'profile_id': me.profile_id, 'display':'none', 
-						'dms_file_list': me.dms_file_list})
-				// me.render_uploader_and_files();
-			})	
-
-		
 	},
 	set_provider_details:function(){
 		var me = this;
