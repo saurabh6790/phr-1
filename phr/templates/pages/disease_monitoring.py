@@ -92,6 +92,7 @@ def build_options(dm_list,fields,field_mapper,raw_fields=None):
 		for dm in dm_list:
 			dm_data = []
 			field_dict = {}
+
 			for str_data in dm["data"]:
 				val_list = str_data.split("=")
 				field_dict[val_list[0]] = val_list[1]
@@ -100,7 +101,7 @@ def build_options(dm_list,fields,field_mapper,raw_fields=None):
 				if field == 'sr':
 					dm_data.append('<input type="checkbox" name="">')
 				else:
-					dm_data.append("<div style='word-wrap: break-word;width:80%%;'>%s</div>"%field_dict[field])
+					dm_data.append("<div style='word-wrap: break-word;width:80%%;'>%s</div>"%field_dict.get(field))
 			rows.extend([dm_data])
 
 	return fields_list
@@ -142,11 +143,9 @@ def valide_date(arg, data):
 	from_date_time = datetime.datetime.strptime(obj.get('date'), '%d/%m/%Y %H:%M').strftime('%Y-%m-%d %H:%M:%S')
 	curr_date_time = datetime.datetime.strptime(arg.get('curr_date_time'), '%Y-%m-%d %H:%M:%S').strftime('%Y-%m-%d %H:%M:%S')
 
-	frappe.errprint([from_date_time, curr_date_time])
-
 	if time_diff_in_seconds(from_date_time, curr_date_time) > 0:
-		frappe.errprint
 		return False
+
 	return True
 
 def save_data_to_solr(args):
@@ -185,8 +184,8 @@ def share_dm(data, header, share_info, profile_id, disease):
 @frappe.whitelist()
 def save_pdf(data, header, profile_id, disease):
 	import pdfkit
-	frappe.errprint(header)
-	data = eval(data)
+	
+	data = json.loads(data)
 	rows = ''
 	for row in data:
 		rows += "<tr style='border: 1px solid black; border-collapse: collapse;''>%s</tr>"%('</td>'.join(row.split('</td>')[1:][:-1]))
