@@ -52,20 +52,18 @@ $(document).ready(function () {
 	}
 	else{
 		if (sessionStorage.getItem("cid")!=sessionStorage.getItem("pid")){
-
 			$('#linkedphr').hide()
 			var db = new render_dashboard();
 			db.render_LPHR_name()
 		}
-		else{
-			
-		}	download_phr()
-		
+		download_phr()
+		$('.save_controller').hide()
+		$('.new_controller').hide()
 		NProgress.start();
 		profile_id=sessionStorage.getItem("cid")
 		var db = new render_dashboard();
 		db.render_providers(profile_id)
-		db.render_linked_phr(profile_id)
+		db.render_linked_phr(sessionStorage.getItem("pid"))
 		db.render_middle_section(profile_id)
 		db.render_emer_details(profile_id)
 		db.render_to_do(profile_id)
@@ -73,25 +71,26 @@ $(document).ready(function () {
 		$('#profile').attr('data-name',profile_id)
 		$('#home').attr('data-name',profile_id)
 		bind_events(db)
+		$('#share').remove()
 		NProgress.done();
 	}
 })
 function download_phr(){
-	$('<a nohref class="list-group-item-side chome"><div><i class="icon-download"></i> Download PHR</div></a>').appendTo('.linked-phr').unbind("click").click(function(){
-				args={
-					"cmd": "phr.templates.pages.profile.get_phr_pdf",
-					'profile_id': sessionStorage.getItem("pid")
-				}
-				//cmd="phr.templates.pages.profile.verify_mobile"
-				$.ajax({
-					url: '/',
-					type: 'POST',
-					data: args,
-					success: function(data) {
-						console.log(data)
-						window.open(data['message']['url'], '_blank')
-					}
-				});
+	$('.link-phr').empty()
+	$('<a class="btn btn-primary" href="#"><div><i class="fa fa-arrow-circle-down"></i> Download PHR</div></a> ').appendTo('.link-phr').unbind("click").click(function(){
+		args={
+			"cmd": "phr.templates.pages.profile.get_phr_pdf",
+			'profile_id': sessionStorage.getItem("pid")
+		}
+		//cmd="phr.templates.pages.profile.verify_mobile"
+		$.ajax({
+			url: '/',
+			type: 'POST',
+			data: args,
+			success: function(data) {
+				window.open(data['message']['url'], '_blank')
+			}
+		});
 	})
 	
 }
@@ -102,9 +101,12 @@ function bind_events(){
 	profile_id=sessionStorage.getItem("cid")
 	$("#home").on("click",function(){
 		$('.breadcrumb').empty()
-		$('.linked-phr').empty()
+		//$('.linked-phr').empty()
+		$('#cphrname').empty()
+		$('.cdd').addClass('hide')
 		$('.save_controller').hide()
 		$('.new_controller').hide()
+		$('.edit_profile').remove()
 		NProgress.start();
 		profile_id=sessionStorage.getItem("pid")
 		$('#linkedphr').show()
@@ -113,6 +115,7 @@ function bind_events(){
 		var db = new render_dashboard();
 		$('.field-area').empty()
 		$('#main-con').empty()
+		$('#share').remove()
 		download_phr()
 		db.render_providers(profile_id)
 		db.render_linked_phr(profile_id)
@@ -121,6 +124,31 @@ function bind_events(){
 		db.render_advertisements(profile_id)
 		NProgress.done();
 	})
+	$("#cprofile").unbind("click").click(function(){
+		NProgress.start();
+		$('#main-con').empty()
+		PatientDashboard.prototype.init($(document).find("#main-con"),
+				{"file_name" : "profile", "method": "profile"},sessionStorage.getItem('cid'))	
+		$('<ul class="dropdown-menu dropdown-dark"><li><a nohref class="cdb">Dashboard</a></li><li><a nohref id="cprofile">Profile</li></ul>').appendTo($('.cdd'))
+		NProgress.done();
+	})	
+	$("#pprofile").unbind("click").click(function(){
+		$('.cdd').addClass('hide')
+		$('#cphrname').empty()
+		NProgress.start();
+		profile_id=sessionStorage.getItem('pid')
+		sessionStorage.setItem("cid",profile_id)
+		PatientDashboard.prototype.init($(document).find("#main-con"),
+				{"file_name" : "profile", "method": "profile"},profile_id)	
+		NProgress.done();
+	})
+	$(".cdb").on("click",function(){
+		var db = new render_dashboard();
+		$('.field-area').empty()
+		$('#main-con').empty()
+		db.render_middle_section(sessionStorage.getItem('cid'))
+	})	
+
 	$("#profile").unbind("click").click(function(){
 		profile_id=sessionStorage.getItem("cid")
 		$('.breadcrumb').empty()
@@ -195,19 +223,24 @@ function bind_events(){
 		NProgress.done();
 	})
 	$('.create_linkphr').unbind("click").click(function(){
-		if (!(sessionStorage.getItem("lphrs")>=10)){
-			$('.breadcrumb').empty()
-			NProgress.start();
-			$('<li><a nohref>New Linked PHR</a></li>').click(function(){
+		if (sessionStorage.getItem("cid")==sessionStorage.getItem("pid")){
+			if (!(sessionStorage.getItem("lphrs")>=10)){
+				$('.breadcrumb').empty()
+				NProgress.start();
+				$('<li><a nohref>New Linked PHR</a></li>').click(function(){
+					LinkedPHR.prototype.init($(document).find("#main-con"),
+					{"file_name" : "linked_patient"},"","create_linkphr")
+				}).appendTo('.breadcrumb');
 				LinkedPHR.prototype.init($(document).find("#main-con"),
-				{"file_name" : "linked_patient"},"","create_linkphr")
-			}).appendTo('.breadcrumb');
-			LinkedPHR.prototype.init($(document).find("#main-con"),
-				{"file_name" : "linked_patient"},"","create_linkphr")
-			NProgress.done();
+					{"file_name" : "linked_patient"},"","create_linkphr")
+				NProgress.done();
+			}
+			else{
+				frappe.msgprint("Linked PHR's Limit Exceeded.Please Contact Admin or Delink One of Existing PHR")
+			}
 		}
 		else{
-			frappe.msgprint("Linked PHR's Limit Exceeded.Please Contact Admin or Delink One of Existing PHR")
+			frappe.msgprint("Switch User to Account Holder to Link PHR")
 		}
 	})
 	$(".create_provider").unbind("click").click(function(){

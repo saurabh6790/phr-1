@@ -1,6 +1,13 @@
 {
     "listview": [
          {
+            "fieldname":"", 
+            "fieldtype":"section_break", 
+            "label":"Appointment Details",
+            "options": "<i class='fa fa-calendar-o'></i>"
+
+         },
+         {
             "fieldname": "from_date_time",
             "fieldtype": "datetime",
             "label": "Date time",
@@ -33,17 +40,9 @@
          {
             "fieldname": "",
             "fieldtype": "section_break",
-            "label": ""
-        },
-        {
-            "fieldname": "",
-            "fieldtype": "button",
-            "label": ""
-        },
-        {
-            "fieldname": "",
-            "fieldtype": "section_break",
-            "label": ""
+            "label": "Appointment logs",
+            "options":"<i class='fa fa-list-alt'></i>"
+
         },
         {
             "fieldname": "tab",

@@ -81,7 +81,7 @@ def update_password(data,dashboard=None):
 		return " Cannot Update: New Password and Confirm Password fields are not matching "
 
 	user=frappe.db.get_value("User",{"profile_id":usrobj.get('entityid')})
-	print [user,old_password,new_password]
+	
 	if not new_password:
 		return _("Cannot Update: Please Enter Valid Password")
 	if old_password:
@@ -95,7 +95,7 @@ def update_password(data,dashboard=None):
 
 @frappe.whitelist(allow_guest=True)
 def manage_phr(data,dashboard=None):
-	frappe.errprint(data)
+	pass
 
 @frappe.whitelist(allow_guest=True)
 def manage_notifications(data,dashboard=None):
@@ -175,12 +175,16 @@ def get_user_image(profile_id):
 			return{
 				"image":up	
 			}
+		else:
+			return{
+				"image":get_gravatar(profile_id)	
+			}
+
 
 @frappe.whitelist(allow_guest=True)
 def upload_image(profile_id,data=None,file_name=None):
 	from binascii import a2b_base64
 	import base64
-	print data
 	data_index = data.index('base64') + 7
 	filedata = data[data_index:len(data)]
 	decoded_image = base64.b64decode(filedata)
@@ -246,20 +250,30 @@ def get_linked_phrs(profile_id):
 	from phr.phr.phr_api import get_response
 	response=get_response(url,json.dumps(data),request_type)
 	res=json.loads(response.text)
-	print res
 	if res['returncode']==120:
+		#linked_phr_list=get_lphrs_with_img(res)
 		return res
+
+@frappe.whitelist(allow_guest=True)		
+def get_linked_phrs_with_img(profile_id):
+	data=get_linked_phrs(profile_id)
+	return get_lphrs_with_img(data)
+
+@frappe.whitelist(allow_guest=True)
+def get_lphrs_with_img(data):
+	linked_phr_list=[]
+	for profile in data["list"]:
+		user_image=get_user_image(profile["entityid"])
+		linked_phr_list.append({"entityid":profile["entityid"],"person_firstname":profile["person_firstname"],"person_lastname":profile["person_lastname"],"user_image":user_image["image"],"gender":profile["gender"]})
+	return linked_phr_list
+
 
 @frappe.whitelist(allow_guest=True)
 def delink_phr(selected,data,profile_id,res):
 	obj=json.loads(data)
 	id=selected
-	print obj
-	print id
 	if id:
-		print obj[id]
 		ret_res=delink_phr_solr(obj[id],id,profile_id,res)
-		print ret_res
 		return {
 			"message":"Profile Delinked Successfully",
 			"response":ret_res
@@ -279,7 +293,6 @@ def delink_phr_solr(data,id,profile_id,res):
 	from phr.phr.phr_api import get_response
 	response=get_response(url,json.dumps(jsonobj),request_type)
 	res=json.loads(response.text)
-	print res
 	if res['returncode']==121:
 		return res
 
@@ -341,6 +354,7 @@ def get_data_for_middle_section(profile_id):
 			data=get_diseases()
 			if data:
 				res_list=build_dm_data(data,res_list)
+
 		if obj.get('visits')==1 or obj.get('events')==1:
 			data=get_data_from_solr(profile_id)
 			#if data:
@@ -394,7 +408,6 @@ def get_data_from_solr(profile_id):
 	response=get_response(url,json.dumps(data),request_type)
 	res=json.loads(response.text)
 	if res['returncode']==105:
-		#frappe.errprint(res['actualdata'])
 		return res['actualdata']
 
 @frappe.whitelist(allow_guest=True)
@@ -412,7 +425,7 @@ def get_medications(profile_id):
 
 def build_response(data,obj,res_list,profile_id):
 	if obj.get('visits')==1:
-		visit_data=build_visit_data(data)
+		visit_data = build_visit_data(data)
 		res_list.append(visit_data)
 	if obj.get('events')==1:
 		event_data=build_event_data(data,profile_id)
@@ -420,7 +433,7 @@ def build_response(data,obj,res_list,profile_id):
 	return res_list
 
 def build_response_for_medications(data,obj,res_list):
-	medication_data=build_medication_data(data)
+	medication_data = build_medication_data(data)
 	res_list.append(medication_data)
 	return res_list
 	
@@ -456,8 +469,11 @@ def build_visit_data(obj):
 		if (data["visitList"]):
 			for d in data["visitList"]:
 				rows.extend([[d["str_visit_date"],d["visit_descripton"],d["doctor_name"]]])
+		else:
+			rows.extend([["NO DATA","",""]])
 	else:
-		rows.extend([["","NO DATA",""]])
+		rows.extend([["NO DATA","",""]])
+
 	visit_dic={"fieldname":"visits","fieldtype": "table","label": "Visits","rows":rows}
 	return visit_dic
 
@@ -471,13 +487,16 @@ def build_event_data(obj,profile_id):
     	]
    ]	
    #datetime.datetime.fromtimestamp(cint(visit['event_date'])/1000.0)
-   	if obj:
+	if obj:
 		data=json.loads(obj)
 		if data and data["eventList"]:
 			for d in data["eventList"]:
 				rows.extend([["""<a nohref id="%(entityid)s" onclick="Events.prototype.open_form('%(entityid)s', '%(event_title)s', '%(profile_id)s')"> %(event_title)s </a>"""%{"entityid": d['entityid'],"event_title": d['event_title'], "profile_id":profile_id},datetime.datetime.fromtimestamp(cint(d["event_date"])/1000.0).strftime('%d/%m/%Y'),d["event_symptoms"],d["diagnosis_desc"]]])
+		else:
+			rows.extend([["	NO DATA","","",""]])
 	else:
-		rows.extend([["","NO DATA","",""]])		
+		rows.extend([["	NO DATA","","",""]])
+
 	event_dic={"fieldname":"events","fieldtype": "table","label": "Events","rows":rows}
 	return event_dic
 
@@ -672,7 +691,6 @@ def get_phr_pdf(profile_id):
 	response=get_response(url,json.dumps(data),request_type)
 	res=json.loads(response.text)
 	if res:
-		#frappe.errprint(res['file_location'].split('/')[-1])
 		url = get_url()+"/files/%s/"%(profile_id)+cstr(res['file_location'].split('/')[-1])
 		res["url"]=url
 		response.headers['Content-Disposition'] = 'attachment; filename='+res["file_location"].split("/")[-1]
@@ -727,9 +745,7 @@ def get_pdf(profile_id,options=None):
 	pdfkit.from_string(html, fname, options=options or {})
 
 	li=fname.split('/')
-	print li
 	url = get_url()+"/".join(["",li[-3],li[-2],li[-1]])
-	print url
 	return url
 
 

@@ -8,7 +8,7 @@ var PatientDashboard = inherit(RenderFormFields, {
 	init: function(wrapper,cmd, entityid){
 		this.wrapper = wrapper;
 		this.args=cmd
-		this.entityid=sessionStorage.getItem("cid")
+		this.entityid=entityid ? entityid:sessionStorage.getItem("cid")
 		$(this.wrapper).empty()
 		$('.field-area').empty()
 		RenderFormFields.prototype.init(this.wrapper,this.args,this.entityid)
@@ -17,15 +17,38 @@ var PatientDashboard = inherit(RenderFormFields, {
 		//this.get_linked_phrs(this.entityid)
 		this.get_enabled_notification(this.entityid)
 		this.get_enabled_dashboard(this.entityid)
-		//this.download_phr(this.entityid)
+		$('#share').remove()
+		this.make_profile_noeditable(this.entityid)
+		scroll_top()
+
 	},
-	download_phr:function(profile_id){
-		
+	make_editable_profile:function(profile_id){
+		var me=this;
+		$('.edit_profile').remove()
+		$('<div class="pull-right margin-left-20 save_controller">\
+			<button class="btn btn-primary"><i class="fa fa-save"></i> Save</button></div>').appendTo($('.top-btns-bar'))
+		$("form input,form textarea,form select").each(function(i, obj) {
+			$(this).prop('disabled', false);
+		})
+		if ($('input[name="email"]').val()){
+			$('input[name="email"]').prop('disabled',true)
+		}
+		$('input[name="height_in_inches"]').prop('disabled',true)
+		$('input[name="weight_in_pounds"]').prop('disabled',true)
+		me.render_field(sessionStorage.getItem('cid'))
+	},
+	make_profile_noeditable:function(){
+		var me=this;
+		$('.save_controller').remove()
+		$('<div class="pull-right margin-left-20 edit_profile">\
+			<button class="btn btn-primary"><i class="fa fa-pencil-square-o"></i> Edit</button></div>').appendTo($('.top-btns-bar')).on("click",function(){
+				me.make_editable_profile()
+		})
+		$("form input,form textarea,form select").each(function(i, obj) {
+			$(this).prop('disabled', true);
+		})
 	},
 	render_validations:function(profile_id){
-		
-
-
 		var me=this;
 		$('.chk').bind('click',function(event){
 			var $id=$('.tab-pane.active').attr('id')
@@ -78,12 +101,12 @@ var PatientDashboard = inherit(RenderFormFields, {
 		});
 		$('.tab-pane.active form input[name="weight"]').bind('change', function() { 
 			var pounds=$(this).val()/0.45359237
-			// console.log(pounds)
 			$(".tab-pane.active form input[name='weight_in_pounds']").val(pounds.toFixed(2))
 			
 		});
-		$('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
-  			attr=$(e.target).attr('href')
+		
+		$('a[data-toggle="tab"]').on('click', function (e) {
+			attr=$(e.target).attr('href')
 			if (attr=='#notification' && (sessionStorage.getItem("cid")!=sessionStorage.getItem("pid"))){
 				$($('input[name="linked_phr"]').parents()[3]).css("display", "none");  				
   			}
@@ -141,6 +164,8 @@ var PatientDashboard = inherit(RenderFormFields, {
 	},
 	render_field: function(profile_id){
 		var me = this;
+		frappe.require("assets/phr/jasny-bootstrap/js/jasny-bootstrap.js");
+		frappe.require("assets/phr/jasny-bootstrap/js/jasny-bootstrap.min.js");
 		$('.fileinput').fileinput()
 				
 		$('.save_controller').bind('click',function(event) {
@@ -167,6 +192,7 @@ var PatientDashboard = inherit(RenderFormFields, {
 				me.res["entityid"]=profile_id
 				me.res["received_from"]="Desktop"
 				me.get_method(me.res,$id,me,selected)
+				me.make_profile_noeditable()
 			}
 			else{
 				NProgress.done();
@@ -354,7 +380,8 @@ var PatientDashboard = inherit(RenderFormFields, {
 			})
 	},
 	delink_phr:function(meta,selected,meta_dic,profile_id,me){
-	fields=[{
+		fields=[
+			{
    				"fieldname": "email", 
 				"fieldtype": "data", 
    				"label": "Email", 
@@ -371,6 +398,7 @@ var PatientDashboard = inherit(RenderFormFields, {
    				"description": "All your future notifications will be sent on these Mobile"
   			}] 
 		d = new Dialog();
+		console.log(meta_dic[selected])
 		d.init({'fields':fields,"values":meta_dic[selected],"title":"Add Email And Mobile"})
 		d.show()
 		var me=this;

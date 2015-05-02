@@ -28,10 +28,10 @@ window.Events = inherit(ListView,{
 			'cmd':"event.get_event_data",
 			'tab_at': 4,
 			'profile_id':profile_id})
+		$('.save_controller').remove();
 
-		$("<button class='btn btn-primary'> Share </button>").click(function(){
+		$("#share").click(function(){
 			var fg = false;
-
 			$('.table').find('thead').each(function(){
 				var row = $(this);
 				$('th', row).map(function(index, th) {
@@ -64,16 +64,16 @@ window.Events = inherit(ListView,{
 			}
 			
 			
-		}).appendTo($('.field-area'))
+		})
 		this.render_spans()
 		this.get_linked_providers()
+		scroll_top()
 	},
 	open_form:function(event_id, event_title, profile_id, res, req_id, visit_id){
 		var me = this;
 		this.profile_id = profile_id;
 		this.req_id = req_id;
 		$('#main-con').empty();
-		console.log(['req_id',req_id, 'res', res, 'event_id', event_id])
 		RenderFormFields.prototype.init(me.wrapper, {"file_name" : "event", "method": 'event'}, event_id)
 		this.set_values(res)
 		me.bind_save_event()
@@ -82,12 +82,14 @@ window.Events = inherit(ListView,{
 			$(this).remove()
 			me.open_form(event_id, event_title, me.profile_id, '', me.req_id)
 		}).appendTo('.breadcrumb');
-		
+		scroll_top()
 		this.make_multi_select_div()
 
-		$('<div class="event_section" style="margin-top:-10%;"></div>').appendTo($('.field-area'))
+		//$('<div class="event_section" style="margin-top:-10%;"></div>').appendTo($('.field-area'))
 		$('.visit_details').css("display","inherit")
 		$('.upload_files').css("display","inherit")
+		$('.files_section').css("display","inherit")
+		$('.comment_section').css("display","inherit")
 
 		disable_fields(['event_title', 'event_date', 'event_symptoms'])
 
@@ -107,7 +109,6 @@ window.Events = inherit(ListView,{
 		this.make_comment_section(event_title, profile_id)
 	},
 	set_values: function(res){
-		console.log(['setting visits details',res])
 		if(res && res['entityid']){
 			$.each(res, function(field, value){
 				if(field!='event_symptoms') $('[name="'+field+'"]').val(value)
@@ -126,7 +127,7 @@ window.Events = inherit(ListView,{
 	},
 	make_share_pannel: function(event_id){
 		var me = this;
-		$('<button class="btn btn-primary" id="share"> Share Data </button>').appendTo($('.save_controller'))
+		//$('<button class="btn btn-primary" id="share"> Share Data </button>').appendTo($('.save_controller'))
 
 		$('#share').click(function(){
 			$("form input, form textarea").each(function(i, obj) {
@@ -147,7 +148,6 @@ window.Events = inherit(ListView,{
 	},
 	make_tree_view:function(event_id, visit_id){
 		var me = this;
-		console.log(['make tree view', visit_id])
 		me.dms_file_list = me.dms_file_list ? me.dms_file_list : [];
 		if(visit_id) file_counts=me.get_visit_file_counts(visit_id,this.profile_id,me.dms_file_list)
 		else file_counts=me.get_event_file_counts(event_id,this.profile_id,me.dms_file_list)
@@ -166,7 +166,6 @@ window.Events = inherit(ListView,{
 	},
 	get_visit_file_counts:function(visit_id, profile_id, dms_file_list){
 		var me = this;
-		console.log(['calling visit file_counts', visit_id])
 		frappe.call({
 			"method":"phr.templates.pages.event.get_individual_visit_count_for_badges",
 			"args":{"visit_id":visit_id,"profile_id":me.profile_id},
@@ -179,7 +178,7 @@ window.Events = inherit(ListView,{
 	},
 	make_comment_section: function(){
 		var me = this;
-		PHRComments.prototype.init({"wrapper":$('.field-area'), 
+		PHRComments.prototype.init({"wrapper":$('.comments'), 
 				"provider_id" : frappe.get_cookie("profile_id"), 
 				"profile_id": me.profile_id,
 				"event_id": $("[name='entityid']").val(),
@@ -188,7 +187,7 @@ window.Events = inherit(ListView,{
 	},
 	make_multi_select_div: function(){
 		$.each($('[name="event_symptoms"]').val().split(','), function(i, val){
-			$('<div class="ui-autocomplete-multiselect-item">'+val+'<span class="ui-icon ui-icon-close"></span></div>').insertAfter($('[name="event_symptoms"]'))
+			$('<div class="ui-autocomplete-multiselect-item">'+val+'</div>').insertAfter($('[name="event_symptoms"]'))
 		})
 		$('[name="event_symptoms"]').val('');
 	},

@@ -17,7 +17,6 @@ $.extend(Dialog.prototype,{
 	},
 	make:function(){
 		this.$wrapper = this.get_diloag();
-		console.log(this.$wrapper)
 		this.render_filed_dict()
 	},
 	get_diloag:function(){
@@ -41,7 +40,7 @@ $.extend(Dialog.prototype,{
 		return $dialog;
 	},
 	render_filed_dict:function(){
-		RenderFormFields.prototype.init('', this.field_list, '', '', this.$wrapper)
+		if (this.field_list['file_name'] || this.field_list['fields']) RenderFormFields.prototype.init('', this.field_list, '', '', this.$wrapper)
 	},
 	make_head: function() {
 		var me = this;

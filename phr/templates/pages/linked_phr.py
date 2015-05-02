@@ -31,7 +31,6 @@ def update_profile_solr(data):
 	from phr.phr.phr_api import get_response
 	response=get_response(url,data,request_type)
 	res=json.loads(response.text)
-	print res
 	if res['returncode']=="102":
 		return "Profile Updated Successfully"
 
@@ -53,14 +52,11 @@ def create_profile_solr(data):
 	from phr.phr.phr_api import get_response
 	response=get_response(url,data,request_type)
 	res=json.loads(response.text)
-	print res
 	if res and res.get('returncode')==101:
 		data=json.loads(data)
 		path=get_image_path(barcode,res['entityid'])
 		from phr.templates.pages.login import set_default_dashboard
 		set_default_dashboard(res['entityid'])		
-		print "============================="
-		print data
 		args={"entityid":res.get('entityid'),"linking_id":data["linking_id"],"relationship":data["relationship"],"received_from":"Desktop"}
 		request_type="POST"
 		url="%s/linkprofile"%get_base_url()
@@ -84,6 +80,7 @@ def update_lphr_barcode(path,profile_id):
 		return "Image Uploaded Successfully"
 	else:
 		lp=frappe.new_doc("LinkedPHR Images")
+		lp.profile_image=uimage
 		lp.profile_id=profile_id
 		lp.barcode=file_path
 		lp.profile_image = uimage

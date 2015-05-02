@@ -1,104 +1,135 @@
-{% block style %}{% include "templates/includes/login.css" %}{% endblock %}
-
 {% block content %}
-<div class="login-content container" style="max-width: 800px;">
-	<form class="form-signin form-login" role="form">
-		<div class="panel panel-default">
-			<div class="panel-body">
-				<h2 class="form-signin-heading">{{ _("PHR Login") }}</h2>
-				<div class="form-group">
-                   	<div class="input-group">
-						<span class="input-group-addon"><span class="glyphicon glyphicon-envelope"></span></span>
-						<input type="text" id="login_email"
-						class="form-control" placeholder="{{ _('Email address') }}" required autofocus>
-					</div>
-				</div>
-				<div class="form-group">
-                   	<div class="input-group">
-                   		<span class="input-group-addon"><span class="glyphicon glyphicon-lock"></span></span>
-						<input type="password" id="login_password"
-						class="form-control" placeholder="{{ _('Password') }}" required>
-					</div>
-				</div>
-				<br>
-				<button class="btn btn-lg btn-primary btn-block btn-login" type="submit">{{ _("Sign in") }}</button>
-				{%- if social_login -%}
-				<p class="text-muted text-center" style="margin: 10px;">or login via</p>
-				<p class="text-muted text-center" style="margin: 10px;">
-				{%- if facebook_login is defined %}
-				<a href="{{ facebook_login }}" class="btn btn-lg btn-block btn-primary btn-facebook">
-				<i class="icon-facebook-sign"></i> {{ _("Facebook") }}</a>
-				{%- endif -%}
-
-				{%- if google_login is defined %}
-				<a href="{{ google_login }}" class="btn btn-lg btn-block btn-primary btn-google">
-				<i class="icon-google-plus-sign"></i> {{ _("Google") }}</a>
-				{%- endif -%}
-
-				{%- if github_login is defined %}
-				<a href="{{ github_login }}" class="btn btn-lg btn-block btn-primary btn-github">
-				<i class="icon-github-sign"></i> {{ _("GitHub") }}</a>
-				{%- endif -%}
-				</p>
-				{%- endif -%}
-				{%- if not disable_signup -%}
-				<p class="text-center">
-					<br><a href="#signup">{{ _("Not a user yet? Sign up") }}</a>
-				</p>
-				{%- endif -%}
-				<p class="text-center">
-					<br><a href="#forgot" class="text-muted">{{ _("Forgot Password?") }}</a>
-				</p>
-			</div>
+	<div class="main-login col-xs-10 col-sm-8 col-md-3">
+		<div class="logo margin-top-30">
+			<img src="assets/phr/images/logo.png" alt="Healthsnapp"/>
 		</div>
-	</form>
-	<form class="form-signin form-signup hide" role="form" autocomplete="off">
-		<div class="panel panel-default">
-			<div class="panel-body">
-				<h2 class="form-signin-heading">{{ _("Sign Up") }}</h2>
-				<label for="signup_firstname">First Name</label>
-				<input type="text" id="signup_firstname"
-					class="form-control" placeholder="{{ _('First Name') }}" required autofocus>
-				<label for="signup_middlename">Middle Name</label>
-				<input type="text" id="signup_middlename"
-					class="form-control" placeholder="{{ _('Middle Name') }}" required autofocus>
-				<label for="signup_lastname">Last Name</label>
-				<input type="text" id="signup_lastname"
-					class="form-control" placeholder="{{ _('Last Name') }}" required autofocus>
-				<label for="signup_email">Email ID</label>
-				<input type="email" id="signup_email"
-					class="form-control disable" placeholder="{{ _('Email Id') }}" required>
-				<label for="signup_email_cnf">Confirm Email ID</label>
-				<input type="email" id="signup_email_cnf"
-					class="form-control disable" placeholder="{{ _('Confirm Email Id') }}" required>
-				<label for="signup_contact">contact</label>
-				<input type="text" id="signup_contact"
-					class="form-control disable" placeholder="{{ _('Contact No') }}" required>
-				<label for="signup_contact_cnf"> Confirm contact</label>
-				<input type="text" id="signup_contact_cnf"
-					class="form-control disable" placeholder="{{ _('Confirm Contact No') }}" required>
-				<button class="btn btn-lg btn-primary btn-block btn-signup" type="submit">{{ _("Sign up") }}</button>
-				<p class="text-center">
-				<br><a href="#login">{{ _("Have an account? Login") }}</a>
-				</p>
-			</div>
-		</div>	
-	</form>
-
-	<form class="form-signin form-forgot hide" role="form">
-		<h2 class="form-signin-heading">{{ _("Forgot Password") }}</h2>
-		<input type="email" id="forgot_email"
-			class="form-control" placeholder="{{ _('Email Id') }}" required autofocus>
-		<br>
-		<button class="btn btn-lg btn-primary btn-block btn-forgot" type="submit">{{ _("Send Password") }}</button>
-		<p class="text-center">
-			<br><a href="#login">{{ _("Back to Login") }}</a>
-		</p>
-
-	</form>
-
-</div>
-<script type="text/javascript">
+		<div class="box-login"> 
+            <form class="form-login" role="form">
+				<fieldset>
+					<legend>Login</legend>
+					<br>
+					<div class="form-group">
+						<span class="input-icon">
+							<input type="text" id="login_email" class="form-control" name="email" placeholder="Email" required autofocus>
+							<i class="fa fa-envelope"></i> </span>
+					</div>
+					<div class="form-group">
+						<span class="input-icon">
+							<input type="password" id="login_password" class="form-control" name="password" placeholder="Password" required>
+							<i class="fa fa-lock"></i>
+						</span>
+					</div>
+					<div class="form-group clearfix"> 
+						<button type="submit" class="btn btn-primary col-md-12">
+							Sign in <i class="fa fa-arrow-circle-right"></i>
+						</button>
+                    </div>
+                    {%- if social_login -%}    
+                    <div class="form-group margin-top-15 clearfix">
+                        <span>or Log in via</span>
+					</div>
+					{%- if facebook_login is defined %}
+                    <div class="form-group clearfix"> 
+						<a href="{{ facebook_login }}" class="btn btn-primary col-md-12">
+							<i class="fa fa-facebook-square"></i> Facebook 
+						</a>
+                    </div>
+                    {%- endif -%}
+					{%- if google_login is defined %}
+                    <div class="form-group clearfix"> 
+                        <a href="{{ google_login }}" class="btn btn-primary col-md-12">
+							<i class="fa fa-google-plus-square"></i> Google 
+						</a>
+                    </div> 
+                    {%- endif -%}
+                    {%- endif -%}
+                    {%- if not disable_signup -%}
+					<div class="new-account">
+						Not a user yet?
+						<a href="#signup">
+							Sign up
+						</a>
+					</div>
+					{%- endif -%}
+                    <div class="margin-top-10">
+                    	<a href="#forgot">
+                            Forgot Password?
+                        </a>
+                    </div>
+                    <div class="clearfix"></div>
+				</fieldset>
+			</form>
+			<form class="form-register form-signup hide" role="form" autocomplete="off">
+				<fieldset>
+					<legend>Sign Up</legend>
+					<br>
+					<div class="form-group">
+						<input type="text" class="form-control" name="first-name" id="signup_firstname" placeholder="First Name" required>
+					</div>
+                    <div class="form-group">
+						<input type="text" class="form-control" name="middle-name" placeholder="Middle Name" id="signup_middlename" required>
+					</div>
+                    <div class="form-group">
+						<input type="text" class="form-control" name="last-name" placeholder="Last Name" id="signup_lastname" required>
+					</div>  
+					<div class="form-group">
+						<span class="input-icon">
+							<input type="email" class="form-control disable" name="email" placeholder="Email ID" id="signup_email" required>
+							<i class="fa fa-envelope"></i> </span>
+					</div>
+                    <div class="form-group">
+						<span class="input-icon">
+							<input type="email" class="form-control disable" name="confirm-email" placeholder="Confirm Email ID" id="signup_email_cnf" required>
+							<i class="fa fa-envelope"></i> </span>
+					</div>
+					<div class="form-group">
+						<span class="input-icon">
+							<input type="text" class="form-control disable" name="contact" placeholder="Contact No" id="signup_contact" required>
+							<i class="fa fa-phone"></i> </span>
+					</div>
+					<div class="form-group">
+						<span class="input-icon">
+							<input type="text" class="form-control disable" name="confirm-contact" placeholder="Confirm Contact No" id="signup_contact_cnf">
+							<i class="fa fa-phone"></i> </span>
+					</div> 
+					<div class="form-actions"> 
+						<button type="submit" class="btn btn-primary col-md-12">
+							Sign up <i class="fa fa-arrow-circle-right"></i>
+						</button>
+					</div>
+                    <div class="form-actions">
+						<p>
+							Already have an account?
+							<a href="#login">Log-in</a>
+						</p> 
+					</div>
+				</fieldset>
+			</form>
+			<form class="form-forgot hide" role="form">
+				<fieldset>
+					<legend>Forget Password?</legend>
+					<br>
+					<p>Enter e-mail address to reset your password.</p>
+					<div class="form-group">
+						<span class="input-icon">
+							<input type="email" class="form-control" name="email" placeholder="Email" required autofocus>
+							<i class="fa fa-envelope-o"></i> </span>
+					</div>
+					<div class="form-actions"> 
+						<button type="submit" class="btn btn-primary col-md-12">
+							Send Password <i class="fa fa-arrow-circle-right"></i>
+						</button>
+					</div>
+                    <div class="form-actions">
+						<a class="btn btn-primary col-md-12" href="#login">
+							<i class="fa fa-chevron-circle-left"></i> Log-In
+						</a> 
+					</div>
+				</fieldset>
+			</form>
+		</div>
+	</div>
+	<script type="text/javascript">
 		window.history.forward();
 		function noBack(){
 			window.history.forward();
@@ -118,9 +149,13 @@
                 return false;
             });
         });
-</script>
+	</script>
+	<script src="assets/phr/js/login.js"></script>
+	<script>
+		jQuery(document).ready(function() {
+			Login.init();
+		});
+	</script>
 {% endblock %}
-
 {% block script_lib %}{% include "templates/includes/login.js" %}{% endblock %}
-
 {% block sidebar %}{% endblock %}

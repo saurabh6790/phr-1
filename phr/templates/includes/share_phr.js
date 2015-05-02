@@ -23,10 +23,11 @@ $.extend(SharePhr.prototype,{
 		this.doc_list = args.doc_list;
 		RenderFormFields.prototype.init(this.wrapper, {'file_name':args['file_name'], 
 			'values': args['values'], 'method': args['method']}, args['event_id'])
+		$('.save_controller').remove()
 
-		$('<button id="share_data" class="btn btn-primary">Share Data</button></div>').appendTo($('.field-area'))
-		$('<div class="event_section"></div>').appendTo($('.field-area'))
-		$('#share_data').click(function(){
+		//$('<button id="share_data" class="btn btn-primary">Share Data</button></div>').appendTo($('.field-area'))
+		//$('<div class="event_section"></div>').appendTo($('.field-area'))
+		$('#share').click(function(){
 			me.share_phr();
 		})
 		this.bind_controller()
@@ -91,7 +92,6 @@ $.extend(SharePhr.prototype,{
 	},
 	render_folder_section:function(event_id,method){
 		var me = this;
-		console.log([method, me.args['profile_id'], $('input[name="entityid"]').val()])
 		if (method=="visit"){
 			frappe.call({
 				"method":"phr.templates.pages.event.get_individual_visit_count_for_badges",

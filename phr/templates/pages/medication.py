@@ -11,7 +11,7 @@ from phr.templates.pages.profile import search_profile_data_from_solr
 
 @frappe.whitelist(allow_guest=True)
 def get_medication_data(data):
-	print "################################################################################"
+	
 	fields, values, tab = get_data_to_render(data)
 
 	pos = 0
@@ -84,15 +84,11 @@ def get_dosage_types():
 	return dt
 
 def save_data(data):
-	print data
 	obj=json.loads(data)
 	from_date=get_formatted_date(obj.get('from_date_time'))
 	to_date=get_formatted_date(obj.get('to_date_time'))
 	options=get_options(obj)
-	print frappe.user.name
 	user=frappe.get_doc("User",frappe.user.name)
-	print "======"
-	print frappe.user
 	med = frappe.get_doc({
 		"doctype":"Medication",
 		"profile_id":obj.get('profile_id'),
@@ -172,6 +168,7 @@ def update_status_of_medication():
 		where to_date_time < CURDATE() 
 		and status='Active'""")
 	return "done"
+	
 def fetch_data_from_medications(med_list,recipient_list):
 	if med_list:
 		msg={}

@@ -3,7 +3,6 @@ window.disable_signup = {{ disable_signup and "true" or "false" }};
 window.login = {};
 
 login.bind_events = function() {
-	console.log("checking for multiple page rendering issue")
 	if(!window.pageInitialized){
 		$(window).on("hashchange", function() {
 			login.route();
@@ -155,7 +154,6 @@ login.login_handlers = (function() {
 					window.location.href = "/index";
 				}
 			} else if(["#signup", "#forgot"].indexOf(window.location.hash)!==-1) {
-				console.log(["registration completed",data])
 				if (data.message["returncode"]==101){
 					frappe.msgprint(data.message.msg_display);
 					setTimeout("window.location.href = '/login'", 5000);

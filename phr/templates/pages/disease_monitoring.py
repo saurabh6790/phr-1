@@ -25,7 +25,8 @@ def get_disease_fields(name,profile_id=None):
 		if dm:
 			fields, rows, dm_cols, field_mapper = [], [], [""], ["sr"]
 			row_count = 0
-
+			sec_label=name+' Readings'
+			fields.append({"fieldname":"","fieldtype":"section_break","label":sec_label,"options":"<i class='fa fa-pencil-square-o'></i>"})
 			for d in dm.get('parameters'):
 				row_count += 1
 				f_dic = {"fieldname":d.fieldname,"fieldtype":d.fieldtype,"label":d.label,"placeholder":"", "required": d.required or 0}
@@ -35,12 +36,13 @@ def get_disease_fields(name,profile_id=None):
 
 				if row_count==4:
 					row_count=0
-					f_dic={"fieldname":"","fieldtype":"column_break","label":""}
-					fields.append(f_dic)
-
-			s_break = {"fieldname":"","fieldtype":"section_break","label":""}	
-			fields.append(s_break)
+					fields.append({"fieldname":"","fieldtype":"column_break","label":""})
+			#s_break = {"fieldname":"","fieldtype":"section_break","label":""}	
+			#fields.append(s_break)
 			rows.append(dm_cols)
+			sec_label=name+' Monitoring Logs'		
+			fields.append({"fieldname":"","fieldtype":"section_break","label":sec_label,"options":"<i class='fa fa-list-alt'></i>"})
+			#raw_fields.append(s_break)
 			row_dic={"fieldname":"tab","fieldtype": "table","label": "Disease Monitoring","rows":rows}
 			fields.append(row_dic)
 			values=get_values(profile_id, fields, dm.event_master_id, field_mapper)
@@ -90,7 +92,6 @@ def build_options(dm_list,fields,field_mapper,raw_fields=None):
 		for dm in dm_list:
 			dm_data = []
 			field_dict = {}
-
 			for str_data in dm["data"]:
 				val_list = str_data.split("=")
 				field_dict[val_list[0]] = val_list[1]

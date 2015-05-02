@@ -20,7 +20,10 @@ var Appointments = inherit(ListView,{
 			'cmd':"appointments.get_appointments",
 			'profile_id':profile_id})
 		$('.new_controller').remove();
+		$('#share').remove()
 		me.bind_save_event()
+		this.get_linked_providers(profile_id)
+		scroll_top()
 	},
 	bind_save_event: function(){
 		var me = this;
@@ -45,8 +48,7 @@ var Appointments = inherit(ListView,{
     			frappe.msgprint("Appointment Date/Time Should not be less than Current Date/Time")
 			}
 		});
-
-		$('.update').unbind('click').bind('click',function(event) {
+		$('.save_controller').bind('click',function(event) {
 			NProgress.start();
 			var validated=me.validate_form()
 			if (validated['fg']==true){
@@ -106,7 +108,8 @@ var Appointments = inherit(ListView,{
 		var me = this;
 		RenderFormFields.prototype.init($(".field-area"), {'fields': data['listview']})
 		me.bind_save_event()
-		$('.save_controller').remove();
+		$('#share').remove()
+		//$('.save_controller').remove();
 	},
 	get_linked_providers:function(profile_id){
 		var me = this;

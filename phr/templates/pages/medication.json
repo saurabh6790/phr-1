@@ -1,6 +1,12 @@
 {
  "listview": [
   {
+   "fieldname": "", 
+   "fieldtype": "section_break", 
+   "label": "Medicine details",
+   "options":"<i class='fa fa-hospital-o'></i>"
+  },
+  {
    "fieldname": "medicine_name", 
    "fieldtype": "data", 
    "label": "Medicine Name", 
@@ -96,22 +102,8 @@
   {
    "fieldname": "", 
    "fieldtype": "section_break", 
-   "label": ""
-  }, 
-  {
-   "fieldname": "", 
-   "fieldtype": "button", 
-   "label": ""
-  }, 
-  {
-   "fieldname": "", 
-   "fieldtype": "column_break", 
-   "label": ""
-  }, 
-  {
-   "fieldname": "", 
-   "fieldtype": "section_break", 
-   "label": ""
+   "label": "Medication logs",
+    "options":"<i class='fa fa-list-alt'></i>"
   }, 
   {
    "fieldname": "tab", 

@@ -373,7 +373,7 @@ def get_visit_data(data):
 	url="%s/phrdata/getprofilevisit"%get_base_url()
 	from phr.phr.phr_api import get_response
 
-	fields, values, tab = get_data_to_render(data)
+	fields, values, tab= get_data_to_render(data)
 
 	pos = 0
 

@@ -19,15 +19,14 @@ $.extend(PHRComments.prototype, {
 	},
 	make_comment_section:function(){
 		console.log(['make_comment_section',this.wrapper])
-		$('<hr>\
-			<h4> Comments: </h4><br>\
+		$('<h4> Comments: </h4><br>\
 			<div class="form-comments">\
 				<div class="comments db">\
 				</div>\
 			</div>\
 			<div class="media comment" data-name="%(name)s">\
 				<span class="pull-left avatar avatar-small">    \
-					<img class="media-object" src="https://secure.gravatar.com/avatar/7b7bc2512ee1fedcd76bdc68926d4f7b?d=retro">   </span>\
+					<img style="border-radius: 4px;min-width: 40px; max-height: 20px;padding-left:2px" class="user-picture" src="https://secure.gravatar.com/avatar/7b7bc2512ee1fedcd76bdc68926d4f7b?d=retro">   </span>\
 					<div class="media-body">\
 						<textarea style="height: 80px" class="form-control" ></textarea>\
 						<div class="text-right" style="margin-top: 10px">\
@@ -76,7 +75,7 @@ $.extend(PHRComments.prototype, {
 		$.each(comments, function(i, comment){
 			$(repl_str('<div class="media comment" data-name="%(name)s">\
 				<span class="pull-left avatar avatar-small">\
-					<img class="media-object" src="%(usr_img)s">\
+					<img style="border-radius: 4px;min-width: 40px; max-height: 20px;padding-left:2px" class="user-picture" src="%(usr_img)s">\
 				</span>\
 				<span class="pull-left comment-icon">\
 					<i class="icon-plus icon-timeline" style="background-color: #1abc9c; color: #fff; "></i>\
