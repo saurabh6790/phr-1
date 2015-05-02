@@ -73,7 +73,7 @@ window.Events = inherit(ListView,{
 			$(this).remove()
 			me.open_form(event_id, event_title, me.profile_id, '', me.req_id)
 		}).appendTo('.breadcrumb');
-		
+		scroll_top()
 		this.make_multi_select_div()
 
 		//$('<div class="event_section" style="margin-top:-10%;"></div>').appendTo($('.field-area'))
@@ -183,7 +183,7 @@ window.Events = inherit(ListView,{
 	},
 	make_multi_select_div: function(){
 		$.each($('[name="event_symptoms"]').val().split(','), function(i, val){
-			$('<div class="ui-autocomplete-multiselect-item">'+val+'<span class="ui-icon ui-icon-close"></span></div>').insertAfter($('[name="event_symptoms"]'))
+			$('<div class="ui-autocomplete-multiselect-item">'+val+'</div>').insertAfter($('[name="event_symptoms"]'))
 		})
 		$('[name="event_symptoms"]').val('');
 	},

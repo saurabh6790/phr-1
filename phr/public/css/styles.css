@@ -331,7 +331,26 @@ h5.over-title {
     background: none repeat scroll 0 0 #fff !important;
     border: 0 none !important;
     color: #808080 !important;
-} 
+}
+#app input:disabled::-webkit-input-placeholder, #app textarea:disabled::-webkit-input-placeholder, #app select:disabled::-webkit-input-placeholder {  
+    color:    #fff;
+}
+#app input:disabled:-moz-placeholder, #app textarea:disabled:-moz-placeholder, #app select:disabled:-moz-placeholder {  
+    color:    #fff;
+}
+#app input:disabled::-moz-placeholder, #app textarea:disabled::-moz-placeholder, #app select:disabled::-moz-placeholder {  
+    color:    #fff;
+}
+#app input:disabled:-ms-input-placeholder, #app textarea:disabled:-ms-input-placeholder, #app select:disabled:-ms-input-placeholder {  
+    color:    #fff;
+}
+#app textarea {
+ resize: none;
+}
+
+.control-input .ui-autocomplete-multiselect .ui-autocomplete-input { width: 278px !important; overflow: hidden;  }
+.ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default { border: 0 !important; } 
+.ui-autocomplete-multiselect-item .ui-state-default .ui-icon { display: inline !important; }
 
 .top-btns-bar {
     background: none repeat scroll 0 0 #fff;

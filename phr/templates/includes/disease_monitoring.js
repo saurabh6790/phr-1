@@ -14,6 +14,7 @@ var DiseaseMonitoring = inherit(RenderFormFields, {
 		$(this.wrapper).empty();
 		$('.field-area').empty();
 		this.render_master_select(this.wrapper)
+		scroll_top()
 	},
 	render_master_select: function(event_title){
 
