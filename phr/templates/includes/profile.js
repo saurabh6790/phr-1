@@ -3,6 +3,7 @@ frappe.provide("templates/includes");
 {% include "templates/includes/log.js" %}
 {% include "templates/includes/form_generator.js" %}
 {% include "templates/includes/linked_phr_updates.js" %}
+{% include "templates/includes/html_viewer.js" %}
 
 var PatientDashboard = inherit(RenderFormFields, {
 	init: function(wrapper,cmd, entityid){
@@ -11,22 +12,35 @@ var PatientDashboard = inherit(RenderFormFields, {
 		this.entityid=entityid ? entityid:sessionStorage.getItem("cid")
 		$(this.wrapper).empty()
 		$('.field-area').empty()
-		RenderFormFields.prototype.init(this.wrapper,this.args,this.entityid)
-		this.render_validations(this.entityid)
-		this.render_field(this.entityid)
+		// RenderFormFields.prototype.init(this.wrapper, this.args, this.entityid)
+
+		HTMLViewer.prototype.init(this.wrapper, this.args, this.entityid)
+
+		this.get_user_image(this.entityid)
+		// this.render_validations(this.entityid)
+		// this.render_field(this.entityid)
 		//this.get_linked_phrs(this.entityid)
-		this.get_enabled_notification(this.entityid)
-		this.get_enabled_dashboard(this.entityid)
+		// this.get_enabled_notification(this.entityid)
+		// this.get_enabled_dashboard(this.entityid)
 		$('#share').remove()
 		this.make_profile_noeditable(this.entityid)
 		scroll_top()
 
 	},
 	make_editable_profile:function(profile_id){
+		console.log(profile_id)
 		var me=this;
+		RenderFormFields.prototype.init(this.wrapper, this.args, this.entityid)
 		$('.edit_profile').remove()
+		$('.save_controller').remove()
+
 		$('<div class="pull-right margin-left-20 save_controller">\
 			<button class="btn btn-primary"><i class="fa fa-save"></i> Save</button></div>').appendTo($('.top-btns-bar'))
+
+		this.render_validations(this.entityid)
+		this.render_field(this.entityid)
+
+		$('#share').remove()
 		$("form input,form textarea,form select").each(function(i, obj) {
 			$(this).prop('disabled', false);
 		})
@@ -35,7 +49,7 @@ var PatientDashboard = inherit(RenderFormFields, {
 		}
 		$('input[name="height_in_inches"]').prop('disabled',true)
 		$('input[name="weight_in_pounds"]').prop('disabled',true)
-		me.render_field(sessionStorage.getItem('cid'))
+		// me.render_field(sessionStorage.getItem('cid'))
 	},
 	make_profile_noeditable:function(){
 		var me=this;
@@ -49,6 +63,7 @@ var PatientDashboard = inherit(RenderFormFields, {
 		})
 	},
 	render_validations:function(profile_id){
+		console.log("testing validations")
 		var me=this;
 		$('.chk').bind('click',function(event){
 			var $id=$('.tab-pane.active').attr('id')
@@ -67,7 +82,7 @@ var PatientDashboard = inherit(RenderFormFields, {
    				$(this).css({"border": "1px solid #999","border-color": "F3F2F5" });	
    			}
 		});
-		$('.tab-pane.active form input[name="mobile"]').bind('change', function() { 
+		$('form input[name="mobile"]').bind('change', function() { 
 			if (validate_mobile($(this).val())) {
 				$(this).closest('.control-input').find('#valid').html('Valid');
 		       	$(this).closest('.control-input').find('#valid').css('color', 'green');
@@ -78,7 +93,7 @@ var PatientDashboard = inherit(RenderFormFields, {
     		    $(this).closest('.control-input').find('#valid').css('color', 'red');
   			}
 		});
-		$('.tab-pane.active form input[name="email"]').bind('change', function() { 
+		$('form input[name="email"]').bind('change', function() { 
 			if (validate_email($(this).val())) {
 				$(this).closest('.control-input').find('#valid').html('Valid');
 		       	$(this).closest('.control-input').find('#valid').css('color', 'green');
@@ -89,19 +104,19 @@ var PatientDashboard = inherit(RenderFormFields, {
     		    $(this).closest('.control-input').find('#valid').css('color', 'red');
   			}
 		});	
-		$('.tab-pane.active form input[name="height"]').bind('change', function() { 
+		$('form input[name="height"]').bind('change', function() { 
 			var inches=$(this).val()/2.54
 			//var prod = one / 0.0254 / 100;
 			var ft = parseInt(inches / 12).toFixed(0);
 			var inch = (inches % 12).toFixed(2);
 			var inc=inch.toString().replace('.', '')
 			fts_inches=ft+"."+parseInt(inch,10)
-			$(".tab-pane.active form input[name='height_in_inches']").val(fts_inches)
+			$("form input[name='height_in_inches']").val(fts_inches)
 			
 		});
-		$('.tab-pane.active form input[name="weight"]').bind('change', function() { 
+		$('form input[name="weight"]').bind('change', function() { 
 			var pounds=$(this).val()/0.45359237
-			$(".tab-pane.active form input[name='weight_in_pounds']").val(pounds.toFixed(2))
+			$("form input[name='weight_in_pounds']").val(pounds.toFixed(2))
 			
 		});
 		
@@ -183,7 +198,10 @@ var PatientDashboard = inherit(RenderFormFields, {
 				me.res = {};
 				selected=[]
 				var $id=$('.tab-pane.active').attr('id')
-				$(".tab-pane.active form input, .tab-pane.active form textarea, .tab-pane.active form select").each(function(i, obj) {
+				// $(".tab-pane.active form input, .tab-pane.active form textarea, .tab-pane.active form select").each(function(i, obj) {
+				// 	me.res[obj.name] = $(obj).val();	 
+				// })
+				$("form input, form textarea, form select").each(function(i, obj) {
 					me.res[obj.name] = $(obj).val();	 
 				})
 				$(".tab-pane.active form").find(".chk:checked").each(function() {
@@ -191,8 +209,8 @@ var PatientDashboard = inherit(RenderFormFields, {
   				});	
 				me.res["entityid"]=profile_id
 				me.res["received_from"]="Desktop"
-				me.get_method(me.res,$id,me,selected)
-				me.make_profile_noeditable()
+				me.get_method(me.res,'basic_info',me,selected)
+				// me.make_profile_noeditable()
 			}
 			else{
 				NProgress.done();
@@ -278,7 +296,9 @@ var PatientDashboard = inherit(RenderFormFields, {
 			args:{"profile_id":profile_id},
 			callback: function(r) {
 				if (r.message["image"]){
-					$('<img src="'+r.message["image"]+'"alt="user image">').appendTo($('.fileinput-preview'))
+					$('<img style="max-width:200px;max-height:300px;" src="'+r.message["image"]+'"alt="user image">\
+						<a class="edit_photo_link" href="javascript:void(0);"><img src="assets/phr/images/change-photo.png"> Edit</a>\
+					').appendTo($('.profile_photo'))
 				}
 			}
 		});
@@ -304,9 +324,17 @@ var PatientDashboard = inherit(RenderFormFields, {
 				NProgress.done();
 				if(r.message) {
 					frappe.msgprint(r.message);
+					$(me.wrapper).empty()
+					$('.field-area').empty()
+					HTMLViewer.prototype.init(me.wrapper, me.args, me.entityid)
+					$('#share').remove()
+					me.make_profile_noeditable(me.entityid)
+					me.get_user_image(me.entityid)
+					// scroll_top()
 					email_msg='Linked PHR Has Updated His Profile'
 					text_msg='Linked PHR Has Updated His Profile'
 					send_linkedphr_updates(email_msg,text_msg,"Profile")
+
 				}
 			}
 		})

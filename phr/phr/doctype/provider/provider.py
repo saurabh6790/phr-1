@@ -17,6 +17,7 @@ class Provider(Document):
 	def on_update(self):
 		if self.provider_category == "TieUp":
 			self.create_user()
+			frappe.db.commit()
 		else:
 			if self.exisitng_user():
 				self.update_user()
@@ -45,7 +46,7 @@ class Provider(Document):
 		res=json.loads(response.text)
 
 		if res['returncode']==129:
-			self.provider_id = res['entityid']
+			self.profile_id = res['entityid']
 
 	def create_user_login(self):
 		from frappe.utils import random_string

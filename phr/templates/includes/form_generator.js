@@ -78,12 +78,15 @@ $.extend(RenderFormFields.prototype,{
 			async: false,
 			success: function(r) {
 				me.render_fields(r.message[0], r.message[1],r.message[2])
+				if (me.args['param'] == "html_viewer"){
+					HTMLViewer.prototype.form_generator_callback(r.message[1])
+				}
 			}
 		});
 	},
 	render_fields:function(fields, values, tab){
 		var me = this;
-		//console.log(section_info)
+		console.log(fields, values, tab)
 		if(tab==1) me.tab_field_renderer()
 		$.each(fields,function(indx, meta){
 			!me.section && meta['fieldtype'] !== 'section_break' && tab!=1 && me.section_break_field_renderer()

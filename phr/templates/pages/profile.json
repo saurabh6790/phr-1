@@ -1,9 +1,21 @@
 {
-   "tab":1,
+   "html_viewer":[
+         {
+         "fieldname": "basic_info", 
+         "fieldtype": "section_break", 
+         "label": "Profile",
+         "options":"<i class='fa fa-user-secret'></i>"
+      },
+      {
+         "fieldname":"profile_viewer", 
+         "fieldtype":"html", 
+         "label":""
+      }
+   ],
    "fields":[
    {
       "fieldname": "basic_info", 
-      "fieldtype": "section", 
+      "fieldtype": "section_break", 
       "section_title":"Profile",
       "label": "Personal Info",
       "options":"<i class='fa fa-user-secret'></i>",
@@ -259,117 +271,6 @@
       "placeholder":"",
       "readonly":1,
       "depends_on": "insurance:Yes" 
-   },
-  
-   {
-      "fieldname": "password", 
-      "fieldtype": "section",
-      "section_title":"Update Password",
-      "options":"<i class='fa fa-keyboard-o'></i>", 
-      "label": "Change Password" 
-
-   },
-   {
-      "fieldname": "old_password", 
-      "fieldtype": "password", 
-      "label": "Old Password",
-      "placeholder":"",
-      "readonly":1,
-      "required":1
-   },
-   {
-      "fieldname": "new_password", 
-      "fieldtype": "password", 
-      "label": "New Password",
-      "placeholder":"",
-      "readonly":1,
-      "required":1
-   },
-   {
-      "fieldname": "cnf_new_password", 
-      "fieldtype": "password", 
-      "label": "Confirm Password",
-      "placeholder":"",
-      "readonly":1,
-      "required":1
-   },
-   {
-      "fieldname": "manage_phr", 
-      "fieldtype": "section",
-      "section_title":"Manage LinkedPHR",
-      "options":"<i class='fa fa-users'></i>",  
-      "label": "LinkedPHR List" 
-   },
-   {
-      "fieldname": "dashboard", 
-      "fieldtype": "section",
-      "section_title":"Manage Dashboard",
-      "options":"<i class='fa fa-tachometer'></i>", 
-      "label": "Dashboard Settings"
-   },
-   {
-      "fieldname": "events", 
-      "fieldtype": "check", 
-      "label": "Events" 
-   },
-   {
-      "fieldname": "visits", 
-      "fieldtype": "check", 
-      "label": "Visits" 
-   },
-   {
-      "fieldname": "disease_monitoring", 
-      "fieldtype": "check", 
-      "label": "Disease Monitoring" 
-   },
-   {
-      "fieldname": "", 
-      "fieldtype": "column_break", 
-      "label": ""
-   },    
-   {
-      "fieldname": "medications", 
-      "fieldtype": "check", 
-      "label": "Medications" 
-   },
-   {
-      "fieldname":"appointments", 
-      "fieldtype":"check", 
-      "label": "Appointments" 
-   }, 
-   {
-      "fieldname":"messages", 
-      "fieldtype":"check", 
-      "label": "Shared History" 
-   },
-   {
-      "fieldname": "image", 
-      "fieldtype": "section",
-      "section_title":"Profile Image",
-      "options":"<i class='fa fa-file-image-o'></i>", 
-      "label": "User Image" 
-   },
-   {
-      "fieldname":"", 
-      "fieldtype":"attach", 
-      "label": "" 
-   },
-   {
-      "fieldname": "notification", 
-      "fieldtype": "section",
-      "section_title":"Manage Notifications",
-      "options":"<i class='fa fa-file-audio-o'></i>", 
-      "label": "Notifications List" 
-   },
-   {
-      "fieldname": "linked_phr", 
-      "fieldtype": "check", 
-      "label": "Linked PHRs" 
-   },
-   {
-      "fieldname":"to_do", 
-      "fieldtype":"check", 
-      "label": "To Do" 
-   } 
+   }
    ]
 }

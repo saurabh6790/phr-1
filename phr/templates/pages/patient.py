@@ -15,7 +15,7 @@ import datetime
 @frappe.whitelist(allow_guest=True)
 def get_data_to_render(data=None,entityid=None):
 	json_data, fields, values, tab = None, None, None, None
-	
+	print [data]
 	if data:
 		data = json.loads(data)
 	
@@ -29,13 +29,14 @@ def get_data_to_render(data=None,entityid=None):
 		if data.get('values'):
 			json_data['values'] = data.get('values')
 
+	if json_data:
+		print "param \n\n\n\n", data.get('param'), "\n\n\n", data
+		fields = json_data.get(data.get('param')) if json_data.get(data.get('param')) else json_data.get('fields')
+
 		if data.get('method'):
 			data = {"method" : data.get('method') }
 		else:
 			data = data
-
-	if json_data:
-		fields = json_data.get(data.get('param')) if json_data.get(data.get('param')) else json_data.get('fields')
 		
 		tab = json_data.get('tab')
 		#section_info = json_data.get('section_info')
