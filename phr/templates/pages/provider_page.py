@@ -218,7 +218,7 @@ def get_acc_req(target, provider_id):
 
 	if data:
 		for d in data:
-			rows.append(d[4:])
+			rows.append(d[5:])
 	else:
 		rows.extend([["","NO DATA",""]])
 
