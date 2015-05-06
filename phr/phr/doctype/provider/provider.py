@@ -7,19 +7,28 @@ from frappe.model.document import Document
 from frappe.utils import cint
 from phr.templates.pages.patient import get_base_url,get_data_to_render
 import json
+import re
 
 class Provider(Document):
 	def validate(self):
+		if self.email and not re.match(r"[^@]+@[^@]+\.[^@]+", self.email):
+			frappe.msgprint("Invalid Email Id",raise_exception=1)
+
+		if self.mobile_number and not (self.mobile_number).isdigit():
+			frappe.msgprint("Invalid Mobile Number",raise_exception=1)
+			
 		if self.provider_category == "TieUp":
 			if not self.mobile_number or not self.email:
 				frappe.msgprint("Mobile Number And Email id are mandetory",raise_exception=1)
 
-	def on_update(self):
 		if self.provider_category == "TieUp":
 			self.create_user()
 		else:
 			if self.exisitng_user():
 				self.update_user()
+
+	def on_update(self):
+		pass
 
 	def create_user(self):
 		if self.exisitng_user():
