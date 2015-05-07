@@ -69,13 +69,18 @@ $.extend(TreeView.prototype, {
 			</li>', dic)).appendTo($('.tree').find('ul').first())
 	
 			$.each(me.mapper[dic['id']], function(j, chld_dic){
+				console.log(chld_dic['count'])
 				$(repl_str('<li>\
 					<span id="%(id)s"><i class="icon-leaf"></i> %(label)s <span class="badge" style="background-color:#1094A0;">%(count)s</span> </span> <a href=""></a>\
 				</li>', chld_dic)).appendTo($li.find('ul'))
+				console.log((repl_str('<li>\
+					<span id="%(id)s"><i class="icon-leaf"></i> %(label)s <span class="badge" style="background-color:#1094A0;">%(count)s</span> </span> <a href=""></a>\
+				</li>', chld_dic)))
 			})
 		})
 
 		if(me.args['req_id']){
+			console.log("removing bag")
 			$('.tree .badge').remove()
 		}
 	

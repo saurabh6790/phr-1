@@ -165,7 +165,6 @@ $.extend(ThumbNails.prototype,{
 		else{
 			frappe.msgprint("Please write description before converting it as pdf!!!")
 		}
-			
 	},
 	show_attachments:function(){
 		var me = this;

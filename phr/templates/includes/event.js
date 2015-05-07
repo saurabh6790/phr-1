@@ -158,6 +158,7 @@ window.Events = inherit(ListView,{
 			"method":"phr.templates.pages.event.get_individual_event_count_for_badges",
 			"args":{"event_id":event_id,"profile_id":profile_id},
 			callback:function(r){
+				console.log([r.message.event_dict, r.message.sub_event_count])
 				TreeView.prototype.init({'profile_id': profile_id, 'dms_file_list':dms_file_list, 
 						'display': 'none',"event_dict":r.message.event_dict,"sub_event_count":r.message.sub_event_count, 
 						'req_id': me.req_id})

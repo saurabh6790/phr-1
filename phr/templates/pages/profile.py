@@ -185,29 +185,30 @@ def get_user_image(profile_id):
 def upload_image(profile_id,data=None,file_name=None):
 	from binascii import a2b_base64
 	import base64
-	data_index = data.index('base64') + 7
-	filedata = data[data_index:len(data)]
-	decoded_image = base64.b64decode(filedata)
-	site_name = get_site_name()
-	path = os.path.abspath(os.path.join('.',site_name, 'public', 'files'))
-	image=path+'/'+profile_id+'/'+file_name
+	# data_index = data.index('base64') + 7
+	# filedata = data[data_index:len(data)]
+	# decoded_image = base64.b64decode(filedata)
+	# site_name = get_site_name()
+	# path = os.path.abspath(os.path.join('.',site_name, 'public', 'files'))
+	# image=path+'/'+profile_id+'/'+file_name
 	file_path='/files/'+profile_id+'/'+file_name
-	if os.path.exists(image):
-		try:
-			os.remove(image)
-			fd = open(image, 'wb')
-			fd.write(decoded_image)
-			fd.close()
-			update_user_image(file_path,profile_id)
-			return "Profile Image Updated"
-		except OSError, e:
-			print ("Error: %s - %s." % (e.filename,e.strerror))
-	else:
-		fd = open(image, 'wb')
-		fd.write(decoded_image)
-		fd.close()
-		update_user_image(file_path,profile_id)
-		return "Profile Image Uploaded Successfully"
+	update_user_image(file_path, profile_id)
+	# if os.path.exists(image):
+	# 	try:
+	# 		os.remove(image)
+	# 		fd = open(image, 'wb')
+	# 		fd.write(decoded_image)
+	# 		fd.close()
+	# 		update_user_image(file_path,profile_id)
+	# 		return "Profile Image Updated"
+	# 	except OSError, e:
+	# 		print ("Error: %s - %s." % (e.filename,e.strerror))
+	# else:
+	# 	fd = open(image, 'wb')
+	# 	fd.write(decoded_image)
+	# 	fd.close()
+	# 	update_user_image(file_path,profile_id)
+	# 	return "Profile Image Uploaded Successfully"
 
 def update_user_image(path, profile_id):
 	ue=frappe.db.get_value("User",{"profile_id":profile_id},"user_image")
@@ -218,7 +219,7 @@ def update_user_image(path, profile_id):
 		sub="Image Uploaded Successfully "+path
 		make_log(profile_id,"profile","Image Upload",sub)
 		frappe.local.cookie_manager.set_cookie("user_image", path or "")
-		return "Image Uploaded Successfully"
+		# return "Image Uploaded Successfully"
 	else:
 		cie=frappe.db.get_value("LinkedPHR Images",{"profile_id":profile_id},"profile_image")
 		if cie:
@@ -227,7 +228,7 @@ def update_user_image(path, profile_id):
 			frappe.db.commit()
 			sub="Image Uploaded Successfully "+path
 			make_log(profile_id,"profile","Linked PHR Image Upload",sub)
-			return "Image Uploaded Successfully"
+			# return "Image Uploaded Successfully"
 		else:
 			lp=frappe.new_doc("LinkedPHR Images")
 			lp.profile_id=profile_id
@@ -235,7 +236,7 @@ def update_user_image(path, profile_id):
 			lp.save(ignore_permissions=True)
 			sub="Image Uploaded Successfully "+path
 			make_log(profile_id,"profile","Linked PHR Image Upload",sub)
-			return "Image Uploaded Successfully"
+			# return "Image Uploaded Successfully"
 
 def get_site_name():
 	return frappe.local.site_path.split('/')[1]

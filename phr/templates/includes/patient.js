@@ -8,6 +8,7 @@ frappe.provide("frappe");
 {% include "templates/includes/visit.js" %}
 {% include "templates/includes/list_view.js" %}
 {% include "templates/includes/profile.js" %}
+{% include "templates/includes/profile_settings.js" %}
 {% include "templates/includes/linked_phr.js" %}
 {% include "templates/includes/provider.js" %}
 {% include "templates/includes/medication.js" %}
@@ -129,7 +130,11 @@ function bind_events(){
 		$('#main-con').empty()
 		PatientDashboard.prototype.init($(document).find("#main-con"),
 				{"file_name" : "profile", "method": "profile"},sessionStorage.getItem('cid'))	
-		$('<ul class="dropdown-menu dropdown-dark"><li><a nohref class="cdb">Dashboard</a></li><li><a nohref id="cprofile">Profile</li></ul>').appendTo($('.cdd'))
+		$('<ul class="dropdown-menu dropdown-dark">\
+				<li><a nohref class="cdb">Dashboard</a></li>\
+				<li><a nohref id="cprofile">Profile</li>\
+				<li><a nohref class="csettings">Profile Settings</a></li>\
+			</ul>').appendTo($('.cdd'))
 		NProgress.done();
 	})	
 	$("#pprofile").unbind("click").click(function(){
@@ -140,6 +145,27 @@ function bind_events(){
 		sessionStorage.setItem("cid",profile_id)
 		PatientDashboard.prototype.init($(document).find("#main-con"),
 				{"file_name" : "profile", "method": "profile"},profile_id)	
+		NProgress.done();
+	})
+	$(".psettings").unbind("click").click(function(){
+		$('.cdd').addClass('hide')
+		$('#cphrname').empty()
+		NProgress.start();
+		profile_id=sessionStorage.getItem('pid')
+		sessionStorage.setItem("cid",profile_id)
+		ProfileSettings.prototype.init($(document).find("#main-con"),
+				{"file_name" : "profile_settings", "method": "profile"},profile_id)	
+		NProgress.done();
+	})
+	$(".csettings").unbind("click").click(function(){
+		// $('.cdd').addClass('hide')
+		// $('#cphrname').empty()
+		alert("test")
+		NProgress.start();
+		profile_id=sessionStorage.getItem('cid')
+		sessionStorage.setItem("cid",profile_id)
+		ProfileSettings.prototype.init($(document).find("#main-con"),
+				{"file_name" : "profile_settings", "method": "profile"},profile_id)	
 		NProgress.done();
 	})
 	$(".cdb").on("click",function(){
