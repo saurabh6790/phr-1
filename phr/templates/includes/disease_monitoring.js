@@ -97,7 +97,6 @@ var DiseaseMonitoring = inherit(RenderFormFields, {
 			if ($('input[data-fieldtype="DateTime"]') || $('input[data-fieldtype="Date"]')){
 				var date=$('input[data-fieldtype="DateTime"]').val() || $('input[data-fieldtype="Date"]').val()
 			}
-			console.log(["s",date,$('input[data-fieldtype="DateTime"]')])
 			arg={"profile_id":profile_id,"received_from":"Desktop","event_master_id":event_id,"event_title":value,"date":date}
 			me.save_dm(me.res,arg,fields,field_mapper,raw_fields,me,value,profile_id)
 		})
@@ -172,7 +171,9 @@ var DiseaseMonitoring = inherit(RenderFormFields, {
 	add_share_event:function(){
 		var me = this;
 		this.selected_dm = []
-		//$('.share').remove();
+		//$('#share').remove();
+
+
 		$("#share").click(function(){
 			var flag = false;
 			me.make_sharing_dialog();
@@ -188,7 +189,7 @@ var DiseaseMonitoring = inherit(RenderFormFields, {
 			})
 			if (flag) me.make_sharing_dialog();
 			else frappe.msgprint("Please select atleast one record for sharing")
-		}).appendTo('.field-area')
+		})
 	},
 	make_sharing_dialog: function(){
 		var me = this;
@@ -216,7 +217,6 @@ var DiseaseMonitoring = inherit(RenderFormFields, {
 	share_data:function(d){
 		var me = this;
 		me.res['lphr_name'] = sessionStorage.getItem("cname")
-		console.log(["Testing RES Dictionary", me.res])
 		NProgress.start();
 		if(me.validate_sharing_modal()){
 			console.log(["Testing RES Dictionary before frappe call", me.res])

@@ -355,7 +355,7 @@ h5.over-title {
 .top-btns-bar {
     background: none repeat scroll 0 0 #fff;
     border-bottom: 1px solid rgba(0, 0, 0, 0.07) !important;
-    padding: 20px 30px 20px 290px;
+    padding:  10px 30px 10px 290px;
     position: fixed;
     right: 0;
     top: 65px;
@@ -1609,7 +1609,7 @@ ul.sub-menu li ul.sub-menu li ul.sub-menu li a {
     margin-left: 260px;
   }
   .app-navbar-fixed .main-content {
-    margin-top: 75px;
+    margin-top: 58px;
   }
   .app-navbar-fixed .main-content:before, .app-navbar-fixed .main-content:after {
     content: " ";
@@ -3643,8 +3643,8 @@ a.text-light:hover {
   position: relative;
   border-bottom-width: 1px;
   border-bottom-style: solid;
-  padding: 15px;
-  min-height: 50px;
+  padding: 10px 15px;
+  min-height: 40px;
 }
 .panel-heading .panel-heading-tabs {
   list-style: none;
@@ -4609,7 +4609,8 @@ a.text-light:hover {
 /*  Labels and Badges
 /* ---------------------------------------------------------------------- */
 .badge {
-  background-color: #89c148;
+  background-color: #89c148 !important;
+  float: right;
 }
 
 .badge-success {
@@ -4712,6 +4713,13 @@ fieldset legend {
   color: #c2c2c5;
   opacity: 1;
 }
+.tree li span:first-child { width:75%; }
+ .tree ul { padding-left: 0 !important; }
+ .tree ul li ul { padding-left: 25px !important; }
+.tree .selected {
+    background: none repeat scroll 0 0 #eee !important;
+    color: #89c148 !important;
+}
 
 textarea, select, input[type="text"], input[type="password"], input[type="datetime"], input[type="datetime-local"], input[type="date"], input[type="month"], input[type="time"], input[type="week"], input[type="number"], input[type="email"], input[type="url"], input[type="search"], input[type="tel"], input[type="color"] {
   -webkit-appearance: none;
@@ -4720,7 +4728,7 @@ textarea, select, input[type="text"], input[type="password"], input[type="dateti
   background-color: #FFFFFF;
   background-image: none;
   border: 1px solid rgba(0, 0, 0, 0.07);
-  border-radius: 0 0 0 0 !important;
+  border-radius: 4px !important;
   color: #5b5b60;
   font-family: inherit;
   font-size: 14px;

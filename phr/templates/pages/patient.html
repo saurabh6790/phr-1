@@ -169,8 +169,11 @@
       </div>
       <div class="linked-phr pull-right margin-left-20 link-phr">
       </div>
-      
-       <div class="pull-right margin-left-20 save_controller">
+      <div class="pull-right margin-left-20" id="share">
+        <button class="btn btn-primary">
+          <i class="fa fa-share-square"></i>Share Data</button>
+      </div>
+      <div class="pull-right margin-left-20 save_controller">
         <button class="btn btn-primary"><i class="fa fa-save"></i> Save</button>
       </div>
       <div class="pull-right margin-left-20 new_controller">
@@ -225,11 +228,13 @@
 {% block con_right %}
 <div class="panel panel-white no-radius">
     <div class="panel-heading border-bottom">
-      <h4 class="panel-title"><img src="assets/phr/images/emergency-dtls.png" alt="Emergency Details" title="Emergency Details"> Emergency Details<a nohref class="ped"><span id="emer_ico" data-toggle="tooltip" data-placement="top" title="Print Emergency Details"><i class="fa fa-print"></i></span></a> </h4>
+      <h4 class="panel-title"><img src="assets/phr/images/emergency-dtls.png" alt="Emergency Details" title="Emergency Details"> Emergency Details</h4>
     </div>
-    <div class="panel-body" id="ed">
-        
+    <div class="panel-body" >
+        <div id="ed"></div>
+        <a nohref class="ped"><span id="emer_ico" data-toggle="tooltip" data-placement="top" title="Print Emergency Details"><i class="fa fa-print"></i></span></a>     
     </div>
+    
 </div>
 <div class="panel panel-white no-radius to_do_lists">
     <div class="panel-heading border-bottom">

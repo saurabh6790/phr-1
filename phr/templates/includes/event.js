@@ -1,5 +1,5 @@
-frappe.provide("templates/includes");
 frappe.provide("frappe");
+frappe.provide("templates/includes");
 {% include "templates/includes/inherit.js" %}
 {% include "templates/includes/utils.js" %}
 {% include "templates/includes/form_generator.js" %}
@@ -23,13 +23,25 @@ window.Events = inherit(ListView,{
 		this.dms_file_list = [];
 		this.profile_id = profile_id;
 		this.doc_list = [];
+		this.from_date=$('[name="from_date"]').val()
+		this.to_date=$('[name="to_date"]').val()
 		
 		ListView.prototype.init(this.wrapper, {"file_name" : "event",
 			'cmd':"event.get_event_data",
 			'tab_at': 4,
+			'event_date_from':this.from_date,
+			'event_date_to':this.to_date,
 			'profile_id':profile_id})
+		
 		$('.save_controller').remove();
-
+		this.add_share_event()
+		this.render_spans()
+		this.get_linked_providers()
+		this.add_search_event()
+		scroll_top()
+	},
+	add_share_event:function(){
+		var me=this;
 		$("#share").click(function(){
 			var fg = false;
 			$('.table').find('thead').each(function(){
@@ -62,12 +74,20 @@ window.Events = inherit(ListView,{
 			else{
 				frappe.msgprint("Please first select an event. ")
 			}
-			
-			
 		})
-		this.render_spans()
-		this.get_linked_providers()
-		scroll_top()
+	},
+	add_search_event:function(wrapper,json_file,profile_id,entity_id){
+		var me = this;
+		$('.search_event').click(function(){
+			from_date=$('[name="from_date"]').val()
+			to_date=$('[name="to_date"]').val()
+			ListView.prototype.init(this.wrapper, {"file_name" : "event",
+			'search':"event",
+			'tab_at': 4,
+			'event_date_from':from_date,
+			'event_date_to':to_date,
+			'profile_id':me.profile_id})
+		})
 	},
 	open_form:function(event_id, event_title, profile_id, res, req_id, visit_id){
 		var me = this;

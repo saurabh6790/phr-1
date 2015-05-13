@@ -46,6 +46,12 @@ $.extend(RenderFormFields.prototype,{
 		$('.save_controller').remove();
 		$('#share').remove()
 		$('.edit_profile').remove()
+
+		$('<div class="pull-right margin-left-20" id="share">\
+			<button class="btn btn-primary">\
+			<i class="fa fa-share-square"></i>Share Data</button></div>').appendTo($('.top-btns-bar')).addClass(me.operation)
+
+		
 		$('<div class="pull-right margin-left-20 save_controller">\
 			<button class="btn btn-primary"><i class="fa fa-save"></i> Save</button></div>').appendTo($('.top-btns-bar')).addClass(me.operation)
 		//$('<button class="btn btn-primary pull-right margin-left-20 new_controller"><i class="fa fa-plus-square"></i> New</button>').appendTo($('top-btns-bar')).addClass(me.operation)
@@ -55,11 +61,9 @@ $.extend(RenderFormFields.prototype,{
 					<i class="icon-save"></i> Save \
 				</button>\
 			</div>').appendTo($('.sub-top-bar')).addClass(me.operation)*/
+	
 		
-		$('<div class="pull-right margin-left-20" id="share">\
-			<button class="btn btn-primary">\
-			<i class="fa fa-share-square"></i>Share Data</button></div>').appendTo($('.top-btns-bar')).addClass(me.operation)
-
+		
 	},
 	get_field_meta:function(){
 		var me = this;
@@ -254,9 +258,9 @@ $.extend(RenderFormFields.prototype,{
 		$input = $(repl_str('<div class="form-horizontal frappe-control" style="max-width: 600px;margin-top:10px;">\
 			<div class="form-group row" style="margin: 0px">\
 			<label class="control-label col-xs-4" style="padding-right: 0px;">%(label)s</label>\
-			<div class="col-xs-8"><div class="control-input">\
+			<label class="col-xs-8 weight_mngnt"><div class="control-input">\
 			<select type="text" class="form-control" data-toggle="tooltip" \
-			data-placement="top" title="%(label)s" name="%(fieldname)s" ></div></div></div></div>', field_meta)).appendTo($(this.column))
+			data-placement="top" title="%(label)s" name="%(fieldname)s" ></div></label></div></div>', field_meta)).appendTo($(this.column))
 
 
 		if (typeof(field_meta['options']) === "string"){
@@ -300,7 +304,7 @@ $.extend(RenderFormFields.prototype,{
 		var val = field_meta['value'];
 		if(field_meta['required']==1){
 			$input.find("select").prop('required',true)
-			$input.find("label").addClass('required')
+			$input.find(".control-label").addClass('required')
 			$('<style>.required:after{content:" *";color:red;font-size:20px;}</style>').appendTo($input)
 			/*if (!val){
 				$input.find("select").css({"border": "1px solid #999","border-color": "red" });
@@ -425,11 +429,10 @@ $.extend(RenderFormFields.prototype,{
 		this.set_description($input.find('.control-input'), field_meta)
 	},
 	button_field_renderer: function(field_meta){
-		$('<div class="update" style="width:45%;display:inline-block;text-align:right;">\
-				<button class="btn btn-primary">\
-					Save \
-				</button>\
-			</div>').appendTo($(this.column))
+		$(repl_str('<div class="form-horizontal frappe-control" style="max-width: 600px;margin-top:10px;">\
+			<div class="form-group row" style="margin: 0px"><div class="col-xs-8">\
+			<div class="%(fieldname)s" style="margin-right:0px;float:right;"><button class="btn btn-primary"> %(label)s</button>\
+			</div></div></div></div>',field_meta)).appendTo($(this.column))
 
 	},
 	attach_field_renderer:function(field_meta){
@@ -690,7 +693,7 @@ $.extend(RenderFormFields.prototype,{
 		this.column_break_field_renderer();
 	},
 	column_break_field_renderer: function(field_meta){
-        this.column = $('<div class="form-column" style="margin-top:10px;">\
+        this.column = $('<div class="form-column" >\
             				<form>\
 							</form>\
 					</div>').appendTo($(this.section))
@@ -703,7 +706,7 @@ $.extend(RenderFormFields.prototype,{
 			.addClass("col-md-" + colspan);
     },
     section_break_field_renderer: function(meta){
-       	$input = $('<div class="panel panel-white no-radius events  sec %(fieldname)s"><div class="panel-heading border-light he"></div><div class="panel-body margin-top-15 bod"> </div>').appendTo($(this.wrapper))
+       	$input = $('<div class="panel panel-white no-radius events  sec %(fieldname)s"><div class="panel-heading border-light he"></div><div class="panel-body bod"> </div>').appendTo($(this.wrapper))
   		this.section=$input.find($('.bod'))
         
       	if(meta){

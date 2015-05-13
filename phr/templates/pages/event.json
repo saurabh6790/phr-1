@@ -152,6 +152,12 @@
 			"placeholder":""
 		},
 		{
+			"fieldname":"search_event", 
+			"fieldtype":"button", 
+			"label":"Search Event",
+			"placeholder":""
+		},
+		{
 			"fieldname":"",
 			"fieldtype":"column_break",
 			"label":""
