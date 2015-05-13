@@ -438,10 +438,10 @@ def get_event_data(data):
 			break
 
 	data=json.loads(data)
-	print data
-	other_param=data.get('other_param')
+	#other_param=data.get('other_param')
 	profile_id = data.get('profile_id')
-	response=get_response(url, json.dumps({"profileId":data.get('profile_id'),"event_date_from":other_param.get('event_date_from'),"event_date_to":other_param.get('event_date_to')}), request_type)
+	frappe.errprint([data.get('event_date_from'),data.get('event_date_to'),data.get('profile_id')])
+	response=get_response(url, json.dumps({"profileId":data.get('profile_id'),"event_date_from":data.get('event_date_from'),"event_date_to":data.get('event_date_to')}), request_type)
 	res_data = json.loads(response.text)
 
 

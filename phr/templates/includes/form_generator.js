@@ -255,9 +255,9 @@ $.extend(RenderFormFields.prototype,{
 		$input = $(repl_str('<div class="form-horizontal frappe-control" style="max-width: 600px;margin-top:10px;">\
 			<div class="form-group row" style="margin: 0px">\
 			<label class="control-label col-xs-4" style="padding-right: 0px;">%(label)s</label>\
-			<div class="col-xs-8"><div class="control-input">\
+			<label class="col-xs-8 weight_mngnt"><div class="control-input">\
 			<select type="text" class="form-control" data-toggle="tooltip" \
-			data-placement="top" title="%(label)s" name="%(fieldname)s" ></div></div></div></div>', field_meta)).appendTo($(this.column))
+			data-placement="top" title="%(label)s" name="%(fieldname)s" ></div></label></div></div>', field_meta)).appendTo($(this.column))
 
 
 		if (typeof(field_meta['options']) === "string"){
@@ -301,7 +301,7 @@ $.extend(RenderFormFields.prototype,{
 		var val = field_meta['value'];
 		if(field_meta['required']==1){
 			$input.find("select").prop('required',true)
-			$input.find("label").addClass('required')
+			$input.find(".control-label").addClass('required')
 			$('<style>.required:after{content:" *";color:red;font-size:20px;}</style>').appendTo($input)
 			/*if (!val){
 				$input.find("select").css({"border": "1px solid #999","border-color": "red" });
@@ -690,7 +690,7 @@ $.extend(RenderFormFields.prototype,{
 		this.column_break_field_renderer();
 	},
 	column_break_field_renderer: function(field_meta){
-        this.column = $('<div class="form-column" style="margin-top:10px;">\
+        this.column = $('<div class="form-column" >\
             				<form>\
 							</form>\
 					</div>').appendTo($(this.section))
@@ -703,7 +703,7 @@ $.extend(RenderFormFields.prototype,{
 			.addClass("col-md-" + colspan);
     },
     section_break_field_renderer: function(meta){
-       	$input = $('<div class="panel panel-white no-radius events  sec %(fieldname)s"><div class="panel-heading border-light he"></div><div class="panel-body margin-top-15 bod"> </div>').appendTo($(this.wrapper))
+       	$input = $('<div class="panel panel-white no-radius events  sec %(fieldname)s"><div class="panel-heading border-light he"></div><div class="panel-body bod"> </div>').appendTo($(this.wrapper))
   		this.section=$input.find($('.bod'))
         
       	if(meta){

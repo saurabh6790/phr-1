@@ -44,11 +44,11 @@ $.extend(TreeView.prototype, {
 		$('.event_section').empty();
 
 		$('<div class="event_tree" style="width=100%;">\
-				<div class="tree" style="width:40%;float:left;min-height:500px;">\
+				<div class="tree" style="width:30%;float:left;min-height:500px;">\
 					<ul>\
 					</ul>\
 				</div>\
-				<div class="thumb" style="width:60%;float:left;">\
+				<div class="thumb" style="width:70%;float:left;">\
 					<div align="center"><h4> Document Uploader and Viewer </h4></div>\
 					<div style="word-wrap: break-word;width:100%;">\
 						<p>You can upload images and pdfs of your here.</p>\

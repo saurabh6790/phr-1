@@ -29,9 +29,19 @@ window.Events = inherit(ListView,{
 		ListView.prototype.init(this.wrapper, {"file_name" : "event",
 			'cmd':"event.get_event_data",
 			'tab_at': 4,
+			'event_date_from':this.from_date,
+			'event_date_to':this.to_date,
 			'profile_id':profile_id})
 		
 		$('.save_controller').remove();
+		this.add_share_event()
+		this.render_spans()
+		this.get_linked_providers()
+		this.add_search_event()
+		scroll_top()
+	},
+	add_share_event:function(){
+		var me=this;
 		$("#share").click(function(){
 			var fg = false;
 			$('.table').find('thead').each(function(){
@@ -65,19 +75,19 @@ window.Events = inherit(ListView,{
 				frappe.msgprint("Please first select an event. ")
 			}
 		})
-		this.render_spans()
-		this.get_linked_providers()
-		//this.add_search_event(this.wrapper,json_file,profile_id,entity_id)
-		scroll_top()
 	},
 	add_search_event:function(wrapper,json_file,profile_id,entity_id){
-		/*var me=this;
-		$('<button class="btn btn-primary">Search Events</button>').appendTo($('.search_event')).click(function(){
-			me.init(wrapper,json_file,profile_id,entity_id)
-		})*/
-		/*$('.search_event').click(function(){
-			me.init(wrapper,json_file,profile_id,entity_id)
-		})*/
+		var me = this;
+		$('.search_event').click(function(){
+			from_date=$('[name="from_date"]').val()
+			to_date=$('[name="to_date"]').val()
+			ListView.prototype.init(this.wrapper, {"file_name" : "event",
+			'search':"event",
+			'tab_at': 4,
+			'event_date_from':from_date,
+			'event_date_to':to_date,
+			'profile_id':me.profile_id})
+		})
 	},
 	open_form:function(event_id, event_title, profile_id, res, req_id, visit_id){
 		var me = this;

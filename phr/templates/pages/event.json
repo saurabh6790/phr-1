@@ -153,7 +153,7 @@
 		},
 		{
 			"fieldname":"search_event", 
-			"fieldtype":"html", 
+			"fieldtype":"button", 
 			"label":"Search Event",
 			"placeholder":""
 		},
