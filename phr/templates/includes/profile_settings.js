@@ -14,6 +14,7 @@ var ProfileSettings = inherit(RenderFormFields, {
 		this.entityid=sessionStorage.getItem("cid")
 		$(this.wrapper).empty()
 		$('.field-area').empty()
+		$('#share').remove()
 		RenderFormFields.prototype.init(this.wrapper,this.args,this.entityid)
 		this.render_validations(this.entityid)
 		this.render_field(this.entityid)
@@ -26,12 +27,13 @@ var ProfileSettings = inherit(RenderFormFields, {
 		
 	},
 	render_validations:function(profile_id){
-		
-
+		$('#share').remove()
 
 		var me=this;
+		
 		$('.chk').bind('click',function(event){
 			var $id=$('.tab-pane.active').attr('id')
+			console.log($('.tab-pane.active').attr('id'))
 			if ($id=='dashboard'){
 				if (($('#dashboard.tab-pane.active form').find("input:checkbox:checked").length)>4){
 					alert("You Need to select any Four")
@@ -47,44 +49,6 @@ var ProfileSettings = inherit(RenderFormFields, {
    				$(this).css({"border": "1px solid #999","border-color": "F3F2F5" });	
    			}
 		});
-		$('.tab-pane.active form input[name="mobile"]').bind('change', function() { 
-			if (validate_mobile($(this).val())) {
-				$(this).closest('.control-input').find('#valid').html('Valid');
-		       	$(this).closest('.control-input').find('#valid').css('color', 'green');
-			}
-			else {
-				
-				$(this).closest('.control-input').find('#valid').html('Invalid');
-    		    $(this).closest('.control-input').find('#valid').css('color', 'red');
-  			}
-		});
-		$('.tab-pane.active form input[name="email"]').bind('change', function() { 
-			if (validate_email($(this).val())) {
-				$(this).closest('.control-input').find('#valid').html('Valid');
-		       	$(this).closest('.control-input').find('#valid').css('color', 'green');
-			}
-			else {
-				
-				$(this).closest('.control-input').find('#valid').html('Invalid');
-    		    $(this).closest('.control-input').find('#valid').css('color', 'red');
-  			}
-		});	
-		$('.tab-pane.active form input[name="height"]').bind('change', function() { 
-			var inches=$(this).val()/2.54
-			//var prod = one / 0.0254 / 100;
-			var ft = parseInt(inches / 12).toFixed(0);
-			var inch = (inches % 12).toFixed(2);
-			var inc=inch.toString().replace('.', '')
-			fts_inches=ft+"."+parseInt(inch,10)
-			$(".tab-pane.active form input[name='height_in_inches']").val(fts_inches)
-			
-		});
-		$('.tab-pane.active form input[name="weight"]').bind('change', function() { 
-			var pounds=$(this).val()/0.45359237
-			// console.log(pounds)
-			$(".tab-pane.active form input[name='weight_in_pounds']").val(pounds.toFixed(2))
-			
-		});
 		$('a[data-toggle="tab"]').on('click', function (e) {
   			attr=$(e.target).attr('href')
 			if (attr=='#notification' && (sessionStorage.getItem("cid")!=sessionStorage.getItem("pid"))){
@@ -94,15 +58,8 @@ var ProfileSettings = inherit(RenderFormFields, {
   				me.get_linked_phrs(sessionStorage.getItem('pid'))
   			}
 		})
-		/*frappe.datetime.get_diff(doc.schedule_date) < 1*/
-		$('.tab-pane.active form input[name="str_date_of_birth"]').bind('change', function() { 
-			val=$(this).val()
-			if (diffDays(parseDate(val),new Date().setHours(0,0,0,0)) < 0) { 
-				$(this).val("")
-    			frappe.msgprint("OOP's Date of Birth is not valid")
-			}
-		});
 		if (sessionStorage.getItem("cid")!=sessionStorage.getItem("pid")){
+			$('.tab-pane.active').removeClass('active');
 			$($('a[aria-controls="manage_phr"]').parent()).css("display", "none");
 			$($('#manage_phr')).css("display", "none");
 			$($('a[aria-controls="password"]').parent()).css("display", "none");
@@ -283,9 +240,10 @@ var ProfileSettings = inherit(RenderFormFields, {
 				NProgress.done();
 				if(r.message) {
 					frappe.msgprint(r.message);
-					email_msg='Linked PHR Has Updated His Profile'
-					text_msg='Linked PHR Has Updated His Profile'
-					send_linkedphr_updates(email_msg,text_msg,"Profile")
+					$('#share').remove();
+					email_msg='Linked PHR Has Updated His Profile';
+					text_msg='Linked PHR Has Updated His Profile';
+					send_linkedphr_updates(email_msg,text_msg,"Profile");
 				}
 			}
 		})

@@ -194,7 +194,7 @@
       "fieldtype": "select", 
       "label": "Blood Group",
       "readonly":1,
-      "options":["","B+","B-", "A+", "A-", "AB+", "AB-", "O+", "O-"]
+      "options":["", "A+", "A-", "B+", "B-", "O+", "O-", "AB+", "AB-"]
    },
    {
       "fieldname": "addiction", 

@@ -69,7 +69,8 @@ def create_profile_solr(data):
 
 def update_lphr_barcode(path,profile_id):
 	cie=frappe.db.get_value("LinkedPHR Images",{"profile_id":profile_id},"barcode")
-	uimage=get_gravatar(profile_id)
+	# uimage=get_gravatar(profile_id)
+	uimage = "/assets/phr/images/profile-photo.jpg"
 	file_path='/files/'+profile_id+'/'+profile_id+".svg"
 	if cie:
 		frappe.db.sql("""update `tabLinkedPHR Images` 
