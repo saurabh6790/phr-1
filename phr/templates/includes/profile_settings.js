@@ -33,7 +33,7 @@ var ProfileSettings = inherit(RenderFormFields, {
 		
 		$('.chk').bind('click',function(event){
 			var $id=$('.tab-pane.active').attr('id')
-			console.log($('.tab-pane.active').attr('id'))
+			// console.log($('.tab-pane.active').attr('id'))
 			if ($id=='dashboard'){
 				if (($('#dashboard.tab-pane.active form').find("input:checkbox:checked").length)>4){
 					alert("You Need to select any Four")
@@ -51,10 +51,12 @@ var ProfileSettings = inherit(RenderFormFields, {
 		});
 		$('a[data-toggle="tab"]').on('click', function (e) {
   			attr=$(e.target).attr('href')
+  			$('.save_controller').show();
 			if (attr=='#notification' && (sessionStorage.getItem("cid")!=sessionStorage.getItem("pid"))){
 				$($('input[name="linked_phr"]').parents()[3]).css("display", "none");  				
   			}
   			else if(attr=='#manage_phr'){
+  				$('.save_controller').hide();
   				me.get_linked_phrs(sessionStorage.getItem('pid'))
   			}
 		})

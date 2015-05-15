@@ -328,7 +328,7 @@ h5.over-title {
 }
 
 #app textarea[disabled], #app input[disabled], #app select[disabled] {
-    background: none repeat scroll 0 0 #fff !important;
+    background: none repeat scroll 0 0 #f1f1f1 !important;
     border: 0 none !important;
     color: #808080 !important;
 }
@@ -11518,6 +11518,11 @@ td.small-width {
   color: #ffffff !important;
 }
 
+.ui-datepicker { 
+  background: #f1f1f1 !important; 
+  z-index: 9999 !important;
+}
+.ui-datepicker td .ui-state-default:hover { background: #89c148 !important; } 
 /* ---------------------------------------------------------------------- */
 /*  Custom CSS
 /* ---------------------------------------------------------------------- */ 

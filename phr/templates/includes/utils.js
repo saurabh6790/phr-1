@@ -25,7 +25,7 @@ function diffDays(startDate, endDate) {
 function repl_str(str, args){
 	$.each(args, function(key, val){
 		var reg = new RegExp("\\%\\(" + key + "\\)s", "igm");
-        console.log([key, args[key]])
+        // console.log([key, args[key]])
         if (args[key])	str = str.replace(reg, args[key]);
         if (args[key] === 0) str = str.replace(reg, args[key]);
         else str = str.replace(reg, '');

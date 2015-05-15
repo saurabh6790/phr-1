@@ -532,7 +532,7 @@ def build_appointments_data(data):
 		for d in data:
 			rows.extend([[get_formatted_date_time(d["from_date_time"]),d["provider_name"],d["reason"]]])
 	else:
-		rows.extend([["","NO DATA",""]])
+		rows.extend([["NO DATA", "",""]])
 	appointments_dic={"fieldname":"appointments","fieldtype": "table","label": "Appointments","rows":rows}
 	return appointments_dic
 
@@ -548,7 +548,7 @@ def build_logs_data(data):
 		for d in data:
 			rows.extend([[d["entity"],d["operation"],d["subject"]]])
 	else:
-		rows.extend([["","NO","DATA"]])
+		rows.extend([["NO DATA", "",""]])
 
 	logs_dic={"fieldname":"messages","fieldtype": "table","label": "Shared History","rows":rows}
 	return logs_dic

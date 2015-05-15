@@ -3,9 +3,9 @@
   {
    "fieldname": "", 
    "fieldtype": "section_break", 
-   "label": "Medicine details",
-   "options":"<i class='fa fa-hospital-o'></i>"
-  },
+   "label": "Medicine details", 
+   "options": "<i class='fa fa-hospital-o'></i>"
+  }, 
   {
    "fieldname": "medicine_name", 
    "fieldtype": "data", 
@@ -102,8 +102,8 @@
   {
    "fieldname": "", 
    "fieldtype": "section_break", 
-   "label": "Medication logs",
-    "options":"<i class='fa fa-list-alt'></i>"
+   "label": "Medication logs", 
+   "options": "<i class='fa fa-list-alt'></i>"
   }, 
   {
    "fieldname": "tab", 
@@ -111,7 +111,7 @@
    "label": "Medications", 
    "rows": [
     [
-     " ", 
+     "<i class='icon-unlock'></i>/<i class='icon-lock'></i>", 
      "Medicine Name", 
      "Dosage", 
      "From Date", 

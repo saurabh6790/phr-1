@@ -94,7 +94,7 @@ upload = {
 					"method": "phr.templates.pages.uploader.upload",
 					args: args,
 					callback: function(r) {
-						console.log(r)
+						// console.log(r)
 						
 						if(!r._server_messages){
 							msgbox.hide();

@@ -30,7 +30,7 @@ var PatientDashboard = inherit(RenderFormFields, {
 
 	},
 	make_editable_profile:function(profile_id){
-		console.log(profile_id)
+		// console.log(profile_id)
 		var me=this;
 		RenderFormFields.prototype.init(this.wrapper, this.args, this.entityid)
 		$('.edit_profile').remove()
@@ -65,7 +65,7 @@ var PatientDashboard = inherit(RenderFormFields, {
 		})
 	},
 	render_validations:function(profile_id){
-		console.log("testing validations")
+		// console.log("testing validations")
 		var me=this;
 		$('.chk').bind('click',function(event){
 			var $id=$('.tab-pane.active').attr('id')
@@ -329,14 +329,14 @@ var PatientDashboard = inherit(RenderFormFields, {
 	},
 	make_image_uploader:function(d){
 		var me =this;
-		console.log($('input[name="entityid"]').val())
+		// console.log($('input[name="entityid"]').val())
 		upload.make({
 			parent: $('.modal-body'),
 			args:{'profile_id': me.entityid, 'dialog': d},
 			callback:function(attachment, r) {
 				// NProgress.done();
 				me.set_image(attachment)
-				console.log(attachment['file_name'])
+				// console.log(attachment['file_name'])
 			}
 		});
 	},
@@ -464,7 +464,7 @@ var PatientDashboard = inherit(RenderFormFields, {
    				"description": "All your future notifications will be sent on these Mobile"
   			}] 
 		d = new Dialog();
-		console.log(meta_dic[selected])
+		// console.log(meta_dic[selected])
 		d.init({'fields':fields,"values":meta_dic[selected],"title":"Add Email And Mobile"})
 		d.show()
 		var me=this;

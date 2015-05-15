@@ -202,7 +202,6 @@ function render_dashboard(profile_id){
 			method:'phr.templates.pages.profile.get_user_image',
 			args:{"profile_id":sessionStorage.getItem("cid")},
 			callback: function(r) {
-				console.log(r.message)
 				if (r.message["image"]){
 					//$('.cdd .linked-phr #cphrimg').attr("src",r.message["image"])
 					$('<img style="min-width: 40px; max-height: 30px; border-radius: 4px" src="'+r.message["image"]+'" class="img-rounded"  id="cphrimg" title="'+name+'" alt="'+name+'">').appendTo($('.cdd .linked-phr #cimage'))

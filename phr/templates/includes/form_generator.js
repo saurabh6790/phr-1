@@ -90,7 +90,7 @@ $.extend(RenderFormFields.prototype,{
 	},
 	render_fields:function(fields, values, tab){
 		var me = this;
-		console.log(fields, values, tab)
+		// console.log(fields, values, tab)
 		if(tab==1) me.tab_field_renderer()
 		$.each(fields,function(indx, meta){
 			!me.section && meta['fieldtype'] !== 'section_break' && tab!=1 && me.section_break_field_renderer()

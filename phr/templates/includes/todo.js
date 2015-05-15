@@ -22,7 +22,7 @@ var ToDo = inherit(ListView,{
 	make_todo:function(){
 		var me = this;
 		d = new Dialog();
-		d.init({"file_name":"todo", "title":"To Do"})
+		d.init({"file_name":"todo", "title":"To Do", "button_title": "Create To Do"})
 		d.show()
 		$('.modal-body form input[name="due_date"]').bind('blur', function() { 
 				val=$(this).val()

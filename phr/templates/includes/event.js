@@ -178,7 +178,7 @@ window.Events = inherit(ListView,{
 			"method":"phr.templates.pages.event.get_individual_event_count_for_badges",
 			"args":{"event_id":event_id,"profile_id":profile_id},
 			callback:function(r){
-				console.log([r.message.event_dict, r.message.sub_event_count])
+				// console.log([r.message.event_dict, r.message.sub_event_count])
 				TreeView.prototype.init({'profile_id': profile_id, 'dms_file_list':dms_file_list, 
 						'display': 'none',"event_dict":r.message.event_dict,"sub_event_count":r.message.sub_event_count, 
 						'req_id': me.req_id})
@@ -221,16 +221,17 @@ window.Events = inherit(ListView,{
 		$('.modal-backdrop').remove();;
 
 		d = new Dialog();
-		d.init({"file_name":"provider_search", "title":"Provider Search"})
+		d.init({"file_name":"provider_search", "title":"Provider Search", "button_title": "Add"})
 		d.show()
-		$('<button class ="btn btn-success btn-sm" style="float:left;"> search </button>')
+		$('.modal-footer .btn-primary').css("float","left")
+		$('<button class ="btn btn-success btn-sm" style="float:left;"> Search </button>')
 			.click(function(){
 				$(".modal-body form input, .modal-body form select").each(function(i, obj) {
 					me.filters[obj.name] = $(obj).val();
 				})
 				me.render_result_table(me.filters, d)
 			})
-			.appendTo($('.modal-body'))
+			.appendTo($('.modal-body .panel'))
 	},
 	render_result_table:function(filters, d){
 		var me = this;
@@ -244,23 +245,23 @@ window.Events = inherit(ListView,{
 	},
 	generate_table: function(result_set, d, filters){
 		var me = this;
-		$('.stable').empty()
+		$('.stable').remove()
 		$('.ap').remove()
 		$('.hr').remove()
-		this.table = $("<hr class='hr'><div class='table-responsive stable'>\
-			<table class='table table-bordered'>\
-				<thead><tr></tr></thead>\
-				<tbody></tbody>\
-			</table>\
-		</div>").appendTo('.modal-body');
-
-		header = [["", 50], ["Provider Name", 170], ["Number", 100], ["Email", 100], ["Specialization", 100], ["Location", 100]]
-
 		if(result_set){
-			$.each(header, function(i, col) {
-			$("<th>").html(col[0]).css("width", col[1]+"px")
-				.appendTo(me.table.find("thead tr"));
-			});
+			this.table = $("<hr class='hr'><div class='table-responsive stable' style='overflow-y: auto;height: 300px; margin-top: 10%;'>\
+				<table class='table table-bordered'>\
+					<thead><tr></tr></thead>\
+					<tbody></tbody>\
+				</table>\
+			</div>").appendTo('.modal-body');
+
+			header = [["", 50], ["Provider Name", 170], ["Number", 100], ["Email", 100], ["Specialization", 100], ["Location", 100]]
+
+				$.each(header, function(i, col) {
+				$("<th>").html(col[0]).css("width", col[1]+"px")
+					.appendTo(me.table.find("thead tr"));
+				});
 
 			$.each(result_set, function(i,d){
 				var row = $("<tr>").appendTo(me.table.find("tbody"));
@@ -274,12 +275,12 @@ window.Events = inherit(ListView,{
 			me.set_provider(d)
 		}
 		else{
-			$('<div class="stable">No Provider is there for selected criteria. \
+			$('<div class="stable" style="margin-top: 10%;">No Provider is there for selected criteria. \
 				You can add New Provider by clicking on Add Button</div>').appendTo('.modal-body')
 		}
 		
 
-		$('<button class ="btn btn-success btn-sm ap" style="float:left;"> Add New Provider </button>')
+		$('<button class ="btn btn-success btn-sm ap" style="float:left;"> Create New Provider </button>')
 			.unbind("click").click(function(){
 				d.hide()
 				me.create_provider_linking(filters, d)
@@ -308,7 +309,7 @@ window.Events = inherit(ListView,{
 			method:"phr.templates.pages.provider.check_existing_provider",
 			args:{'provider_id':provider_id, 'profile_id':sessionStorage.getItem("cid")},
 			callback:function(r){
-				console.log(r.message)
+				// console.log(r.message)
 				if (r.message!=true){
 					me.attach_provider({'entityid':provider_id},
 							{'email': email,'mobile': mobile,'name':name }, d)
@@ -346,7 +347,8 @@ window.Events = inherit(ListView,{
 		$('.modal').remove();
 		$('.modal-backdrop').remove();
 
-		d.init({"file_name":"provider", "values": filters})
+		d.init({"file_name":"provider", "values": filters, "title":"New Provider", "button_title": "Add"})
+		$('.modal-footer .btn-primary').css("float","left")
 		d.show()
 		me.bind_provider_creation(d)
 	},
@@ -475,7 +477,7 @@ window.Events = inherit(ListView,{
 					method:"phr.templates.pages.event.create_update_event",
 					args:{"data":JSON.stringify(me.res), "req_id": me.req_id},
 					callback:function(r){
-						console.log(r.message)
+						// console.log(r.message)
 						if(!r.message['exe']){
 							$('.breadcrumb li:last').remove()
 							NProgress.done();

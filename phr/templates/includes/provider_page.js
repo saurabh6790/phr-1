@@ -8,12 +8,14 @@ frappe.provide("frappe");
 {% include "templates/includes/visit.js" %}
 {% include "templates/includes/list_view.js" %}
 {% include "templates/includes/profile.js" %}
+{% include "templates/includes/profile_settings.js" %}
 {% include "templates/includes/linked_phr.js" %}
 {% include "templates/includes/provider.js" %}
 {% include "templates/includes/medication.js" %}
 {% include "templates/includes/appointments.js" %}
 {% include "templates/includes/messages.js" %}
 {% include "templates/includes/custom_dialog.js" %}
+{% include "templates/includes/disease_monitoring.js" %}
 {% include "templates/includes/dashboard_renderer.js" %}
 {% include "templates/includes/todo.js" %}
 
@@ -65,6 +67,10 @@ $(document).ready(function () {
 		})	
 	}
 
+	$("#home").on("click",function(){
+		render_middle(sessionStorage.getItem("pid"))
+	})
+
 	$("#pprofile").unbind("click").click(function(){
 		$('.cdd').addClass('hide')
 		$('#cphrname').empty()
@@ -113,6 +119,16 @@ $(document).ready(function () {
 			{"file_name" : "profile", "method": "profile"},sessionStorage.getItem('cid'))	
 			NProgress.done();
 		})	
+		$(".csettings").unbind("click").click(function(){
+			// $('.cdd').addClass('hide')
+			// $('#cphrname').empty()
+			NProgress.start();
+			profile_id=sessionStorage.getItem('cid')
+			sessionStorage.setItem("cid",profile_id)
+			ProfileSettings.prototype.init($(document).find("#main-con"),
+					{"file_name" : "profile_settings", "method": "profile"},profile_id)	
+			NProgress.done();
+		})
 		NProgress.done();
 
 	})
@@ -157,6 +173,26 @@ $(document).ready(function () {
 		DiseaseMonitoring.prototype.init($(document).find("#main-con"),'', sessionStorage.getItem("cid"))
 		NProgress.done();
 	})
+	$('.appoint').unbind("click").click(function(){
+		$('.breadcrumb').empty()
+		NProgress.start();
+		$('<li><a nohref>Appointments</a></li>').click(function(){
+			$('.breadcrumb li').nextAll().remove()
+			Appointments.prototype.init($(document).find("#main-con"), '', sessionStorage.getItem("cid"))
+		}).appendTo('.breadcrumb');
+		Appointments.prototype.init($(document).find("#main-con"),'', sessionStorage.getItem("cid"))
+		NProgress.done();
+	})
+	$('.msg').unbind("click").click(function(){
+		$('.breadcrumb').empty()
+		NProgress.start();
+		$('<li><a nohref>Messages</a></li>').click(function(){
+			$('.breadcrumb li').nextAll().remove()
+			Messages.prototype.init($(document).find("#main-con"), '', sessionStorage.getItem("cid"))
+		}).appendTo('.breadcrumb');
+		Messages.prototype.init($(document).find("#main-con"),'', sessionStorage.getItem("cid"))
+		NProgress.done();
+	})
 	$(".create_todo").unbind("click").click(function(){
 		NProgress.start();
 		ToDo.prototype.init($(document).find("#main-con"),
@@ -182,15 +218,16 @@ open_patient=function(profile_id,name){
 }
 
 render_middle = function(profile_id){
-	$(".field-area").empty()
-	RenderFormFields.prototype.init($("#main-con"), {'file_name':'provider_page'})
+	$(".top-btns-bar").empty();
+	$(".field-area").empty();
+	RenderFormFields.prototype.init($("#main-con"), {'file_name':'provider_page'});
 	$('a[data-toggle="tab"]').unbind("click").click(function (e) {
 		e.target // newly activated tab
 		e.relatedTarget // previous active tab
 	 		// alert(e.target)
 		request_renderer($(this).attr('href'), profile_id)
-	})
-	request_renderer('#my_req', profile_id)
+	});
+	request_renderer('#my_req', profile_id);
 }
 
 request_renderer = function(target, profile_id){

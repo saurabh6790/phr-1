@@ -11,14 +11,14 @@ var PHRComments = function(){
 
 $.extend(PHRComments.prototype, {
 	init:function(args){
-		console.log(['comment', args["wrapper"]])
+		// console.log(['comment', args["wrapper"]])
 		this.wrapper = args["wrapper"];
 		this.args = args;
 		this.make_comment_section();
 		this.get_comments()
 	},
 	make_comment_section:function(){
-		console.log(['make_comment_section',this.wrapper])
+		// console.log(['make_comment_section',this.wrapper])
 		$('<h4> Comments: </h4><br>\
 			<div class="form-comments">\
 				<div class="comments db">\
@@ -57,7 +57,7 @@ $.extend(PHRComments.prototype, {
 	},
 	get_comments:function(){
 		var me = this;
-		console.log("get_comments")
+		// console.log("get_comments")
 		frappe.call({
 			method:"phr.templates.pages.phr_comments.get_comments",
 			args:{"profile_id": me.args["profile_id"], 

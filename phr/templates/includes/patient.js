@@ -266,7 +266,7 @@ function bind_events(){
 			}
 		}
 		else{
-			frappe.msgprint("Switch User to Account Holder to Link PHR")
+			frappe.msgprint("Switch User to Account Holder to create new Link PHR")
 		}
 	})
 	$(".create_provider").unbind("click").click(function(){

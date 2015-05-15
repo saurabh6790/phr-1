@@ -23,17 +23,17 @@ $.extend(TreeView.prototype, {
 				{'label' : 'Prescription', 'id':'prescription-14', 'icon':'icon-file',"count":me.args['event_dict']['14']},
 				{'label' : 'Cost of Care', 'id':'cost_of_care-15', 'icon':'icon-credit-card',"count":me.args['event_dict']['15']}]
 
-		me.mapper = {'consultancy-11':[{'label' : 'DOCTORS  CLINICAL NOTES', 'id':'A_51',"count":me.args['sub_event_count']['1151']}, 
-									{'label' : 'TEST / INVESTIGATION ADVISED', 'id': 'B_52',"count":me.args['sub_event_count']['1152']}, 
-									{'label' : 'REFERAL NOTE', 'id': 'C_53',"count":me.args['sub_event_count']['1153']}],
-					'event_snap-12':[{'label' : 'PATIENT SNAPS', 'id' : 'A_51',"count":me.args['sub_event_count']['1251']},
-							{'label':'CLINICAL SNAPS', 'id': 'B_52',"count":me.args['sub_event_count']['1252']}],
-					'lab_reports-13':[{'label': 'TEST REPORTS', 'id':'A_51',"count":me.args['sub_event_count']['1351']}, 
-							{'label':'TEST IMAGES', 'id':'B_52',"count":me.args['sub_event_count']['1352']}],
-					'prescription-14':[{'label':'PRESCRIBED MEDICATION', 'id':'A_51',"count":me.args['sub_event_count']['1451']},
-							{'label':'PRISCRIBED ADVICE','id':'B_52',"count":me.args['sub_event_count']['1452']},
-							{'label':'DISCHARGE SUMMERY', 'id': 'C_53',"count":me.args['sub_event_count']['1453']}],
-					'cost_of_care-15':[{'label': 'MEDICAL BILLS', 'id': 'A_51',"count":me.args['sub_event_count']['1551']}]
+		me.mapper = {'consultancy-11':[{'label' : 'Doctors Clinical Notes', 'id':'A_51',"count":me.args['sub_event_count']['1151']}, 
+									{'label' : 'Test / Investigation Advidce ', 'id': 'B_52',"count":me.args['sub_event_count']['1152']}, 
+									{'label' : 'Referal Note', 'id': 'C_53',"count":me.args['sub_event_count']['1153']}],
+					'event_snap-12':[{'label' : 'Patient Snaps', 'id' : 'A_51',"count":me.args['sub_event_count']['1251']},
+							{'label':'Clinical Snaps', 'id': 'B_52',"count":me.args['sub_event_count']['1252']}],
+					'lab_reports-13':[{'label': 'Test Reports', 'id':'A_51',"count":me.args['sub_event_count']['1351']}, 
+							{'label':'Test Images', 'id':'B_52',"count":me.args['sub_event_count']['1352']}],
+					'prescription-14':[{'label':'Prescribed Medication', 'id':'A_51',"count":me.args['sub_event_count']['1451']},
+							{'label':'Prescribed Advice','id':'B_52',"count":me.args['sub_event_count']['1452']},
+							{'label':'Discharge Summery', 'id': 'C_53',"count":me.args['sub_event_count']['1453']}],
+					'cost_of_care-15':[{'label': 'Medical Bills', 'id': 'A_51',"count":me.args['sub_event_count']['1551']}]
 				}
 
 		this.make_tree_base()
@@ -69,18 +69,18 @@ $.extend(TreeView.prototype, {
 			</li>', dic)).appendTo($('.tree').find('ul').first())
 	
 			$.each(me.mapper[dic['id']], function(j, chld_dic){
-				console.log(chld_dic['count'])
+				// console.log(chld_dic['count'])
 				$(repl_str('<li>\
 					<span id="%(id)s"><i class="icon-leaf"></i> %(label)s <span class="badge" style="background-color:#1094A0;">%(count)s</span> </span> <a href=""></a>\
 				</li>', chld_dic)).appendTo($li.find('ul'))
-				console.log((repl_str('<li>\
-					<span id="%(id)s"><i class="icon-leaf"></i> %(label)s <span class="badge" style="background-color:#1094A0;">%(count)s</span> </span> <a href=""></a>\
-				</li>', chld_dic)))
+				// console.log((repl_str('<li>\
+				// 	<span id="%(id)s"><i class="icon-leaf"></i> %(label)s <span class="badge" style="background-color:#1094A0;">%(count)s</span> </span> <a href=""></a>\
+				// </li>', chld_dic)))
 			})
 		})
 
 		if(me.args['req_id']){
-			console.log("removing bag")
+			// console.log("removing bag")
 			$('.tree .badge').remove()
 		}
 	

@@ -9,7 +9,7 @@ login.bind_events = function() {
 		});
 
 		$(".form-login").on("submit", function(event) {
-			console.log("form-login first event")
+			// console.log("form-login first event")
 			event.preventDefault();
 			$('.btn-primary').prop("disabled", true);
 			var args = {};
@@ -58,7 +58,7 @@ login.bind_events = function() {
 				return false;
 			}
 
-			console.log("phr signup")
+			// console.log("phr signup")
 
 			login.call(args);
 		});
@@ -81,7 +81,7 @@ login.bind_events = function() {
 
 login.route = function() {
 	var route = window.location.hash.slice(1);
-	console.log(route)
+	// console.log(route)
 	if(!route) route = "login";
 	login[route]();
 }
@@ -130,7 +130,7 @@ login.login_handlers = (function() {
 
 	var login_handlers = {
 		200: function(data) {
-			console.log(["Data", window.location.hash])
+			// console.log(["Data", window.location.hash])
             if(data.message=="Logged In") {
 				window.location.href = get_url_arg("redirect-to") || "/desk";
 			} else if(data.message=="No App") {

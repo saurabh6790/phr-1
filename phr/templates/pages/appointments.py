@@ -23,7 +23,7 @@ def get_appointments(data):
 	data=json.loads(data)
 	apts_list=fetch_values_from_db(data)
 	for d in apts_list:
-		rows.extend([["",get_formatted_date_time(d.from_date_time),d.provider_name,d.reason]])
+		rows.extend([[get_formatted_date_time(d.from_date_time),d.provider_name,d.reason]])
 
 	return {
 		'rows': rows,

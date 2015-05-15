@@ -50,7 +50,6 @@
             "label": "Appointments",
             "rows": [
                 [
-                    "",
                     "Date time",
                     "Provider's Name",
                     "Reason For Visit"
