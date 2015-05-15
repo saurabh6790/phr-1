@@ -8,7 +8,7 @@ upload = {
 				+ __('Upload a file') + '</a> | <a class="action-link" href="#"><i class="icon-link"></i> '
 				 + __('Attach as web link') + '</a></p>\
 			<div class="action-attach-input">\
-				<input class="alert alert-info" style="padding: 7px; margin: 7px 0px;" \
+				<input class="alert alert-info" style="max-width: 100%; padding: 7px; margin: 7px 0px;" \
 					type="file" name="filedata" />\
 			</div>\
 			<div class="action-link-input" style="display: none; margin-top: 7px;">\
@@ -94,7 +94,7 @@ upload = {
 					"method": "phr.templates.pages.uploader.upload",
 					args: args,
 					callback: function(r) {
-						console.log(r)
+						// console.log(r)
 						
 						if(!r._server_messages){
 							msgbox.hide();

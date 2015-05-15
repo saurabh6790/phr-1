@@ -24,13 +24,15 @@
 			"fieldname":"event_title",
 			"fieldtype":"data", 
 			"label":"Event Title",
-			"placeholder":""
+			"placeholder":"",
+			"readonly": 1
 		},
 		{
 			"fieldname":"str_visit_date", 
 			"fieldtype":"date", 
 			"label":"Date",
-			"placeholder":""
+			"placeholder":"",
+			"readonly": 1
 		},
 		{
 			"fieldname":"", 
@@ -41,7 +43,8 @@
 			"fieldname":"visit_descripton", 
 			"fieldtype":"data", 
 			"label":"Visit Description",
-			"placeholder":""
+			"placeholder":"",
+			"readonly": 1
 		},
 		{
 			"fieldname":"",
@@ -102,6 +105,17 @@
 			"options":["", "Consultation", "Follow Up", "Second Opinion"],
 			"label":"Reason For Sharing",
 			"placeholder":""
+		},
+		{
+			"fieldname":"files_section", 
+			"fieldtype":"section_break", 
+			"label":"Attachments",
+			"options": "<i class='fa fa-paperclip green font20 padding-right-10'></i>"
+		},
+		{
+			"fieldname":"event_section", 
+			"fieldtype":"html",
+			"label":""
 		}
 	]
 }

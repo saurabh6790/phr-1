@@ -100,8 +100,8 @@
 		{
 			"fieldname":"files_section", 
 			"fieldtype":"section_break", 
-			"label":"Upload Files",
-			"options": "<i class='fa fa-upload green font20 padding-right-10'></i>"
+			"label":"Attachments",
+			"options": "<i class='fa fa-paperclip green font20 padding-right-10'></i>"
 		},
 		{
 			"fieldname":"event_section", 

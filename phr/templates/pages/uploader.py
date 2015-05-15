@@ -157,7 +157,11 @@ def save_file_on_filesystem(fname, content, content_type=None):
 
 	public_path = os.path.join(frappe.local.site_path, "public")
 	# frappe.errprint([get_files_path(), profile_id, event_id, folder, sub_folder])
-	folder_path = os.path.join(get_files_path(), profile_id, event_id, folder, sub_folder)
+	if event_id and folder and sub_folder:
+		folder_path = os.path.join(get_files_path(), profile_id, event_id, folder, sub_folder)
+
+	elif profile_id:
+		folder_path = os.path.join(get_files_path(), profile_id)
 
 	# frappe.errprint(folder_path)
 	fpath = write_file(content, folder_path, fname)

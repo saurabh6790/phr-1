@@ -39,9 +39,9 @@ $.extend(SharePhr.prototype,{
 		var me = this;
 		$('form input[name="sharing_duration"]').bind('change', function() { 
 			val=$(this).val()
-			if (diffDays(parseDate(val),new Date().setHours(0,0,0,0)) >= 0) { 
+			if (diffDays(parseDate(val),new Date().setHours(0,0,0,0)) > 0) { 
 				$(this).val("")
-    			frappe.msgprint("Sharing Duration date should not be less or equal than Current Date")
+    			frappe.msgprint("Sharing Duration date should not be less than Current Date")
 			}
 		});
 
@@ -79,12 +79,12 @@ $.extend(SharePhr.prototype,{
             	"visit_tag_id": visit_tag_id 
 			}]	
 		}
-		console.log(event_data)
+		// console.log(event_data)
 		frappe.call({
 			"method":"phr.templates.pages.event.marked_files_doc",
 			"args":{"event_data": event_data, "data": {}, "selected_files": me.selected_files},
 			callback:function(r){
-				console.log(r.message)
+				// console.log(r.message)
 				me.doc_list = r.message;
 				me.render_folder_section(me.args['event_id'], me.args['method'])
 			}

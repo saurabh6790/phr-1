@@ -1,0 +1,96 @@
+{
+    "tab": 1,
+    "fields": [
+        {
+            "fieldname": "password",
+            "fieldtype": "section",
+            "label": "Update Password",
+            "section_title": "Update Password",
+            "default": 1
+        },
+        {
+            "fieldname": "old_password",
+            "fieldtype": "password",
+            "label": "Old Password",
+            "placeholder": "",
+            "required": 1
+        },
+        {
+            "fieldname": "new_password",
+            "fieldtype": "password",
+            "label": "New Password",
+            "placeholder": "",
+            "required": 1
+        },
+        {
+            "fieldname": "cnf_new_password",
+            "fieldtype": "password",
+            "label": "Confirm Password",
+            "placeholder": "",
+            "required": 1
+        },
+        {
+            "fieldname": "manage_phr",
+            "fieldtype": "section",
+            "label": "Manage LinkedPHR",
+            "section_title": "Manage LinkedPHR"
+        },
+        {
+            "fieldname": "dashboard",
+            "fieldtype": "section",
+            "label": "Manage Dashboard",
+            "section_title": "Manage Dashboard"
+        },
+        {
+            "fieldname": "events",
+            "fieldtype": "check",
+            "label": "Events"
+        },
+        {
+            "fieldname": "visits",
+            "fieldtype": "check",
+            "label": "Visits"
+        },
+        {
+            "fieldname": "disease_monitoring",
+            "fieldtype": "check",
+            "label": "Disease Monitoring"
+        },
+        {
+            "fieldname": "",
+            "fieldtype": "column_break",
+            "label": ""
+        },
+        {
+            "fieldname": "medications",
+            "fieldtype": "check",
+            "label": "Medications"
+        },
+        {
+            "fieldname": "appointments",
+            "fieldtype": "check",
+            "label": "Appointments"
+        },
+        {
+            "fieldname": "messages",
+            "fieldtype": "check",
+            "label": "Shared History"
+        },
+        {
+            "fieldname": "notification",
+            "fieldtype": "section",
+            "label": "Manage Notifications",
+            "section_title": "Manage Notifications"
+        },
+        {
+            "fieldname": "linked_phr",
+            "fieldtype": "check",
+            "label": "Linked PHRs"
+        },
+        {
+            "fieldname": "to_do",
+            "fieldtype": "check",
+            "label": "To Do"
+        }
+    ]
+}

@@ -31,6 +31,11 @@
 							My Profile
 						</a>
 					</li> 
+					<li>
+						<a nohref class="pprofile psettings">
+							Profile Settings
+						</a>
+					</li> 
 					{%- for child in post_login -%}
 						<li {% if child.label %}data-label="{{ child.label }}" {% endif %}
 							{% if child.class %} class="{{ child.class }}" {% endif %}>

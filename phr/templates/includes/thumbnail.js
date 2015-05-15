@@ -73,10 +73,10 @@ $.extend(ThumbNails.prototype,{
 				</div>\
 				').appendTo('.modal-body');
 
-				console.log($('#pdf_maker'));
+				// console.log($('#pdf_maker'));
 
 				$('#myModal #pdf_maker').click(function(){
-					console.log('trigger pdf pdf_maker')
+					// console.log('trigger pdf pdf_maker')
 					me.convert_txt_to_pdf($('[name="attch_desc"]').val())
 				})
 					
@@ -106,7 +106,7 @@ $.extend(ThumbNails.prototype,{
 	},
 	make_image_uploader:function(d){
 		var me =this;
-		console.log($('input[name="entityid"]').val())
+		// console.log($('input[name="entityid"]').val())
 		upload.make({
 			parent: $('.modal-body'),
 			args:{'profile_id': me.args['profile_id'], 'folder':me.folder, 
@@ -134,7 +134,7 @@ $.extend(ThumbNails.prototype,{
 	},
 	convert_txt_to_pdf:function(desc){
 		var me = this;
-		console.log($('[name="attch_desc"]').val())
+		// console.log($('[name="attch_desc"]').val())
 		if($('[name="attch_desc"]').val()){
 			frappe.call({
 				method:"phr.templates.pages.uploader.get_pdf_site_path",
@@ -165,11 +165,10 @@ $.extend(ThumbNails.prototype,{
 		else{
 			frappe.msgprint("Please write description before converting it as pdf!!!")
 		}
-			
 	},
 	show_attachments:function(){
 		var me = this;
-		console.log(['show_attachments', me.args['req_id']])
+		// console.log(['show_attachments', me.args['req_id']])
 		frappe.call({
 			method:"phr.templates.pages.event.get_attachments",
 			args:{'profile_id': sessionStorage.getItem("cid"), 'folder':me.folder, 
@@ -202,7 +201,7 @@ $.extend(ThumbNails.prototype,{
 			$td = $(repl('<td style="width:200px;\
 							height:200px;padding-right:20px;vertical-align:top;padding-left:5%;padding-top:5%;">\
 						',attachment)).appendTo(row)
-			console.log(me.doc_list)
+			// console.log(me.doc_list)
 			thumbnail("/"+attachment['path']+"/"+attachment['file_name'], $td, attachment['file_name'], me.doc_list, me.args['display'])
 		}
 		else if((/\.(gif|jpg|jpeg|tiff|png)$/i).test(attachment['file_name'].toLowerCase()) ){
@@ -235,7 +234,7 @@ $.extend(ThumbNails.prototype,{
 		$("input[type=checkbox]").unbind("click").click(function(){
 			if($(this).is(':checked')){
 				file_path = $(this).val()
-				console.log(file_path)
+				// console.log(file_path)
 				me.doc_list.push(file_path.substring(7, file_path.length))
 			}
 			else{

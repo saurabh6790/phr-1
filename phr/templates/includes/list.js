@@ -22,7 +22,7 @@
 // }
 
 function thumbnail(pdfURL, elementID, filename, doc_list, display){
-    console.log(['pdfURL', 'test_pdf', doc_list])
+    // console.log(['pdfURL', 'test_pdf', doc_list])
     PDFJS.workerSrc="/assets/phr/pdfjs/build/pdf.worker.js";
     PDFJS.getDocument(pdfURL).then(function(pdf){
         pdf.getPage(1).then(function(page) {  //1 is the page number we want to retrieve
@@ -66,7 +66,7 @@ function thumbnail(pdfURL, elementID, filename, doc_list, display){
         $("input[type=checkbox]").unbind("click").click(function(){
             if($(this).is(':checked')){
                 file_path = $(this).val()
-                console.log(file_path)
+                // console.log(file_path)
                 doc_list.push(file_path.substring(7, file_path.length))
             }
             else{

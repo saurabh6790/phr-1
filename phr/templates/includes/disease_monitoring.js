@@ -154,7 +154,7 @@ var DiseaseMonitoring = inherit(RenderFormFields, {
   			$("form input, form textarea").each(function(i, obj) {
 				if (obj.name != "date" && obj.name != "") {
 	  				if ($(obj).val() && $(obj).val()!=""){
-	  					console.log([obj.name, $(obj).val()])
+	  					// console.log([obj.name, $(obj).val()])
 	  					fg = true;
 	  					return false;
 	  				}
@@ -176,7 +176,7 @@ var DiseaseMonitoring = inherit(RenderFormFields, {
 
 		$("#share").click(function(){
 			var flag = false;
-			me.make_sharing_dialog();
+			// me.make_sharing_dialog();
 			$('.table').find('tr').each(function () {
 				var row = $(this);
 				$('td', row).map(function(index, td) {
@@ -194,7 +194,7 @@ var DiseaseMonitoring = inherit(RenderFormFields, {
 	make_sharing_dialog: function(){
 		var me = this;
 		d = new Dialog();
-		d.init({"file_name":"share_dm", "title":"Sharing Panel"})
+		d.init({"file_name":"share_dm", "title":"Sharing Panel", "button_title": "Share Record(s)"})
 		d.show()
 		this.res = {}
 		Events.prototype.get_linked_providers(this.profile_id)
@@ -219,7 +219,7 @@ var DiseaseMonitoring = inherit(RenderFormFields, {
 		me.res['lphr_name'] = sessionStorage.getItem("cname")
 		NProgress.start();
 		if(me.validate_sharing_modal()){
-			console.log(["Testing RES Dictionary before frappe call", me.res])
+			// console.log(["Testing RES Dictionary before frappe call", me.res])
 			frappe.call({
 				method:"phr.templates.pages.disease_monitoring.share_dm",
 				args:{'data':me.selected_dm, 'header': $('.fixed-table-header').find('thead').html(), 'share_info':me.res,
@@ -231,7 +231,7 @@ var DiseaseMonitoring = inherit(RenderFormFields, {
 					$('.modal-backdrop').remove();;
 					NProgress.done();
 					me.selected_dm = [];
-					console.log(r)
+					// console.log(r)
 					frappe.msgprint(r.message)
 				}
 			})
