@@ -22,14 +22,14 @@ var DiseaseMonitoring = inherit(RenderFormFields, {
 		$('.field-area').empty()
 		$input = $('<div class="panel panel-white no-radius events sec">\
 			<div class="panel-heading border-light he"><h4 class="panel-title"><i class="fa fa-heartbeat"></i>Disease Selection</h4></div>\
-			<div class="panel-body margin-top-15 bod">\
-			<div class="form-column col-md-12" style="margin-top:10px;">\
+			<div class="panel-body bod">\
+			<div class="form-column col-md-12">\
 			<form><div class="form-horizontal frappe-control" style="max-width: 600px;margin-top:10px;margin-bottom:5px">\
 			<div class="form-group row" style="margin: 0px">\
 			<label class="control-label col-xs-4" style="padding-right: 0px;">Disease</label>\
-			<div class="col-xs-8"><div class="control-input">\
+			<label class="col-xs-8 weight_mngnt"><div class="control-input">\
 			<select type="text" class="form-control" name="disease">\
-			</div></div></div></div></form></div></div></div>').appendTo($('.field-area'))
+			</div></label></div></div></form></div></div></div>').appendTo($('.field-area'))
 		frappe.call({
 			method:"phr.templates.pages.disease_monitoring.get_diseases",
 			callback:function(r){

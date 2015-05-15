@@ -197,14 +197,13 @@
      
       jQuery(document).ready(function() {
         // Sidebar Acive Menu
-        $('.main-navigation-menu > li > a').click(function(){           
-          $('.main-navigation-menu li ul').slideUp();             
-          $('.main-navigation-menu li a').removeClass('active');             
+        $('.main-navigation-menu > li > a').click(function(){      
+          $('.main-navigation-menu li a').removeClass('active');       
           $(this).addClass('active');
         });
-        
+    
         $('.main-navigation-menu > li > ul > li > a').click(function(){     
-          $('.main-navigation-menu li ul li a').removeClass('active');             
+          $('.main-navigation-menu li ul li a').removeClass('active');       
           $(this).addClass('active');
         });
         
