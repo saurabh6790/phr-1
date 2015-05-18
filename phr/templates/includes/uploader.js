@@ -94,12 +94,16 @@ upload = {
 					args: args,
 					callback: function(r) {
 						// console.log(r)
-						
+						console.log("test")
 						if(!r._server_messages){
 							msgbox.hide();
 							$('.modal').remove()
 							$('.modal-backdrop').remove()
 							frappe.msgprint(r.message['success_meg'])
+						}
+						else{
+							NProgress.done();
+							return;
 						}
 						// if(r.exc) {
 						// 	// if no onerror, assume callback will handle errors

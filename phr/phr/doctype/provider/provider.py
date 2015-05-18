@@ -70,7 +70,8 @@ class Provider(Document):
 
 	def exisitng_user(self):
 		if cint(frappe.db.sql("""select count(*) 
-				from tabUser where name = '%s'
+				from tabUser where name = '%s' 
+					and access_type = "Provider"
 			"""%self.email,as_list=1)[0][0]) > 0:
 			return True
 

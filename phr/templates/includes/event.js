@@ -245,10 +245,13 @@ window.Events = inherit(ListView,{
 	},
 	generate_table: function(result_set, d, filters){
 		var me = this;
+
 		$('.stable').remove()
 		$('.ap').remove()
 		$('.hr').remove()
 		if(result_set){
+			$('.modal-footer .btn-primary').show();
+
 			this.table = $("<hr class='hr'><div class='table-responsive stable' style='overflow-y: auto;height: 300px; margin-top: 10%;'>\
 				<table class='table table-bordered'>\
 					<thead><tr></tr></thead>\
@@ -256,7 +259,7 @@ window.Events = inherit(ListView,{
 				</table>\
 			</div>").appendTo('.modal-body');
 
-			header = [["", 50], ["Provider Name", 170], ["Number", 100], ["Email", 100], ["Specialization", 100], ["Location", 100]]
+			header = [["", 50], ["Provider Type", 170],["Provider Name", 170], ["Number", 100], ["Email", 100], ["Specialization", 100], ["Location", 100]]
 
 				$.each(header, function(i, col) {
 				$("<th>").html(col[0]).css("width", col[1]+"px")
@@ -266,6 +269,7 @@ window.Events = inherit(ListView,{
 			$.each(result_set, function(i,d){
 				var row = $("<tr>").appendTo(me.table.find("tbody"));
 				$('<td>').html('<input type="radio" name="provider" id = "'+d['provider_id']+'">').appendTo(row)
+				$('<td>').html(d['provider_type']).appendTo(row)
 				$('<td>').html(d['provider_name']).appendTo(row)
 				$('<td>').html(d['mobile_number']).appendTo(row)
 				$('<td>').html(d['email']).appendTo(row)
@@ -277,6 +281,7 @@ window.Events = inherit(ListView,{
 		else{
 			$('<div class="stable" style="margin-top: 10%;">No Provider is there for selected criteria. \
 				You can add New Provider by clicking on Add Button</div>').appendTo('.modal-body')
+			$('.modal-footer .btn-primary').hide()
 		}
 		
 
@@ -290,6 +295,8 @@ window.Events = inherit(ListView,{
 	set_provider:function(d){
 		var me = this;
 		$('.modal-footer .btn-primary').unbind("click").click(function(){
+			var flag = false;
+
 			$('.table').find('tr').each(function () {
 				var row = $(this);
 				var $td = $('td', row);
@@ -298,12 +305,18 @@ window.Events = inherit(ListView,{
 					$('[name="doctor_name"]').val($($td[1]).html())
 					$('[name="email_id"]').val($($td[3]).html())
 					$('[name="number"]').val($($td[2]).html())
-					me.check_existing($td.find('input[name="provider"]').attr('id'),$($td[3]).html(),$($td[2]).html(),$($td[1]).html(),d)
+					me.check_existing($td.find('input[name="provider"]').attr('id'),$($td[4]).html(),$($td[3]).html(),$($td[2]).html(), $($td[1]).html(),d)
+				}
+				else{
+					flag = true;
 				}
 			})
+			if(flag){
+				frappe.msgprint("First Select provider then click on Add")
+			}
 		})
 	},
-	check_existing:function(provider_id,email,mobile,name,d){
+	check_existing:function(provider_id,email,mobile,name, provider_type, d){
 		var me=this;
 		frappe.call({
 			method:"phr.templates.pages.provider.check_existing_provider",
@@ -312,7 +325,7 @@ window.Events = inherit(ListView,{
 				// console.log(r.message)
 				if (r.message!=true){
 					me.attach_provider({'entityid':provider_id},
-							{'email': email,'mobile': mobile,'name':name }, d)
+							{'email': email,'mobile': mobile,'name':name, 'provider_type': provider_type }, d)
 				}
 				else{
 					d.hide();
@@ -510,6 +523,7 @@ window.Events = inherit(ListView,{
 	validate_form:function(){
   		var me=this;
   		var fg=true
+  		var msg = ''
   		$("form input[required], form textarea[required], form select[required]").each(function(i, obj) {
   			if ($(this).val()=="" && $(this).is(':visible')){
   				$(this).css({"border": "1px solid #999","border-color": "red" });

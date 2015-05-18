@@ -684,6 +684,7 @@ def verify_mobile():
 
 @frappe.whitelist(allow_guest=True)	
 def get_phr_pdf(profile_id):
+	import os, time
 	path = os.path.join(os.getcwd(), get_site_path().replace('.',"").replace('/', ""), 'public', 'files', profile_id)
 	solr_op='dms/getPhrPdfwithfilelocation'
 	url=get_base_url()+solr_op
@@ -694,7 +695,8 @@ def get_phr_pdf(profile_id):
 	response=get_response(url,json.dumps(data),request_type)
 	res=json.loads(response.text)
 	if res:
-		url = get_url()+"/files/%s/"%(profile_id)+cstr(res['file_location'].split('/')[-1])
+		url = ""
+		url = get_url()+"/files/%s/"%(profile_id)+cstr(res['file_location'].split('/')[-1]) + '?id=' + str(int(round(time.time() * 1000)))
 		res["url"]=url
 		response.headers['Content-Disposition'] = 'attachment; filename='+res["file_location"].split("/")[-1]
 		return res

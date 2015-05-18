@@ -187,7 +187,8 @@ $.extend(ThumbNails.prototype,{
 
 		row = $('<tr>').appendTo(this.table)
 		$.each(attachments, function(i, attachment){
-			if((i+1)%3 == 0){
+			if(i==0) i=i+1;
+			if((i)%3 == 0){
 				row = $('<tr>').appendTo(me.table)
 			}
 			attachment['display'] = me.args['display'];

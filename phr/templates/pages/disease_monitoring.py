@@ -139,8 +139,11 @@ def valide_date(arg, data):
 	arg = json.loads(arg)
 	obj = json.loads(data)
 	from frappe.utils import time_diff_in_seconds
-	
-	from_date_time = datetime.datetime.strptime(obj.get('date'), '%d/%m/%Y %H:%M').strftime('%Y-%m-%d %H:%M:%S')
+	try:
+		from_date_time = datetime.datetime.strptime(obj.get('date'), '%d/%m/%Y %H:%M').strftime('%Y-%m-%d %H:%M:%S')
+	except:
+		from_date_time = datetime.datetime.strptime(obj.get('date'), '%d/%m/%Y').strftime('%Y-%m-%d %H:%M:%S')
+
 	curr_date_time = datetime.datetime.strptime(arg.get('curr_date_time'), '%Y-%m-%d %H:%M:%S').strftime('%Y-%m-%d %H:%M:%S')
 
 	if time_diff_in_seconds(from_date_time, curr_date_time) > 0:
