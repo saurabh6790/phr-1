@@ -765,6 +765,7 @@ h5.over-title {
   float: left;
   margin-right: 5px;
   width: 39px;
+  height: 39px;
   margin-top: -2px;
   border-radius: 20%;
 }
@@ -10905,6 +10906,10 @@ td.small-width {
   min-height: 100% !important;
 }
 
+.modal-open {
+    overflow: scroll;
+}
+
 @-webkit-keyframes fadeInLeft {
   0% {
     opacity: 0;
@@ -11520,7 +11525,7 @@ td.small-width {
 
 .ui-datepicker { 
   background: #f1f1f1 !important; 
-  z-index: 9999 !important;
+  z-index: 99999999 !important;
 }
 .ui-datepicker td .ui-state-default:hover { background: #89c148 !important; } 
 /* ---------------------------------------------------------------------- */

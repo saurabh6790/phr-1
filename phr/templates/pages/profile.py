@@ -454,7 +454,8 @@ def build_dm_data(data,res_list):
 		dic={"option":d["disease_name"],"id":d["event_master_id"]}
 		options.append(dic)
 	dm_dic={"fieldname":"disease_monitoring","fieldtype": "table","label": "Disease Monitoring","options":options}
-	res_list.append(dm_dic)	
+	res_list.append(dm_dic)
+
 	return res_list
 
 def build_visit_data(obj):
@@ -508,12 +509,13 @@ def build_medication_data(data):
      		"Dosage", 
      		"From Date", 
      		"To Date",
-     		"Addn Info"
+     		"Addn Info",
+     		"Status"
     	]
    ]	
 	if (data):
 		for d in data:
-			rows.extend([[d["medicine_name"],d["dosage"],formatted_date(d["from_date_time"]),formatted_date(d["to_date_time"]),d["additional_info"]]])
+			rows.extend([[d["medicine_name"],d["dosage"],formatted_date(d["from_date_time"]),formatted_date(d["to_date_time"]),d["additional_info"], d['status']]])
 	else:
 		rows.extend([[" NO DATA","","","",""]])		
 	

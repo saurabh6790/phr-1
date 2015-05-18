@@ -123,19 +123,7 @@
 			"fieldname":"event_section", 
 			"fieldtype":"html", 
 			"label":""
-		},
-		{
-			"fieldname":"comment_section", 
-			"fieldtype":"section_break", 
-			"label":"Comments",
-			"display":"none"
-		},
-		{
-			"fieldname":"comments", 
-			"fieldtype":"html", 
-			"label":""
 		}
-
 	], 
 	"listview":[
 		{
