@@ -207,11 +207,13 @@ $.extend(ThumbNails.prototype,{
 		else if((/\.(gif|jpg|jpeg|tiff|png)$/i).test(attachment['file_name'].toLowerCase()) ){
 			$('<td style="width:200px;height:200px;padding-right:20px;vertical-align:top;padding-left:5%;padding-top:5%;">')
 				.html($(repl('<div>\
-						<input type="checkbox" name="image" style="display:%(display)s" value="/%(path)s/%(file_name)s" >\
-					</div>\
-					<a nohref class="control-image" data-name="/%(path)s/%(file_name)s"><img class="img-responsive"  style="height:150px;" \
-					src="/%(path)s/%(file_name)s" data-bigimgsrc="/%(path)s/%(file_name)s">\
-					<br><label style="width: 150px;word-wrap: break-word;color: #009906;">%(file_name)s</label></a>',attachment))).appendTo(row)
+								<input type="checkbox" name="image" style="display:%(display)s" value="/%(path)s/%(file_name)s" >\
+							</div>\
+							<a nohref class="control-image" data-name="/%(path)s/%(file_name)s">\
+								<img class="img-responsive"  style="height:150px;" \
+									src="/%(path)s/%(file_name)s" data-bigimgsrc="/%(path)s/%(file_name)s">\
+								<br><label style="width: 150px;word-wrap: break-word;color: #009906;">%(file_name)s</label>\
+							</a>',attachment))).appendTo(row)
 		}
 
 		if(me.doc_list){
@@ -228,8 +230,7 @@ $.extend(ThumbNails.prototype,{
 			d.show();
 			$('.modal-footer .btn-primary').hide();
 			$('<div><img style="position: relative; width: 100%; height: 60%; top: 10px" src="'+val+'">\
-				<p style="position: absolute; top: 100px; left: 10%; width: 80%; padding: 4px; background-color: transparent; font-weight: bold; color: #0AD5F5; font-weight: 600; font-size: 2em;">\
-				'+title+'</p></div>').appendTo($('.modal-body'))
+				</div>').appendTo($('.modal-body'))
 		})	
 		$("input[type=checkbox]").unbind("click").click(function(){
 			if($(this).is(':checked')){

@@ -5,8 +5,7 @@ upload = {
 		if(!opts.args) opts.args = {};
 		var $upload = $('<div class="file-upload">\
 			<p class="small"><a class="action-attach disabled" href="#"><i class="icon-upload"></i> '
-				+ __('Upload a file') + '</a> | <a class="action-link" href="#"><i class="icon-link"></i> '
-				 + __('Attach as web link') + '</a></p>\
+				+ __('Upload a file') + '</a></p>\
 			<div class="action-attach-input">\
 				<input class="alert alert-info" style="max-width: 100%; padding: 7px; margin: 7px 0px;" \
 					type="file" name="filedata" />\

@@ -395,16 +395,21 @@ window.Events = inherit(ListView,{
 			args:{'data':res, "profile_id": sessionStorage.getItem("cid")},
 			callback:function(r){
 				if(r.message.returncode==129){
-					
+
+					$('[name="doctor_id"]').val(r.message.entityid)
+					$('[name="doctor_name"]').val(res.name)
+					$('[name="email_id"]').val(res.email)
+					$('[name="number"]').val(res.mobile)
+					$('[name="provider_type"]').val(res.provider_type);
+
 					var db = new render_dashboard();
 					db.render_providers(profile_id);
 					me.get_linked_providers()
 					NProgress.done();
-					
+
 					$('#myModal').remove();
 					$('.modal').remove();
 					$('.modal-backdrop').remove();
-					
 				}
 			}
 		})
@@ -457,7 +462,8 @@ window.Events = inherit(ListView,{
 		this.result_set = {};
 		this.doc_list = []
 		$('.save_controller').unbind('click').click(function(event) {
-			if(me.validate_form()){
+			var  validate = me.validate_form();
+			if(validate['fg']){
 				NProgress.start();
 				$("form input, form textarea, form select").each(function(i, obj) {
 					me.res[obj.name] = $(obj).val();
@@ -495,6 +501,9 @@ window.Events = inherit(ListView,{
 						}
 					}
 				})
+			}
+			else{
+				frappe.msgprint(validate['msg'])
 			}			
 		})
 	},
@@ -504,16 +513,19 @@ window.Events = inherit(ListView,{
   		$("form input[required], form textarea[required], form select[required]").each(function(i, obj) {
   			if ($(this).val()=="" && $(this).is(':visible')){
   				$(this).css({"border": "1px solid #999","border-color": "red" });
-  				frappe.msgprint("Fields Marked as Red Are Mandatory")
-  				fg=false
+  				msg = "Fields Marked as Red Are Mandatory"
+  				fg = false
   			}
   		})
   		if($("form input[name='doctor_name']").val() && $("form input[name='doctor_id']").val()==''){
-  			frappe.msgprint("Please Select Appropriate Provider")
-  			fg=false
+  			msg = "Please Add a provider first then save the event"
+  			fg = false
   		}
 
-  		return fg
+  		return { 
+  			"fg" : fg,
+  			"msg" : msg
+  		}
   	},
 	open_sharing_pannel: function(event_id){
 		var me = this;

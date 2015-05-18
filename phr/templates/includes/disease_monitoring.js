@@ -252,7 +252,7 @@ var DiseaseMonitoring = inherit(RenderFormFields, {
   		})
   		if(fg){
   			if($("form select[name='share_via']").val() == 'Provider Account' && (!$(".modal-body form input[name='doctor_name']").val() || $(" .modal-body form input[name='doctor_id']").val() == '')){
-  				frappe.msgprint("Please Select Appropriate Provider")
+  				frappe.msgprint("Please select a provider first then procees with sharing")
   				fg=false
   			}
 

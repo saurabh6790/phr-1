@@ -63,13 +63,13 @@ $(document).ready(function () {
 
 		$('.create_linkphr').unbind("click").click(function(){
 			$("#main-con").empty()
-			LinkedPHR.prototype.init('',{"file_name" : "linked_patient"},"","create_linkphr")
+			LinkedPHR.prototype.init('',{"file_name" : "linked_patient"},"","create_linkphr", {"source": "provider"})
 		})	
 	}
 
-	$("#home").on("click",function(){
-		render_middle(sessionStorage.getItem("pid"))
-	})
+	// $("#home").on("click",function(){
+	// 	render_middle(sessionStorage.getItem("pid"))
+	// })
 
 	$("#pprofile").unbind("click").click(function(){
 		$('.cdd').addClass('hide')
@@ -108,10 +108,10 @@ $(document).ready(function () {
 			'cmd':"provider.get_pateint_data",
 			'profile_id':profile_id})
 		}).appendTo('.breadcrumb');
-			ListView.prototype.init($(document).find(".field-area"), {"file_name" : "patients",
-			'cmd':"provider.get_patient_data",
-			'profile_id':profile_id})
-		
+		ListView.prototype.init($(document).find(".field-area"), {"file_name" : "patients",
+		'cmd':"provider.get_patient_data",
+		'profile_id':profile_id})
+	
 		$(".cprofile").unbind("click").click(function(){
 			NProgress.start();
 			$('#main-con').empty()
@@ -129,9 +129,25 @@ $(document).ready(function () {
 					{"file_name" : "profile_settings", "method": "profile"},profile_id)	
 			NProgress.done();
 		})
+		$("#share").remove()
+		$(".save_controller").remove()
+		$(".new_controller").remove()
+
 		NProgress.done();
 
 	})
+	
+	$(".psettings").unbind("click").click(function(){
+			$('.cdd').addClass('hide')
+			$('#cphrname').empty()
+			NProgress.start();
+			profile_id=sessionStorage.getItem('pid')
+			sessionStorage.setItem("cid",profile_id)
+			ProfileSettings.prototype.init($(document).find("#main-con"),
+					{"file_name" : "provider_profile_settings", "method": "profile"},profile_id)	
+			NProgress.done();
+		})
+
 	$('.event').unbind("click").click(function(){
 		profile_id=sessionStorage.getItem("cid")
 		$('.breadcrumb').empty()
@@ -218,7 +234,6 @@ open_patient=function(profile_id,name){
 }
 
 render_middle = function(profile_id){
-	$(".top-btns-bar").empty();
 	$(".field-area").empty();
 	RenderFormFields.prototype.init($("#main-con"), {'file_name':'provider_page'});
 	$('a[data-toggle="tab"]').unbind("click").click(function (e) {
@@ -237,6 +252,8 @@ request_renderer = function(target, profile_id){
 		args:{'target':target, 'provider_id': profile_id},
 		callback:function(r){
 			RenderFormFields.prototype.init($("#"+target), {'fields': r.message})
+			$("#share").remove()
+			$(".save_controller").remove()
 		}
 	})
 }

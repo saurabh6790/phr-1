@@ -4,11 +4,12 @@ frappe.provide("templates/includes");
 {% include "templates/includes/dashboard_renderer.js" %}
 
 var LinkedPHR = inherit(RenderFormFields, {
-	init: function(wrapper,cmd, entityid,operation){
+	init: function(wrapper,cmd, entityid,operation, other_param){
 		this.wrapper = wrapper;
 		this.args=cmd
 		this.entityid=entityid
 		this.operation=operation
+		this.source = other_param ? other_param['source'] : "Patient";
 		$(this.wrapper).empty();
 		$('.field-area').empty();
 		RenderFormFields.prototype.init(this.wrapper,this.args,this.entityid,this.operation)
@@ -102,8 +103,10 @@ var LinkedPHR = inherit(RenderFormFields, {
 							frappe.msgprint(r.message.message_summary)
 							$("input").val("");
 							$("form input[name='relationship']").prop("placeholder","")
-							var db = new render_dashboard();
-							db.render_linked_phr(sessionStorage.getItem("pid"))
+							if(me.source=="Patient"){
+								var db = new render_dashboard();
+								db.render_linked_phr(sessionStorage.getItem("pid"))
+							}
 						}
 						else{
 							frappe.msgprint(r.message.message_summary)
