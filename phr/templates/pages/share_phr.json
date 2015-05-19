@@ -3,7 +3,8 @@
 		{
 			"fieldname":"",
 			"fieldtype":"section_break", 
-			"label":"Event Details"
+			"label":"Event Details",
+			"options": "<img src='assets/phr/images/events.png' alt='Events' title='Events'>"
 		},
 		{
 			"fieldname":"entityid",
@@ -37,7 +38,8 @@
 		},
 		{
 			"fieldname":"",
-			"fieldtype":"section_break", 
+			"fieldtype":"section_break",
+			"options":"<i class='fa fa-share-alt-square'></i>",
 			"label":"Sharing Details"
 		},
 		{
@@ -94,6 +96,17 @@
 			"options":["", "Consultation", "Follow Up", "Second Opinion"],
 			"label":"Reason For Sharing",
 			"placeholder":""
+		},
+		{
+			"fieldname":"files_section", 
+			"fieldtype":"section_break", 
+			"label":"Attachments",
+			"options": "<i class='fa fa-paperclip green font20 padding-right-10'></i>"
+		},
+		{
+			"fieldname":"event_section", 
+			"fieldtype":"html",
+			"label":""
 		}
 	]
 }

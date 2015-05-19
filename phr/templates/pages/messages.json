@@ -1,6 +1,12 @@
 {
    "listview": [
         {
+            "fieldname": "", 
+            "fieldtype": "section_break", 
+            "label": "Shared History Logs",
+            "options":"<i class='fa fa-list-alt'></i>"
+        },
+        {
             "fieldname": "tab",
             "fieldtype": "table",
             "label": "Message Logs",

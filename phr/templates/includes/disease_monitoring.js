@@ -14,22 +14,22 @@ var DiseaseMonitoring = inherit(RenderFormFields, {
 		$(this.wrapper).empty();
 		$('.field-area').empty();
 		this.render_master_select(this.wrapper)
+		scroll_top()
 	},
 	render_master_select: function(event_title){
 
 		var me = this;
 		$('.field-area').empty()
-		$input = $('<div class="form-horizontal frappe-control" style="max-width: 600px;margin-top:10px;margin-bottom:5px">\
-						<div class="form-group row" style="margin: 0px">\
-							<label class="control-label small col-xs-4" style="padding-right: 0px;">Disease</label>\
-							<div class="col-xs-8">\
-								<div class="control-input">\
-									<select type="text" class="form-control" \
-										name="disease">\
-								</div>\
-							</div>\
-						</div>\
-				</div>').appendTo($('.field-area'))
+		$input = $('<div class="panel panel-white no-radius events sec">\
+			<div class="panel-heading border-light he"><h4 class="panel-title"><i class="fa fa-heartbeat"></i>Disease Selection</h4></div>\
+			<div class="panel-body bod">\
+			<div class="form-column col-md-12">\
+			<form><div class="form-horizontal frappe-control" style="max-width: 600px;margin-top:10px;margin-bottom:5px">\
+			<div class="form-group row" style="margin: 0px">\
+			<label class="control-label col-xs-4" style="padding-right: 0px;">Disease</label>\
+			<label class="col-xs-8 weight_mngnt"><div class="control-input">\
+			<select type="text" class="form-control" name="disease">\
+			</div></label></div></div></form></div></div></div>').appendTo($('.field-area'))
 		frappe.call({
 			method:"phr.templates.pages.disease_monitoring.get_diseases",
 			callback:function(r){
@@ -76,7 +76,6 @@ var DiseaseMonitoring = inherit(RenderFormFields, {
 
 	},
 	bind_save_event:function(me,event_id,profile_id,value,fields,field_mapper,raw_fields){
-
 		$('form input[name="date"]').bind('blur', function() { 
 			val=$(this).val()
 			if (diffDays(parseDate(val),new Date().setHours(0,0,0,0)) < 0) { 
@@ -98,7 +97,6 @@ var DiseaseMonitoring = inherit(RenderFormFields, {
 			if ($('input[data-fieldtype="DateTime"]') || $('input[data-fieldtype="Date"]')){
 				var date=$('input[data-fieldtype="DateTime"]').val() || $('input[data-fieldtype="Date"]').val()
 			}
-			console.log(["s",date,$('input[data-fieldtype="DateTime"]')])
 			arg={"profile_id":profile_id,"received_from":"Desktop","event_master_id":event_id,"event_title":value,"date":date}
 			me.save_dm(me.res,arg,fields,field_mapper,raw_fields,me,value,profile_id)
 		})
@@ -156,7 +154,7 @@ var DiseaseMonitoring = inherit(RenderFormFields, {
   			$("form input, form textarea").each(function(i, obj) {
 				if (obj.name != "date" && obj.name != "") {
 	  				if ($(obj).val() && $(obj).val()!=""){
-	  					console.log([obj.name, $(obj).val()])
+	  					// console.log([obj.name, $(obj).val()])
 	  					fg = true;
 	  					return false;
 	  				}
@@ -173,10 +171,12 @@ var DiseaseMonitoring = inherit(RenderFormFields, {
 	add_share_event:function(){
 		var me = this;
 		this.selected_dm = []
-		$('.share').remove();
-		$("<button class='btn btn-primary share'> Share </button>").click(function(){
-			var flag = false;
+		//$('#share').remove();
 
+
+		$("#share").click(function(){
+			var flag = false;
+			// me.make_sharing_dialog();
 			$('.table').find('tr').each(function () {
 				var row = $(this);
 				$('td', row).map(function(index, td) {
@@ -187,15 +187,14 @@ var DiseaseMonitoring = inherit(RenderFormFields, {
 				});
 
 			})
-
 			if (flag) me.make_sharing_dialog();
 			else frappe.msgprint("Please select atleast one record for sharing")
-		}).appendTo('.field-area')
+		})
 	},
 	make_sharing_dialog: function(){
 		var me = this;
 		d = new Dialog();
-		d.init({"file_name":"share_dm", "title":"Sharing Panel"})
+		d.init({"file_name":"share_dm", "title":"Sharing Panel", "button_title": "Share Record(s)"})
 		d.show()
 		this.res = {}
 		Events.prototype.get_linked_providers(this.profile_id)
@@ -218,10 +217,9 @@ var DiseaseMonitoring = inherit(RenderFormFields, {
 	share_data:function(d){
 		var me = this;
 		me.res['lphr_name'] = sessionStorage.getItem("cname")
-		console.log(["Testing RES Dictionary", me.res])
 		NProgress.start();
 		if(me.validate_sharing_modal()){
-			console.log(["Testing RES Dictionary before frappe call", me.res])
+			// console.log(["Testing RES Dictionary before frappe call", me.res])
 			frappe.call({
 				method:"phr.templates.pages.disease_monitoring.share_dm",
 				args:{'data':me.selected_dm, 'header': $('.fixed-table-header').find('thead').html(), 'share_info':me.res,
@@ -233,7 +231,7 @@ var DiseaseMonitoring = inherit(RenderFormFields, {
 					$('.modal-backdrop').remove();;
 					NProgress.done();
 					me.selected_dm = [];
-					console.log(r)
+					// console.log(r)
 					frappe.msgprint(r.message)
 				}
 			})
@@ -254,7 +252,7 @@ var DiseaseMonitoring = inherit(RenderFormFields, {
   		})
   		if(fg){
   			if($("form select[name='share_via']").val() == 'Provider Account' && (!$(".modal-body form input[name='doctor_name']").val() || $(" .modal-body form input[name='doctor_id']").val() == '')){
-  				frappe.msgprint("Please Select Appropriate Provider")
+  				frappe.msgprint("Please select a provider first then procees with sharing")
   				fg=false
   			}
 

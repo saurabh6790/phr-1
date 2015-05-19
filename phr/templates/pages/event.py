@@ -373,7 +373,7 @@ def get_visit_data(data):
 	url="%s/phrdata/getprofilevisit"%get_base_url()
 	from phr.phr.phr_api import get_response
 
-	fields, values, tab = get_data_to_render(data)
+	fields, values, tab= get_data_to_render(data)
 
 	pos = 0
 
@@ -426,7 +426,7 @@ def get_event_data(data):
 	fields, values, tab = get_data_to_render(data)
 
 	request_type="POST"
-	url="%s/phrdata/getprofileevent"%get_base_url()
+	url="%s/searchEventByFilterParam"%get_base_url()
 	from phr.phr.phr_api import get_response
 
 	pos = 0
@@ -438,9 +438,12 @@ def get_event_data(data):
 			break
 
 	data=json.loads(data)
+	#other_param=data.get('other_param')
 	profile_id = data.get('profile_id')
-	response=get_response(url, json.dumps({"profileId":data.get('profile_id')}), request_type)
+	frappe.errprint([data.get('event_date_from'),data.get('event_date_to'),data.get('profile_id')])
+	response=get_response(url, json.dumps({"profileId":data.get('profile_id'),"event_date_from":data.get('event_date_from'),"event_date_to":data.get('event_date_to')}), request_type)
 	res_data = json.loads(response.text)
+
 
 	url = "%s/phrdata/getprofilefilecount"%get_base_url()
 	response=get_response(url, json.dumps({"profile_id":data.get('profile_id')}), request_type)
@@ -449,14 +452,14 @@ def get_event_data(data):
 	event_count_dict = {}
 	get_event_wise_count_dict(res_data1.get('FileCountData'), event_count_dict)
 
-	if isinstance(type(res_data), dict):
-		res_data = res_data.get('phr')
+	# if isinstance(type(res_data), dict):
+	# 	res_data = res_data.get('phr')
 
-	else:
-		res_data = json.loads(res_data.get('phr'))	
+	# else:
+	# 	res_data = json.loads(res_data.get('phr'))	
 
-	if res_data.get('eventList'):
-		for visit in res_data.get('eventList'):
+	if res_data.get('list'):
+		for visit in res_data.get('list'):
 			count_list = [0, 0, 0, 0, 0]
 			if not visit.get("event_diseasemontoring"):
 				data = ['<input type="radio" name="event" id = "%s" "><div style="display:none">%s</div>'%(visit['entityid'], visit['entityid']), 
@@ -608,11 +611,11 @@ def get_conditions(filters):
 
 def get_provider_info(cond):
 	if cond:
-		ret = frappe.db.sql("""select provider_id, provider_name, 
+		ret = frappe.db.sql("""select provider_id, provider_type, provider_name, 
 					mobile_number, email, specialization, 
 					concat(ifnull(address,'') , ', ' ,ifnull(address_2,''), ', ', ifnull(city,''), ', ', 
 					ifnull(state,''), ', ', ifnull(country,''), ', ', ifnull(pincode,'')) as addr
-					from tabProvider where %s """%cond, as_dict=1, debug=1)
+					from tabProvider where %s """%cond, as_dict=1)
 		# frappe.errprint(ret)
 		return ((len(ret[0]) > 1) and ret) if ret else None
 	
@@ -623,7 +626,7 @@ def get_provider_info(cond):
 def get_linked_providers(profile_id=None):
 	import itertools
 	if profile_id:
-		ret = frappe.db.sql("select name1, provider, mobile, email, provider_type from  `tabProviders Linked` where patient = '%s' and status = 'Active' "%profile_id, as_dict=1)
+		ret = frappe.db.sql("select name1, provider, mobile, email, provider_type from  `tabProviders Linked` where patient = '%s' and status = 'Active' "%profile_id, as_dict=1, debug=1)
 		
 		for r in ret:
 			r.update({'label': r['name1'], 'value': r['name1']})

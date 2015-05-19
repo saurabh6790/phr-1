@@ -18,7 +18,10 @@ var Messages = inherit(ListView,{
 		ListView.prototype.init($(document).find(".field-area"), {"file_name" : "messages",
 			'cmd':"messages.get_messages_list",
 			'profile_id':this.profile_id})
-		$('.new_controller').remove();
+		$('.new_controller').hide();
+		$('.save_controller').hide();
+		$('#share').remove()
+		scroll_top()
 
 	},
 	

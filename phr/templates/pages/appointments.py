@@ -12,8 +12,7 @@ from phr.templates.pages.profile import search_profile_data_from_solr
 
 @frappe.whitelist(allow_guest=True)
 def get_appointments(data):
-	print "################################################################################"
-	fields, values, tab = get_data_to_render(data)
+	fields, values, tab= get_data_to_render(data)
 
 	pos = 0
 	for filed_dict in fields:
@@ -24,7 +23,7 @@ def get_appointments(data):
 	data=json.loads(data)
 	apts_list=fetch_values_from_db(data)
 	for d in apts_list:
-		rows.extend([["",get_formatted_date_time(d.from_date_time),d.provider_name,d.reason]])
+		rows.extend([[get_formatted_date_time(d.from_date_time),d.provider_name,d.reason]])
 
 	return {
 		'rows': rows,

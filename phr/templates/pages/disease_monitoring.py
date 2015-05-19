@@ -25,7 +25,8 @@ def get_disease_fields(name,profile_id=None):
 		if dm:
 			fields, rows, dm_cols, field_mapper = [], [], [""], ["sr"]
 			row_count = 0
-
+			sec_label=name+' Readings'
+			fields.append({"fieldname":"","fieldtype":"section_break","label":sec_label,"options":"<i class='fa fa-pencil-square-o'></i>"})
 			for d in dm.get('parameters'):
 				row_count += 1
 				f_dic = {"fieldname":d.fieldname,"fieldtype":d.fieldtype,"label":d.label,"placeholder":"", "required": d.required or 0}
@@ -35,12 +36,13 @@ def get_disease_fields(name,profile_id=None):
 
 				if row_count==4:
 					row_count=0
-					f_dic={"fieldname":"","fieldtype":"column_break","label":""}
-					fields.append(f_dic)
-
-			s_break = {"fieldname":"","fieldtype":"section_break","label":""}	
-			fields.append(s_break)
+					fields.append({"fieldname":"","fieldtype":"column_break","label":""})
+			#s_break = {"fieldname":"","fieldtype":"section_break","label":""}	
+			#fields.append(s_break)
 			rows.append(dm_cols)
+			sec_label=name+' Monitoring Logs'		
+			fields.append({"fieldname":"","fieldtype":"section_break","label":sec_label,"options":"<i class='fa fa-list-alt'></i>"})
+			#raw_fields.append(s_break)
 			row_dic={"fieldname":"tab","fieldtype": "table","label": "Disease Monitoring","rows":rows}
 			fields.append(row_dic)
 			values=get_values(profile_id, fields, dm.event_master_id, field_mapper)
@@ -99,7 +101,7 @@ def build_options(dm_list,fields,field_mapper,raw_fields=None):
 				if field == 'sr':
 					dm_data.append('<input type="checkbox" name="">')
 				else:
-					dm_data.append("<div style='word-wrap: break-word;width:80%%;'>%s</div>"%field_dict[field])
+					dm_data.append("<div style='word-wrap: break-word;width:80%%;'>%s</div>"%field_dict.get(field))
 			rows.extend([dm_data])
 
 	return fields_list
@@ -137,15 +139,16 @@ def valide_date(arg, data):
 	arg = json.loads(arg)
 	obj = json.loads(data)
 	from frappe.utils import time_diff_in_seconds
-	
-	from_date_time = datetime.datetime.strptime(obj.get('date'), '%d/%m/%Y %H:%M').strftime('%Y-%m-%d %H:%M:%S')
+	try:
+		from_date_time = datetime.datetime.strptime(obj.get('date'), '%d/%m/%Y %H:%M').strftime('%Y-%m-%d %H:%M:%S')
+	except:
+		from_date_time = datetime.datetime.strptime(obj.get('date'), '%d/%m/%Y').strftime('%Y-%m-%d %H:%M:%S')
+
 	curr_date_time = datetime.datetime.strptime(arg.get('curr_date_time'), '%Y-%m-%d %H:%M:%S').strftime('%Y-%m-%d %H:%M:%S')
 
-	frappe.errprint([from_date_time, curr_date_time])
-
 	if time_diff_in_seconds(from_date_time, curr_date_time) > 0:
-		frappe.errprint
 		return False
+
 	return True
 
 def save_data_to_solr(args):
@@ -184,8 +187,8 @@ def share_dm(data, header, share_info, profile_id, disease):
 @frappe.whitelist()
 def save_pdf(data, header, profile_id, disease):
 	import pdfkit
-	frappe.errprint(header)
-	data = eval(data)
+	
+	data = json.loads(data)
 	rows = ''
 	for row in data:
 		rows += "<tr style='border: 1px solid black; border-collapse: collapse;''>%s</tr>"%('</td>'.join(row.split('</td>')[1:][:-1]))

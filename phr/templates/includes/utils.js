@@ -25,7 +25,10 @@ function diffDays(startDate, endDate) {
 function repl_str(str, args){
 	$.each(args, function(key, val){
 		var reg = new RegExp("\\%\\(" + key + "\\)s", "igm");
-		str = str.replace(reg, args[key]);
+        // console.log([key, args[key]])
+        if (args[key])	str = str.replace(reg, args[key]);
+        if (args[key] === 0) str = str.replace(reg, args[key]);
+        else str = str.replace(reg, '');
 	})
 	return str
 }
@@ -38,6 +41,12 @@ function validate_mobile(mobile){
     else{
         return true
     }
+}
+
+function scroll_top(){
+    $("html, body").animate({
+        scrollTop: 0
+    }, "slow");
 }
 
 function validate_email(id) {

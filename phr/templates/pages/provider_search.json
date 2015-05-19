@@ -1,6 +1,12 @@
 {
 	"fields":[
 		{
+            "fieldname": "",
+            "fieldtype": "section_break",
+            "options":"<i class='fa fa-search-plus'></i>",
+            "label": "Search Provider"
+        },
+		{
 			"fieldname":"provider_type", 
 			"fieldtype":"select", 
 			"label":"Type",

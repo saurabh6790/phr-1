@@ -22,13 +22,13 @@ var ToDo = inherit(ListView,{
 	make_todo:function(){
 		var me = this;
 		d = new Dialog();
-		d.init({"file_name":"todo", "title":"To Do"})
+		d.init({"file_name":"todo", "title":"To Do", "button_title": "Create To Do"})
 		d.show()
 		$('.modal-body form input[name="due_date"]').bind('blur', function() { 
 				val=$(this).val()
 				if (diffDays(parseDate(val),new Date().setHours(0,0,0,0)) > 0) { 
 					$(this).val("")
-    				frappe.msgprint("TO DO Date Should not be less than Current Date")
+    				frappe.msgprint("Td Dd Date Should not be less than Current Date")
 				}
 		});
 		$('.modal-footer .btn-primary').unbind('click').click(function(){
@@ -49,7 +49,7 @@ var ToDo = inherit(ListView,{
 						$('#myModal').remove();
 						$('.modal').remove();
 						$('.modal-backdrop').remove();
-						frappe.msgprint('ToDo Record Created')
+						frappe.msgprint('To Do Record Created')
 						var db = new render_dashboard();
 						db.render_to_do(sessionStorage.getItem("pid"))
 					}

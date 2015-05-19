@@ -11,9 +11,21 @@ var ListView = inherit(RenderFormFields,{
 		this.profile_id=args["profile_id"]
 		if (args['cmd']){
 			this.get_data()
-		}else{
+		}
+		else if(args['search']){
+			cmd=''
+			if (args['search']== "event"){
+				cmd="get_event_data"
+			}
+			else if(args['search']== "visit"){
+				cmd="get_visit_data"
+			}
+			this.rerender_event_visit(cmd)
+		}
+		else{
 			RenderFormFields.prototype.init(this.wrapper, {'file_name': me.args['file_name'], 'param':'listview'})
 			me.render_top_section()
+	
 			NProgress.done();
 		}
 
@@ -34,13 +46,46 @@ var ListView = inherit(RenderFormFields,{
 				if(me.args['tab_at']){
 					r.message['listview'][me.args['tab_at']]['rows'] = r.message['rows'];	
 				}
-				
 				RenderFormFields.prototype.init(this.wrapper, {'fields': r.message['listview']})
-				
 				// me.create_pagination(r.message['options'], r.message['page_size'])
+				//console.log(me.args)
+				if(me.args['file_name'] == "event"){
+					Events.prototype.add_search_event()
+				}
 				me.render_top_section()
 			}
 		});
+	},
+	rerender_event_visit:function(cmd){
+		var me=this;
+		frappe.call({
+			method:"phr.templates.pages.event."+cmd,
+			args:{'data':{'profile_id':me.args['profile_id'],'file_name':'event','param':'listview','tab_at':4,"event_date_from":me.args['event_date_from'],'event_date_to':me.args['event_date_to']}},
+			callback:function(r){
+				if (r.message){
+					r.message['listview'][4]['rows'] = r.message['rows'];	
+					RenderFormFields.prototype.init(this.wrapper, {'fields': r.message['listview']})
+					$('.save_controller').remove();
+					me.render_top_section()
+					me.add_search_event()
+					Events.prototype.add_share_event()
+					if(me.args['file_name'] == "event"){
+						Events.prototype.add_search_event()
+					}
+					else if(me.args['file_name'] == "visit"){
+						Visit.prototype.add_search_event()
+					}
+					NProgress.done();
+				}
+				else{
+					NProgress.done();
+				}
+			}
+		})
+	},
+	add_search_event:function(){
+		//$('<button class="btn btn-default">Search Events</button>').appendTo($('.search_event'))
+		//Events.prototype.add_search_event()
 	},
 	create_pagination: function(table_data, page_size){
 		this.table_data = table_data;
@@ -75,16 +120,14 @@ var ListView = inherit(RenderFormFields,{
 	render_top_section: function(){
 		var me = this;
 		$('.new_controller').remove();
-		$('.save_controller').remove();
-		$('<div class="new_controller" style="width:45%;display:inline-block;text-align:right;">\
-				<button class="btn btn-primary">\
-					<i class="icon-plus"></i> New \
-				</button>\
-			</div>')
-			.appendTo($('.sub-top-bar'))
+		//$('.save_controller').remove();
+		$('<div class="pull-right margin-left-20 new_controller">\
+			<button class="btn btn-primary pull-right new_controller">\
+			<i class="fa fa-plus-square"></i> New</button></div>').appendTo($('.top-btns-bar'))
 			.bind('click',function(){
 				me.new_form()
 				if(me.args['file_name'] == "event"){
+					Events.prototype.bind_save_event()
 					Events.prototype.get_linked_providers()	
 					$("#provider_name").click(function(){
 						Events.prototype.dialog_oprations()

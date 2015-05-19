@@ -26,8 +26,6 @@ def create_provider_in_solr(data,profile_id):
 	from phr.phr.phr_api import get_response
 	response=get_response(url,data,request_type)
 	res=json.loads(response.text)
-	print res
-	print res['returncode']
 	if res['returncode']==129:
 		link_provider(res, data, profile_id)
 		create_provider_master_entry(res, data)

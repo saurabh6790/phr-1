@@ -1,5 +1,5 @@
-frappe.provide("templates/includes");
 frappe.provide("frappe");
+frappe.provide("templates/includes");
 {% include "templates/includes/inherit.js" %}
 {% include "templates/includes/utils.js" %}
 {% include "templates/includes/form_generator.js" %}
@@ -23,15 +23,27 @@ window.Events = inherit(ListView,{
 		this.dms_file_list = [];
 		this.profile_id = profile_id;
 		this.doc_list = [];
+		this.from_date=$('[name="from_date"]').val()
+		this.to_date=$('[name="to_date"]').val()
 		
 		ListView.prototype.init(this.wrapper, {"file_name" : "event",
 			'cmd':"event.get_event_data",
 			'tab_at': 4,
+			'event_date_from':this.from_date,
+			'event_date_to':this.to_date,
 			'profile_id':profile_id})
-
-		$("<button class='btn btn-primary'> Share </button>").click(function(){
+		
+		$('.save_controller').remove();
+		this.add_share_event()
+		this.render_spans()
+		this.get_linked_providers()
+		this.add_search_event()
+		scroll_top()
+	},
+	add_share_event:function(){
+		var me=this;
+		$("#share").click(function(){
 			var fg = false;
-
 			$('.table').find('thead').each(function(){
 				var row = $(this);
 				$('th', row).map(function(index, th) {
@@ -62,18 +74,26 @@ window.Events = inherit(ListView,{
 			else{
 				frappe.msgprint("Please first select an event. ")
 			}
-			
-			
-		}).appendTo($('.field-area'))
-		this.render_spans()
-		this.get_linked_providers()
+		})
+	},
+	add_search_event:function(wrapper,json_file,profile_id,entity_id){
+		var me = this;
+		$('.search_event').click(function(){
+			from_date=$('[name="from_date"]').val()
+			to_date=$('[name="to_date"]').val()
+			ListView.prototype.init(this.wrapper, {"file_name" : "event",
+			'search':"event",
+			'tab_at': 4,
+			'event_date_from':from_date,
+			'event_date_to':to_date,
+			'profile_id':me.profile_id})
+		})
 	},
 	open_form:function(event_id, event_title, profile_id, res, req_id, visit_id){
 		var me = this;
 		this.profile_id = profile_id;
 		this.req_id = req_id;
 		$('#main-con').empty();
-		console.log(['req_id',req_id, 'res', res, 'event_id', event_id])
 		RenderFormFields.prototype.init(me.wrapper, {"file_name" : "event", "method": 'event'}, event_id)
 		this.set_values(res)
 		me.bind_save_event()
@@ -82,12 +102,14 @@ window.Events = inherit(ListView,{
 			$(this).remove()
 			me.open_form(event_id, event_title, me.profile_id, '', me.req_id)
 		}).appendTo('.breadcrumb');
-		
+		scroll_top()
 		this.make_multi_select_div()
 
-		$('<div class="event_section" style="margin-top:-10%;"></div>').appendTo($('.field-area'))
+		//$('<div class="event_section" style="margin-top:-10%;"></div>').appendTo($('.field-area'))
 		$('.visit_details').css("display","inherit")
 		$('.upload_files').css("display","inherit")
+		$('.files_section').css("display","inherit")
+		$('.comment_section').css("display","inherit")
 
 		disable_fields(['event_title', 'event_date', 'event_symptoms'])
 
@@ -107,7 +129,6 @@ window.Events = inherit(ListView,{
 		this.make_comment_section(event_title, profile_id)
 	},
 	set_values: function(res){
-		console.log(['setting visits details',res])
 		if(res && res['entityid']){
 			$.each(res, function(field, value){
 				if(field!='event_symptoms') $('[name="'+field+'"]').val(value)
@@ -126,7 +147,7 @@ window.Events = inherit(ListView,{
 	},
 	make_share_pannel: function(event_id){
 		var me = this;
-		$('<button class="btn btn-primary" id="share"> Share Data </button>').appendTo($('.save_controller'))
+		//$('<button class="btn btn-primary" id="share"> Share Data </button>').appendTo($('.save_controller'))
 
 		$('#share').click(function(){
 			$("form input, form textarea").each(function(i, obj) {
@@ -147,7 +168,6 @@ window.Events = inherit(ListView,{
 	},
 	make_tree_view:function(event_id, visit_id){
 		var me = this;
-		console.log(['make tree view', visit_id])
 		me.dms_file_list = me.dms_file_list ? me.dms_file_list : [];
 		if(visit_id) file_counts=me.get_visit_file_counts(visit_id,this.profile_id,me.dms_file_list)
 		else file_counts=me.get_event_file_counts(event_id,this.profile_id,me.dms_file_list)
@@ -158,6 +178,7 @@ window.Events = inherit(ListView,{
 			"method":"phr.templates.pages.event.get_individual_event_count_for_badges",
 			"args":{"event_id":event_id,"profile_id":profile_id},
 			callback:function(r){
+				// console.log([r.message.event_dict, r.message.sub_event_count])
 				TreeView.prototype.init({'profile_id': profile_id, 'dms_file_list':dms_file_list, 
 						'display': 'none',"event_dict":r.message.event_dict,"sub_event_count":r.message.sub_event_count, 
 						'req_id': me.req_id})
@@ -166,7 +187,6 @@ window.Events = inherit(ListView,{
 	},
 	get_visit_file_counts:function(visit_id, profile_id, dms_file_list){
 		var me = this;
-		console.log(['calling visit file_counts', visit_id])
 		frappe.call({
 			"method":"phr.templates.pages.event.get_individual_visit_count_for_badges",
 			"args":{"visit_id":visit_id,"profile_id":me.profile_id},
@@ -179,7 +199,7 @@ window.Events = inherit(ListView,{
 	},
 	make_comment_section: function(){
 		var me = this;
-		PHRComments.prototype.init({"wrapper":$('.field-area'), 
+		PHRComments.prototype.init({"wrapper":$('.comments'), 
 				"provider_id" : frappe.get_cookie("profile_id"), 
 				"profile_id": me.profile_id,
 				"event_id": $("[name='entityid']").val(),
@@ -188,7 +208,7 @@ window.Events = inherit(ListView,{
 	},
 	make_multi_select_div: function(){
 		$.each($('[name="event_symptoms"]').val().split(','), function(i, val){
-			$('<div class="ui-autocomplete-multiselect-item">'+val+'<span class="ui-icon ui-icon-close"></span></div>').insertAfter($('[name="event_symptoms"]'))
+			$('<div class="ui-autocomplete-multiselect-item">'+val+'</div>').insertAfter($('[name="event_symptoms"]'))
 		})
 		$('[name="event_symptoms"]').val('');
 	},
@@ -201,16 +221,17 @@ window.Events = inherit(ListView,{
 		$('.modal-backdrop').remove();;
 
 		d = new Dialog();
-		d.init({"file_name":"provider_search", "title":"Provider Search"})
+		d.init({"file_name":"provider_search", "title":"Provider Search", "button_title": "Add"})
 		d.show()
-		$('<button class ="btn btn-success btn-sm" style="float:left;"> search </button>')
+		$('.modal-footer .btn-primary').css("float","left")
+		$('<button class ="btn btn-success btn-sm" style="float:left;"> Search </button>')
 			.click(function(){
 				$(".modal-body form input, .modal-body form select").each(function(i, obj) {
 					me.filters[obj.name] = $(obj).val();
 				})
 				me.render_result_table(me.filters, d)
 			})
-			.appendTo($('.modal-body'))
+			.appendTo($('.modal-body .panel'))
 	},
 	render_result_table:function(filters, d){
 		var me = this;
@@ -224,27 +245,31 @@ window.Events = inherit(ListView,{
 	},
 	generate_table: function(result_set, d, filters){
 		var me = this;
-		$('.stable').empty()
+
+		$('.stable').remove()
 		$('.ap').remove()
 		$('.hr').remove()
-		this.table = $("<hr class='hr'><div class='table-responsive stable'>\
-			<table class='table table-bordered'>\
-				<thead><tr></tr></thead>\
-				<tbody></tbody>\
-			</table>\
-		</div>").appendTo('.modal-body');
-
-		header = [["", 50], ["Provider Name", 170], ["Number", 100], ["Email", 100], ["Specialization", 100], ["Location", 100]]
-
 		if(result_set){
-			$.each(header, function(i, col) {
-			$("<th>").html(col[0]).css("width", col[1]+"px")
-				.appendTo(me.table.find("thead tr"));
-			});
+			$('.modal-footer .btn-primary').show();
+
+			this.table = $("<hr class='hr'><div class='table-responsive stable' style='overflow-y: auto;height: 300px; margin-top: 10%;'>\
+				<table class='table table-bordered'>\
+					<thead><tr></tr></thead>\
+					<tbody></tbody>\
+				</table>\
+			</div>").appendTo('.modal-body');
+
+			header = [["", 50], ["Provider Type", 170],["Provider Name", 170], ["Number", 100], ["Email", 100], ["Specialization", 100], ["Location", 100]]
+
+				$.each(header, function(i, col) {
+				$("<th>").html(col[0]).css("width", col[1]+"px")
+					.appendTo(me.table.find("thead tr"));
+				});
 
 			$.each(result_set, function(i,d){
 				var row = $("<tr>").appendTo(me.table.find("tbody"));
 				$('<td>').html('<input type="radio" name="provider" id = "'+d['provider_id']+'">').appendTo(row)
+				$('<td>').html(d['provider_type']).appendTo(row)
 				$('<td>').html(d['provider_name']).appendTo(row)
 				$('<td>').html(d['mobile_number']).appendTo(row)
 				$('<td>').html(d['email']).appendTo(row)
@@ -254,12 +279,13 @@ window.Events = inherit(ListView,{
 			me.set_provider(d)
 		}
 		else{
-			$('<div class="stable">No Provider is there for selected criteria. \
+			$('<div class="stable" style="margin-top: 10%;">No Provider is there for selected criteria. \
 				You can add New Provider by clicking on Add Button</div>').appendTo('.modal-body')
+			$('.modal-footer .btn-primary').hide()
 		}
 		
 
-		$('<button class ="btn btn-success btn-sm ap" style="float:left;"> Add New Provider </button>')
+		$('<button class ="btn btn-success btn-sm ap" style="float:left;"> Create New Provider </button>')
 			.unbind("click").click(function(){
 				d.hide()
 				me.create_provider_linking(filters, d)
@@ -269,6 +295,8 @@ window.Events = inherit(ListView,{
 	set_provider:function(d){
 		var me = this;
 		$('.modal-footer .btn-primary').unbind("click").click(function(){
+			var flag = false;
+
 			$('.table').find('tr').each(function () {
 				var row = $(this);
 				var $td = $('td', row);
@@ -277,21 +305,27 @@ window.Events = inherit(ListView,{
 					$('[name="doctor_name"]').val($($td[1]).html())
 					$('[name="email_id"]').val($($td[3]).html())
 					$('[name="number"]').val($($td[2]).html())
-					me.check_existing($td.find('input[name="provider"]').attr('id'),$($td[3]).html(),$($td[2]).html(),$($td[1]).html(),d)
+					me.check_existing($td.find('input[name="provider"]').attr('id'),$($td[4]).html(),$($td[3]).html(),$($td[2]).html(), $($td[1]).html(),d)
+				}
+				else{
+					flag = true;
 				}
 			})
+			if(flag){
+				frappe.msgprint("First Select provider then click on Add")
+			}
 		})
 	},
-	check_existing:function(provider_id,email,mobile,name,d){
+	check_existing:function(provider_id,email,mobile,name, provider_type, d){
 		var me=this;
 		frappe.call({
 			method:"phr.templates.pages.provider.check_existing_provider",
 			args:{'provider_id':provider_id, 'profile_id':sessionStorage.getItem("cid")},
 			callback:function(r){
-				console.log(r.message)
+				// console.log(r.message)
 				if (r.message!=true){
 					me.attach_provider({'entityid':provider_id},
-							{'email': email,'mobile': mobile,'name':name }, d)
+							{'email': email,'mobile': mobile,'name':name, 'provider_type': provider_type }, d)
 				}
 				else{
 					d.hide();
@@ -326,7 +360,8 @@ window.Events = inherit(ListView,{
 		$('.modal').remove();
 		$('.modal-backdrop').remove();
 
-		d.init({"file_name":"provider", "values": filters})
+		d.init({"file_name":"provider", "values": filters, "title":"New Provider", "button_title": "Add"})
+		$('.modal-footer .btn-primary').css("float","left")
 		d.show()
 		me.bind_provider_creation(d)
 	},
@@ -373,16 +408,21 @@ window.Events = inherit(ListView,{
 			args:{'data':res, "profile_id": sessionStorage.getItem("cid")},
 			callback:function(r){
 				if(r.message.returncode==129){
-					
+
+					$('[name="doctor_id"]').val(r.message.entityid)
+					$('[name="doctor_name"]').val(res.name)
+					$('[name="email_id"]').val(res.email)
+					$('[name="number"]').val(res.mobile)
+					$('[name="provider_type"]').val(res.provider_type);
+
 					var db = new render_dashboard();
 					db.render_providers(profile_id);
 					me.get_linked_providers()
 					NProgress.done();
-					
+
 					$('#myModal').remove();
 					$('.modal').remove();
 					$('.modal-backdrop').remove();
-					
 				}
 			}
 		})
@@ -435,7 +475,8 @@ window.Events = inherit(ListView,{
 		this.result_set = {};
 		this.doc_list = []
 		$('.save_controller').unbind('click').click(function(event) {
-			if(me.validate_form()){
+			var  validate = me.validate_form();
+			if(validate['fg']){
 				NProgress.start();
 				$("form input, form textarea, form select").each(function(i, obj) {
 					me.res[obj.name] = $(obj).val();
@@ -455,7 +496,7 @@ window.Events = inherit(ListView,{
 					method:"phr.templates.pages.event.create_update_event",
 					args:{"data":JSON.stringify(me.res), "req_id": me.req_id},
 					callback:function(r){
-						console.log(r.message)
+						// console.log(r.message)
 						if(!r.message['exe']){
 							$('.breadcrumb li:last').remove()
 							NProgress.done();
@@ -473,25 +514,32 @@ window.Events = inherit(ListView,{
 						}
 					}
 				})
+			}
+			else{
+				frappe.msgprint(validate['msg'])
 			}			
 		})
 	},
 	validate_form:function(){
   		var me=this;
   		var fg=true
+  		var msg = ''
   		$("form input[required], form textarea[required], form select[required]").each(function(i, obj) {
   			if ($(this).val()=="" && $(this).is(':visible')){
   				$(this).css({"border": "1px solid #999","border-color": "red" });
-  				frappe.msgprint("Fields Marked as Red Are Mandatory")
-  				fg=false
+  				msg = "Fields Marked as Red Are Mandatory"
+  				fg = false
   			}
   		})
   		if($("form input[name='doctor_name']").val() && $("form input[name='doctor_id']").val()==''){
-  			frappe.msgprint("Please Select Appropriate Provider")
-  			fg=false
+  			msg = "Please Add a provider first then save the event"
+  			fg = false
   		}
 
-  		return fg
+  		return { 
+  			"fg" : fg,
+  			"msg" : msg
+  		}
   	},
 	open_sharing_pannel: function(event_id){
 		var me = this;

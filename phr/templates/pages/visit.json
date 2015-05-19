@@ -1,9 +1,21 @@
 {
 	"listview":[
 		{
+			"fieldname":"", 
+			"fieldtype":"section_break",
+			"label":"Visit Search",
+			"options": "<i class='fa fa-filter'></i>"
+		},
+		{
 			"fieldname":"from_date",
 			"fieldtype":"date",
 			"label":"From Date",
+			"placeholder":""
+		},
+		{
+			"fieldname":"visit_event", 
+			"fieldtype":"button", 
+			"label":"Search Event",
 			"placeholder":""
 		},
 		{
@@ -20,7 +32,8 @@
 		{
 			"fieldname":"", 
 			"fieldtype":"section_break", 
-			"label":""
+			"options":"<i class='fa fa-list-alt'></i>",
+			"label":"Visit Logs"
 		},
 		{
 			"fieldname":"tab",

@@ -73,10 +73,10 @@ $.extend(ThumbNails.prototype,{
 				</div>\
 				').appendTo('.modal-body');
 
-				console.log($('#pdf_maker'));
+				// console.log($('#pdf_maker'));
 
 				$('#myModal #pdf_maker').click(function(){
-					console.log('trigger pdf pdf_maker')
+					// console.log('trigger pdf pdf_maker')
 					me.convert_txt_to_pdf($('[name="attch_desc"]').val())
 				})
 					
@@ -106,7 +106,7 @@ $.extend(ThumbNails.prototype,{
 	},
 	make_image_uploader:function(d){
 		var me =this;
-		console.log($('input[name="entityid"]').val())
+		// console.log($('input[name="entityid"]').val())
 		upload.make({
 			parent: $('.modal-body'),
 			args:{'profile_id': me.args['profile_id'], 'folder':me.folder, 
@@ -134,7 +134,7 @@ $.extend(ThumbNails.prototype,{
 	},
 	convert_txt_to_pdf:function(desc){
 		var me = this;
-		console.log($('[name="attch_desc"]').val())
+		// console.log($('[name="attch_desc"]').val())
 		if($('[name="attch_desc"]').val()){
 			frappe.call({
 				method:"phr.templates.pages.uploader.get_pdf_site_path",
@@ -165,11 +165,10 @@ $.extend(ThumbNails.prototype,{
 		else{
 			frappe.msgprint("Please write description before converting it as pdf!!!")
 		}
-			
 	},
 	show_attachments:function(){
 		var me = this;
-		console.log(['show_attachments', me.args['req_id']])
+		// console.log(['show_attachments', me.args['req_id']])
 		frappe.call({
 			method:"phr.templates.pages.event.get_attachments",
 			args:{'profile_id': sessionStorage.getItem("cid"), 'folder':me.folder, 
@@ -188,7 +187,8 @@ $.extend(ThumbNails.prototype,{
 
 		row = $('<tr>').appendTo(this.table)
 		$.each(attachments, function(i, attachment){
-			if((i+1)%3 == 0){
+			if(i==0) i=i+1;
+			if((i)%3 == 0){
 				row = $('<tr>').appendTo(me.table)
 			}
 			attachment['display'] = me.args['display'];
@@ -202,17 +202,19 @@ $.extend(ThumbNails.prototype,{
 			$td = $(repl('<td style="width:200px;\
 							height:200px;padding-right:20px;vertical-align:top;padding-left:5%;padding-top:5%;">\
 						',attachment)).appendTo(row)
-			console.log(me.doc_list)
+			// console.log(me.doc_list)
 			thumbnail("/"+attachment['path']+"/"+attachment['file_name'], $td, attachment['file_name'], me.doc_list, me.args['display'])
 		}
 		else if((/\.(gif|jpg|jpeg|tiff|png)$/i).test(attachment['file_name'].toLowerCase()) ){
 			$('<td style="width:200px;height:200px;padding-right:20px;vertical-align:top;padding-left:5%;padding-top:5%;">')
 				.html($(repl('<div>\
-						<input type="checkbox" name="image" style="display:%(display)s" value="/%(path)s/%(file_name)s" >\
-					</div>\
-					<a nohref class="control-image" data-name="/%(path)s/%(file_name)s"><img class="img-responsive"  style="height:150px;" \
-					src="/%(path)s/%(file_name)s" data-bigimgsrc="/%(path)s/%(file_name)s">\
-					<br><label style="width: 150px;word-wrap: break-word;color: #009906;">%(file_name)s</label></a>',attachment))).appendTo(row)
+								<input type="checkbox" name="image" style="display:%(display)s" value="/%(path)s/%(file_name)s" >\
+							</div>\
+							<a nohref class="control-image" data-name="/%(path)s/%(file_name)s">\
+								<img class="img-responsive"  style="height:150px;" \
+									src="/%(path)s/%(file_name)s" data-bigimgsrc="/%(path)s/%(file_name)s">\
+								<br><label style="width: 150px;word-wrap: break-word;color: #009906;">%(file_name)s</label>\
+							</a>',attachment))).appendTo(row)
 		}
 
 		if(me.doc_list){
@@ -229,13 +231,12 @@ $.extend(ThumbNails.prototype,{
 			d.show();
 			$('.modal-footer .btn-primary').hide();
 			$('<div><img style="position: relative; width: 100%; height: 60%; top: 10px" src="'+val+'">\
-				<p style="position: absolute; top: 100px; left: 10%; width: 80%; padding: 4px; background-color: transparent; font-weight: bold; color: #0AD5F5; font-weight: 600; font-size: 2em;">\
-				'+title+'</p></div>').appendTo($('.modal-body'))
+				</div>').appendTo($('.modal-body'))
 		})	
 		$("input[type=checkbox]").unbind("click").click(function(){
 			if($(this).is(':checked')){
 				file_path = $(this).val()
-				console.log(file_path)
+				// console.log(file_path)
 				me.doc_list.push(file_path.substring(7, file_path.length))
 			}
 			else{

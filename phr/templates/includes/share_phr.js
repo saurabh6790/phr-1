@@ -23,10 +23,11 @@ $.extend(SharePhr.prototype,{
 		this.doc_list = args.doc_list;
 		RenderFormFields.prototype.init(this.wrapper, {'file_name':args['file_name'], 
 			'values': args['values'], 'method': args['method']}, args['event_id'])
+		$('.save_controller').remove()
 
-		$('<button id="share_data" class="btn btn-primary">Share Data</button></div>').appendTo($('.field-area'))
-		$('<div class="event_section"></div>').appendTo($('.field-area'))
-		$('#share_data').click(function(){
+		//$('<button id="share_data" class="btn btn-primary">Share Data</button></div>').appendTo($('.field-area'))
+		//$('<div class="event_section"></div>').appendTo($('.field-area'))
+		$('#share').click(function(){
 			me.share_phr();
 		})
 		this.bind_controller()
@@ -38,9 +39,9 @@ $.extend(SharePhr.prototype,{
 		var me = this;
 		$('form input[name="sharing_duration"]').bind('change', function() { 
 			val=$(this).val()
-			if (diffDays(parseDate(val),new Date().setHours(0,0,0,0)) >= 0) { 
+			if (diffDays(parseDate(val),new Date().setHours(0,0,0,0)) > 0) { 
 				$(this).val("")
-    			frappe.msgprint("Sharing Duration date should not be less or equal than Current Date")
+    			frappe.msgprint("Sharing Duration date should not be less than Current Date")
 			}
 		});
 
@@ -78,12 +79,12 @@ $.extend(SharePhr.prototype,{
             	"visit_tag_id": visit_tag_id 
 			}]	
 		}
-		console.log(event_data)
+		// console.log(event_data)
 		frappe.call({
 			"method":"phr.templates.pages.event.marked_files_doc",
 			"args":{"event_data": event_data, "data": {}, "selected_files": me.selected_files},
 			callback:function(r){
-				console.log(r.message)
+				// console.log(r.message)
 				me.doc_list = r.message;
 				me.render_folder_section(me.args['event_id'], me.args['method'])
 			}
@@ -91,7 +92,6 @@ $.extend(SharePhr.prototype,{
 	},
 	render_folder_section:function(event_id,method){
 		var me = this;
-		console.log([method, me.args['profile_id'], $('input[name="entityid"]').val()])
 		if (method=="visit"){
 			frappe.call({
 				"method":"phr.templates.pages.event.get_individual_visit_count_for_badges",
@@ -231,7 +231,7 @@ $.extend(SharePhr.prototype,{
   		})
   		if(fg){
   			if($("form select[name='share_via']").val() == 'Provider Account' && (!$("form input[name='doctor_name']").val() || $("form input[name='doctor_id']").val() == '')){
-  				frappe.msgprint("Please Select Appropriate Provider")
+  				frappe.msgprint("Please select a provider first then procees with sharing")
   				fg=false
   			}
 
