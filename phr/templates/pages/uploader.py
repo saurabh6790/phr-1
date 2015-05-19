@@ -112,6 +112,9 @@ def save_file(fname, content, decode=False):
 		content = base64.b64decode(content)
 
 	file_size = check_max_file_size(content)
+	if file_size.get('exe'):
+		return {"msg": file_size.get('exe'), "fname": fname}
+
 	content_hash = get_content_hash(content)
 	content_type = mimetypes.guess_type(fname)[0]
 	fname = get_file_name(fname, content_hash[-6:])
@@ -176,11 +179,13 @@ def check_max_file_size(content):
 	file_size = len(content)
 
 	if file_size > max_file_size:
-		frappe.msgprint(_("File size exceeded the maximum allowed size of {0} MB").format(
-			max_file_size / 1048576),
-			raise_exception=MaxFileSizeReachedError)
+		# frappe.msgprint(_("File size exceeded the maximum allowed size of {0} MB").format(
+		# 	max_file_size / 1048576),
+		# 	raise_exception=MaxFileSizeReachedError)
+		return {'exe': "File size exceeded the maximum allowed size of {0} MB".format(
+			max_file_size / 1048576)}
 
-	return file_size
+	return {"file_size":file_size}
 
 def write_file(content, file_path, fname):
 	"""write file to disk with a random name (to compare)"""

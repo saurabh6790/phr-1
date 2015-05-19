@@ -611,11 +611,11 @@ def get_conditions(filters):
 
 def get_provider_info(cond):
 	if cond:
-		ret = frappe.db.sql("""select provider_id, provider_name, 
+		ret = frappe.db.sql("""select provider_id, provider_type, provider_name, 
 					mobile_number, email, specialization, 
 					concat(ifnull(address,'') , ', ' ,ifnull(address_2,''), ', ', ifnull(city,''), ', ', 
 					ifnull(state,''), ', ', ifnull(country,''), ', ', ifnull(pincode,'')) as addr
-					from tabProvider where %s """%cond, as_dict=1, debug=1)
+					from tabProvider where %s """%cond, as_dict=1)
 		# frappe.errprint(ret)
 		return ((len(ret[0]) > 1) and ret) if ret else None
 	
@@ -626,7 +626,7 @@ def get_provider_info(cond):
 def get_linked_providers(profile_id=None):
 	import itertools
 	if profile_id:
-		ret = frappe.db.sql("select name1, provider, mobile, email, provider_type from  `tabProviders Linked` where patient = '%s' and status = 'Active' "%profile_id, as_dict=1)
+		ret = frappe.db.sql("select name1, provider, mobile, email, provider_type from  `tabProviders Linked` where patient = '%s' and status = 'Active' "%profile_id, as_dict=1, debug=1)
 		
 		for r in ret:
 			r.update({'label': r['name1'], 'value': r['name1']})

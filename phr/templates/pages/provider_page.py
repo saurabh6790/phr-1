@@ -144,8 +144,8 @@ def get_myrequests(target, provider_id):
 				 from `tabShared Requests`
 				 where ifnull(approval_status,'') not in ('Accept', 'Reject') 
 					and provider_id="%s" and doc_name in ('Event', 'Disease Monitoring') and 
-					DATE_FORMAT(STR_TO_DATE(valid_upto,'%s'), '%s') >= NOW()
-				 order by date desc, valid_upto asc """%('%d/%m/%Y',provider_id, '%d/%m/%Y', '%Y-%m-%d'), as_list=1)
+					DATE_FORMAT(STR_TO_DATE(valid_upto,'%s'), '%s') >= DATE_FORMAT(NOW(), '%s')
+				 order by date desc, valid_upto asc """%('%d/%m/%Y',provider_id, '%d/%m/%Y', '%Y-%m-%d', '%Y-%m-%d'), as_list=1, debug=1)
 
 	for d in data:
 		d.append("""<button class="btn btn-success  btn-sm" 
@@ -187,8 +187,8 @@ def get_acc_req(target, provider_id):
 				 from `tabShared Requests`
 				 where ifnull(approval_status,'') = 'Accept'
 					and provider_id="%s" and 
-					DATE_FORMAT(STR_TO_DATE(valid_upto,'%s'), '%s') >= NOW() 
-					order by date desc, valid_upto asc"""%('%d/%m/%Y', provider_id, '%d/%m/%Y', '%Y-%m-%d'), as_list=1)
+					DATE_FORMAT(STR_TO_DATE(valid_upto,'%s'), '%s') >= DATE_FORMAT(NOW(), '%s') 
+					order by date desc, valid_upto asc"""%('%d/%m/%Y', provider_id, '%d/%m/%Y', '%Y-%m-%d', "%Y-%m-%d"), as_list=1)
 
 	for d in data:
 		if d[4] == 'Event':
@@ -211,7 +211,7 @@ def get_acc_req(target, provider_id):
 
 	if data:
 		for d in data:
-			rows.append(d[4:])
+			rows.append(d[5:])
 	else:
 		rows.extend([["","NO DATA",""]])
 

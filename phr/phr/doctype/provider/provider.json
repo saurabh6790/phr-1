@@ -2,6 +2,7 @@
  "allow_copy": 0, 
  "allow_import": 0, 
  "allow_rename": 0, 
+ "autoname": "PVDR.##########", 
  "creation": "2014-12-13 18:42:29.765969", 
  "custom": 0, 
  "docstatus": 0, 
@@ -406,14 +407,14 @@
  "icon": "icon-user-md", 
  "in_create": 0, 
  "in_dialog": 0, 
- "is_submittable": 1, 
+ "is_submittable": 0, 
  "issingle": 0, 
  "istable": 0, 
- "modified": "2015-03-23 19:47:54.603660", 
+ "modified": "2015-05-06 13:18:02.883219", 
  "modified_by": "Administrator", 
  "module": "phr", 
  "name": "Provider", 
- "name_case": "", 
+ "name_case": "Title Case", 
  "owner": "Administrator", 
  "permissions": [
   {
@@ -431,12 +432,13 @@
    "report": 0, 
    "role": "All", 
    "set_user_permissions": 0, 
-   "submit": 1, 
+   "submit": 0, 
    "write": 1
   }
  ], 
  "read_only": 0, 
  "read_only_onload": 0, 
  "sort_field": "modified", 
- "sort_order": "DESC"
+ "sort_order": "DESC", 
+ "title_field": "provider_name"
 }

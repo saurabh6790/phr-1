@@ -76,7 +76,7 @@ var PatientDashboard = inherit(RenderFormFields, {
 				}
 			}
 		})
-		$('.tab-pane.active form input[required],.tab-pane.active form textarea[required],.tab-pane.active form select[required]').bind('change', function() { 
+		$('form input[required], form textarea[required], form select[required]').bind('change', function() { 
    			if (!$(this).val()){
    				$(this).css({"border": "1px solid #999","border-color": "red" });
    			}
@@ -132,7 +132,7 @@ var PatientDashboard = inherit(RenderFormFields, {
   			}
 		})
 		/*frappe.datetime.get_diff(doc.schedule_date) < 1*/
-		$('.tab-pane.active form input[name="str_date_of_birth"]').bind('change', function() { 
+		$('form input[name="str_date_of_birth"]').bind('change', function() { 
 			val=$(this).val()
 			if (diffDays(parseDate(val),new Date().setHours(0,0,0,0)) < 0) { 
 				$(this).val("")
@@ -269,7 +269,7 @@ var PatientDashboard = inherit(RenderFormFields, {
   		var me=this;
   		var fg=true
   		msg=""
-  		$(".tab-pane.active form input[required],.tab-pane.active form textarea[required],.tab-pane.active form select[required]").each(function(i, obj) {
+  		$("form input[required], form textarea[required], form select[required]").each(function(i, obj) {
   			if ($(this).val()==""){
   				$(this).css({"border": "1px solid #999","border-color": "red" });
   				fg=false
@@ -281,8 +281,8 @@ var PatientDashboard = inherit(RenderFormFields, {
   				"msg":"Fields Marked as Red Are Mandatory"
   			}
  		}
-  		if($('.tab-pane.active form input[name="mobile"]').val()){
-  			if (!validate_mobile($('.tab-pane.active form input[name="mobile"]').val())) {
+  		if($('form input[name="mobile"]').val()){
+  			if (!validate_mobile($('form input[name="mobile"]').val())) {
   				msg="Mobile No Invalid"
   				fg=false
   			}
