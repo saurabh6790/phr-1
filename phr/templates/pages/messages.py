@@ -19,7 +19,7 @@ def get_messages_list(data):
 	data=json.loads(data)
 	log_list=fetch_values_from_db(data)
 	for d in log_list:
-		rows.extend([["",d.entity,d.operation,d.subject,d.creation]])
+		rows.extend([["",d.entity,d.operation,d.subject, datetime.datetime.strptime(d.creation, '%Y-%m-%d %H:%M:%S.%f').strftime('%d/%m/%Y %H:%M')]])
 
 	return {
 		'rows': rows,

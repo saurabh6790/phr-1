@@ -45,11 +45,11 @@ def update_profile_solr(data,dashboard=None):
 			sub="Profile Updated Successfully"
 			make_log(p.get('entityid'),"profile","update",sub)
 			update_user_details(p)
-			return "Profile Updated Successfully"
+			return {"msg": "Profile Updated Successfully"}
 		else:
-			return "Error While Updating Profile"
+			return {"exe": "Error While Updating Profile"}
 	else:
-		return "Maintioned contact number is already registered with another profile."
+		return {"exe": "Maintioned contact number is already registered with another profile."}
 
 def not_duplicate_contact(data):
 	if frappe.db.sql("""select count(*) from tabUser 
@@ -258,7 +258,8 @@ def get_linked_phrs(profile_id):
 @frappe.whitelist(allow_guest=True)		
 def get_linked_phrs_with_img(profile_id):
 	data=get_linked_phrs(profile_id)
-	return get_lphrs_with_img(data)
+	if data:
+		return get_lphrs_with_img(data)
 
 @frappe.whitelist(allow_guest=True)
 def get_lphrs_with_img(data):

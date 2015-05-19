@@ -183,6 +183,7 @@ def update_request_record(req_id, rej_reason):
 	sr.save()
 
 def get_acc_req(target, provider_id):
+	import time
 	data = frappe.db.sql("""select name, provider_id, patient, event_id, doc_name, DATE_FORMAT(date, '%s'), patient_name, event_title, reason, valid_upto, payment, ifnull(visit_id, '')
 				 from `tabShared Requests`
 				 where ifnull(approval_status,'') = 'Accept'
@@ -200,13 +201,13 @@ def get_acc_req(target, provider_id):
 				from `tabDisease Sharing Log` dsl
 				where dsl.name = '%s' """%d[3], as_dict=1)[0]
 
-			file_path = '/'.join(dm_info.get('pdf_path').split('/')[3:])
+			file_path = '/'.join(dm_info.get('pdf_path').split('/')[3:])  + '?id=' + str(int(round(time.time() * 1000)))
 			d[7] = '<a target="_blank" href="/%s"> %s </a>' % ( file_path, dm_info['disease_name'])
 					
 	rows=[
 		["Date (Shared date)", "Patient Name", "Event Name",
 				"Reason for Sharing",  "Period of Sharing", 
-				"Payment Status", "Status"]
+				"Payment Status"]
 	]
 
 	if data:

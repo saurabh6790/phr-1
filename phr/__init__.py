@@ -549,13 +549,17 @@ def setNotification(data):
 """Update Password"""
 @frappe.whitelist(allow_guest=True)
 def updatePassword(data):
-	from frappe.auth import _update_password
+	from templates.pages.profile import update_password
 	data = json.loads(data)
 
-	user = frappe.db.get_value("User",{"profile_id":data.get('profile_id')})
-	_update_password(user, data.get('new_password'))
+	usrobj = {
+		"old_password": data.get('old_password'),
+		"new_password": data.get('new_password'),
+		"entityid" : data.get('profile_id'),
+		"cnf_new_password": data.get('cnf_new_password')
+	}
 
-	return "Password Updated Successfully"
+	return update_password(json.dumps(usrobj))
 
 @frappe.whitelist(allow_guest=True)
 def shareDM(data):
@@ -572,14 +576,14 @@ def build_dm_share_data(share_info):
 	for d in dm_doc.get('parameters'):
 		field_dic[d.label]=d.fieldname
 	rows=[]
-	tr=""
+	tr = "<th></th>"
 	for label in reversed(field_dic.keys()):
-		tr+="""<th>%s</th>"""%label
+		tr += """<th>%s</th>"""%label
 	
 	header_row="""<tr>%s</tr>"""%tr	
 
 	for data in share_info["data"]:
-		row=""
+		row = "<td></td>"
 		for label in reversed(field_dic.keys()):
 			row_list=[]
 			row+="""<td>%s</td>"""%data[field_dic[label]]
