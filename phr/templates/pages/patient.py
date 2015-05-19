@@ -15,15 +15,10 @@ import datetime
 @frappe.whitelist(allow_guest=True)
 def get_data_to_render(data=None,entityid=None):
 	json_data, fields, values, tab = None, None, None, None
-	print "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
-	print data
-	print "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+	print [data]
 	if data:
 		data = json.loads(data)
-	print "======before dict check ========="
-	print data
-	print "================================="
-
+	
 	if isinstance(data, dict):
 		if not data.get('file_name'):
 			json_data = data
@@ -34,36 +29,25 @@ def get_data_to_render(data=None,entityid=None):
 		if data.get('values'):
 			json_data['values'] = data.get('values')
 
+	if json_data:
+		print "param \n\n\n\n", data.get('param'), "\n\n\n", data
+		fields = json_data.get(data.get('param')) if json_data.get(data.get('param')) else json_data.get('fields')
+
 		if data.get('method'):
 			data = {"method" : data.get('method') }
 		else:
 			data = data
-
-	if json_data:
-		print "----------------------------------"
-		print json_data.get(data.get('param'))
-		print "===================================="
-		fields = json_data.get(data.get('param')) if json_data.get(data.get('param')) else json_data.get('fields')
-
-		print "----------------fields--------------------"
-		print fields
-		print "------------------------------------------"
-
-		print "@@@@@@@@ values @@@@"
-		print json_data
-		print "@@@@@@@@@@@@@@@@@@@@"
+		
 		tab = json_data.get('tab')
+		#section_info = json_data.get('section_info')
 		values = get_values(data,entityid) if not json_data.get('values') else json_data.get('values')
 
-		print "*************values*************"
-		print values
-
+		
 	return fields, values, tab
 	
 @frappe.whitelist(allow_guest=True)	
 def get_json_data(file_name):
 	fn=file_name+'.json'
-	print os.path.join(os.path.dirname(__file__), fn)
 	with open(os.path.join(os.path.dirname(__file__), fn), "r") as json_data:
 		json_data = json.loads(json_data.read())
 
@@ -78,7 +62,6 @@ def write_json_data(file_name,data):
 	return plain dictionary 
 """	
 def get_values(data,entityid=None):
-	print entityid, data
 	if entityid:
 		url=get_url(data)
 		args=get_args(entityid)
@@ -127,7 +110,7 @@ def get_url(data):
 @frappe.whitelist(allow_guest=True)
 def get_base_url():
 	return "http://192.168.5.18:9090/phr-api/"
-	# return "http://88.198.52.49:7974/phr-api/"
+	#return "http://88.198.52.49:7974/phr-api/"
 	# return "http://115.113.66.90:8989/phr-api/"
 
 """
@@ -150,7 +133,6 @@ def get_master_details(doctype):
 @frappe.whitelist(allow_guest=True)
 def send_phrs_mail(recipient,subject, template, add_args):
 
-	"""send mail with login details"""
 	from frappe.utils.user import get_user_fullname
 	from frappe.utils import get_url
 

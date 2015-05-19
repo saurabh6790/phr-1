@@ -4,24 +4,28 @@
 {% block breadcrumbs %}{% endblock %}
 
 {% block content %}
-<div class="container">
-	<div class="row" style="margin-top: 40px; margin-bottom: 20px">
-		<div class="col-sm-offset-3 col-sm-6">
-			<div class="panel panel-default">
-				<div class="panel-heading">
-					<h4><i class="icon-key"></i> {{_("Verify Mobile")}}</h4>
-				</div>
-				<div class="panel-body">
-					<p>Please Enter the verification code sent to your registered mobile</p>
-					<div class="form-group">
-						<input id="code" type="text"
-							class="form-control" placeholder="Verification Code">
+<div class="main-login col-xs-10 col-sm-8 col-md-3">
+	<div class="row" style="margin-top: 75px; margin-bottom: 20px">
+		<div class="logo margin-top-30">
+			<img src="assets/phr/images/logo.png" alt="Healthsnapp"/>
+		</div>
+		<div class="box-login">
+			<div class="form-login">
+				<fieldset>
+					<legend>{{_("Verify Mobile")}}</legend>
+					<br>
+					<div class="panel-body">
+						<p>Please Enter the verification code sent to your registered mobile</p>
+						<div class="form-group">
+							<input id="code" type="text"
+								class="form-control" placeholder="Verification Code">
+						</div>
+						<div class="form-group">
+							<button type="submit" id="update"
+								class="btn btn-primary">{{_("Verify")}}</button>
+						</div>
 					</div>
-					<div class="form-group">
-						<button type="submit" id="update"
-							class="btn btn-primary">{{_("Verify")}}</button>
-					</div>
-				</div>
+				</fieldset>
 			</div>
 		</div>
 	</div>

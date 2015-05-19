@@ -4,7 +4,7 @@
 			"fieldname":"", 
 			"fieldtype":"section_break", 
 			"label":"Event Details",
-			"options": "icon-calendar"
+			"options": "<img src='assets/phr/images/events.png' alt='Events' title='Events'>"
 		},
 		{
 			"fieldname":"entityid", 
@@ -53,8 +53,9 @@
 			"fieldname":"visit_details", 
 			"fieldtype":"section_break", 
 			"label":"Visit Details",
-			"options": "icon-user-md",
+			"options": "<img src='assets/phr/images/visits.png' alt='Visit Details' title='Visit Details'>",
 			"display": "none"
+			
 		},
 		{
 			"fieldname":"visit_date", 
@@ -105,7 +106,6 @@
 			"label":"Email Id",
 			"placeholder":""
 		},
-		
 		{
 			"fieldname":"number", 
 			"fieldtype":"data", 
@@ -113,18 +113,36 @@
 			"placeholder":""
 		},
 		{
-			"fieldname":"upload_files", 
+			"fieldname":"files_section", 
 			"fieldtype":"section_break", 
 			"label":"Upload Files",
-			"options": "icon-cloud-upload",
+			"options": "<i class='fa fa-upload green font20 padding-right-10'></i>",
 			"display":"none"
+		},
+		{
+			"fieldname":"event_section", 
+			"fieldtype":"html", 
+			"label":""
 		}
 	], 
 	"listview":[
 		{
+			"fieldname":"", 
+			"fieldtype":"section_break", 
+			"label":"Event Search",
+			"options": "<i class='fa fa-filter'></i>"
+
+		},
+		{
 			"fieldname":"from_date", 
 			"fieldtype":"date", 
 			"label":"From Date",
+			"placeholder":""
+		},
+		{
+			"fieldname":"search_event", 
+			"fieldtype":"button", 
+			"label":"Search Event",
 			"placeholder":""
 		},
 		{
@@ -141,7 +159,8 @@
 		{
 			"fieldname":"",
 			"fieldtype":"section_break",
-			"label":""
+			"label":"Event Logs",
+			"options":"<i class='fa fa-list-alt'></i>"
 		},
 		{
 			"fieldname":"tab",

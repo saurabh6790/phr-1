@@ -1,72 +1,268 @@
-<!-- {% block style %}
+{% block style %}
 {% include "templates/includes/dashboard.css" %}
-{% include "templates/includes/theme.css" %}
-{% endblock %} -->
+{% endblock %}
+{% block phr_con %}
+{% endblock %}
 {% block con_left %}
-<script src="jQuery.jTableCheckbox.min.js"></script>
-<div class="list-group-side" id="profile" style="height:auto;margin-top:5%">
-   <a href="#" class="list-group-item-side active">PHR Home</a>
-   <a noherf class="list-group-item-side" id='profile' data-name="">Profile</a>
+<div class="sidebar-container perfect-scrollbar">
+    <nav>
+    <ul class="main-navigation-menu">
+      <li class="open">
+        <a nohref id="home" class="active">
+          <div class="item-content">
+            <div class="item-media dashboard">
+               
+            </div>
+            <div class="item-inner">
+              <span class="title font15"> Dashboard </span>
+            </div>
+          </div>
+        </a>
+      </li>
+      <li>
+        <a nohref>
+          <div class="item-content">
+            <div class="item-media linked_phr create_linkphr" data-toggle="tooltip" data-placement="top" title="Create Linked PHR"> 
+                                
+            </div>
+            <div class="item-inner">
+              <span class="title"> Linked PHR's </span><i class="icon-arrow"></i>
+            </div>
+          </div>
+        </a>
+        <ul class="sub-menu" id="clphr">
+           
+        </ul>
+      </li>
+      <li>
+        <a nohref>
+          <div class="item-content">
+            <div class="item-media healthcare_provider create_provider" data-toggle="tooltip" data-placement="top" title="Create Provider">
+              
+            </div>
+            <div class="item-inner">
+              <span class="title"> Healthcare Providers </span><i class="icon-arrow"></i>
+            </div>
+          </div>
+        </a>
+        <ul class="sub-menu" id="hps">
+           
+        </ul>
+      </li>
+      <li>
+        <a nohref>
+          <div class="item-content">
+            <div class="item-media health_records">
+               
+            </div>
+            <div class="item-inner">
+              <span class="title"> My Health Records </span><i class="icon-arrow"></i>
+            </div>
+          </div>
+        </a> 
+        <ul class="sub-menu">
+          <li>
+          <a nohref class="event">
+              <div class="item-content">
+                  <div class="item-media events">
+                  </div>
+                  <div class="item-inner" >
+                      <span class="title"> Events </span>
+                  </div>
+              </div>  
+          </a>
+          </li>               
+          <li>
+              <a nohref class="visit">
+                  <div class="item-content">
+                      <div class="item-media visits">
+                           
+                      </div>
+                      <div class="item-inner">
+                          <span class="title"> Visits </span>
+                      </div>
+                  </div>  
+              </a>
+          </li>
+          <li>
+              <a nohref class="medications">
+                  <div class="item-content">
+                      <div class="item-media medications">
+                           
+                      </div>
+                      <div class="item-inner">
+                          <span class="title"> Medications </span>
+                      </div>
+                  </div>   
+              </a>
+          </li>
+          <li>
+              <a nohref class="dmonit">
+                  <div class="item-content">
+                      <div class="item-media disease_monitoring">
+                           
+                      </div>
+                      <div class="item-inner">
+                          <span class="title"> Disease Monitoring </span>
+                      </div>
+                  </div>   
+              </a>
+          </li>
+          <li>
+              <a nohref class="appoint">
+                  <div class="item-content">
+                      <div class="item-media appointments">
+                           
+                      </div>
+                      <div class="item-inner">
+                          <span class="title"> Appointments </span>
+                      </div>
+                  </div>   
+              </a>
+          </li>
+          <li>
+              <a nohref class="msg">
+                  <div class="item-content">
+                      <div class="item-media msgs">
+                      </div>
+                      <div class="item-inner">
+                          <span class="title">Shared History</span>
+                          <span class="msg_count pull-right"></span>
+                      </div>
+                  </div>   
+              </a>
+          </li>
+        </ul>  
+      </li>
+       
+    </ul>
+            <!-- end: MAIN NAVIGATION MENU --> 
+  </nav>
 </div>
-<div class="list-group-side" id="linkedphr">
-  <div class="list-group-item-side active" data-toggle='popover' data-placement='right'  data-container:'#body' title='Add New Linked PHR' data-content='Create and Manage PHRs for family and friends' data-trigger="hover" data-html="true">Linked PHR's <a noherf class="create_linkphr" id="clp"><span style="float:right"><i class="icon-plus"></i></span></a></div>
-  <div id="clphr">
-    <p class="nophr">No Linked PHR's<div class="btn create_linkphr">Add New</div></p>
-  </div>  
-</div>
-<div class="list-group-side" id="hp">
-  <div class="list-group-item-side active" data-toggle='popover' data-placement='right'  data-container:'#body' title='Add New Provider' data-content=' Contact book for your Healthcare Providers' data-trigger="hover" data-html="true">My Healthcare Providers <a noherf class="create_provider"><span style="float:right"><i class="icon-plus"></i></span></a></div>
-  <div id="hps">
-    <p class="hp">No Providers</p>
+{% endblock %}
+{% block topbar %}
+   <div class="top-btns-bar clearfix">
+      <div class="user_dp dropdown current-user cdd hide pull-left margin-right-20">
+          <a data-toggle="dropdown" class="dropdown-toggle linked-phr" nohref>
+              <span id="cimage"></span><span class="username margin-left-5"><span id="cphrname"></span><i class="ti-angle-down margin-left-5 green"></i></span>
+          </a>
+          <ul class="dropdown-menu dropdown-dark">
+              <li>
+                  <a nohref class="cdb">
+                      Dashboard
+                  </a>
+              </li> 
+              <li>
+                  <a nohref id="cprofile">
+                      Profile
+                  </a>
+              </li>
+              <li>
+                  <a nohref class="csettings">
+                      Account Settings
+                  </a>
+              </li>
+          </ul>
+      </div>
+      <div class="page-breadcrumbs pull-left">
+        <ul class="breadcrumb"><li><a nohref=""></a></li></ul>
+      </div>
+      <div class="linked-phr pull-right margin-left-20 link-phr">
+      </div>
+      <div class="pull-right margin-left-20" id="share">
+        <button class="btn btn-primary">
+          <i class="fa fa-share-square"></i>Share Data</button>
+      </div>
+      <div class="pull-right margin-left-20 save_controller">
+        <button class="btn btn-primary"><i class="fa fa-save"></i> Save</button>
+      </div>
+      <div class="pull-right margin-left-20 new_controller">
+        <button class="btn btn-primary pull-right new_controller"><i class="fa fa-plus-square"></i> New</button>
+      </div>  
   </div>
-</div>
-<div class="list-group-side" id="mhr">
-  <div class="list-group-item-side active">My Health Records</div>
-  <a noherf class="list-group-item-side event" data-toggle='popover' data-placement='right'  data-container:'#body' title='Events' data-content=' Create, share and manage your Health Events' data-trigger="hover" data-html="true">Events</a>
-  <a noherf class="list-group-item-side visit" data-toggle='popover' data-placement='right'  data-container:'#body' title='Visits' data-content='Share your Visits' data-trigger="hover" data-html="true">Visits</a>
-  <a noherf class="list-group-item-side medications" data-toggle='popover' data-placement='right'  data-container:'#body' title='Medications' data-content='Give medicine details and get notifications on your mobile' data-trigger="hover" data-html="true">Medications</a>
-  <a noherf class="list-group-item-side dmonit" data-toggle='popover' data-placement='right'  data-container:'#body' title='Disease Monitoring' data-content=' Monitor your disease and share them with your Healthcare Providers' data-trigger="hover" data-html="true">Disease Monitoring</a>
-  <a noherf class="list-group-item-side appoint" data-toggle='popover' data-placement='right'  data-container:'#body' title='Appointments' data-content='Set Appointments with Doctors' data-trigger="hover" data-html="true">Appointments</a>
-  <a noherf class="list-group-item-side msg" data-toggle='popover' data-placement='top'  data-container:'#body' title='Messages' data-content='Check details of your shared PHRs' data-trigger="hover" data-html="true">Shared History</a>
-</div>
 {% endblock %}
 {% block content_area %}
+<script src="/assets/phr/vendor/jquery/jquery.min.js"></script>
+<script src="/assets/phr/vendor/bootstrap/js/bootstrap.min.js"></script>
+<script src="/assets/phr/vendor/modernizr/modernizr.js"></script>
+<script src="/assets/phr/vendor/jquery-cookie/jquery.cookie.js"></script>
+<script src="/assets/phr/vendor/perfect-scrollbar/perfect-scrollbar.min.js"></script>
+<script src="/assets/phr/vendor/switchery/switchery.min.js"></script>
+<script src="/assets/phr/vendor/Chart.js/Chart.min.js"></script>
+<script src="assets/phr/vendor/jquery.sparkline/jquery.sparkline.min.js"></script>
+
+
+<!-- end: JAVASCRIPTS REQUIRED FOR THIS PAGE ONLY -->
+<!-- start: JAVASCRIPTS -->
+<script src="assets/phr/js/main.js"></script>
+<script src="assets/phr/js/index.js"></script>
+<!-- start: JavaScript Event Handlers for this page -->
+
+    <script>
+     
+      jQuery(document).ready(function() {
+        // Sidebar Acive Menu
+        $('.main-navigation-menu > li > a').click(function(){      
+          $('.main-navigation-menu li a').removeClass('active');       
+          $(this).addClass('active');
+        });
+    
+        $('.main-navigation-menu > li > ul > li > a').click(function(){     
+          $('.main-navigation-menu li ul li a').removeClass('active');       
+          $(this).addClass('active');
+        });
+        
+        Main.init();
+
+      });
+    </script>
+  <!-- end: MAIN JAVASCRIPTS -->
+
 <script src="http://jqueryvalidation.org/files/dist/jquery.validate.min.js"></script>
 <script src="http://jqueryvalidation.org/files/dist/additional-methods.min.js"></script>
-<div style="padding-top:1%;">
-</div>
-<div class="top-bar" style="height:50px;">
-              <button type="button" class="btn btn-primary home" style ="vertical-align:bottom;" id="home" data-name="">Home</button>
-              <button type="button" class="btn btn-primary market" style="margin:0px auto;">Health Marketplace</button>
-              <div class="linked-phr" style="float:right;"></div>
-            </div>
-            <div class="form-controller">
-                <div class="sub-top-bar" style="padding-top:2%;padding-bottom:2%;background-color:#ECECEC; border-top: 1px solid #006DEA; border-bottom: 1px solid #006DEA;">
-                  <div class="page-breadcrumbs" style="width:50%;display:inline-block;">
-                    <ul class="breadcrumb">
-                    </ul>
-                  </div>
-                </div>
-            </div>
-<div class="field-area" style="padding-top:5%"></div>
+
+<div class="field-area"></div>
 <div id="main-con"></div>
-</div>
 {% endblock %}
 {% block con_right %}
-<div class="list-group-side" id="ed" style="margin-top:5%">
-  <div href="" class="list-group-item-side active">Emergency details<a noherf class="ped"><span style="float:right"><i class="icon-print"></i></span></a></div>
+<div class="panel panel-white no-radius">
+    <div class="panel-heading border-bottom">
+      <h4 class="panel-title"><img src="assets/phr/images/emergency-dtls.png" alt="Emergency Details" title="Emergency Details"> Emergency Details</h4>
+    </div>
+    <div class="panel-body" >
+        <div id="ed"></div>
+        <a nohref class="ped"><span id="emer_ico" data-toggle="tooltip" data-placement="top" title="Print Emergency Details"><i class="fa fa-print"></i></span></a>     
+    </div>
+    
 </div>
-<div class="list-group-side" id="todo">
-  <div class="list-group-item-side active" data-toggle='popover' data-placement='top'  data-container:'#body' title='Messages' data-content='Create a reminder list and get notifications on your mobile' data-trigger="hover" data-html="true">To Do List's
-    <a noherf class="create_todo"><span style="float:right"><i class="icon-plus"></i></span></a>
-  </div>
-  <div id="tdlst">
+<div class="panel panel-white no-radius to_do_lists">
+    <div class="panel-heading border-bottom">
+        <h4 class="panel-title">
+        <img src="assets/phr/images/todolist.png" alt="To Do Lists" title="To Do Lists"> To Do List's
+        <a nohref class="create_todo"><span id="add_list" data-toggle="tooltip" data-placement="top" title="Create To Do"> </span></a>
+        </h4>
+    </div>
+    <div class="panel-body">
+      <div suppress-scroll-x="true" wheel-propagation="false" perfect-scrollbar="" class="panel-scroll height-215 ng-scope ps-container ps-active-y"> 
+        <ul class="timeline-xs" id="tdlst">
+          
+        </ul>
+      </div>
+    </div>
+</div> 
+<div class="panel panel-white no-radius advertise">
+    <div class="panel-heading border-bottom">
+        <h4 class="panel-title"><img src="assets/phr/images/advertisements.png" alt="Advertisements" title="Advertisements"> Advertisements</h4>
+    </div>
+    <div class="panel-body">
+      <div suppress-scroll-x="true" wheel-propagation="false" perfect-scrollbar="" class="panel-scroll height-130 ng-scope ps-container ps-active-y"> 
+        <ul id='adlst'>
+             
+        </ul>
+      </div>
+    </div>
   </div> 
-</div>
-<div class="list-group-side" id="ad" style="margin-top:5%">
-  <a href="" class="list-group-item-side active">Advertisements</a>
-  <div id="adlst">
-  </div>
+  <div class="clearfix"></div>
 </div>
 {% endblock %}
 {% block script %}

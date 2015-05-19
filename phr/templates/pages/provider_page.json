@@ -5,6 +5,7 @@
 			"fieldname": "my_req", 
 			"fieldtype": "section", 
 			"label": "My Requests",
+			"section_title":"My Requests",
 			"default":1
 		},
 		{
@@ -26,7 +27,8 @@
 		{
 			"fieldname": "acc_req", 
 			"fieldtype": "section", 
-			"label": "Accepted Request"
+			"label": "Accepted Request",
+			"section_title":"Accepted Requests"
 		},
 		{
 			"fieldname": "acc_req1", 
@@ -41,7 +43,8 @@
 		{
 			"fieldname": "rej_req", 
 			"fieldtype": "section", 
-			"label": "Rejected Request"
+			"label": "Rejected Request",
+			"section_title":"Rejected Requests"
 		},
 		{
 			"fieldname": "rej_req1", 

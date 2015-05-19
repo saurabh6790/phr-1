@@ -1,10 +1,24 @@
 {
-   "tab":1,
+   "html_viewer":[
+         {
+         "fieldname": "basic_info", 
+         "fieldtype": "section_break", 
+         "label": "Profile",
+         "options":"<i class='fa fa-user-secret'></i>"
+      },
+      {
+         "fieldname":"profile_viewer", 
+         "fieldtype":"html", 
+         "label":""
+      }
+   ],
    "fields":[
    {
       "fieldname": "basic_info", 
-      "fieldtype": "section", 
-      "label": "Profile",
+      "fieldtype": "section_break", 
+      "section_title":"Profile",
+      "label": "Personal Info",
+      "options":"<i class='fa fa-user-secret'></i>",
       "default":1
    },
    {
@@ -12,6 +26,7 @@
       "fieldtype": "data", 
       "label": "First Name",
       "placeholder":"",
+      "readonly":1,
       "required":1
 	},
    {
@@ -19,6 +34,7 @@
       "fieldtype": "data", 
       "label": "Middle Name",
       "placeholder":"",
+      "readonly":1,
       "required":1
    },
 	{
@@ -26,6 +42,7 @@
       "fieldtype": "data", 
       "label": "Last Name",
       "placeholder":"",
+      "readonly":1,
       "required":1
 	},
    {
@@ -37,6 +54,7 @@
       "fieldname": "gender", 
       "fieldtype": "select", 
       "label": "Gender",
+      "readonly":1,
       "options":["", "Male", "Female"]
    },
   	{
@@ -44,36 +62,42 @@
       "fieldtype": "date", 
       "label": "DOB",
       "placeholder":"",
+      "readonly":1,
       "required":1
 	},
    {
       "fieldname": "marital_status", 
       "fieldtype": "select", 
       "label": "Marital Status",
+      "readonly":1,
       "options": ["","Married","Single"] 
    },
    {
       "fieldname": "relationship", 
       "fieldtype": "data", 
       "label": "Relationship",
+      "readonly":1,
       "placeholder":""
    },
    {
       "fieldname": "", 
-      "fieldtype": "section_break", 
-      "label": ""
+      "fieldtype": "section_break",
+      "options":"<i class='fa fa-phone-square'></i>", 
+      "label": " Contact Details"
    },
    {
       "fieldname": "mobile", 
       "fieldtype": "data", 
       "label": "Mobile No",
       "placeholder":"",
+      "readonly":1,
       "required":1
    },
    {
       "fieldname": "phone", 
       "fieldtype": "data", 
       "label": "Landline",
+      "readonly":1,
       "placeholder":""
    },
    {
@@ -85,6 +109,7 @@
       "fieldname": "fax", 
       "fieldtype": "data", 
       "label": "Fax",
+      "readonly":1,
       "placeholder":""
    },
 
@@ -92,6 +117,7 @@
       "fieldname": "email", 
       "fieldtype": "email", 
       "label": "Email",
+      "readonly":1,
       "placeholder":""
    },
    {
@@ -102,19 +128,22 @@
    },   
    {
       "fieldname": "", 
-      "fieldtype": "section_break", 
-      "label": ""
+      "fieldtype": "section_break",
+      "options":"<i class='fa fa-hand-o-down'></i>", 
+      "label": " Address"
    },
    {
       "fieldname": "address1", 
       "fieldtype": "text", 
       "label": "Address Line 1",
+      "readonly":1,
       "placeholder":"Flat No, Society, Locality"
    },
    {
       "fieldname": "address2", 
       "fieldtype": "text", 
       "label": "Address Line 2",
+      "readonly":1,
       "placeholder":"Street, Landmark"
    },
    {
@@ -127,6 +156,7 @@
       "fieldtype": "data", 
       "label": "Country",
       "placeholder":"",
+      "readonly":1,
       "value":"India"
       
    },
@@ -135,48 +165,56 @@
       "fieldtype": "select", 
       "label": "State",
       "placeholder":"",
+      "readonly":1,
       "options":"State"
    },
    {
       "fieldname": "city", 
       "fieldtype": "data", 
       "label": "City",
+      "readonly":1,
       "placeholder":""
    },
    {
       "fieldname": "pincode", 
       "fieldtype": "data", 
       "label": "Pincode",
+      "readonly":1,
       "placeholder":""
    },
 
    {
       "fieldname": "", 
       "fieldtype": "section_break", 
-      "label": ""
+      "options":"<i class='fa fa-hospital-o'></i>",
+      "label": "Health Details"
    },
    {
       "fieldname": "blod_group", 
       "fieldtype": "select", 
       "label": "Blood Group",
-      "options":["","B+","B-", "A+", "A-", "AB+", "AB-", "O+", "O-"]
+      "readonly":1,
+      "options":["", "A+", "A-", "B+", "B-", "O+", "O-", "AB+", "AB-"]
    },
    {
       "fieldname": "addiction", 
       "fieldtype": "text", 
       "label": "Addictions",
+      "readonly":1,
       "placeholder":"smoking, alcohol, tobacco, drugs"
    },
    {
       "fieldname": "allergies", 
       "fieldtype": "text", 
       "label": "Allergies",
+      "readonly":1,
       "placeholder":""
    },
     {
       "fieldname": "diet_type", 
       "fieldtype": "select", 
       "label": "Diet Type",
+      "readonly":1,
       "options":["","Vegetarian","Non-Vegetarian"]
    },
    {
@@ -188,6 +226,7 @@
       "fieldname": "height", 
       "fieldtype": "data", 
       "label": "Height (CMS)",
+      "readonly":1,
       "placeholder":"in cms"
    },
    {
@@ -201,6 +240,7 @@
       "fieldname": "weight", 
       "fieldtype": "data", 
       "label": "Weight (KGS)",
+      "readonly":1,
       "placeholder":"in KGS"
    },
    {
@@ -212,14 +252,16 @@
    },
   {
       "fieldname": "", 
-      "fieldtype": "section_break", 
-      "label": ""
+      "fieldtype": "section_break",
+      "options":"<i class='fa fa-newspaper-o'></i>",
+      "label": "Insurance Details"
    },
    {
       "fieldname": "insurance", 
       "fieldtype": "select", 
       "label": "Insurance",
       "options":["","Yes","No"],
+      "readonly":1,
       "placeholder":""
    },
    {
@@ -227,105 +269,8 @@
       "fieldtype": "data", 
       "label": "Insurance Provider",
       "placeholder":"",
+      "readonly":1,
       "depends_on": "insurance:Yes" 
-   },
-  
-   {
-      "fieldname": "password", 
-      "fieldtype": "section", 
-      "label": "Update Password" 
-
-   },
-   {
-      "fieldname": "old_password", 
-      "fieldtype": "password", 
-      "label": "Old Password",
-      "placeholder":"",
-      "required":1
-   },
-   {
-      "fieldname": "new_password", 
-      "fieldtype": "password", 
-      "label": "New Password",
-      "placeholder":"",
-      "required":1
-   },
-   {
-      "fieldname": "cnf_new_password", 
-      "fieldtype": "password", 
-      "label": "Confirm Password",
-      "placeholder":"",
-      "required":1
-   },
-   {
-      "fieldname": "manage_phr", 
-      "fieldtype": "section", 
-      "label": "Manage LinkedPHR" 
-   },
-   {
-      "fieldname": "dashboard", 
-      "fieldtype": "section", 
-      "label": "Manage Dashboard"
-   },
-   {
-      "fieldname": "events", 
-      "fieldtype": "check", 
-      "label": "Events" 
-   },
-   {
-      "fieldname": "visits", 
-      "fieldtype": "check", 
-      "label": "Visits" 
-   },
-   {
-      "fieldname": "disease_monitoring", 
-      "fieldtype": "check", 
-      "label": "Disease Monitoring" 
-   },
-   {
-      "fieldname": "", 
-      "fieldtype": "column_break", 
-      "label": ""
-   },    
-   {
-      "fieldname": "medications", 
-      "fieldtype": "check", 
-      "label": "Medications" 
-   },
-   {
-      "fieldname":"appointments", 
-      "fieldtype":"check", 
-      "label": "Appointments" 
-   }, 
-   {
-      "fieldname":"messages", 
-      "fieldtype":"check", 
-      "label": "Shared History" 
-   },
-   {
-      "fieldname": "image", 
-      "fieldtype": "section", 
-      "label": "Profile Image" 
-   },
-   {
-      "fieldname":"", 
-      "fieldtype":"attach", 
-      "label": "" 
-   },
-   {
-      "fieldname": "notification", 
-      "fieldtype": "section", 
-      "label": "Manage Notifications" 
-   },
-   {
-      "fieldname": "linked_phr", 
-      "fieldtype": "check", 
-      "label": "Linked PHRs" 
-   },
-   {
-      "fieldname":"to_do", 
-      "fieldtype":"check", 
-      "label": "To Do" 
-   } 
+   }
    ]
 }

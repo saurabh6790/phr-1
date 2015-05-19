@@ -9,7 +9,7 @@ frappe.provide("frappe");
 {% include "templates/includes/thumbnail.js" %}
 {% include "templates/includes/share_phr.js" %}
 
-var Visit = inherit(ListView,{
+window.Visit = inherit(ListView,{
 	init: function(wrapper, json_file, profile_id, entity_id){
 		var me = this;
 		this.wrapper = wrapper;
@@ -24,6 +24,7 @@ var Visit = inherit(ListView,{
 			'profile_id':profile_id})
 
 		$('.new_controller').hide()
+		$('.save_controller').remove();
 
 		$('<tr>\
 			<td></td>\
@@ -37,8 +38,14 @@ var Visit = inherit(ListView,{
 			<td align="center"><input type="checkbox" id="prescription"  value="Prescription" ></td>\
 			<td align="center"><input type="checkbox" id="cost_of_care"  value="Cost Of Care" ></td>\
 		</tr>').insertBefore('table > thead > tr:first')
-
-		$("<button class='btn btn-primary'> Share </button>").click(function(){
+		this.add_share_event()
+		this.add_search_event()
+		scroll_top()
+		
+	},
+	add_share_event:function(){
+		var me=this;
+		$("#share").click(function(){
 			var fg = false;
 
 			$('.table').find('thead').each(function(){
@@ -86,9 +93,20 @@ var Visit = inherit(ListView,{
 				frappe.msgprint("Please first select a Visit. ")
 			}
 			
-		}).appendTo($('.field-area'))
-
-		
+		})
+	},
+	add_search_event:function(wrapper,json_file,profile_id,entity_id){
+		var me = this;
+		$('.search_event').click(function(){
+			from_date=$('[name="from_date"]').val()
+			to_date=$('[name="to_date"]').val()
+			ListView.prototype.init(this.wrapper, {"file_name" : "visit",
+			'search':"event",
+			'tab_at': 4,
+			'visit_date_from':from_date,
+			'visit_date_to':to_date,
+			'profile_id':me.profile_id})
+		})
 	},
 	render_spans: function(){
 		var me = this;
@@ -171,7 +189,7 @@ var Visit = inherit(ListView,{
 						<a href='#' class='active'>%(id)s</a>\
 					",{'id':$(this).attr('id')})).appendTo('.breadcrumb');
 
-				$('.event_section').empty();
+				//$('.event_section').empty();
 				me.folder = $(this).attr('id');
 				me.render_sub_sections();
 			})

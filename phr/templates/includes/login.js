@@ -3,14 +3,13 @@ window.disable_signup = {{ disable_signup and "true" or "false" }};
 window.login = {};
 
 login.bind_events = function() {
-	console.log("checking for multiple page rendering issue")
 	if(!window.pageInitialized){
 		$(window).on("hashchange", function() {
 			login.route();
 		});
 
 		$(".form-login").on("submit", function(event) {
-			console.log("form-login first event")
+			// console.log("form-login first event")
 			event.preventDefault();
 			$('.btn-primary').prop("disabled", true);
 			var args = {};
@@ -59,7 +58,7 @@ login.bind_events = function() {
 				return false;
 			}
 
-			console.log("phr signup")
+			// console.log("phr signup")
 
 			login.call(args);
 		});
@@ -82,7 +81,7 @@ login.bind_events = function() {
 
 login.route = function() {
 	var route = window.location.hash.slice(1);
-	console.log(route)
+	// console.log(route)
 	if(!route) route = "login";
 	login[route]();
 }
@@ -131,7 +130,7 @@ login.login_handlers = (function() {
 
 	var login_handlers = {
 		200: function(data) {
-			console.log(["Data", window.location.hash])
+			// console.log(["Data", window.location.hash])
             if(data.message=="Logged In") {
 				window.location.href = get_url_arg("redirect-to") || "/desk";
 			} else if(data.message=="No App") {
@@ -155,7 +154,6 @@ login.login_handlers = (function() {
 					window.location.href = "/index";
 				}
 			} else if(["#signup", "#forgot"].indexOf(window.location.hash)!==-1) {
-				console.log(["registration completed",data])
 				if (data.message["returncode"]==101){
 					frappe.msgprint(data.message.msg_display);
 					setTimeout("window.location.href = '/login'", 5000);

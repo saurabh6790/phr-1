@@ -8,12 +8,14 @@ frappe.provide("frappe");
 {% include "templates/includes/visit.js" %}
 {% include "templates/includes/list_view.js" %}
 {% include "templates/includes/profile.js" %}
+{% include "templates/includes/profile_settings.js" %}
 {% include "templates/includes/linked_phr.js" %}
 {% include "templates/includes/provider.js" %}
 {% include "templates/includes/medication.js" %}
 {% include "templates/includes/appointments.js" %}
 {% include "templates/includes/messages.js" %}
 {% include "templates/includes/custom_dialog.js" %}
+{% include "templates/includes/disease_monitoring.js" %}
 {% include "templates/includes/dashboard_renderer.js" %}
 {% include "templates/includes/todo.js" %}
 
@@ -37,7 +39,9 @@ $(document).ready(function () {
 		$("#home").on("click",function(){
 			$('#phr').addClass("hide");
 			$('.breadcrumb').empty()
-			$('.linked-phr').empty()
+			//$('.linked-phr').empty()
+			$('#cphrname').empty()
+			$('.cdd').addClass('hide')
 			$('.save_controller').hide()
 			$('.new_controller').hide()
 			NProgress.start();
@@ -59,9 +63,29 @@ $(document).ready(function () {
 
 		$('.create_linkphr').unbind("click").click(function(){
 			$("#main-con").empty()
-			LinkedPHR.prototype.init('',{"file_name" : "linked_patient"},"","create_linkphr")
+			LinkedPHR.prototype.init('',{"file_name" : "linked_patient"},"","create_linkphr", {"source": "provider"})
 		})	
 	}
+
+	// $("#home").on("click",function(){
+	// 	render_middle(sessionStorage.getItem("pid"))
+	// })
+
+	$("#pprofile").unbind("click").click(function(){
+		$('.cdd').addClass('hide')
+		$('#cphrname').empty()
+		NProgress.start();
+		PatientDashboard.prototype.init($(document).find("#main-con"),
+				{"file_name" : "profile", "method": "profile"},sessionStorage.getItem('pid'))	
+		NProgress.done();
+	})
+	$(".cdb").on("click",function(){
+		var db = new render_dashboard();
+		$('.field-area').empty()
+		$('#main-con').empty()
+		db.render_middle_section(sessionStorage.getItem('cid'))
+	})	
+
 	$("#profile").unbind("click").click(function(){
 		profile_id=sessionStorage.getItem("cid")
 		$('.breadcrumb').empty()
@@ -75,7 +99,7 @@ $(document).ready(function () {
 		NProgress.done();
 	})
 	$(".patients").unbind("click").click(function(){
-		profile_id=sessionStorage.getItem("cid")
+		profile_id=sessionStorage.getItem("pid")
 		$('.breadcrumb').empty()
 		$('#main-con').empty()
 		NProgress.start();
@@ -84,12 +108,46 @@ $(document).ready(function () {
 			'cmd':"provider.get_pateint_data",
 			'profile_id':profile_id})
 		}).appendTo('.breadcrumb');
-			ListView.prototype.init($(document).find(".field-area"), {"file_name" : "patients",
-			'cmd':"provider.get_patient_data",
-			'profile_id':profile_id})
+		ListView.prototype.init($(document).find(".field-area"), {"file_name" : "patients",
+		'cmd':"provider.get_patient_data",
+		'profile_id':profile_id})
+	
+		$(".cprofile").unbind("click").click(function(){
+			NProgress.start();
+			$('#main-con').empty()
+			PatientDashboard.prototype.init($(document).find("#main-con"),
+			{"file_name" : "profile", "method": "profile"},sessionStorage.getItem('cid'))	
+			NProgress.done();
+		})	
+		$(".csettings").unbind("click").click(function(){
+			// $('.cdd').addClass('hide')
+			// $('#cphrname').empty()
+			NProgress.start();
+			profile_id=sessionStorage.getItem('cid')
+			sessionStorage.setItem("cid",profile_id)
+			ProfileSettings.prototype.init($(document).find("#main-con"),
+					{"file_name" : "profile_settings", "method": "profile"},profile_id)	
+			NProgress.done();
+		})
+		$("#share").remove()
+		$(".save_controller").remove()
+		$(".new_controller").remove()
+
 		NProgress.done();
 
 	})
+	
+	$(".psettings").unbind("click").click(function(){
+			$('.cdd').addClass('hide')
+			$('#cphrname').empty()
+			NProgress.start();
+			profile_id=sessionStorage.getItem('pid')
+			sessionStorage.setItem("cid",profile_id)
+			ProfileSettings.prototype.init($(document).find("#main-con"),
+					{"file_name" : "provider_profile_settings", "method": "profile"},profile_id)	
+			NProgress.done();
+		})
+
 	$('.event').unbind("click").click(function(){
 		profile_id=sessionStorage.getItem("cid")
 		$('.breadcrumb').empty()
@@ -131,6 +189,26 @@ $(document).ready(function () {
 		DiseaseMonitoring.prototype.init($(document).find("#main-con"),'', sessionStorage.getItem("cid"))
 		NProgress.done();
 	})
+	$('.appoint').unbind("click").click(function(){
+		$('.breadcrumb').empty()
+		NProgress.start();
+		$('<li><a nohref>Appointments</a></li>').click(function(){
+			$('.breadcrumb li').nextAll().remove()
+			Appointments.prototype.init($(document).find("#main-con"), '', sessionStorage.getItem("cid"))
+		}).appendTo('.breadcrumb');
+		Appointments.prototype.init($(document).find("#main-con"),'', sessionStorage.getItem("cid"))
+		NProgress.done();
+	})
+	$('.msg').unbind("click").click(function(){
+		$('.breadcrumb').empty()
+		NProgress.start();
+		$('<li><a nohref>Messages</a></li>').click(function(){
+			$('.breadcrumb li').nextAll().remove()
+			Messages.prototype.init($(document).find("#main-con"), '', sessionStorage.getItem("cid"))
+		}).appendTo('.breadcrumb');
+		Messages.prototype.init($(document).find("#main-con"),'', sessionStorage.getItem("cid"))
+		NProgress.done();
+	})
 	$(".create_todo").unbind("click").click(function(){
 		NProgress.start();
 		ToDo.prototype.init($(document).find("#main-con"),
@@ -156,15 +234,15 @@ open_patient=function(profile_id,name){
 }
 
 render_middle = function(profile_id){
-	$(".field-area").empty()
-	RenderFormFields.prototype.init($("#main-con"), {'file_name':'provider_page'})
-	$('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+	$(".field-area").empty();
+	RenderFormFields.prototype.init($("#main-con"), {'file_name':'provider_page'});
+	$('a[data-toggle="tab"]').unbind("click").click(function (e) {
 		e.target // newly activated tab
 		e.relatedTarget // previous active tab
 	 		// alert(e.target)
 		request_renderer($(this).attr('href'), profile_id)
-	})
-	request_renderer('#my_req', profile_id)
+	});
+	request_renderer('#my_req', profile_id);
 }
 
 request_renderer = function(target, profile_id){
@@ -174,6 +252,8 @@ request_renderer = function(target, profile_id){
 		args:{'target':target, 'provider_id': profile_id},
 		callback:function(r){
 			RenderFormFields.prototype.init($("#"+target), {'fields': r.message})
+			$("#share").remove()
+			$(".save_controller").remove()
 		}
 	})
 }

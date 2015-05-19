@@ -1,6 +1,12 @@
 {
    "tab": 0,
    "fields":[
+          {
+            "fieldname": "", 
+            "fieldtype": "section_break", 
+            "label": " Linked PHR details",
+            "options":"<i class='fa fa-user-plus'></i>"
+         },
          {
             "fieldname": "person_firstname", 
             "fieldtype": "data", 

@@ -19,9 +19,11 @@ var Medications = inherit(ListView,{
 		ListView.prototype.init($(document).find(".field-area"), {"file_name" : "medication",
 			'cmd':"medication.get_medication_data",
 			'profile_id':profile_id})
-		$('.new_controller').remove();
+		$('.new_controller').hide();
+		$('#share').remove()
 		//me.update_select_options()
 		me.bind_save_event()
+		scroll_top()
 
 	},
 	/*update_select_options:function(){
@@ -72,7 +74,7 @@ var Medications = inherit(ListView,{
 				}
 			}
 		}); 
-		$('.update').bind('click',function(event) {
+		$('.save_controller').bind('click',function(event) {
 			NProgress.start();
 			var validated=me.validate_form()
 			if (validated==true){
@@ -155,6 +157,7 @@ var Medications = inherit(ListView,{
   	},
 	update_list_view:function(data){
 		RenderFormFields.prototype.init($(".field-area"), {'fields': data['listview']})
-		$('.save_controller').remove();
+		$('#share').remove()
+		//$('.save_controller').remove();
 	}
 })

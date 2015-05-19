@@ -1,6 +1,12 @@
 {
 	"fields":[
 		{
+			"fieldname":"",
+			"fieldtype":"section_break",
+			"options":"<i class='fa fa-share-alt-square'></i>",
+			"label":"Sharing DM"
+		},
+		{
 			"fieldname":"doctor_name",
 			"fieldtype":"data", 
 			"label":"Provider Name",

@@ -10,14 +10,7 @@ import os
 
 @frappe.whitelist(allow_guest=True)
 def get_profile_list(data):
-	print "in provider page p1"
-	print data
-
-	# fields, values, tab = get_data_to_render(data)
-
-	# print fields
-
-
+	
 	request_type="POST"
 	url="%s/sharephr/getprofilelistSharedFrom"%get_base_url()
 	from phr.phr.phr_api import get_response
@@ -151,8 +144,8 @@ def get_myrequests(target, provider_id):
 				 from `tabShared Requests`
 				 where ifnull(approval_status,'') not in ('Accept', 'Reject') 
 					and provider_id="%s" and doc_name in ('Event', 'Disease Monitoring') and 
-					DATE_FORMAT(STR_TO_DATE(valid_upto,'%s'), '%s') >= NOW()
-				 order by date desc, valid_upto asc """%('%d/%m/%Y',provider_id, '%d/%m/%Y', '%Y-%m-%d'), as_list=1)
+					DATE_FORMAT(STR_TO_DATE(valid_upto,'%s'), '%s') >= DATE_FORMAT(NOW(), '%s')
+				 order by date desc, valid_upto asc """%('%d/%m/%Y',provider_id, '%d/%m/%Y', '%Y-%m-%d', '%Y-%m-%d'), as_list=1, debug=1)
 
 	for d in data:
 		d.append("""<button class="btn btn-success  btn-sm" 
@@ -194,8 +187,8 @@ def get_acc_req(target, provider_id):
 				 from `tabShared Requests`
 				 where ifnull(approval_status,'') = 'Accept'
 					and provider_id="%s" and 
-					DATE_FORMAT(STR_TO_DATE(valid_upto,'%s'), '%s') >= NOW() 
-					order by date desc, valid_upto asc"""%('%d/%m/%Y', provider_id, '%d/%m/%Y', '%Y-%m-%d'), as_list=1)
+					DATE_FORMAT(STR_TO_DATE(valid_upto,'%s'), '%s') >= DATE_FORMAT(NOW(), '%s') 
+					order by date desc, valid_upto asc"""%('%d/%m/%Y', provider_id, '%d/%m/%Y', '%Y-%m-%d', "%Y-%m-%d"), as_list=1)
 
 	for d in data:
 		if d[4] == 'Event':

@@ -1,0 +1,39 @@
+{
+    "tab": 1,
+    "fields": [
+        {
+            "fieldname": "password",
+            "fieldtype": "section",
+            "label": "Update Password",
+            "section_title": "Update Password",
+            "default": 1
+        },
+        {
+            "fieldname": "old_password",
+            "fieldtype": "password",
+            "label": "Old Password",
+            "placeholder": "",
+            "required": 1
+        },
+        {
+            "fieldname": "new_password",
+            "fieldtype": "password",
+            "label": "New Password",
+            "placeholder": "",
+            "required": 1
+        },
+        {
+            "fieldname": "cnf_new_password",
+            "fieldtype": "password",
+            "label": "Confirm Password",
+            "placeholder": "",
+            "required": 1
+        },
+        {
+            "fieldname": "manage_phr",
+            "fieldtype": "section",
+            "label": "Manage LinkedPHR",
+            "section_title": "Manage LinkedPHR"
+        }
+    ]
+}

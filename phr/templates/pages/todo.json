@@ -1,6 +1,12 @@
 {
 	"fields":[
 		{
+            "fieldname": "",
+            "fieldtype": "section_break",
+            "label": "TO DO Details",
+            "options":"<i class='fa fa-calendar'></i>"
+        },
+		{
 			"fieldname":"priority", 
 			"fieldtype":"select", 
 			"label":"Priority",
