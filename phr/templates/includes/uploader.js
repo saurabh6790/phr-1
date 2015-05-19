@@ -101,10 +101,6 @@ upload = {
 							$('.modal-backdrop').remove()
 							frappe.msgprint(r.message['success_meg'])
 						}
-						else{
-							NProgress.done();
-							return;
-						}
 						// if(r.exc) {
 						// 	// if no onerror, assume callback will handle errors
 						// 	opts.onerror ? opts.onerror(r) : opts.callback(null, null, r);

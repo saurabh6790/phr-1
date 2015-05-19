@@ -206,7 +206,7 @@ $.extend(SharePhr.prototype,{
 		me.res['sub_folder'] = me.sub_folder;
 		me.res['lphr_name'] = sessionStorage.getItem("cname")
 
-		// console.log(me.res)
+		// console.log([me.doc_list.length])
 		if(me.validate_form()){
 			NProgress.start();
 			frappe.call({
@@ -242,6 +242,10 @@ $.extend(SharePhr.prototype,{
   			if($("form select[name='share_via']").val() == 'Provider Account' && !$("form input[name='sharing_duration']").val()){
   				frappe.msgprint("Please mention sharing duration")
   				fg=false	
+  			}
+  			if(me.doc_list.length === 0){
+  				frappe.msgprint("Please select files for sharing")
+  				fg=false
   			}
   		} 
   		return fg

@@ -360,8 +360,8 @@ var PatientDashboard = inherit(RenderFormFields, {
 			args:{'data': res,"id":cmd,"dashboard":selected},
 			callback: function(r) {
 				NProgress.done();
-				if(r.message) {
-					frappe.msgprint(r.message);
+				if(!r.message['exe']) {
+					frappe.msgprint(r.message['msg']);
 					$(me.wrapper).empty()
 					$('.field-area').empty()
 					HTMLViewer.prototype.init(me.wrapper, me.args, me.entityid)
@@ -373,6 +373,9 @@ var PatientDashboard = inherit(RenderFormFields, {
 					text_msg='Linked PHR Has Updated His Profile'
 					send_linkedphr_updates(email_msg,text_msg,"Profile")
 
+				}
+				else{
+					frappe.msgprint(r.message['exe']);
 				}
 			}
 		})
