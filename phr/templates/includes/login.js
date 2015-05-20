@@ -24,7 +24,7 @@ login.bind_events = function() {
 		});
 
 		$(".form-signup").unbind("submit").submit(function(event) {
-			//event.preventDefault();
+			event.preventDefault();
 			$('.btn-primary').prop("disabled", true);
 			var args = {};
 			args.first_name = ($("#signup_firstname").val() || "").trim();
