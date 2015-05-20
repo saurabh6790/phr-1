@@ -40,6 +40,7 @@ def create_profile(first_name,middle_name,last_name,email_id,contact,created_via
 			res=create_profile_in_db(response['entityid'],args,response,file_path)
 			db=set_default_dashboard(response['entityid'])
 			response['msg_display']='Profile created successfully, please check your email and complete signup process'
+			return response
 		else:
 			return response
 
