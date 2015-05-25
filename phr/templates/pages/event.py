@@ -370,7 +370,7 @@ def get_event_info(event_id):
 @frappe.whitelist(allow_guest=True)
 def get_visit_data(data):
 	request_type="POST"
-	url="%s/phrdata/getprofilevisit"%get_base_url()
+	url="%s/searchVisitByFilterparam"%get_base_url()
 	from phr.phr.phr_api import get_response
 
 	fields, values, tab= get_data_to_render(data)
@@ -385,7 +385,7 @@ def get_visit_data(data):
 
 	data=json.loads(data)
 
-	response=get_response(url, json.dumps({"profileId":data.get('profile_id')}), request_type)
+	response=get_response(url, json.dumps({"profileId":data.get('profile_id'), "visit_date_from": data.get('visit_date_from'), "visit_date_to": data.get('visit_date_to')}), request_type)
 	res_data = json.loads(response.text)
 
 	url = "%s/phrdata/getprofilevisitfilecount"%get_base_url()
@@ -395,20 +395,14 @@ def get_visit_data(data):
 
 	event_count_dict = {}
 	get_event_wise_count_dict(res_data1.get('FileCountData'), event_count_dict)
-	
-	if isinstance(type(res_data), dict):
-		res_data = res_data.get('phr')
 
-	else:
-		res_data = json.loads(res_data.get('phr'))	
-
-	if res_data.get('visitList'):
-		for visit in res_data.get('visitList'):
+	if res_data.get('list'):
+		for visit in res_data.get('list'):
 
 			count_list = [0, 0, 0, 0, 0]
 
 			data = ['<input  type="radio" name="visit" id = "%s"><div style="display:none">%s</div>'%(visit['entityid'], visit['entityid']),
-					visit['event']['event_title'], visit['str_visit_date'], 
+					visit['visit_title'], visit['str_visit_date'], 
 					visit['visit_descripton'], visit['doctor_name']]
 
 			event_list_updater(visit['entityid'], event_count_dict, count_list, data)
@@ -438,9 +432,8 @@ def get_event_data(data):
 			break
 
 	data=json.loads(data)
-	#other_param=data.get('other_param')
 	profile_id = data.get('profile_id')
-	frappe.errprint([data.get('event_date_from'),data.get('event_date_to'),data.get('profile_id')])
+	
 	response=get_response(url, json.dumps({"profileId":data.get('profile_id'),"event_date_from":data.get('event_date_from'),"event_date_to":data.get('event_date_to')}), request_type)
 	res_data = json.loads(response.text)
 
@@ -451,12 +444,6 @@ def get_event_data(data):
 
 	event_count_dict = {}
 	get_event_wise_count_dict(res_data1.get('FileCountData'), event_count_dict)
-
-	# if isinstance(type(res_data), dict):
-	# 	res_data = res_data.get('phr')
-
-	# else:
-	# 	res_data = json.loads(res_data.get('phr'))	
 
 	if res_data.get('list'):
 		for visit in res_data.get('list'):
