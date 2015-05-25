@@ -34,7 +34,25 @@
 <script>
 
 $(document).ready(function() {
-	
+	var id=get_url_arg("id") || "";
+	frappe.call({
+		type: "POST",
+		method: "phr.phr.verifier.check_verified",
+		args:{"profile_id":id},
+		callback: function(r) {
+			res = r.message
+			if(res) {
+				
+				if(res=="verified"){
+					window.location.href = "update_password?id="+id;
+				}
+				else if(res=="not_verified"){
+					
+				}
+			}
+		}
+	})
+
 	$("#code").on("keypress", function(e) {
 		if(e.which===13) $("#update").click();
 	})

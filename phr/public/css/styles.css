@@ -11597,3 +11597,64 @@ td.small-width {
 .font20 { font-size: 20px !important; }
 
 #sidebar > div nav > ul li a.active .icon-arrow { color: #fff !important; } 
+
+/* Healthsnapp Card CSS */
+@font-face {
+    font-family: 'futura_lt_btlight';
+    src: url('../fonts/futult_0-webfont.eot');
+    src: url('../fonts/futult_0-webfont.eot?#iefix') format('embedded-opentype'),
+         url('../fonts/futult_0-webfont.woff2') format('woff2'),
+         url('../fonts/futult_0-webfont.woff') format('woff'),
+         url('../fonts/futult_0-webfont.ttf') format('truetype'),
+         url('../fonts/futult_0-webfont.svg#futura_lt_btlight') format('svg');
+    font-weight: normal;
+    font-style: normal;
+
+}
+@font-face {
+    font-family: 'pluto_sansbold';
+    src: url('../fonts/PlutoSansBold-webfont.eot');
+    src: url('../fonts/PlutoSansBold-webfont.eot?#iefix') format('embedded-opentype'),
+         url('../fonts/PlutoSansBold-webfont.woff2') format('woff2'),
+         url('../fonts/PlutoSansBold-webfont.woff') format('woff'),
+         url('../fonts/PlutoSansBold-webfont.ttf') format('truetype'),
+         url('../fonts/PlutoSansBold-webfont.svg#pluto_sansbold') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'futura_md_btmedium';
+    src: url('../fonts/futuram-webfont.eot');
+    src: url('../fonts/futuram-webfont.eot?#iefix') format('embedded-opentype'),
+         url('../fonts/futuram-webfont.woff2') format('woff2'),
+         url('../fonts/futuram-webfont.woff') format('woff'),
+         url('../fonts/futuram-webfont.ttf') format('truetype'),
+         url('../fonts/futuram-webfont.svg#futura_md_btmedium') format('svg');
+    font-weight: normal;
+    font-style: normal; 
+}
+.card-container { width: 430px; height: 265px; margin: 100px auto 0; background: #1e1e1e; padding: 80px; }
+.card-main { width: 430px; height: 260px; }
+.card-top { 
+    background: -webkit-linear-gradient(#1b7ab2, #85c23f); /* For Safari 5.1 to 6.0 */
+  background: -o-linear-gradient(#1b7ab2, #85c23f); /* For Opera 11.1 to 12.0 */
+  background: -moz-linear-gradient(#1b7ab2, #85c23f); /* For Firefox 3.6 to 15 */
+  background: linear-gradient(#1b7ab2, #85c23f); /* Standard syntax (must be last) */
+  color: #fff;
+  width: 100%;
+  height: 190px;
+  border-top-left-radius: 15px;
+  border-top-right-radius: 15px; 
+}
+.card-top-left { width: 260px; padding: 35px 25px 15px; background: none; float: left; }
+.patient-name { font-family: 'futura_md_btmedium'; font-size: 18px; margin: 0 0 10px; }
+.patient-number { font-family: 'futura_md_btmedium'; font-size: 20px; margin: 0 0 25px; letter-spacing: 2px; }
+.patient-number span { display: inline-block; margin-right: 5px; }  
+.patient-blood-grp, .patient-contact, .patient-emergncy-contact { font-family: 'futura_lt_btlight'; font-size: 14px; margin: 0 0 2px; }
+.card-top-right { width: 92px; padding: 35px 28px 45px 0; background: none; float: left; }
+.card-photo {  border-radius: 10px; height: 101px; }
+.card-photo img { border-radius: 10px; width: 100%; }
+.card-bottom { background: #fff; height: 50px; padding: 10px 25px; border-bottom-left-radius: 15px; border-bottom-right-radius: 15px;  }
+.card-logo { float: left; }
+.card-logo img { margin-top: 6px; }
+.card-barcode { float: right; }

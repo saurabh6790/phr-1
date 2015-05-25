@@ -38,6 +38,11 @@ def get_data():
 				},
 				{
 					"type": "doctype",
+					"name": "Mobile Verification",
+					"description": _("Verification details For Mobile"),
+				},
+				{
+					"type": "doctype",
 					"name": "Shared Requests",
 					"description": _("Shared Requests"),
 				},
