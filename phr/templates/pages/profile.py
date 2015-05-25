@@ -48,6 +48,7 @@ def update_profile_solr(data,dashboard=None):
 			sub="Profile Updated Successfully"
 			make_log(p.get('entityid'),"profile","update",sub)
 			update_user_details(p)
+
 			return {"rtcode":100,"msg":"Profile Updated Successfully","mob_no":user_details.get('mobile'),"user":user_details.get('email')}
 		else:
 			return {"rtcode":101,"msg":"Error While Updating Profile"}
@@ -59,8 +60,7 @@ def update_profile_solr(data,dashboard=None):
 def make_mv_entry(mobile,user,profile_id):
 	if not frappe.db.get_value("Mobile Verification",{"mobile_no":mobile},"name"):
 		generate_mobile_vericication_code(mobile,profile_id)
-		frappe.errprint("returned")
-
+		
 
 
 @frappe.whitelist(allow_guest=True)
@@ -321,7 +321,10 @@ def get_linked_phrs_with_img(profile_id):
 	data=get_linked_phrs(profile_id)
 	if data:
 		return get_lphrs_with_img(data)
+<<<<<<< HEAD
 
+=======
+>>>>>>> 782ba21e26d8814140a731bb8a6d5a9ba79c9e59
 
 @frappe.whitelist(allow_guest=True)
 def get_lphrs_with_img(data):

@@ -301,6 +301,9 @@ var PatientDashboard = inherit(RenderFormFields, {
 					send_linkedphr_updates(email_msg,text_msg,"Profile")
 
 				}
+				else{
+					
+				}
 			}
 		})
 	},

@@ -18,9 +18,14 @@ window.Visit = inherit(ListView,{
 		this.dms_file_list = [];
 		this.doc_list = [];
 		this.profile_id = profile_id;
+		this.from_date=$('[name="from_date"]').val();
+		this.to_date=$('[name="to_date"]').val();
+
 		ListView.prototype.init(this.wrapper, {"file_name": "visit", 
 			'cmd':"event.get_visit_data",
 			'tab_at': 4,
+			'visit_date_from':this.from_date,
+			'visit_date_to':this.to_date,
 			'profile_id':profile_id})
 
 		$('.new_controller').hide()
@@ -97,11 +102,12 @@ window.Visit = inherit(ListView,{
 	},
 	add_search_event:function(wrapper,json_file,profile_id,entity_id){
 		var me = this;
-		$('.search_event').click(function(){
+		$('.search_visit').click(function(){
 			from_date=$('[name="from_date"]').val()
 			to_date=$('[name="to_date"]').val()
+			console.log([from_date, to_date])
 			ListView.prototype.init(this.wrapper, {"file_name" : "visit",
-			'search':"event",
+			'search':"visit",
 			'tab_at': 4,
 			'visit_date_from':from_date,
 			'visit_date_to':to_date,

@@ -302,9 +302,9 @@ window.Events = inherit(ListView,{
 				var $td = $('td', row);
 				if ($td.find('input[name="provider"]').is(':checked')) {
 					$('[name="doctor_id"]').val($td.find('input[name="provider"]').attr('id'))
-					$('[name="doctor_name"]').val($($td[1]).html())
-					$('[name="email_id"]').val($($td[3]).html())
-					$('[name="number"]').val($($td[2]).html())
+					$('[name="doctor_name"]').val($($td[2]).html())
+					$('[name="email_id"]').val($($td[4]).html())
+					$('[name="number"]').val($($td[3]).html())
 					me.check_existing($td.find('input[name="provider"]').attr('id'),$($td[4]).html(),$($td[3]).html(),$($td[2]).html(), $($td[1]).html(),d)
 				}
 				else{

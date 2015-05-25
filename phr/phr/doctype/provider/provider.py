@@ -53,13 +53,14 @@ class Provider(Document):
 		from phr.phr.phr_api import get_response
 		response=get_response(url, json.dumps(data),request_type)
 		res=json.loads(response.text)
-
+		print res
 		if res['returncode']==129:
-			self.profile_id = res['entityid']
+			self.provider_id = res['entityid']
 
 	def create_user_login(self):
 		from frappe.utils import random_string
 		password=random_string(10)
+		print "\n\n Profile Id \n\n ",self.provider_id
 		user = frappe.get_doc({
 			"doctype":"User",
 			"email": self.email,
