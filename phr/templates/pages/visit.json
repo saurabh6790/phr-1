@@ -13,9 +13,9 @@
 			"placeholder":""
 		},
 		{
-			"fieldname":"visit_event", 
+			"fieldname":"search_visit", 
 			"fieldtype":"button", 
-			"label":"Search Event",
+			"label":"Search Visit",
 			"placeholder":""
 		},
 		{
