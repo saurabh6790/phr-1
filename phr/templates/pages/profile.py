@@ -321,10 +321,7 @@ def get_linked_phrs_with_img(profile_id):
 	data=get_linked_phrs(profile_id)
 	if data:
 		return get_lphrs_with_img(data)
-<<<<<<< HEAD
 
-=======
->>>>>>> 782ba21e26d8814140a731bb8a6d5a9ba79c9e59
 
 @frappe.whitelist(allow_guest=True)
 def get_lphrs_with_img(data):
