@@ -43,7 +43,6 @@ $(document).ready(function() {
 			id: id,
 			key: get_url_arg("key") || "",
 		}
-
 		frappe.call({
 			type: "POST",
 			method: "phr.phr.verifier.verify_email",

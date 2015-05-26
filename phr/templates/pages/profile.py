@@ -10,7 +10,7 @@ from frappe.auth import _update_password
 from frappe import _,msgprint
 import binascii
 import base64
-from phr.templates.pages.login import create_profile_in_db,get_barcode,get_image_path
+from phr.templates.pages.login import create_profile_in_db,get_barcode,get_image_path,get_mob_code
 from frappe.utils import cint, now, get_gravatar,cstr,get_site_path,get_url, get_files_path
 from phr.phr.doctype.phr_activity_log.phr_activity_log import make_log
 import datetime
@@ -34,7 +34,10 @@ def update_profile(data,id,dashboard=None):
 @frappe.whitelist(allow_guest=True)
 def update_profile_solr(data,dashboard=None):
 	request_type="POST"
-	if not_duplicate_contact(json.loads(data)):
+	user_details = json.loads(data)
+	frappe.errprint("in update")
+	if not_duplicate_contact(user_details.get('mobile'),user_details.get('email')):
+		frappe.errprint("assa")
 		url=get_base_url()+"/updateProfile"
 		from phr.phr.phr_api import get_response
 		response=get_response(url,data,request_type)
@@ -45,19 +48,75 @@ def update_profile_solr(data,dashboard=None):
 			sub="Profile Updated Successfully"
 			make_log(p.get('entityid'),"profile","update",sub)
 			update_user_details(p)
-			return {"msg": "Profile Updated Successfully"}
-		else:
-			return {"exe": "Error While Updating Profile"}
-	else:
-		return {"exe": "Maintioned contact number is already registered with another profile."}
 
-def not_duplicate_contact(data):
+			return {"rtcode":100,"msg":"Profile Updated Successfully","mob_no":user_details.get('mobile'),"user":user_details.get('email')}
+		else:
+			return {"rtcode":101,"msg":"Error While Updating Profile"}
+	else:
+		
+		return {"rtcode":201,"msg":"Maintioned contact number is already registered with another profile."}
+
+@frappe.whitelist(allow_guest=True)
+def make_mv_entry(mobile,user,profile_id):
+	if not frappe.db.get_value("Mobile Verification",{"mobile_no":mobile},"name"):
+		generate_mobile_vericication_code(mobile,profile_id)
+		
+
+
+@frappe.whitelist(allow_guest=True)
+def not_duplicate_contact(mobile,user):
 	if frappe.db.sql("""select count(*) from tabUser 
 		where contact = '%s' and name != "%s" 
-	"""%(data.get('mobile'), frappe.session.user), as_list=1)[0][0] == 0:
+	"""%(mobile,user), as_list=1)[0][0] == 0:
 		return True
 	else:
 		return False
+
+@frappe.whitelist(allow_guest=True)
+def verify_code(data,mobile):
+	res = json.loads(data)
+	verification_code = frappe.db.get_value("Mobile Verification",mobile,"verification_code")
+	if not  verification_code == res.get('code'):
+		return {"returncode":0,"message":"Code Invalid"}
+	else:
+		mv = frappe.get_doc('Mobile Verification',mobile)
+		mv.mflag = 1
+		mv.save(ignore_permissions=True)
+		return {"returncode":1,"message":"Mobile No verified"}
+
+
+
+@frappe.whitelist(allow_guest=True)
+def check_contact_verified(mobile):
+	mob_verified = frappe.db.get_value("Mobile Verification",{"mobile_no":mobile},"mflag")
+	if mob_verified == 1:
+		return True
+	else:
+		return False
+
+@frappe.whitelist(allow_guest=True)		
+def generate_mobile_vericication_code(mobile,profile_id):
+	mobile_code = get_mob_code()
+	from phr.templates.pages.patient import get_sms_template
+	sms = get_sms_template("registration",{ "mobile_code": mob_code })
+	rec_list=[]
+	rec_list.append(mobile)
+	from erpnext.setup.doctype.sms_settings.sms_settings import send_sms
+	send_sms(rec_list,sms)
+	make_mobile_verification_entry(mobile,profile_id,mob_code)
+	return "done"
+
+def make_mobile_verification_entry(mobile,profile_id,mobile_code):
+	mv = frappe.get_doc({
+		"doctype":"Mobile Verification",
+		"profile_id":profile_id,
+		"mobile_no":mobile,
+		"verification_code":mobile_code
+	})
+	mv.ignore_permissions = True
+	mv.insert()
+	return mv.name
+
 
 def update_user_details(data):
 	frappe.db.sql("""update `tabUser` set 
@@ -80,15 +139,17 @@ def update_password(data,dashboard=None):
 	if new_password != usrobj.get('cnf_new_password'):
 		return " Cannot Update: New Password and Confirm Password fields are not matching "
 
-	user=frappe.db.get_value("User",{"profile_id":usrobj.get('entityid')})
+	user = frappe.db.get_value("User",{"profile_id":usrobj.get('entityid')})
 	
 	if not new_password:
 		return _("Cannot Update: Please Enter Valid Password")
+
 	if old_password:
 		if not frappe.db.sql("""select user from __Auth where password=password(%s)
 			and user=%s""", (old_password, user)):
 			return "Cannot Update: Old Password is Incorrect"
 	_update_password(user, new_password)
+	frappe.db.set_value("User",user,"password_str",new_password)
 	sub="Password Updated Successfully"
 	make_log(usrobj.get('entityid'),"profile","update Password",sub)
 	return "Password Updated Successfully"
@@ -260,6 +321,7 @@ def get_linked_phrs_with_img(profile_id):
 	data=get_linked_phrs(profile_id)
 	if data:
 		return get_lphrs_with_img(data)
+
 
 @frappe.whitelist(allow_guest=True)
 def get_lphrs_with_img(data):
@@ -629,15 +691,17 @@ def get_mobile_nos():
 
 @frappe.whitelist(allow_guest=True)
 def notify_about_linked_phrs(profile_id,email_msg=None,text_msg=None,entity=None):
-	frappe.errprint(['notify_about_linked_phrs'])
-	linked_phr=("""select profile_id from `tabNotification Configuration` where linked_phr=1""")
+	linked_phr=frappe.db.sql("""select profile_id from 
+		`tabNotification Configuration` 
+		where linked_phr=1 and profile_id='%s'"""%(profile_id))
 	if linked_phr:
 		user=frappe.get_doc('User',frappe.db.get_value("User",{"profile_id":profile_id},"name"))
 		if user:
 			sendmail(user.name,subject="PHR Updates:"+entity+" Updated",msg=email_msg)
-			rec_list=[]
-			rec_list.append(user.contact)
-			send_sms(rec_list,msg=text_msg)
+			if frappe.db.get_value("Mobile Verification",{"mobile_no":user.contact,"mflag":1},"name"):
+				rec_list=[]
+				rec_list.append(user.contact)
+				send_sms(rec_list,msg=text_msg)
 		else:
 			search_profile_data_from_solr(profile_id)
 
@@ -725,18 +789,34 @@ def get_pdf(profile_id,options=None):
 	})
 
 	user=get_user_details(profile_id)
-	html="""<div style='border:1px solid black;width:400px;height:238px;align:center'>
-			<div width=100%% ><tr width=100%% >
-			<td width=30%% >Logo</td>
-			<td width=70%% >Name of Application</td></tr><table><hr>
-			</div><table width=100%% ><tr width=100%% ><td width=20%% >
-			<img class='user-picture' src='%(user_image)s' style='min-width:25px;max-width: 70px; min-width:25px; max-height: 70px; border-radius: 4px;margin-top:0%%;margin-left:20%%'/></td>
-			<td width=60%% >Name:%(name)s
-			</br>Blood Group: %(blood_group)s
-			</br>Contact No: %(contact)s
-			</br>Emergency Contact:%(emergency_contact)s
-			<br><img src="%(barcode)s">
-			</td></tr></table></div></div>"""%user
+	html="""<html lang="en">
+	<head>
+	<title>Healthsnapp</title> 
+	<link rel="stylesheet" href="assets/phr/css/styles.css">
+	</head>
+	<body>
+	<div class="row">
+	<div class="card-container">
+	<div class="card-main">
+	<div class="card-top">
+	<div class="card-top-left">
+	<p class="patient-name">%(name)s</p>
+	<p ><span>1429</span><span>0071</span><span>10076</span></p>
+	<p class="patient-blood-grp">Blood Group:  %(blood_group)s</p>
+	<p class="patient-contact">Contact: %(contact)s</p>
+	<p class="patient-emergncy-contact">Emergency Contact: %(emergency_contact)s</p>
+	<div class="clearfix"></div>
+	</div>
+	<div class="card-top-right">
+	<div class="card-photo"><img src="%(user_image)s"></div>
+	</div><div class="clearfix"></div>
+	</div>
+	<div class="card-bottom">
+	<div class="card-logo">
+	<img src="assets/phr/images/card-logo.png"></div>
+	<div class="card-barcode"><img src="%(barcode)s" style="max-height:50px">
+	</div><div class="clearfix"></div></div>
+	<div class="clearfix"></div></div></div></div></body></html>"""%user
 	
 	
 
@@ -751,7 +831,10 @@ def get_pdf(profile_id,options=None):
 	pdfkit.from_string(html, fname, options=options or {})
 
 	li=fname.split('/')
-	url = get_url()+"/".join(["",li[-3],li[-2],li[-1]])
+	
+	import time
+	url = get_url()+"/".join(["",li[-3],li[-2],li[-1]]) +'?id='+str(int(round(time.time() * 1000)))
+
 	return url
 
 

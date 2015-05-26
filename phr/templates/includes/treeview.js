@@ -79,10 +79,10 @@ $.extend(TreeView.prototype, {
 			})
 		})
 
-		if(me.args['req_id']){
-			// console.log("removing bag")
-			$('.tree .badge').remove()
-		}
+		// if(me.args['req_id']){
+		// 	// console.log("removing bag")
+		// 	$('.tree .badge').remove()
+		// }
 	
 	},
 	add_tree_events:function(){

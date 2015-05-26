@@ -17,6 +17,7 @@ frappe.provide("frappe");
 {% include "templates/includes/disease_monitoring.js" %}
 {% include "templates/includes/dashboard_renderer.js" %}
 {% include "templates/includes/todo.js" %}
+{% include "templates/includes/mobile_verifier.js" %}
 /*
   Format for method Classes
   ClassName.prototype.init(wrapper,name_of_json_file,entityid,operation_entity)
@@ -28,15 +29,6 @@ frappe.provide("frappe");
     window.history.forward();
  }
 $(document).ready(function () {
-	//window.history.forward();
-	/*window.onunload = function() {
-    	null;
-	};
-	setTimeout("preventBack()", 0);*/
-	//alert(frappe.get_cookie("profile_id"))
-	//console.log(sessionStorage.getItem("pid"))
-	//preventBack();
-	   
 	if (!sessionStorage.getItem("pid") || frappe.get_cookie("profile_id")!=sessionStorage.getItem("pid")){
 		sessionStorage.setItem("pid",frappe.get_cookie("profile_id"))
 		sessionStorage.setItem("cid",frappe.get_cookie("profile_id"))

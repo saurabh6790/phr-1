@@ -105,9 +105,10 @@ def send_notification(profile_list):
 			
 		if sms_recipients:
 			for no in sms_recipients:
-				mob_no=[]
-				mob_no.append(no)
-				send_sms(sms_recipients,msg=msg[no])
+				if frappe.db.get_value("Mobile Verification",{"mobile_no":no,"mflag":1},"name"):
+					mob_no=[]
+					mob_no.append(no)
+					send_sms(sms_recipients,msg=msg[no])
 
 def get_list_to_notify():
 	profile_list=frappe.db.sql("""select profile_id,name,DATE_FORMAT(from_date_time,'%h:%i %p') as time,provider_name from 

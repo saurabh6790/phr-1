@@ -159,29 +159,9 @@ var ProfileSettings = inherit(RenderFormFields, {
 			me.upload_image(object,profile_id)
 			
   		})
-  		me.get_user_image(profile_id)
+  		//me.get_user_image(profile_id)
   		//var image=frappe.get_cookie("user_image")
   		
-  	},
-  	get_states:function(){
-  		frappe.call({
-			method:"phr.templates.pages.profile.get_states",
-			callback:function(r){
-			if(r.message){
-				$.each(r.message,function(i, val){
-					$option=$('<option>', { 
-						'value': val[0],
-						'text' : val[0] 
-					}).appendTo($('select[name="state"]'))
-					
-				})
-			}
-			else{
-					
-				}
-			}
-		})
-
   	},
   	validate_form:function(){
   		var me=this;
@@ -210,30 +190,6 @@ var ProfileSettings = inherit(RenderFormFields, {
   			"msg":msg
   		}	
   	},
-  	get_user_image:function(profile_id){
-  		frappe.call({
-			method:'phr.templates.pages.profile.get_user_image',
-			args:{"profile_id":profile_id},
-			callback: function(r) {
-				if (r.message["image"]){
-					$('<img src="'+r.message["image"]+'"alt="user image">').appendTo($('.fileinput-preview'))
-				}
-			}
-		});
-  		
-  	},
-	upload_image:function(object,profile_id){
-		frappe.call({
-			method:'phr.templates.pages.profile.upload_image',
-			args:{"profile_id":profile_id,"data":object.data,"file_name":object.filename},
-			callback: function(r) {
-				NProgress.done();
-				if(r.message) {
-					frappe.msgprint(r.message);
-				}
-			}
-		});
-	},
 	get_method:function(res,cmd,me,selected){
 		frappe.call({
 			method:'phr.templates.pages.profile.update_profile',

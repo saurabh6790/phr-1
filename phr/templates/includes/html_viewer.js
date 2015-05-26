@@ -2,6 +2,7 @@ frappe.provide("templates/includes");
 {% include "templates/includes/utils.js" %}
 {% include "templates/includes/form_generator.js" %}
 
+
 window.HTMLViewer = function(){
 	this.wrapper = ""
 }
@@ -45,7 +46,7 @@ $.extend(window.HTMLViewer.prototype,{
                               </li>\
                               <li>\
                                 <span class="profile_field">Mobile No:</span>\
-                                <span class="profile_value">%(mobile)s</span>\
+                                <span class="profile_value" style="display: inline-flex;">%(mobile)s <br> <span style="color:#17329E;" id="vm">Mobile Not Verified-<br> <a id="verify_mobile" style="color:#17329E;">Verify</a></span></span>\
                               </li>\
                               <li>\
                                 <span class="profile_field">Email:</span>\
@@ -96,5 +97,6 @@ $.extend(window.HTMLViewer.prototype,{
                 </div>\
             <!--Events End--> \
 		</div>',profile_info)).appendTo($('.profile_viewer'))
+    MobileVerifier.prototype.check_contact_verified(profile_info['mobile'])
 	}
 })

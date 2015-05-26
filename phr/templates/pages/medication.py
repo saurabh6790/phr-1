@@ -150,9 +150,10 @@ def notify_medications():
 	build_list,msg=fetch_data_from_medications(med_list,recipient_list)
 	if build_list:
 		for no in build_list:
-			no_list=[]
-			no_list.append(no)
-			send_sms(no_list,msg=msg[no])
+			if frappe.db.get_value("Mobile Verification",{"mobile_no":no,"mflag":1},"name"):
+				no_list=[]
+				no_list.append(no)
+				send_sms(no_list,msg=msg[no])
 
 def get_medictions_to_notify():
 	med_list=frappe.db.sql_list("""select name from 

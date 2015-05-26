@@ -58,9 +58,10 @@ def notify_to_do():
 					email_msg[data["email"]]=todoobj.description
 		if sms_recipients:
 			for no in sms_recipients:
-				mob_no=[]
-				mob_no.append(no)
-				send_sms(sms_recipients,msg=msg[no])
+				if frappe.db.get_value("Mobile Verification",{"mobile_no":no,"mflag":1},"name"):
+					mob_no=[]
+					mob_no.append(no)
+					send_sms(sms_recipients,msg=msg[no])
 		if email_list:
 			for email in email_list:
 				send_phrs_mail(email,"PHR:To Do Alert","templates/emails/todo.html",{"todo":email_msg[email]})
