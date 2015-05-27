@@ -69,6 +69,7 @@ $.extend(RenderFormFields.prototype,{
 		var me = this;
 		var arg = {};
 		
+		
 		if(me.args){
 			arg['data'] = JSON.stringify(me.args)
 		}

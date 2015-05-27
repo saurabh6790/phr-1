@@ -146,11 +146,11 @@ def update_status(data):
 def notify_medications():
 	print "############################~~~~~~~~~~~~Medications~~~~~~~~~~~~~~~~~~~############"
 	recipient_list=[]
-	if frappe.db.get_value("Mobile Verification",{"mobile_no":no,"mflag":1},"name"):
-		med_list=get_medictions_to_notify()
-		build_list,msg=fetch_data_from_medications(med_list,recipient_list)
-		if build_list:
-			for no in build_list:
+	med_list=get_medictions_to_notify()
+	build_list,msg=fetch_data_from_medications(med_list,recipient_list)
+	if build_list:
+		for no in build_list:
+			if frappe.db.get_value("Mobile Verification",{"mobile_no":no,"mflag":1},"name"):
 				no_list=[]
 				no_list.append(no)
 				send_sms(no_list,msg=msg[no])
