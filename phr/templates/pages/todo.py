@@ -34,7 +34,9 @@ def get_todo(profile_id):
 
 @frappe.whitelist(allow_guest=True)
 def notify_to_do():
-	profile_ids=get_profile_ids()
+	profile_ids = get_profile_ids()
+	print "########## TODO #############"
+	print profile_ids
 	if profile_ids:
 		email_list=[]
 		sms_recipients=[]

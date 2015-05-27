@@ -211,6 +211,7 @@ def send_shared_data(data):
 def share_via_email(data):
 	attachments = []
 	files = data.get('files')
+	patient_name = frappe.db.get_value("User", {"profile_id":data.get('profile_id')}, 'concat(first_name, " ", last_name)') or  data.get('lphr_name')
 	for fl in files:
 		fname = os.path.join(get_files_path(), fl)
 
@@ -236,6 +237,8 @@ def share_via_email(data):
 				attachments=attachments)
 
 		make_log(data.get('profile_id'),"Event","Shared Via Email","Event Shared Via Email to %s"%(data.get('email_id')))
+		args = {"patient":patient_name,"email":data.get('email_id')}
+		notify_provider(data.get('doctor_id'),data.get('profile_id'),"Event Share Email",args)
 
 		return """Selected image(s) has been shared with 
 			%(provider_name)s for event %(event)s """%{
@@ -249,6 +252,8 @@ def share_via_providers_account(data):
 	event_dict = {}
 	sub_event_count = {}
 	# return [event_dict, sub_event_count] 
+
+	patient_name = frappe.db.get_value("User", {"profile_id":data.get('profile_id')}, 'concat(first_name, " ", last_name)') or  data.get('lphr_name')
 	if not data.get('files'):
 		event_data =	{
 				"sharelist": [
@@ -278,6 +283,9 @@ def share_via_providers_account(data):
 		files_list = get_files_doc(event_data, data, None, event_dict, sub_event_count)
 		make_sharing_request(event_data, data, files_list, event_dict, sub_event_count)
 		make_log(data.get('profile_id'),"Event","Shared Via Provider","Event Shared Via Provider")
+		args = {"patient":patient_name,"duration":data.get('sharing_duration')}
+		email_msg = "%(patient)s has shared Event with You which is accesible upto %(duration)s. Thank you. Team HealthSnapp."%args
+		notify_provider(data.get('doctor_id'),data.get('profile_id'),"Event Share",args,email_msg)
 		return eval(json.loads(response.text).get('sharelist'))[0].get('message_summary')
 
 	else:
@@ -310,9 +318,32 @@ def share_via_providers_account(data):
 		files_list = get_files_doc(event_data, data, None, event_dict, sub_event_count)
 		make_sharing_request(event_data, data, files_list, event_dict, sub_event_count)
 		make_log(data.get('profile_id'),"Event","Shared Via Provider","Event Shared Via Provider")
+		args = {"patient":patient_name,"duration":data.get('sharing_duration')}
+		email_msg = "%(patient)s has shared Event with You which is accesible upto %(duration)s. Thank you. Team HealthSnapp."%args
+		notify_provider(data.get('doctor_id'),data.get('profile_id'),"Event Share",args,email_msg)
+
 		return json.loads(json.loads(response.text).get('sharelist'))[0].get('message_summary')
 
+<<<<<<< HEAD
 def make_sharing_request(event_data, data, files_list=None, event_dict=None, sub_event_count=None):
+=======
+
+def notify_provider(provider_id,patient,template,args,email_msg=None):
+	provider_info = frappe.db.get_value("Provider",{"provider_id":profile_id},"name")
+	if provider_info:
+		provider = frappe.get_doc("Provider",provider_info)
+		if provider_info.mobile_no:
+			msg = get_sms_template(template,args)
+			recipient_list = []
+			recipient_list.append(provider.mobile_no)
+			from erpnext.setup.doctype.sms_settings.sms_settings import send_sms
+			send_sms(recipient_list,msg=msg)
+
+		if provider_info.email and email_msg:
+			sendmail(provider_info.email, subject="HealthSnapp Updates:Data Shared With You", msg=email_msg)
+
+def make_sharing_request(event_data, data, files_list=None):
+>>>>>>> 2a19ed521a63a7c52899372c9ec2b656a6611f29
 	req = frappe.new_doc('Shared Requests')
 	d = event_data.get('sharelist')[0]
 

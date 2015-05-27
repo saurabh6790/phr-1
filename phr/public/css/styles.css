@@ -136,6 +136,14 @@ body.bg_style_5 {
     border-color: #2472a4;
     color: #fff;
 }
+.bootstrap-dialog.type-primary .modal-header {
+    background-color: #89c148 !important;
+}
+.btn-primary {
+    background-color: #89c148 !important;
+    border-color: #89c148 !important;
+    color: #fff;
+}
 
 
 ::-moz-selection {
@@ -5926,9 +5934,9 @@ input[type="radio"], input[type="checkbox"] {
 }
 
 #app .btn-primary {
-  background-color: #89c148;
-  border-color: #89c148;
-  color: #ffffff;
+  background-color: #89c148 !important;
+  border-color: #89c148 !important;
+  color: #ffffff !important;
 }
 .open .btn-primary.dropdown-toggle {
   background-color: #89c148;
