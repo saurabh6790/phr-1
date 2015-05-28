@@ -324,26 +324,23 @@ def share_via_providers_account(data):
 
 		return json.loads(json.loads(response.text).get('sharelist'))[0].get('message_summary')
 
-<<<<<<< HEAD
-def make_sharing_request(event_data, data, files_list=None, event_dict=None, sub_event_count=None):
-=======
-
 def notify_provider(provider_id,patient,template,args,email_msg=None):
-	provider_info = frappe.db.get_value("Provider",{"provider_id":profile_id},"name")
+	provider_info = frappe.db.get_value("Provider",{"provider_id":provider_id},"name")
 	if provider_info:
 		provider = frappe.get_doc("Provider",provider_info)
-		if provider_info.mobile_no:
+		if provider.mobile_number:
+			from phr.templates.pages.patient import get_sms_template
 			msg = get_sms_template(template,args)
 			recipient_list = []
-			recipient_list.append(provider.mobile_no)
+			recipient_list.append(provider.mobile_number)
 			from erpnext.setup.doctype.sms_settings.sms_settings import send_sms
 			send_sms(recipient_list,msg=msg)
 
-		if provider_info.email and email_msg:
-			sendmail(provider_info.email, subject="HealthSnapp Updates:Data Shared With You", msg=email_msg)
+		if provider.email and email_msg:
+			from frappe.utils.email_lib import sendmail
+			sendmail(provider.email, subject="HealthSnapp Updates:Data Shared With You", msg=email_msg)
 
-def make_sharing_request(event_data, data, files_list=None):
->>>>>>> 2a19ed521a63a7c52899372c9ec2b656a6611f29
+def make_sharing_request(event_data, data, files_list=None, event_dict=None, sub_event_count=None):
 	req = frappe.new_doc('Shared Requests')
 	d = event_data.get('sharelist')[0]
 

@@ -85,7 +85,6 @@ def notify_appointments():
 	profile_list = get_list_to_notify()
 	send_notification(profile_list)
 
-
 def send_notification(profile_list):
 	print "##########Appointments#############"
 	print profile_list
