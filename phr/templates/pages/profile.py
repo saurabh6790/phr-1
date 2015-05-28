@@ -695,7 +695,7 @@ def notify_about_linked_phrs(profile_id,email_msg=None,text_msg=None,entity=None
 		`tabNotification Configuration` 
 		where linked_phr=1 and profile_id='%s'"""%(profile_id))
 	if linked_phr:
-		user=frappe.get_doc('User',frappe.db.get_value("User",{"profile_id":profile_id},"name"))
+		user = frappe.get_doc('User',frappe.db.get_value("User",{"profile_id":profile_id},"name"))
 		if user:
 			sendmail(user.name,subject="PHR Updates:"+entity+" Updated",msg=email_msg)
 			if frappe.db.get_value("Mobile Verification",{"mobile_no":user.contact,"mflag":1},"name"):

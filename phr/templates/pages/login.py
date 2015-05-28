@@ -155,7 +155,7 @@ def db_set(args,fieldname, value):
 	frappe.db.set_value("User", args["email"], fieldname, value, args["modified"], args["modified_by"])
 
 """
-	Send Mail to User
+	Send Mail and SMS to User
 """
 @frappe.whitelist(allow_guest=True)
 def send_welcome_mail(password,profile_id,args):
@@ -175,7 +175,7 @@ def send_welcome_mail(password,profile_id,args):
 
 		from phr.templates.pages.patient import get_sms_template
 		sms = get_sms_template("registration",{ "mobile_code": mob_code })
-		rec_list=[]
+		rec_list = []
 		rec_list.append(args["mobile"])
 		from erpnext.setup.doctype.sms_settings.sms_settings import send_sms
 		send_sms(rec_list,sms)
