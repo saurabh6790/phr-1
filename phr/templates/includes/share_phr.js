@@ -225,7 +225,7 @@ $.extend(SharePhr.prototype,{
   		$("form input[required], form textarea[required], form select[required]").each(function(i, obj) {
   			if ($(this).val()=="" && $(this).is(':visible')){
   				$(this).css({"border": "1px solid #999","border-color": "red" });
-  				frappe.msgprint("Fields Marked as Red Are Mandatory")
+  				// frappe.msgprint("Field(s) Marked as Red Are Mandatory")
   				fg=false
   			}
   		})
@@ -247,6 +247,9 @@ $.extend(SharePhr.prototype,{
   				frappe.msgprint("Please select files for sharing")
   				fg=false
   			}
+  		}
+  		else{
+  			frappe.msgprint("Field(s) Marked as Red Are Mandatory")
   		} 
   		return fg
   	}

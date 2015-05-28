@@ -125,6 +125,17 @@ def copy_files_to_visit(dms_file_list, visit_id, profile_id, pid, req_id):
 				base_path[0] = pid
 				if req_id:
 					base_path.insert(1, req_id)	
+					req_id = frappe.get_doc('Shared Requests', req_id)
+					event_dict = json.loads(req_id.event_dict)
+					sub_event_count = json.loads(req_id.sub_event_count)
+					print "\n\n base path \n\n",base_path
+					shared_file_count('/'.join(base_path)[:-1], event_dict, sub_event_count, 3, 4)
+
+					req_id.event_dict = json.dumps(event_dict)
+					req_id.sub_event_count = json.dumps(sub_event_count)
+
+					req_id.save()
+
 				provider_path = os.path.join(file_path.split('/files/')[0], 'files', '/'.join(base_path)[:-1])
 				frappe.create_folder(provider_path)
 				shutil.copy(filename, provider_path)
@@ -238,6 +249,10 @@ def share_via_email(data):
 
 def share_via_providers_account(data):
 	# frappe.errprint([data.get('files'), not data.get('files')])
+	event_dict = {}
+	sub_event_count = {}
+	# return [event_dict, sub_event_count] 
+
 	patient_name = frappe.db.get_value("User", {"profile_id":data.get('profile_id')}, 'concat(first_name, " ", last_name)') or  data.get('lphr_name')
 	if not data.get('files'):
 		event_data =	{
@@ -265,8 +280,8 @@ def share_via_providers_account(data):
 		
 		response=get_response(url, json.dumps(event_data), request_type)
 		
-		files_list = get_files_doc(event_data, data)
-		make_sharing_request(event_data, data, files_list)
+		files_list = get_files_doc(event_data, data, None, event_dict, sub_event_count)
+		make_sharing_request(event_data, data, files_list, event_dict, sub_event_count)
 		make_log(data.get('profile_id'),"Event","Shared Via Provider","Event Shared Via Provider")
 		args = {"patient":patient_name,"duration":data.get('sharing_duration')}
 		email_msg = "%(patient)s has shared Event with You which is accesible upto %(duration)s. Thank you. Team HealthSnapp."%args
@@ -300,8 +315,8 @@ def share_via_providers_account(data):
 		response=get_response(url, json.dumps(event_data), request_type)
 		event_data['file_path'] = file_path
 
-		files_list = get_files_doc(event_data, data)
-		make_sharing_request(event_data, data, files_list)
+		files_list = get_files_doc(event_data, data, None, event_dict, sub_event_count)
+		make_sharing_request(event_data, data, files_list, event_dict, sub_event_count)
 		make_log(data.get('profile_id'),"Event","Shared Via Provider","Event Shared Via Provider")
 		args = {"patient":patient_name,"duration":data.get('sharing_duration')}
 		email_msg = "%(patient)s has shared Event with You which is accesible upto %(duration)s. Thank you. Team HealthSnapp."%args
@@ -309,22 +324,23 @@ def share_via_providers_account(data):
 
 		return json.loads(json.loads(response.text).get('sharelist'))[0].get('message_summary')
 
-
 def notify_provider(provider_id,patient,template,args,email_msg=None):
-	provider_info = frappe.db.get_value("Provider",{"provider_id":profile_id},"name")
+	provider_info = frappe.db.get_value("Provider",{"provider_id":provider_id},"name")
 	if provider_info:
 		provider = frappe.get_doc("Provider",provider_info)
-		if provider_info.mobile_no:
+		if provider.mobile_number:
+			from phr.templates.pages.patient import get_sms_template
 			msg = get_sms_template(template,args)
 			recipient_list = []
-			recipient_list.append(provider.mobile_no)
+			recipient_list.append(provider.mobile_number)
 			from erpnext.setup.doctype.sms_settings.sms_settings import send_sms
 			send_sms(recipient_list,msg=msg)
 
-		if provider_info.email and email_msg:
-			sendmail(provider_info.email, subject="HealthSnapp Updates:Data Shared With You", msg=email_msg)
+		if provider.email and email_msg:
+			from frappe.utils.email_lib import sendmail
+			sendmail(provider.email, subject="HealthSnapp Updates:Data Shared With You", msg=email_msg)
 
-def make_sharing_request(event_data, data, files_list=None):
+def make_sharing_request(event_data, data, files_list=None, event_dict=None, sub_event_count=None):
 	req = frappe.new_doc('Shared Requests')
 	d = event_data.get('sharelist')[0]
 
@@ -345,11 +361,13 @@ def make_sharing_request(event_data, data, files_list=None):
 	req.doc_name = 'Event'
 	if files_list:
 		req.files_list = json.dumps(files_list)
+		req.event_dict = json.dumps(event_dict)
+		req.sub_event_count = json.dumps(sub_event_count)
 		
 	req.save(ignore_permissions=True)
 
-def get_files_doc(event_data, data, selected_files=None):
-	frappe.errprint([selected_files])
+def get_files_doc(event_data, data, selected_files=None, event_dict = None, sub_event_count = None):
+	print "\n\n get_files_doc \n\n", [event_dict, sub_event_count]
 	tag_dict = {'11': "consultancy-11", "12": "event_snap-12", "13": "lab_reports-13", "14":"prescription-14", "15": "cost_of_care-15"}
 
 	if selected_files and len(selected_files) > 1:
@@ -362,12 +380,26 @@ def get_files_doc(event_data, data, selected_files=None):
 				for sub_tab in ['A_51', 'B_52', 'C_53']:
 					attachments = get_attachments(d.get("from_profile_id"), values, sub_tab, d.get("event_tag_id"), d.get("visit_tag_id"))
 					for att in attachments:
+						print "\n\n test \n\n", [os.path.join(att.get('path').split('files/')[1], att.get('file_name'))]
+						shared_file_count(os.path.join(att.get('path').split('files/')[1], att.get('file_name')), event_dict, sub_event_count)
 						files_list.append(os.path.join(get_files_path(), att.get('path').split('files/')[1], att.get('file_name')))
 		return files_list
 	else:
 		for fl in event_data.get('file_path'):
+			shared_file_count(fl, event_dict, sub_event_count)
 			files_list.append(os.path.join(get_files_path(), fl))
 		return 	files_list
+
+def shared_file_count(fl, event_dict, sub_event_count, main_loc=2, sub_loc=3):
+	if isinstance(event_dict, dict) and isinstance(sub_event_count, dict):
+		splited_path = fl.split('/')
+		main_folder = splited_path[main_loc].split('-')[-1:][0]
+		folder =  main_folder + splited_path[sub_loc].split('_')[-1:][0]
+
+		event_dict[main_folder] = event_dict[main_folder] + 1 if event_dict.get(main_folder) else 1
+		sub_event_count[folder] = sub_event_count[folder] + 1 if sub_event_count.get(folder) else 1
+
+		print event_dict, sub_event_count
 
 @frappe.whitelist(allow_guest=True)
 def marked_files_doc(event_data, data, selected_files=None):
@@ -463,7 +495,6 @@ def get_event_data(data):
 	response=get_response(url, json.dumps({"profileId":data.get('profile_id'),"event_date_from":data.get('event_date_from'),"event_date_to":data.get('event_date_to')}), request_type)
 	res_data = json.loads(response.text)
 
-
 	url = "%s/phrdata/getprofilefilecount"%get_base_url()
 	response=get_response(url, json.dumps({"profile_id":data.get('profile_id')}), request_type)
 	res_data1 = json.loads(response.text)
@@ -490,33 +521,38 @@ def get_event_data(data):
 		'page_size': 5
 	}
 
+@frappe.whitelist(allow_guest=True)
+def get_individual_event_count_for_badges(event_id,profile_id, req_id=None):
+	if req_id:
+		req_id = frappe.get_doc('Shared Requests', req_id)
+		event_dict = json.loads(req_id.event_dict)
+		sub_event_count = json.loads(req_id.sub_event_count)
 
+	else:
+		request_type="POST"
+		url=get_base_url()+'admin/geteventfilecount'
+		args={"profileId":profile_id,"eventId":event_id}
+		response=get_response(url,json.dumps(args),request_type)
+		res=response.text
+		event_list=[]
+		event_dict={}
+		sub_event_count={}
+		if res:
+			jsonobj=json.loads(res)
+			if jsonobj["returncode"]==139:
+				event=json.loads(jsonobj["list"])
+				event_wise_count_dict(event[0]['eventFileMapCount'], event_dict,sub_event_count)
+
+	return get_count_dict(event_dict, sub_event_count)		
 
 @frappe.whitelist(allow_guest=True)
-def get_individual_event_count_for_badges(event_id,profile_id):
-	request_type="POST"
-	url=get_base_url()+'admin/geteventfilecount'
-	args={"profileId":profile_id,"eventId":event_id}
-	response=get_response(url,json.dumps(args),request_type)
-	res=response.text
-	event_list=[]
-	event_dict={}
-	sub_event_count={}
-	if res:
-		jsonobj=json.loads(res)
-		if jsonobj["returncode"]==139:
-			event=json.loads(jsonobj["list"])
-			event_wise_count_dict(event[0]['eventFileMapCount'], event_dict,sub_event_count)
-			
-
+def get_count_dict(event_dict, sub_event_count):
 	for event in ["11","12","13","14","15"]:
 		if not event_dict.has_key(event):
 			event_dict[event]=0
-	
 	for sub_event in ["1151","1152","1153","1251","1252","1351","1352","1451","1452","1453","1551"]:
 		if not sub_event_count.has_key(sub_event):
 			sub_event_count[sub_event]=0
-
 	return {
 				"event_dict":event_dict,
 				"sub_event_count":sub_event_count
@@ -524,36 +560,31 @@ def get_individual_event_count_for_badges(event_id,profile_id):
 
 
 @frappe.whitelist(allow_guest=True)
-def get_individual_visit_count_for_badges(visit_id,profile_id):
-	request_type="POST"
-	url=get_base_url()+'admin/getvisitfilecount'
-	args={"profileId":profile_id}
-	response=get_response(url,json.dumps(args),request_type)
-	res=response.text
-	event_list=[]
-	event_dict={}
-	sub_event_count={}
-	if res:
-		jsonobj=json.loads(res)
-		if jsonobj["returncode"]==139:
-			for visit in json.loads(jsonobj["list"]):
-				frappe.errprint([visit['visit']['entityid'], visit_id])
-				if visit['visit']['entityid']==visit_id:
-					event_wise_count_dict(visit['visitFileMapCount'], event_dict,sub_event_count)
-					break
+def get_individual_visit_count_for_badges(visit_id,profile_id, req_id=None):
+	if req_id:
+		req_id = frappe.get_doc('Shared Requests', req_id)
+		event_dict = json.loads(req_id.event_dict)
+		sub_event_count = json.loads(req_id.sub_event_count)
 
-	for event in ["11","12","13","14","15"]:
-		if not event_dict.has_key(event):
-			event_dict[event]=0
-	
-	for sub_event in ["1151","1152","1153","1251","1252","1351","1352","1451","1452","1453","1551"]:
-		if not sub_event_count.has_key(sub_event):
-			sub_event_count[sub_event]=0
+	else:
+		request_type="POST"
+		url=get_base_url()+'admin/getvisitfilecount'
+		args={"profileId":profile_id}
+		response=get_response(url,json.dumps(args),request_type)
+		res=response.text
+		event_list=[]
+		event_dict={}
+		sub_event_count={}
+		if res:
+			jsonobj=json.loads(res)
+			if jsonobj["returncode"]==139:
+				for visit in json.loads(jsonobj["list"]):
+					frappe.errprint([visit['visit']['entityid'], visit_id])
+					if visit['visit']['entityid']==visit_id:
+						event_wise_count_dict(visit['visitFileMapCount'], event_dict,sub_event_count)
+						break
 
-	return {
-				"event_dict":event_dict,
-				"sub_event_count":sub_event_count
-			}
+	return get_count_dict(event_dict, sub_event_count)	
 
 @frappe.whitelist(allow_guest=True)
 def event_wise_count_dict(count_dict, event_dict,sub_event_count):
@@ -646,15 +677,13 @@ def get_linked_providers(profile_id=None):
 		
 		return ret
 
-
-
 tag_dict = {'11': "consultancy-11", "12": "event_snap-12", "13": "lab_reports-13", "14":"prescription-14", "15": "cost_of_care-15"}
 sub_tag_dict = {
 	"11":{'51':"A_51", "52":"B_52", "53":"C_53"},
 	"12":{'51':"A_51", "52":"B_52"},
 	"13":{'51':"A_51", "52":"B_52"},
 	"14":{'51':"A_51", "52":"B_52", "53":"C_53"},
-	"15":{'51':"A_51"},
+	"15":{'51':"A_51"}
 }
 
 @frappe.whitelist()
@@ -708,4 +737,3 @@ def get_image_details(data):
 	res_data = json.loads(response.text)
 
 	return res_data.get('filelist')
-

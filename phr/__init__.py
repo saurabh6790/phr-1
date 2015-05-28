@@ -293,8 +293,14 @@ def getAppointments(data):
 """Messages services"""
 @frappe.whitelist(allow_guest=True)
 def getMessages(data):
+	import datetime
 	from templates.pages.messages import fetch_values_from_db
-	return fetch_values_from_db(json.loads(data))
+	log_details = fetch_values_from_db(json.loads(data))
+	
+	for log in log_details:
+		log.creation = datetime.datetime.strptime(log.creation, '%Y-%m-%d %H:%M:%S.%f').strftime('%d/%m/%Y %H:%M')
+	
+	return log_details
 
 @frappe.whitelist(allow_guest=True)
 def createMessageLog(data):
@@ -328,7 +334,9 @@ def linkSelectedProvider(data):
 		} """
 
 	data = json.loads(data)
-	from templates.pages.provider import link_provider
+	from templates.pages.provider import link_provider, check_existing_provider
+	if check_existing_provider(data.get('res').get('entityid'), data.get('profile_id')):
+		return {'exe': "Provider Already linked"}
 
 	return {"link_id": link_provider(data.get('res'), data.get('data'), data.get("profile_id"))}
 

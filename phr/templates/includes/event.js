@@ -176,7 +176,7 @@ window.Events = inherit(ListView,{
 		var me = this;
 		frappe.call({
 			"method":"phr.templates.pages.event.get_individual_event_count_for_badges",
-			"args":{"event_id":event_id,"profile_id":profile_id},
+			"args":{"event_id":event_id,"profile_id":profile_id, "req_id": me.req_id},
 			callback:function(r){
 				// console.log([r.message.event_dict, r.message.sub_event_count])
 				TreeView.prototype.init({'profile_id': profile_id, 'dms_file_list':dms_file_list, 
@@ -189,7 +189,7 @@ window.Events = inherit(ListView,{
 		var me = this;
 		frappe.call({
 			"method":"phr.templates.pages.event.get_individual_visit_count_for_badges",
-			"args":{"visit_id":visit_id,"profile_id":me.profile_id},
+			"args":{"visit_id":visit_id,"profile_id":me.profile_id, "req_id": me.req_id},
 			callback:function(r){
 				TreeView.prototype.init({'profile_id': me.profile_id, 'dms_file_list':dms_file_list, 
 						'display': 'none',"event_dict":r.message.event_dict,"sub_event_count":r.message.sub_event_count, 
@@ -224,7 +224,8 @@ window.Events = inherit(ListView,{
 		d.init({"file_name":"provider_search", "title":"Provider Search", "button_title": "Add"})
 		d.show()
 		$('.modal-footer .btn-primary').css("float","left")
-		$('<button class ="btn btn-success btn-sm" style="float:left;"> Search </button>')
+		$('<button class ="btn btn-success btn-sm" \
+			style="background-color: #89c148;border-color: #89c148;color: #ffffff;float:left;"> Search </button>')
 			.click(function(){
 				$(".modal-body form input, .modal-body form select").each(function(i, obj) {
 					me.filters[obj.name] = $(obj).val();

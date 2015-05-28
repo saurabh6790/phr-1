@@ -75,7 +75,7 @@ upload = {
 		NProgress.start();
 		
 		if(!fileobj && !args.file_url) {
-			frappe.msgprint(__("Please attach a file or set a URL"));
+			frappe.msgprint(__("Please attach a file"));
 			NProgress.done();
 			return;
 		}
