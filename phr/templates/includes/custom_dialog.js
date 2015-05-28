@@ -32,7 +32,8 @@ $.extend(Dialog.prototype,{
 				      <div class="modal-body">\
 					  </div>\
 				      <div class="modal-footer">\
-				      	<button type="button" class="btn btn-primary btn-sm"></button>\
+				      	<button type="button" class="btn btn-primary btn-sm" \
+				      		style="background-color: #89c148;border-color: #89c148;color: #ffffff;"></button>\
 				      </div>\
 				    </div>\
 				  </div>\

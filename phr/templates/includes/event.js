@@ -224,7 +224,8 @@ window.Events = inherit(ListView,{
 		d.init({"file_name":"provider_search", "title":"Provider Search", "button_title": "Add"})
 		d.show()
 		$('.modal-footer .btn-primary').css("float","left")
-		$('<button class ="btn btn-success btn-sm" style="float:left;"> Search </button>')
+		$('<button class ="btn btn-success btn-sm" \
+			style="background-color: #89c148;border-color: #89c148;color: #ffffff;float:left;"> Search </button>')
 			.click(function(){
 				$(".modal-body form input, .modal-body form select").each(function(i, obj) {
 					me.filters[obj.name] = $(obj).val();
