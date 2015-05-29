@@ -56,13 +56,13 @@ $.extend(window.MobileVerifier.prototype,{
 			d.show()
 			$('.modal-footer .btn-primary').unbind('click').click(function(){
 				if ($(".modal-body form input[code]").val()!=""){
-					me.res={}
+					me.resobj={}
 					$('.modal-footer .btn-primary').prop("disabled", true);
 					$(".modal-body form input").each(function(i, obj) {
-						me.res[obj.name] = $(obj).val();
+						me.resobj[obj.name] = $(obj).val();
 					})
-				 	me.res['profile_id'] = sessionStorage.getItem("pid")
-				 	me.verify_code(me.res,mobile)
+				 	me.resobj['profile_id'] = sessionStorage.getItem("pid")
+				 	me.verify_code(me.resobj,mobile)
 				}
 				else{
 					frappe.msgprint("Please Enter verification Code")

@@ -98,12 +98,12 @@ def check_contact_verified(mobile):
 def generate_mobile_vericication_code(mobile,profile_id):
 	mobile_code = get_mob_code()
 	from phr.templates.pages.patient import get_sms_template
-	sms = get_sms_template("registration",{ "mobile_code": mob_code })
+	sms = get_sms_template("registration",{ "mobile_code": mobile_code })
 	rec_list=[]
 	rec_list.append(mobile)
 	from erpnext.setup.doctype.sms_settings.sms_settings import send_sms
 	send_sms(rec_list,sms)
-	make_mobile_verification_entry(mobile,profile_id,mob_code)
+	make_mobile_verification_entry(mobile,profile_id,mobile_code)
 	return "done"
 
 def make_mobile_verification_entry(mobile,profile_id,mobile_code):

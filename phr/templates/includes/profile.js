@@ -136,6 +136,9 @@ var PatientDashboard = inherit(RenderFormFields, {
 		$('.fileinput').fileinput()
 				
 		$('.save_controller').bind('click',function(event) {
+			$('#myModal').remove();
+			$('.modal').remove();
+			$('.modal-backdrop').remove();
 			var validated=me.validate_form()	
 			NProgress.start();
 			if (validated['fg']==true){
