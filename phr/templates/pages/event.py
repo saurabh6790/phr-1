@@ -284,7 +284,7 @@ def share_via_providers_account(data):
 		make_sharing_request(event_data, data, files_list, event_dict, sub_event_count)
 		make_log(data.get('profile_id'),"Event","Shared Via Provider","Event Shared Via Provider")
 		args = {"patient":patient_name,"duration":data.get('sharing_duration')}
-		email_msg = "%(patient)s has shared Event with You which is accesible upto %(duration)s. Thank you. Team HealthSnapp."%args
+		email_msg = "%(patient)s has shared Event with You which is accesible upto %(duration)s. \n\n Thank you. \n Team HealthSnapp."%args
 		notify_provider(data.get('doctor_id'),data.get('profile_id'),"Event Share",args,email_msg)
 		return eval(json.loads(response.text).get('sharelist'))[0].get('message_summary')
 
@@ -319,7 +319,7 @@ def share_via_providers_account(data):
 		make_sharing_request(event_data, data, files_list, event_dict, sub_event_count)
 		make_log(data.get('profile_id'),"Event","Shared Via Provider","Event Shared Via Provider")
 		args = {"patient":patient_name,"duration":data.get('sharing_duration')}
-		email_msg = "%(patient)s has shared Event with You which is accesible upto %(duration)s. Thank you. Team HealthSnapp."%args
+		email_msg = "%(patient)s has shared Event with You which is accesible upto %(duration)s. \n\n Thank you.\n Team HealthSnapp."%args
 		notify_provider(data.get('doctor_id'),data.get('profile_id'),"Event Share",args,email_msg)
 
 		return json.loads(json.loads(response.text).get('sharelist'))[0].get('message_summary')

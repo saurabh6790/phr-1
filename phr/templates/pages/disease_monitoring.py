@@ -272,8 +272,9 @@ def share_via_phr(share_info, profile_id, disease):
 	make_sharing_request(share_info, disease, dm_sharing, profile_id)
 	make_log(profile_id, "Disease Monitoring", "Shared over PHR account to provider %s"% share_info.get('doctor_name') , "Shared over PHR account to provider %s"% share_info.get('doctor_name'))
 	args = {"dr":share_info.get('doctor_name')}
-	email_msg = "Patient has shared DM with You. Thank you. Team HealthSnapp."
-	notify_provider(data.get('doctor_id'),data.get('profile_id'),"Event Share",args,email_msg)
+	email_msg = "Patient has shared DM with You. \n\n Thank you. \nTeam HealthSnapp."
+	from phr.templates.pages.event import notify_provider
+	notify_provider(share_info.get('doctor_id'),profile_id,"Event Share",args,email_msg)
 	return "Disease Monitoring records has been shared"
 
 def make_sharing_request(event_data, disease, dm_sharing, profile_id):
