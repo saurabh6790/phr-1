@@ -142,6 +142,7 @@
    "fieldname": "send_now", 
    "fieldtype": "Button", 
    "label": "Send Notification Now", 
+   "options": "send_notification", 
    "permlevel": 0, 
    "precision": ""
   }
@@ -154,7 +155,7 @@
  "is_submittable": 0, 
  "issingle": 0, 
  "istable": 0, 
- "modified": "2015-05-30 12:36:03.570277", 
+ "modified": "2015-05-30 13:04:35.098967", 
  "modified_by": "Administrator", 
  "module": "phr", 
  "name": "Advertisements", 
