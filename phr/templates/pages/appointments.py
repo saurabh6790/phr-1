@@ -93,23 +93,26 @@ def send_notification(profile_list):
 		sms_recipients=[]
 		msg={}
 		for profile in profile_list:
-			pobj=frappe.get_doc('User',frappe.db.get_value("User",{"profile_id":profile['profile_id']},"name"))
-			apobj=frappe.get_doc('Appointments',profile['name'])
-			if pobj:
-				sms_recipients.append(pobj.contact)
-				msg[pobj.contact]=get_sms_template("appointment",{"doctor_name":profile['provider_name'],"appointment_time":profile['time']})
+			user = frappe.db.get_value("User",{"profile_id":profile['profile_id']},"name")
+			if user:
+				pobj=frappe.get_doc('User',user)
+				apobj=frappe.get_doc('Appointments',profile['name'])
+				if pobj:
+					if frappe.db.get_value("Mobile Verification",{"mobile_no":pobj.contact,"mflag":1},"name"):
+						mob_no=[]
+						mob_no.append(pobj.contact)
+						msgg = get_sms_template("appointments",{"doctor_name":profile['provider_name'],"appointment_time":profile['time']})
+						print msgg
+						send_sms(mob_no,msg=msgg)
+					
 			else:
-				data=search_profile_data_from_solr(profile_id)
-				if data['mobile']:
-					sms_recipients.append(data["mobile"])
-				msg[data["mobile"]]=get_sms_template("appointment",{"doctor_name":profile['provider_name'],"appointment_time":profile['time']})
-			
-		if sms_recipients:
-			for no in sms_recipients:
-				if frappe.db.get_value("Mobile Verification",{"mobile_no":no,"mflag":1},"name"):
+				data = search_profile_data_from_solr(profile['profile_id'])
+				if data and data['mobile']:
 					mob_no=[]
-					mob_no.append(no)
-					send_sms(sms_recipients,msg=msg[no])
+					mob_no.append(data['mobile'])
+					send_sms(mob_no,msg=get_sms_template("appointments",{"doctor_name":profile['provider_name'],"appointment_time":profile['time']}))
+		
+		
 
 def get_list_to_notify():
 	profile_list=frappe.db.sql("""select profile_id,name,DATE_FORMAT(from_date_time,'%h:%i %p') as time,provider_name from 

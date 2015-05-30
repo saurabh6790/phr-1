@@ -35,9 +35,7 @@ def update_profile(data,id,dashboard=None):
 def update_profile_solr(data,dashboard=None):
 	request_type="POST"
 	user_details = json.loads(data)
-	frappe.errprint("in update")
 	if not_duplicate_contact(user_details.get('mobile'),user_details.get('email')):
-		frappe.errprint("assa")
 		url=get_base_url()+"/updateProfile"
 		from phr.phr.phr_api import get_response
 		response=get_response(url,data,request_type)
@@ -57,9 +55,12 @@ def update_profile_solr(data,dashboard=None):
 		return {"rtcode":201,"msg":"Maintioned contact number is already registered with another profile."}
 
 @frappe.whitelist(allow_guest=True)
-def make_mv_entry(mobile,user,profile_id):
-	if not frappe.db.get_value("Mobile Verification",{"mobile_no":mobile},"name"):
+def make_mv_entry(mobile,profile_id):
+	mob_v = frappe.db.get_value("Mobile Verification",{"mobile_no":mobile},"name")
+	if not mob_v:
 		generate_mobile_vericication_code(mobile,profile_id)
+	elif mob_v:
+		generate_mobile_vericication_code(mobile,profile_id,mob_v)
 		
 
 
@@ -95,7 +96,7 @@ def check_contact_verified(mobile):
 		return False
 
 @frappe.whitelist(allow_guest=True)		
-def generate_mobile_vericication_code(mobile,profile_id):
+def generate_mobile_vericication_code(mobile,profile_id,name=None):
 	mobile_code = get_mob_code()
 	from phr.templates.pages.patient import get_sms_template
 	sms = get_sms_template("registration",{ "mobile_code": mobile_code })
@@ -103,7 +104,10 @@ def generate_mobile_vericication_code(mobile,profile_id):
 	rec_list.append(mobile)
 	from erpnext.setup.doctype.sms_settings.sms_settings import send_sms
 	send_sms(rec_list,sms)
-	make_mobile_verification_entry(mobile,profile_id,mobile_code)
+	if not name:
+		make_mobile_verification_entry(mobile,profile_id,mobile_code)
+	elif name:
+		edit_mobile_verification_entry(mobile,profile_id,mobile_code,name)
 	return "done"
 
 def make_mobile_verification_entry(mobile,profile_id,mobile_code):
@@ -117,6 +121,11 @@ def make_mobile_verification_entry(mobile,profile_id,mobile_code):
 	mv.insert()
 	return mv.name
 
+def edit_mobile_verification_entry(mobile,profile_id,mobile_code,name):
+	mv = frappe.get_doc("Mobile Verification",name)
+	mv.mflag = 0
+	mv.verification_code = mobile_code
+	mv.save(ignore_permissions=True)
 
 def update_user_details(data):
 	frappe.db.sql("""update `tabUser` set 
@@ -677,7 +686,7 @@ def get_states():
 def notify_about_registration():
 	mobile_nos=get_mobile_nos()
 	if mobile_nos:
-		send_sms(mobile_nos,msg='Please Complete Your PHR Registration')
+		send_sms(mobile_nos,msg='Please Complete Your Healthsnapp Registration')
 		
 def get_mobile_nos():
 	nos=frappe.db.sql_list("""select contact from 
@@ -690,14 +699,14 @@ def get_mobile_nos():
 	return nos
 
 @frappe.whitelist(allow_guest=True)
-def notify_about_linked_phrs(profile_id,email_msg=None,text_msg=None,entity=None):
-	linked_phr=frappe.db.sql("""select profile_id from 
+def notify_about_linked_phrs(profile_id,email_msg=None,text_msg=None,entity=None,user_name=None):
+	linked_phr = frappe.db.sql("""select profile_id from 
 		`tabNotification Configuration` 
 		where linked_phr=1 and profile_id='%s'"""%(profile_id))
 	if linked_phr:
-		user=frappe.get_doc('User',frappe.db.get_value("User",{"profile_id":profile_id},"name"))
+		user = frappe.get_doc('User',frappe.db.get_value("User",{"profile_id":profile_id},"name"))
 		if user:
-			sendmail(user.name,subject="PHR Updates:"+entity+" Updated",msg=email_msg)
+			send_phrs_mail(user.name,"PHR Updates:"+entity+" Updated","templates/emails/linked_phrs_updates.html",{"user_name":user_name,"entity":entity})
 			if frappe.db.get_value("Mobile Verification",{"mobile_no":user.contact,"mflag":1},"name"):
 				rec_list=[]
 				rec_list.append(user.contact)
@@ -707,16 +716,15 @@ def notify_about_linked_phrs(profile_id,email_msg=None,text_msg=None,entity=None
 
 @frappe.whitelist(allow_guest=True)
 def search_profile_data_from_solr(profile_id):
-	solr_op='admin/searchlinkprofile'
-	url=get_base_url()+solr_op
-	request_type='POST'
-	data={"profileId":profile_id}
+	solr_op = 'admin/searchlinkprofile'
+	url = get_base_url()+solr_op
+	request_type = 'POST'
+	data = {"from_profile_id":profile_id}
 	from phr.phr.phr_api import get_response
-	response=get_response(url,json.dumps(data),request_type)
-	res=json.loads(response.text)
-	if res['returncode']==120:
-		return res['list']
-
+	response = get_response(url,json.dumps(data),request_type)
+	res = json.loads(response.text)
+	if res['returncode'] == 120:
+		return res['list'][0]['childProfile']
 
 @frappe.whitelist(allow_guest=True)
 def get_patients_ids(doctype, txt, searchfield, start, page_len, filters):

@@ -118,8 +118,9 @@ var DiseaseMonitoring = inherit(RenderFormFields, {
 						RenderFormFields.prototype.init($("#main-con"), {'fields':data["fields"]})
 						me.add_share_event()
 						me.render_disease_fields(event_title,profile_id,me)
-						email_msg='Linked PHR Has Created DiseaseMonitoring'
-						text_msg='Linked PHR Has Created DiseaseMonitoring'
+						cname = sessionStorage.getItem("cname")
+						email_msg = cname+' Has Created DiseaseMonitoring'
+						text_msg = cname+' Has Created DiseaseMonitoring'
 						send_linkedphr_updates(email_msg,text_msg,"DiseaseMonitoring")
 					}
 					else{
