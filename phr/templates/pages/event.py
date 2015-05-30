@@ -16,7 +16,6 @@ def create_update_event(data=None, req_id=None):
 	frappe.errprint(['req_id', req_id])
 	if not data.get('entityid'):
 		return create_event(data)
-
 	else:
 		res = update_event(data)
 
@@ -52,6 +51,11 @@ def create_event(data):
 	else:
 		response=get_response(url, json.dumps(event_data), request_type)
 		make_log(json.loads(response.text).get('entityid'),"Event","Create","Event Created")
+		if data.get('cname'):
+			text_msg = "%s Has Created Event,\n\n Team,\nHealthsnapp"%data.get('cname')
+			email_msg = ""
+			from phr.templates.pages.profile import notify_about_linked_phrs
+			notify_about_linked_phrs(data.get('pid'),email_msg,text_msg,"Event",data.get('cname'))
 
 	return json.loads(response.text)
 
@@ -95,6 +99,11 @@ def update_event(data):
 	else:
 		response=get_response(url, json.dumps(event_data), request_type)
 		make_log(data.get('entityid'),"Event","Update","Event Updated")
+		if data.get('cname'):
+			text_msg = "%s Has Updated Event,\n\n Team,\nHealthsnapp"%data.get('cname')
+			email_msg = ""
+			from phr.templates.pages.profile import notify_about_linked_phrs
+			notify_about_linked_phrs(data.get('pid'),email_msg,text_msg,"Event",data.get('cname'))
 
 	return json.loads(response.text)
 
