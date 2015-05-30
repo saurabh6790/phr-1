@@ -50,7 +50,7 @@ def notify_to_do():
 						mob_no = []
 						mob_no.append(pobj.contact)
 						send_sms(mob_no,msg=get_sms_template("todo",{"to_do":todoobj.description}))
-					send_phrs_mail(pobj.name,"PHR:To Do Alert","templates/emails/todo.html",{"todo":todoobj.description,"name":user.first_name})
+					send_phrs_mail(pobj.name,"PHR:To Do Alert","templates/emails/todo.html",{"todo":todoobj.description,"name":pobj.first_name})
 			else:
 				data = search_profile_data_from_solr(profile['profile_id'])
 				if data and data['mobile']:
@@ -59,7 +59,7 @@ def notify_to_do():
 						mob_no.append(data['mobile'])
 						send_sms(mob_no,msg=get_sms_template("todo",{"to_do":todoobj.description}))
 				if data and data['email']:
-					send_phrs_mail(data['email'],"PHR:To Do Alert","templates/emails/todo.html",{"todo":todoobj.description,"name":user.first_name})
+					send_phrs_mail(data['email'],"PHR:To Do Alert","templates/emails/todo.html",{"todo":todoobj.description,"name":data["person_firstname"]})
 		
 def get_profile_ids():
 	profile_ids=frappe.db.sql("""select profile_id,name from 
