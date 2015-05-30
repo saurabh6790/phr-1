@@ -29,7 +29,7 @@ web_include_js = ["assets/phr/bootstrap3-dialog-master/bootstrap-dialog.js",
 					"assets/phr/bootstrap-table.js","assets/phr/js/nprogress.js","public/js/frappe/misc/datetime.js"
 				]
 
-fixtures=["Disease Monitoring","Dosage", "State", "Events", "Specialization", "Provider Type", "Provider Category"]
+fixtures=["Disease Monitoring","Dosage", "State", "Events", "Specialization", "Provider Type", "Provider Category","Message Templates"]
 
 # Home Pages
 # ----------
