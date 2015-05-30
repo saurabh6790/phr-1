@@ -59,13 +59,14 @@ def make_mv_entry(mobile,profile_id):
 	mob_v = frappe.db.get_value("Mobile Verification",{"mobile_no":mobile},"name")
 	if not mob_v:
 		generate_mobile_vericication_code(mobile,profile_id)
-	elif mob_v:
+	elif mob_v and not frappe.db.get_value("Mobile Verification",{"mobile_no":mobile,"profile_id":profile_id},"name"):
 		generate_mobile_vericication_code(mobile,profile_id,mob_v)
 		
 
 
 @frappe.whitelist(allow_guest=True)
 def not_duplicate_contact(mobile,user):
+	print user
 	if frappe.db.sql("""select count(*) from tabUser 
 		where contact = '%s' and name != "%s" 
 	"""%(mobile,user), as_list=1)[0][0] == 0:
@@ -98,16 +99,16 @@ def check_contact_verified(mobile):
 @frappe.whitelist(allow_guest=True)		
 def generate_mobile_vericication_code(mobile,profile_id,name=None):
 	mobile_code = get_mob_code()
+	if not name:
+		make_mobile_verification_entry(mobile,profile_id,mobile_code)
+	elif name:
+		edit_mobile_verification_entry(mobile,profile_id,mobile_code,name)
 	from phr.templates.pages.patient import get_sms_template
 	sms = get_sms_template("registration",{ "mobile_code": mobile_code })
 	rec_list=[]
 	rec_list.append(mobile)
 	from erpnext.setup.doctype.sms_settings.sms_settings import send_sms
 	send_sms(rec_list,sms)
-	if not name:
-		make_mobile_verification_entry(mobile,profile_id,mobile_code)
-	elif name:
-		edit_mobile_verification_entry(mobile,profile_id,mobile_code,name)
 	return "done"
 
 def make_mobile_verification_entry(mobile,profile_id,mobile_code):
@@ -123,6 +124,7 @@ def make_mobile_verification_entry(mobile,profile_id,mobile_code):
 
 def edit_mobile_verification_entry(mobile,profile_id,mobile_code,name):
 	mv = frappe.get_doc("Mobile Verification",name)
+	mv.profile_id = profile_id
 	mv.mflag = 0
 	mv.verification_code = mobile_code
 	mv.save(ignore_permissions=True)
