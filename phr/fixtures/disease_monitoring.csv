@@ -18,22 +18,13 @@
 "Type:","Data (text)","Data","Data","","Data","Data","Select","Check"
 "Info:","","","","","Leave blank for new records","","One of: date, time, datetime, data, text","0 or 1"
 "Start entering data below this line"
-"","""783278539153335""","HYPERTENTION","783278539153335","","""4ffc081fc6d683830077fcede61fb527876556d4d664c0bd9d0fdc05""","Date","datetime",1
-"","","","","","""7516ad9f0f5d009d4da77c94591406f8e7f356126be042923efc62fb""","Systolic BP mm of Hg","data",0
-"","","","","","""de02a9b9bd9817f40a0e00192481cb214eb16b27075fdc6742bffc81""","Diastolic BP  mm of Hg","data",0
-"","","","","","""5638c3fb57b3bbde08958f070009af66be21a341e13820d857689c97""","Pulse Rate  Beats per min","data",0
-"","","","","","""29aeb166efecd22813d875c4df0295df3eb75b94fcade26d7d55ce9b""","Weight Kg","data",0
-"","","","","","""8cfbe4d7aac64e2655e6043ea1c3438b9e4b7fd5b9c0c7156f18de0a""","Patient Notes","text",0
-"","""060240163580837""","CARDIOVASCULAR DISEASE","060240163580837","","""7705bf09632186487bb0a2b24744aca9efa61f2b1291732edd1c2996""","Date","datetime",1
-"","","","","","""6a4a1a792b46565eb104c40bd64c9ff7102a7505838c5f3fdd306f29""","Total Cholesterol mg/dl","data",0
-"","","","","","""a85eda5911b57d60db7bb31bb08596e979e7006a0e1780064eefb46b""","HDL Cholesterol mg/dl","data",0
-"","","","","","""2fb954f0ee63ba9d5a2d1562fc5badc1df65a21a8b55fcd87118b347""","LDL Cholesterol mg/dl","data",0
-"","","","","","""8ba1840d06f4fbe97988a644681aff6855bb3577ad9b4467748ec055""","Triglycerides mg/dl","data",0
-"","","","","","""930824b71aa781ef49b9d91ac648d753782ca6142f338b7343b5fb37""","Weight Kg","data",0
-"","","","","","""f06476026a98fe15d1dfb92febbec468f4e0475e8040943fed73bef2""","Patient Notes","text",0
-"","""226857806684142""","Blood Presure","226857806684142","","""3cf7be1ee15ff30b91a9a40ecd3889580ec90b172d7179be72fac593""","Date","date",1
-"","","","","","""6779df756289a729749bf720e3730ce90cb73d7cbbd49b066d5779b1""","HBP","data",0
-"","","","","","""6a8c1e0aaaf667fe384765b96f275f6fcb817706c8ea664fbd162398""","LBP","data",0
+"","""499101166307298""","Fever","499101166307298","","""a9b69b7a00c2b8cb210375ada449d9c5a84cf5b53206410f635199bc""","Date","datetime",1
+"","","","","","""7f499754450534cecc85e57b232fda1b055dddc1ad8d7870ef48da77""","temp","data",0
+"","""428029167523593""","WEIGHT MANAGEMENT","428029167523593","","""036d0927fce086f83d4799a1648716ab6d676db09020dcc2b7123bb5""","Date","datetime",1
+"","","","","","""98c3b6a1930325776189c2d59eff037656d3d0d1ec2714eea6cd4377""","Height cms","data",0
+"","","","","","""37e3c4f8100356e5a5295f8773d7b4455f2cd70a59af27693dc10d64""","Weight kg","data",0
+"","","","","","""289c83c5f9505566d8e74b9f10e961a80532a3d5f44ca5fc81d627c6""","BMI index","data",0
+"","","","","","""6f046212c8e17b015271b2b120cf7338a6d3de4190df5b14a9836850""","Notes","text",0
 "","""751054783931566""","Diabetis","751054783931566","","""19e85922a17dbd2b3027e69ec1714de9a496782a408424c372da8935""","Date","datetime",1
 "","","","","","""48c34dfabb12311e3b46f9399222fb21923e3f9a34b9d904fab1e67b""","Blood Sugar (Random) mg/dl","data",0
 "","","","","","""d29f7acab69442934ffc8a7f63c0882c32a528bdab36a52a2226ff97""","Blood Sugar (Fasting) mg/dl","data",0
@@ -41,9 +32,19 @@
 "","","","","","""ff3ac70dc8f289bec73bed67d844c6dd7ee683d855ad279310d4d30c""","Hb A1C %","data",0
 "","","","","","""54c272a20eb78991f6dc247b0eb7628e010aa8bb7989a556943849ac""","Weight Kg","data",0
 "","","","","","""e06c13ad67ed8199a126ddf79e9370c52b9bd5b95b742ce0675cf06e""","Patient   Notes","text",0
-"","""428029167523593""","WEIGHT MANAGEMENT","428029167523593","","""036d0927fce086f83d4799a1648716ab6d676db09020dcc2b7123bb5""","Date","datetime",1
-"","","","","","""98c3b6a1930325776189c2d59eff037656d3d0d1ec2714eea6cd4377""","Height cms","data",0
-"","","","","","""37e3c4f8100356e5a5295f8773d7b4455f2cd70a59af27693dc10d64""","Weight kg","data",0
-"","","","","","""289c83c5f9505566d8e74b9f10e961a80532a3d5f44ca5fc81d627c6""","BMI index","data",0
-"","","","","","""6f046212c8e17b015271b2b120cf7338a6d3de4190df5b14a9836850""","Notes","text",0
-"","""499101166307298""","Fever","499101166307298","","""7f499754450534cecc85e57b232fda1b055dddc1ad8d7870ef48da77""","temp","data",""
+"","""226857806684142""","Blood Presure","226857806684142","","""3cf7be1ee15ff30b91a9a40ecd3889580ec90b172d7179be72fac593""","Date","date",1
+"","","","","","""6779df756289a729749bf720e3730ce90cb73d7cbbd49b066d5779b1""","HBP","data",0
+"","","","","","""6a8c1e0aaaf667fe384765b96f275f6fcb817706c8ea664fbd162398""","LBP","data",0
+"","""060240163580837""","CARDIOVASCULAR DISEASE","060240163580837","","""7705bf09632186487bb0a2b24744aca9efa61f2b1291732edd1c2996""","Date","datetime",1
+"","","","","","""6a4a1a792b46565eb104c40bd64c9ff7102a7505838c5f3fdd306f29""","Total Cholesterol mg/dl","data",0
+"","","","","","""a85eda5911b57d60db7bb31bb08596e979e7006a0e1780064eefb46b""","HDL Cholesterol mg/dl","data",0
+"","","","","","""2fb954f0ee63ba9d5a2d1562fc5badc1df65a21a8b55fcd87118b347""","LDL Cholesterol mg/dl","data",0
+"","","","","","""8ba1840d06f4fbe97988a644681aff6855bb3577ad9b4467748ec055""","Triglycerides mg/dl","data",0
+"","","","","","""930824b71aa781ef49b9d91ac648d753782ca6142f338b7343b5fb37""","Weight Kg","data",0
+"","","","","","""f06476026a98fe15d1dfb92febbec468f4e0475e8040943fed73bef2""","Patient Notes","text",0
+"","""783278539153335""","HYPERTENTION","783278539153335","","""4ffc081fc6d683830077fcede61fb527876556d4d664c0bd9d0fdc05""","Date","datetime",1
+"","","","","","""7516ad9f0f5d009d4da77c94591406f8e7f356126be042923efc62fb""","Systolic BP mm of Hg","data",0
+"","","","","","""de02a9b9bd9817f40a0e00192481cb214eb16b27075fdc6742bffc81""","Diastolic BP  mm of Hg","data",0
+"","","","","","""5638c3fb57b3bbde08958f070009af66be21a341e13820d857689c97""","Pulse Rate  Beats per min","data",0
+"","","","","","""29aeb166efecd22813d875c4df0295df3eb75b94fcade26d7d55ce9b""","Weight Kg","data",0
+"","","","","","""8cfbe4d7aac64e2655e6043ea1c3438b9e4b7fd5b9c0c7156f18de0a""","Patient Notes","text",0
