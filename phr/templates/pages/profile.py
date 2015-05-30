@@ -708,7 +708,7 @@ def notify_about_linked_phrs(profile_id,email_msg=None,text_msg=None,entity=None
 	if linked_phr:
 		user = frappe.get_doc('User',frappe.db.get_value("User",{"profile_id":profile_id},"name"))
 		if user:
-			send_phrs_mail(user.name,"PHR Updates:"+entity+" Updated","templates/emails/linked_phrs_updates.html",{"user_name":user_name,"entity":entity})
+			send_phrs_mail(user.name,"HealthSnapp Updates:"+entity+" Updated","templates/emails/linked_phrs_updates.html",{"user_name":user_name,"entity":entity})
 			if frappe.db.get_value("Mobile Verification",{"mobile_no":user.contact,"mflag":1},"name"):
 				rec_list=[]
 				rec_list.append(user.contact)
@@ -745,8 +745,11 @@ def get_patients_ids(doctype, txt, searchfield, start, page_len, filters):
 	return profile_list
 
 @frappe.whitelist(allow_guest=True)
-def check_existing(email):
-	return frappe.db.sql("""select email from `tabUser`  where enabled=1 and email='%s'"""%(email))
+def check_existing(email,mobile):
+	if frappe.db.sql("""select email from `tabUser`  where enabled=1 and email='%s'"""%(email)):
+		return {"msg":"Email Already Used"}
+	elif frappe.db.sql("""select contact from `tabUser`  where enabled=1 and contact='%s'"""%(mobile)):
+		return {"msg":"Mobile No already Used"}
 
 @frappe.whitelist(allow_guest=True)
 def get_patients(doctype, txt, searchfield, start, page_len, filters):
@@ -761,14 +764,14 @@ def verify_mobile():
 def get_phr_pdf(profile_id):
 	import os, time
 	path = os.path.join(os.getcwd(), get_site_path().replace('.',"").replace('/', ""), 'public', 'files', profile_id)
-	solr_op='dms/getPhrPdfwithfilelocation'
-	url=get_base_url()+solr_op
-	request_type='POST'
+	solr_op = 'dms/getPhrPdfwithfilelocation'
+	url = get_base_url()+solr_op
+	request_type = 'POST'
 	path+="/"
-	data={"profileId":profile_id,"file_location": [path]}
+	data = {"profileId":profile_id,"file_location": [path]}
 	from phr.phr.phr_api import get_response
-	response=get_response(url,json.dumps(data),request_type)
-	res=json.loads(response.text)
+	response = get_response(url,json.dumps(data),request_type)
+	res = json.loads(response.text)
 	if res:
 		url = ""
 		url = get_url()+"/files/%s/"%(profile_id)+cstr(res['file_location'].split('/')[-1]) + '?id=' + str(int(round(time.time() * 1000)))
