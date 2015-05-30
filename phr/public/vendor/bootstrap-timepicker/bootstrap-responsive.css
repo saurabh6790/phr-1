@@ -70,7 +70,7 @@
     display: inherit !important;
   }
   .visible-desktop {
-    display: none !important ;
+    display: inherit !important ;
   }
   .visible-tablet {
     display: inherit !important;
