@@ -123,6 +123,14 @@
    "precision": ""
   }, 
   {
+   "fieldname": "er_noti", 
+   "fieldtype": "Check", 
+   "label": "Enable Recurring Notification", 
+   "permlevel": 0, 
+   "precision": ""
+  }, 
+  {
+   "depends_on": "eval:doc.er_noti==1", 
    "description": "Specify days after which notification will get sent.", 
    "fieldname": "interval", 
    "fieldtype": "Data", 
@@ -146,7 +154,7 @@
  "is_submittable": 0, 
  "issingle": 0, 
  "istable": 0, 
- "modified": "2015-05-22 19:35:43.098449", 
+ "modified": "2015-05-30 12:36:03.570277", 
  "modified_by": "Administrator", 
  "module": "phr", 
  "name": "Advertisements", 
