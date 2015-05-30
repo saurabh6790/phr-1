@@ -147,6 +147,7 @@ def notify_medications():
 	print "############################~~~~~~~~~~~~Medications~~~~~~~~~~~~~~~~~~~############"
 	recipient_list = []
 	med_list = get_medictions_to_notify()
+	print med_list
 	notifications = fetch_data_from_medications(med_list,recipient_list)
 	
 
