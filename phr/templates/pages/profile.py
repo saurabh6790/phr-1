@@ -77,7 +77,7 @@ def not_duplicate_contact(mobile,user):
 def verify_code(data,mobile):
 	res = json.loads(data)
 	verification_code = frappe.db.get_value("Mobile Verification",mobile,"verification_code")
-	if not  verification_code == res.get('code'):
+	if not verification_code == res.get('code'):
 		return {"returncode":0,"message":"Code Invalid"}
 	else:
 		mv = frappe.get_doc('Mobile Verification',mobile)
