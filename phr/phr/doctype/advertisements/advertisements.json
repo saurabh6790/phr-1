@@ -104,7 +104,7 @@
    "fieldname": "notification_to", 
    "fieldtype": "Select", 
    "label": "Notification To", 
-   "options": "\nPatients\nProviders\nBoth", 
+   "options": "\nPatient\nProvider\nBoth", 
    "permlevel": 0, 
    "precision": ""
   }, 
@@ -113,6 +113,13 @@
    "fieldtype": "Select", 
    "label": "Notify Via", 
    "options": "\nEmail\nSMS\nBoth", 
+   "permlevel": 0, 
+   "precision": ""
+  }, 
+  {
+   "fieldname": "sms_desc", 
+   "fieldtype": "Small Text", 
+   "label": "SMS Description", 
    "permlevel": 0, 
    "precision": ""
   }, 
@@ -155,7 +162,7 @@
  "is_submittable": 0, 
  "issingle": 0, 
  "istable": 0, 
- "modified": "2015-05-30 13:04:35.098967", 
+ "modified": "2015-05-30 19:50:44.034338", 
  "modified_by": "Administrator", 
  "module": "phr", 
  "name": "Advertisements", 

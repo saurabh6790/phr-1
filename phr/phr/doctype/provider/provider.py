@@ -6,6 +6,7 @@ import frappe
 from frappe.model.document import Document
 from frappe.utils import cint
 from phr.templates.pages.patient import get_base_url,get_data_to_render
+from phr.templates.pages.login import get_barcode, notify_user
 import json
 import re
 
@@ -60,7 +61,6 @@ class Provider(Document):
 	def create_user_login(self):
 		from frappe.utils import random_string
 		password=random_string(10)
-		print "\n\n Profile Id \n\n ",self.provider_id
 		user = frappe.get_doc({
 			"doctype":"User",
 			"email": self.email,
@@ -75,8 +75,14 @@ class Provider(Document):
 			"password_str":password
 		})
 		user.ignore_permissions = True
+		user.no_welcome_mail = True
 		user.insert()
 
+		args = {'person_firstname':self.provider_name,'person_middlename': '',
+				'person_lastname':'','email':self.email,
+				'mobile': self.mobile_number, "barcode":str(get_barcode())}
+
+		notify = notify_user({}, args, self.provider_id)
 
 	def exisitng_user(self):
 		if cint(frappe.db.sql("""select count(*) 
