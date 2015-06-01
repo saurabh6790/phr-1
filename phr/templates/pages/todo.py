@@ -67,7 +67,7 @@ def get_profile_ids():
 		in (select profile_id 
 			from `tabNotification Configuration` 
 			where to_do=1) 
-		and date between now() + INTERVAL 58 MINUTE 
+		and date between now() + INTERVAL 57 MINUTE 
 		and now() + INTERVAL 62 MINUTE """,as_dict=1)
 	return profile_ids
 

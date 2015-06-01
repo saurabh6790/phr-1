@@ -496,6 +496,7 @@ window.Events = inherit(ListView,{
 				if (sessionStorage.getItem("cid")!=sessionStorage.getItem("pid")){
 					me.res['cname'] = sessionStorage.getItem("cname")
 				}
+				me.edata = me.res;
 				frappe.call({
 					method:"phr.templates.pages.event.create_update_event",
 					args:{"data":JSON.stringify(me.res), "req_id": me.req_id},
@@ -504,10 +505,15 @@ window.Events = inherit(ListView,{
 						if(!r.message['exe']){
 							$('.breadcrumb li:last').remove()
 							NProgress.done();
+							console.log(["Saved", r.message.returncode])
 							if(r.message.returncode == 103 || r.message.returncode == 116){
 								me.dms_file_list = [];
 								me.open_form(r.message.entityid, $('[name="event_title"]').val(), me.profile_id, me.res, me.req_id);	
 								frappe.msgprint("Saved")
+								if(r.message.returncode == 116){
+									console.log([me.edata])
+									me.notify_about_update(me.edata)
+								}
 							}
 							else{
 								frappe.msgprint(r.message.message_summary);
@@ -522,6 +528,15 @@ window.Events = inherit(ListView,{
 			else{
 				frappe.msgprint(validate['msg'])
 			}			
+		})
+	},
+	notify_about_update: function(data){
+		frappe.call({
+			method:"phr.templates.pages.event.notify_about_update",
+			args:{"data":data},
+			callback:function(r){
+				console.log("testing done")
+			}
 		})
 	},
 	validate_form:function(){
