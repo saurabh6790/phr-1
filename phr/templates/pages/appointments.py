@@ -118,8 +118,8 @@ def get_list_to_notify():
 	profile_list=frappe.db.sql("""select profile_id,name,DATE_FORMAT(from_date_time,'%h:%i %p') as time,provider_name from 
 		`tabAppointments` 
 		where from_date_time 
-		between  now() + INTERVAL 57 MINUTE 
-		and  now() + INTERVAL 63 MINUTE""",as_dict=1)
+		between  now() + INTERVAL 58 MINUTE 
+		and  now() + INTERVAL 62 MINUTE""",as_dict=1)
 	return profile_list
 
 	
