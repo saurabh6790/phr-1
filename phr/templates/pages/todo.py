@@ -27,7 +27,7 @@ def get_todo(profile_id):
 	todo_list = []
 	todo = frappe.db.sql("select name from tabToDo where profile_id = '%s' and date >= CURDATE() order by creation desc limit 5"%profile_id)
 	for td in todo:
-		td=frappe.get_doc("ToDo", td[0])
+		td = frappe.get_doc("ToDo", td[0])
 		todo_list.append({"desc": td.description, "todo_id": td.name,"date":get_formatted_date_time(td.date),"priority":td.priority})
 
 	return todo_list
@@ -67,7 +67,7 @@ def get_profile_ids():
 		in (select profile_id 
 			from `tabNotification Configuration` 
 			where to_do=1) 
-		and date between now() + INTERVAL 57 MINUTE 
-		and now() + INTERVAL 63 MINUTE """,as_dict=1)
+		and date between now() + INTERVAL 58 MINUTE 
+		and now() + INTERVAL 62 MINUTE """,as_dict=1)
 	return profile_ids
 
