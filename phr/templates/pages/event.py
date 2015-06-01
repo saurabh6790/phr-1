@@ -241,15 +241,11 @@ def share_via_email(data):
 				attachments=attachments)
 
 		make_log(data.get('profile_id'),"Event","Shared Via Email","Event Shared Via Email to %s"%(data.get('email_id')))
-		args = {"patient":patient_name,"email":data.get('email_id')}
-		notify_provider(data.get('doctor_id'),data.get('profile_id'),"Event Share Email",args)
-
-		return """Selected image(s) has been shared with 
-			%(provider_name)s for event %(event)s """%{
-				'event': data.get('event_title'),
-				'provider_name': data.get('doctor_name')}
+		# args = {"patient":patient_name,"email":data.get('email_id')}
+		# notify_provider(data.get('doctor_id'),data.get('profile_id'),"Event Share Email",args)
+		return { "returncode":1,"message_summary":"Selected image(s) has been shared with %(provider_name)s for event %(event)s "%{'event': data.get('event_title'),'provider_name': data.get('doctor_name')}}
 	else:
-		return 'Please select file(s) for sharing'
+		return {"returncode":0,"message_summary":"Please select file(s) for sharing"}
 
 def share_via_providers_account(data):
 	# frappe.errprint([data.get('files'), not data.get('files')])
@@ -257,7 +253,7 @@ def share_via_providers_account(data):
 	sub_event_count = {}
 	# return [event_dict, sub_event_count] 
 
-	patient_name = frappe.db.get_value("User", {"profile_id":data.get('profile_id')}, 'concat(first_name, " ", last_name)') or  data.get('lphr_name')
+	
 	if not data.get('files'):
 		event_data =	{
 				"sharelist": [
@@ -287,10 +283,7 @@ def share_via_providers_account(data):
 		files_list = get_files_doc(event_data, data, None, event_dict, sub_event_count)
 		make_sharing_request(event_data, data, files_list, event_dict, sub_event_count)
 		make_log(data.get('profile_id'),"Event","Shared Via Provider","Event Shared Via Provider")
-		args = {"patient":patient_name,"duration":data.get('sharing_duration')}
-		email_msg = "%(patient)s has shared Event with You which is accesible upto %(duration)s. \n\n Thank you. \n Team HealthSnapp."%args
-		notify_provider(data.get('doctor_id'),data.get('profile_id'),"Event Share",args,email_msg)
-		return eval(json.loads(response.text).get('sharelist'))[0].get('message_summary')
+		return {"returncode":2,"message_summary":eval(json.loads(response.text).get('sharelist'))[0].get('message_summary')}
 
 	else:
 		sharelist = []
@@ -322,12 +315,25 @@ def share_via_providers_account(data):
 		files_list = get_files_doc(event_data, data, None, event_dict, sub_event_count)
 		make_sharing_request(event_data, data, files_list, event_dict, sub_event_count)
 		make_log(data.get('profile_id'),"Event","Shared Via Provider","Event Shared Via Provider")
+		# args = {"patient":patient_name,"duration":data.get('sharing_duration')}
+		# email_msg = "%(patient)s has shared Event with You which is accesible upto %(duration)s. \n\n Thank you.\n Team HealthSnapp."%args
+		# notify_provider(data.get('doctor_id'),data.get('profile_id'),"Event Share",args,email_msg)
+
+		return {"returncode":2,"message_summary":json.loads(json.loads(response.text).get('sharelist'))[0].get('message_summary')}
+
+@frappe.whitelist(allow_guest=True)
+def build_provider_notification(res):
+	data = json.loads(res)
+	patient_name = frappe.db.get_value("User", {"profile_id":data.get('profile_id')}, 'concat(first_name, " ", last_name)') or  data.get('lphr_name')
+	if data.get('share_via') == 'Email':
+		args = {"patient":patient_name,"email":data.get('email_id')}
+		notify_provider(data.get('doctor_id'),data.get('profile_id'),"Event Share Email",args)
+
+	if data.get('share_via') == 'Provider Account':
 		args = {"patient":patient_name,"duration":data.get('sharing_duration')}
 		email_msg = "%(patient)s has shared Event with You which is accesible upto %(duration)s. \n\n Thank you.\n Team HealthSnapp."%args
 		notify_provider(data.get('doctor_id'),data.get('profile_id'),"Event Share",args,email_msg)
-
-		return json.loads(json.loads(response.text).get('sharelist'))[0].get('message_summary')
-
+		
 def notify_provider(provider_id,patient,template,args,email_msg=None):
 	provider_info = frappe.db.get_value("Provider",{"provider_id":provider_id},"name")
 	if provider_info:
