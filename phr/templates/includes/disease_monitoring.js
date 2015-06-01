@@ -220,10 +220,9 @@ var DiseaseMonitoring = inherit(RenderFormFields, {
 		me.res['lphr_name'] = sessionStorage.getItem("cname")
 		NProgress.start();
 		if(me.validate_sharing_modal()){
-			// console.log(["Testing RES Dictionary before frappe call", me.res])
 			frappe.call({
 				method:"phr.templates.pages.disease_monitoring.share_dm",
-				args:{'data':me.selected_dm, 'header': $('.fixed-table-header').find('thead').html(), 'share_info':me.res,
+				args:{'data':me.selected_dm, 'header': $('.table-striped').find('thead').html(), 'share_info':me.res,
 				 'profile_id':me.profile_id, 'disease':$('[name="disease"]').val()},
 				callback:function(r){
 					d.hide()

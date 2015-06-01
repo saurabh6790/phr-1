@@ -99,7 +99,6 @@ def update_event(data):
 
 @frappe.whitelist()
 def notify_about_update(data):
-	frappe.errprint(["data", data])
 	data = json.loads(data)
 	if data.get('cname'):
 			text_msg = "%s Has Updated Event,\n\n Team Healthsnapp"%data.get('cname')

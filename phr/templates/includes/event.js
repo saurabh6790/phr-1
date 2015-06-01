@@ -496,6 +496,7 @@ window.Events = inherit(ListView,{
 				if (sessionStorage.getItem("cid")!=sessionStorage.getItem("pid")){
 					me.res['cname'] = sessionStorage.getItem("cname")
 				}
+				me.edata = me.res;
 				frappe.call({
 					method:"phr.templates.pages.event.create_update_event",
 					args:{"data":JSON.stringify(me.res), "req_id": me.req_id},
@@ -510,7 +511,8 @@ window.Events = inherit(ListView,{
 								me.open_form(r.message.entityid, $('[name="event_title"]').val(), me.profile_id, me.res, me.req_id);	
 								frappe.msgprint("Saved")
 								if(r.message.returncode == 116){
-									me.notify_about_update(me.res)
+									console.log([me.edata])
+									me.notify_about_update(me.edata)
 								}
 							}
 							else{
@@ -529,10 +531,9 @@ window.Events = inherit(ListView,{
 		})
 	},
 	notify_about_update: function(data){
-		console.log("test")
 		frappe.call({
 			method:"phr.templates.pages.event.notify_about_update",
-			args:{"data":JSON.stringify(data)},
+			args:{"data":data},
 			callback:function(r){
 				console.log("testing done")
 			}
