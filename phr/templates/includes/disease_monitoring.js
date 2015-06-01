@@ -218,6 +218,7 @@ var DiseaseMonitoring = inherit(RenderFormFields, {
 	share_data:function(d){
 		var me = this;
 		me.res['lphr_name'] = sessionStorage.getItem("cname")
+		console.log(me.selected_dm,$('.fixed-table-header').find('thead').html(),me.res,me.profile_id,$('[name="disease"]').val())
 		NProgress.start();
 		if(me.validate_sharing_modal()){
 			frappe.call({
@@ -232,13 +233,27 @@ var DiseaseMonitoring = inherit(RenderFormFields, {
 					NProgress.done();
 					me.selected_dm = [];
 					// console.log(r)
-					frappe.msgprint(r.message)
+					frappe.msgprint(r.message.message_display)
+					if (r.message.returncode == 1){
+						me.notify_provider(me.res,me.profile_id);
+					}
+
 				}
 			})
 		}
 		else{
 			NProgress.done();
 		}
+	},
+	notify_provider:function(res,profile_id){
+		frappe.call({
+			"method":"phr.templates.pages.disease_monitoring.notify_provider_of_sharing",
+			"args":{"data":res,"profile_id":profile_id},
+			callback:function(r){
+				
+			}
+		})
+
 	},
 	validate_sharing_modal:function(){
   		var me=this;
