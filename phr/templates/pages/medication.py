@@ -145,65 +145,79 @@ def update_status(data):
 @frappe.whitelist(allow_guest=True)
 def notify_medications():
 	print "############################~~~~~~~~~~~~Medications~~~~~~~~~~~~~~~~~~~############"
-	recipient_list=[]
-	med_list=get_medictions_to_notify()
-	build_list,msg=fetch_data_from_medications(med_list,recipient_list)
-	if build_list:
-		for no in build_list:
-			if frappe.db.get_value("Mobile Verification",{"mobile_no":no,"mflag":1},"name"):
-				no_list=[]
-				no_list.append(no)
-				send_sms(no_list,msg=msg[no])
+	recipient_list = []
+	med_list = get_medictions_to_notify()
+	print med_list
+	notifications = fetch_data_from_medications(med_list,recipient_list)
+	
 
 def get_medictions_to_notify():
 	med_list=frappe.db.sql_list("""select name from 
 		`tabMedication` 
-		where to_date_time >= now() 
-		and status='Active'""")
+		where status='Active' and now() 
+		between from_date_time
+		and to_date_time""")
 	return med_list
 
 @frappe.whitelist(allow_guest=True)
 def update_status_of_medication():
+
 	frappe.db.sql("""update `tabMedication` 
 		set status='Inactive'
 		where to_date_time < CURDATE() 
 		and status='Active'""")
+	frappe.db.commit()
 	return "done"
 	
 def fetch_data_from_medications(med_list,recipient_list):
 	if med_list:
 		msg={}
 		for md in med_list:
-			mobj=frappe.get_doc("Medication",md)
-			fobj=frappe.get_doc("Dosage",mobj.dosage)
-			options=json.loads(mobj.options)
-			for d in fobj.get('dosage_fields'):
-				time_diff=0
-				if d.fieldtype=="time":
-					time_now = datetime.datetime.strftime(datetime.datetime.now(),'%H:%M')
-					if options[d.fieldname]:
-						med_time=datetime.datetime.strptime(options[d.fieldname], '%I:%M %p').strftime('%H:%M')
-						time_diff=(datetime.datetime.strptime(med_time,'%H:%M')-datetime.datetime.strptime(time_now,'%H:%M')).total_seconds()/60
-		
-				elif d.fieldname=="datetime":
-					now_time=datetime.datetime.strftime(datetime.datetime.now(), '%Y-%m-%d %H:%M:%S.%f')
-					now_time_str= datetime.datetime.strptime(now_time, '%Y-%m-%d %H:%M:%S.%f')
-					if options[d.fieldname]:
-						med_time = datetime.datetime.strptime(options[d.fieldname], '%Y-%m-%d %H:%M:%S.%f')
-						time_diff=(med_time-time_now).total_seconds()/60
-
-				if time_diff and (time_diff > 0 and time_diff < 6):
-					user=frappe.get_doc("User",frappe.db.get_value("User",{"profile_id":mobj.profile_id},"name"))
-					if user:
-						recipient_list.append(user.contact)
-						msg[user.contact]=get_sms_template("medication",{"medication":mobj.get('medicine_name')})
-					else:
-						data=search_profile_data_from_solr(mobj.profile_id)
-						if data['mobile']:
-							recipient_list.append(data["mobile"])
-							msg[data["mobile"]]=get_sms_template("medication",{"medication":mobj.get('medicine_name')})
-							
-		return recipient_list,msg
+			sms_send = True
+			mobj = frappe.get_doc("Medication",md)
+			week = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday']
+			import datetime
+			now_day = datetime.datetime.today().weekday()
+			fobj = frappe.get_doc("Dosage",mobj.dosage)
+			options = json.loads(mobj.options)
+			
+			if mobj.dosage == "Weekly":
+				if options['day'] != week[now_day]:
+					sms_send = False 
+	
+			if sms_send:
+				for d in fobj.get('dosage_fields'):
+					time_diff = 0
+					if d.fieldtype == "time":
+						time_now = datetime.datetime.strftime(datetime.datetime.now(),'%H:%M')
+						if options[d.fieldname]:
+							med_time = datetime.datetime.strptime(options[d.fieldname], '%I:%M %p').strftime('%H:%M')
+							time_diff = cint((datetime.datetime.strptime(time_now,'%H:%M')-datetime.datetime.strptime(med_time,'%H:%M')).total_seconds()/60)
+									
+					elif d.fieldname == "datetime":
+						now_time = datetime.datetime.strftime(datetime.datetime.now(), '%Y-%m-%d %H:%M:%S.%f')
+						now_time_str = datetime.datetime.strptime(now_time, '%Y-%m-%d %H:%M:%S.%f')
+						if options[d.fieldname]:
+							med_time = datetime.datetime.strptime(options[d.fieldname], '%Y-%m-%d %H:%M:%S.%f')
+							time_diff = cint((time_now-med_time).total_seconds()/60)
+						
+					if time_diff and (time_diff >= 0 and time_diff <= 6):
+						uexists = frappe.db.get_value("User",{"profile_id":mobj.profile_id},"name")
+						if uexists:
+							user = frappe.get_doc("User",uexists)
+							if user:
+								if frappe.db.get_value("Mobile Verification",{"mobile_no":user.contact,"mflag":1},"name"):
+									no_list = []
+									no_list.append(user.contact)
+									send_sms(no_list,msg=get_sms_template("medication",{"medication":mobj.get('medicine_name')}))
+						else:
+							data = search_profile_data_from_solr(mobj.profile_id)
+							if data and data['mobile']:
+								if frappe.db.get_value("Mobile Verification",{"mobile_no":data['mobile'],"mflag":1},"name"):
+									no_list = []
+									no_list.append(data['mobile'])
+									send_sms(no_list,msg=get_sms_template("medication",{"medication":mobj.get('medicine_name')}))
+		return "done"
 
 
 

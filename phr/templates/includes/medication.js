@@ -93,7 +93,7 @@ var Medications = inherit(ListView,{
 							me.update_list_view(r.message)
 							me.bind_save_event()
 							email_msg='Linked PHR Has Created Medication'
-							text_msg='Linked PHR Has Created Medication'
+							text_msg=sessionStorage.getItem('cname')+' Has Created Medication'
 							send_linkedphr_updates(email_msg,text_msg,"Medication")
 						}
 						else{

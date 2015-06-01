@@ -493,6 +493,9 @@ window.Events = inherit(ListView,{
 				me.res['pid'] = sessionStorage.getItem("pid")
 				me.res['dms_file_list'] = me.dms_file_list;
 				me.res['complaints'] = complaints_array;
+				if (sessionStorage.getItem("cid")!=sessionStorage.getItem("pid")){
+					me.res['cname'] = sessionStorage.getItem("cname")
+				}
 				frappe.call({
 					method:"phr.templates.pages.event.create_update_event",
 					args:{"data":JSON.stringify(me.res), "req_id": me.req_id},

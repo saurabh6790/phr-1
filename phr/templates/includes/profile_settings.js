@@ -303,11 +303,11 @@ var ProfileSettings = inherit(RenderFormFields, {
 			if (validate_mobile(res['mobile']) && validate_email(res['email'])) {
 				frappe.call({
 					method:'phr.templates.pages.profile.check_existing',
-					args:{'email':res['email']},
+					args:{'email':res['email'],"mobile":res["mobile"]},
 					callback: function(r) {
 						// console.log(r)
 						if (r.message){
-							frappe.msgprint('Email Already Used')
+							frappe.msgprint(r.message.msg)
 						}
 						else{
 							// console.log(['delink_phr', meta_dic])

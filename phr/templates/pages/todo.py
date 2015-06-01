@@ -38,36 +38,29 @@ def notify_to_do():
 	print "########## TODO #############"
 	print profile_ids
 	if profile_ids:
-		email_list=[]
-		sms_recipients=[]
 		msg={}
 		email_msg={}
 		for profile in profile_ids:
-			pobj=frappe.get_doc('User',frappe.db.get_value("User",{"profile_id":profile['profile_id']},"name"))
-			todoobj=frappe.get_doc('ToDo',profile['name'])
-			if pobj:
-				sms_recipients.append(pobj.contact)
-				email_list.append(pobj.name)
-				msg[pobj.contact]=get_sms_template("todo",{"to_do":todoobj.description})
-				email_msg[pobj.name]=todoobj.description
+			user = frappe.db.get_value("User",{"profile_id":profile['profile_id']},"name")
+			if user:
+				pobj = frappe.get_doc('User',user)
+				todoobj = frappe.get_doc('ToDo',profile['name'])
+				if pobj:
+					if frappe.db.get_value("Mobile Verification",{"mobile_no":pobj.contact,"mflag":1},"name"):
+						mob_no = []
+						mob_no.append(pobj.contact)
+						send_sms(mob_no,msg=get_sms_template("todo",{"to_do":todoobj.description}))
+					send_phrs_mail(pobj.name,"PHR:To Do Alert","templates/emails/todo.html",{"todo":todoobj.description,"name":pobj.first_name})
 			else:
-				data=search_profile_data_from_solr(profile)
-				if data['mobile']:
-					sms_recipients.append(data["mobile"])
-					msg[data['mobile']]=get_sms_template("todo",{"to_do":todoobj.description})
-				if data['email']:
-					email_list.append(data["email"])
-					email_msg[data["email"]]=todoobj.description
-		if sms_recipients:
-			for no in sms_recipients:
-				if frappe.db.get_value("Mobile Verification",{"mobile_no":no,"mflag":1},"name"):
-					mob_no=[]
-					mob_no.append(no)
-					send_sms(sms_recipients,msg=msg[no])
-		if email_list:
-			for email in email_list:
-				send_phrs_mail(email,"PHR:To Do Alert","templates/emails/todo.html",{"todo":email_msg[email]})
-
+				data = search_profile_data_from_solr(profile['profile_id'])
+				if data and data['mobile']:
+					if frappe.db.get_value("Mobile Verification",{"mobile_no":data['mobile'],"mflag":1},"name"):
+						mob_no = []
+						mob_no.append(data['mobile'])
+						send_sms(mob_no,msg=get_sms_template("todo",{"to_do":todoobj.description}))
+				if data and data['email']:
+					send_phrs_mail(data['email'],"PHR:To Do Alert","templates/emails/todo.html",{"todo":todoobj.description,"name":data["person_firstname"]})
+		
 def get_profile_ids():
 	profile_ids=frappe.db.sql("""select profile_id,name from 
 		`tabToDo` where profile_id 

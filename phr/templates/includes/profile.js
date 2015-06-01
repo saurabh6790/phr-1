@@ -313,7 +313,7 @@ var PatientDashboard = inherit(RenderFormFields, {
 	make_mv_entry:function(profile_id,mobile,user){
 		frappe.call({
 			method:'phr.templates.pages.profile.make_mv_entry',
-			args:{"mobile":mobile,"user":user,"profile_id":profile_id},
+			args:{"mobile":mobile,"profile_id":profile_id},
 			callback: function(r) {
 			}
 		})

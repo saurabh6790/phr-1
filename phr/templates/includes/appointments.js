@@ -70,9 +70,10 @@ var Appointments = inherit(ListView,{
 						NProgress.done();
 						if(r.message && !r.message['exe']){
 							me.update_list_view(r.message)
-							email_msg='Linked PHR Has Created Appointment'
-							text_msg='Linked PHR Has Created Appointment'
-							send_linkedphr_updates(email_msg,text_msg,"Appointment")
+							cname = sessionStorage.getItem("cname")
+							email_msg = cname+' Has Created Appointment'
+							text_msg = cname+' Has Created Appointment'
+							send_linkedphr_updates(email_msg,text_msg,"Appointment",cname)
 						}
 						else{
 							if(r.message['exe']){

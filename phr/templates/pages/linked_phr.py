@@ -42,30 +42,40 @@ def create_linkedphr(data):
 
 @frappe.whitelist(allow_guest=True)
 def create_profile_solr(data):
-	print data
-	request_type="POST"
-	url="%s/createProfile"%get_base_url()
-	barcode=get_barcode()
-	args=json.loads(data)
+	request_type = "POST"
+	url = "%s/createProfile"%get_base_url()
+	args = json.loads(data)
+	
+	if args['mobile'] and not not_duplicate_contact(args['mobile']):
+		return {"message_summary":"Contact Already Registered"}
+
+	barcode = get_barcode()
 	args["barcode"]=str(barcode)
 	data=json.dumps(args)
 	from phr.phr.phr_api import get_response
 	response=get_response(url,data,request_type)
 	res=json.loads(response.text)
 	if res and res.get('returncode')==101:
-		data=json.loads(data)
-		path=get_image_path(barcode,res['entityid'])
+		data = json.loads(data)
+		path = get_image_path(barcode,res['entityid'])
 		from phr.templates.pages.login import set_default_dashboard
 		set_default_dashboard(res['entityid'])		
-		args={"entityid":res.get('entityid'),"linking_id":data["linking_id"],"relationship":data["relationship"],"received_from":"Desktop"}
+		args = {"entityid":res.get('entityid'),"linking_id":data["linking_id"],"relationship":data["relationship"],"received_from":"Desktop"}
 		request_type="POST"
-		url="%s/linkprofile"%get_base_url()
+		url = "%s/linkprofile"%get_base_url()
 		from phr.phr.phr_api import get_response
-		response=get_response(url,json.dumps(args),request_type)
-		res=json.loads(response.text)
+		response = get_response(url,json.dumps(args),request_type)
+		res = json.loads(response.text)
 		update_lphr_barcode(path,res.get('entityid'))
 		return res
 
+@frappe.whitelist(allow_guest=True)
+def not_duplicate_contact(mobile):
+	if frappe.db.sql("""select count(*) from tabUser 
+		where contact = '%s' """%(mobile), as_list=1)[0][0] == 0:
+		return True
+	else:
+		return False
 
 def update_lphr_barcode(path,profile_id):
 	cie=frappe.db.get_value("LinkedPHR Images",{"profile_id":profile_id},"barcode")
