@@ -51,11 +51,6 @@ def create_event(data):
 	else:
 		response=get_response(url, json.dumps(event_data), request_type)
 		make_log(json.loads(response.text).get('entityid'),"Event","Create","Event Created")
-		if data.get('cname'):
-			text_msg = "%s Has Created Event,\n\n Team Healthsnapp"%data.get('cname')
-			email_msg = ""
-			from phr.templates.pages.profile import notify_about_linked_phrs
-			notify_about_linked_phrs(data.get('pid'),email_msg,text_msg,"Event",data.get('cname'))
 
 	return json.loads(response.text)
 
