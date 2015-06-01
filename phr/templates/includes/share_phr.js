@@ -214,10 +214,21 @@ $.extend(SharePhr.prototype,{
 				args:{"data":me.res},
 				callback:function(r){
 					NProgress.done();
-					frappe.msgprint(r.message)
+					frappe.msgprint(r.message.message_summary)
+					if (r.message.returncode != 0){
+						me.notify_provider(me.res,r.message)	
+					}
 				}
 			})
 		}
+	},
+	notify_provider:function(data,res){
+		frappe.call({
+			method:"phr.templates.pages.event.build_provider_notification",
+			args:{"res":data},
+			callback:function(r){
+			}
+		})
 	},
 	validate_form:function(){
   		var me=this;
