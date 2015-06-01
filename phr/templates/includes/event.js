@@ -504,10 +504,14 @@ window.Events = inherit(ListView,{
 						if(!r.message['exe']){
 							$('.breadcrumb li:last').remove()
 							NProgress.done();
+							console.log(["Saved", r.message.returncode])
 							if(r.message.returncode == 103 || r.message.returncode == 116){
 								me.dms_file_list = [];
 								me.open_form(r.message.entityid, $('[name="event_title"]').val(), me.profile_id, me.res, me.req_id);	
 								frappe.msgprint("Saved")
+								if(r.message.returncode == 116){
+									me.notify_about_update(me.res)
+								}
 							}
 							else{
 								frappe.msgprint(r.message.message_summary);
@@ -522,6 +526,16 @@ window.Events = inherit(ListView,{
 			else{
 				frappe.msgprint(validate['msg'])
 			}			
+		})
+	},
+	notify_about_update: function(data){
+		console.log("test")
+		frappe.call({
+			method:"phr.templates.pages.event.notify_about_update",
+			args:{"data":JSON.stringify(data)},
+			callback:function(r){
+				console.log("testing done")
+			}
 		})
 	},
 	validate_form:function(){
