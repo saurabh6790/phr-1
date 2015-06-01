@@ -218,12 +218,13 @@ var DiseaseMonitoring = inherit(RenderFormFields, {
 	share_data:function(d){
 		var me = this;
 		me.res['lphr_name'] = sessionStorage.getItem("cname")
+		console.log(me.selected_dm,$('.fixed-table-header').find('thead').html(),me.res,me.profile_id,$('[name="disease"]').val())
 		NProgress.start();
 		if(me.validate_sharing_modal()){
 			// console.log(["Testing RES Dictionary before frappe call", me.res])
 			frappe.call({
 				method:"phr.templates.pages.disease_monitoring.share_dm",
-				args:{'data':me.selected_dm, 'header': $('.fixed-table-header').find('thead').html(), 'share_info':me.res,
+				args:{'data':me.selected_dm, 'header': $('.table-striped').find('thead').html(), 'share_info':me.res,
 				 'profile_id':me.profile_id, 'disease':$('[name="disease"]').val()},
 				callback:function(r){
 					d.hide()
@@ -233,13 +234,27 @@ var DiseaseMonitoring = inherit(RenderFormFields, {
 					NProgress.done();
 					me.selected_dm = [];
 					// console.log(r)
-					frappe.msgprint(r.message)
+					frappe.msgprint(r.message.message_display)
+					if (r.message.returncode == 1){
+						me.notify_provider(me.res,me.profile_id);
+					}
+
 				}
 			})
 		}
 		else{
 			NProgress.done();
 		}
+	},
+	notify_provider:function(res,profile_id){
+		frappe.call({
+			"method":"phr.templates.pages.disease_monitoring.notify_provider_of_sharing",
+			"args":{"data":res,"profile_id":profile_id},
+			callback:function(r){
+				
+			}
+		})
+
 	},
 	validate_sharing_modal:function(){
   		var me=this;
