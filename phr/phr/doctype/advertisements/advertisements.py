@@ -58,7 +58,7 @@ def classify_method(adv_data):
 			send_adv_sms(advs)
 
 def get_contact_details(adv):
-	contact_list = frappe.db.sql("""select contact from tabUser where %(cond)s"""%{
+	contact_list = frappe.db.sql("""select contact from tabUser where contact is not null and %(cond)s"""%{
 			"cond": get_cond(adv)
 		},as_list=1)
 
