@@ -58,11 +58,11 @@ def update_event(data):
 	response = ''
 	request_type="POST"
 	url="%s/createupdateevent"%get_base_url()
-
+	owner = frappe.db.get_value('User', {'profile_id':data.get('profile_id')}, 'first_name')
 	event_data =	{
 			"entityid":data.get('entityid'),
 			"event_complaint_list":[],
-			"profile_owner_name": frappe.db.get_value('User', {'profile_id':data.get('profile_id')}, 'first_name'),
+			"profile_owner_name": owner if  owner else data.get("cname") ,
 			"status": "active",
 			"event_diseasemontoring": False,
 			"event_symptoms" :data.get('complaints'),
