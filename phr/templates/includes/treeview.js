@@ -1,9 +1,5 @@
 frappe.provide("templates/includes");
 frappe.provide("frappe");
-{% include "templates/includes/inherit.js" %}
-{% include "templates/includes/utils.js" %}
-{% include "templates/includes/form_generator.js" %}
-{% include "templates/includes/uploader.js" %}
 
 var TreeView = function(){
 	this.wrapper = ""

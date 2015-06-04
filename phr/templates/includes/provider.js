@@ -1,7 +1,4 @@
 frappe.provide("templates/includes");
-{% include "templates/includes/utils.js" %}
-{% include "templates/includes/form_generator.js" %}
-{% include "templates/includes/custom_dialog.js" %}
 {% include "templates/includes/linked_phr_updates.js" %}
 
 var Provider = inherit(RenderFormFields, {

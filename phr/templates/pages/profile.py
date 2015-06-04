@@ -293,7 +293,7 @@ def update_user_image(path, profile_id):
 		frappe.local.cookie_manager.set_cookie("user_image", path or "")
 		# return "Image Uploaded Successfully"
 	else:
-		cie=frappe.db.get_value("LinkedPHR Images",{"profile_id":profile_id},"profile_image")
+		cie = frappe.db.get_value("LinkedPHR Images",{"profile_id":profile_id},"profile_image")
 		if cie:
 			frappe.db.sql("""update `tabLinkedPHR Images` 
 				set profile_image='%s' where profile_id='%s'"""%(path,profile_id))
@@ -421,31 +421,33 @@ def get_enabled_dashboard(profile_id):
 
 @frappe.whitelist(allow_guest=True)
 def get_data_for_middle_section(profile_id):
-	db_list=get_enabled_dashboard(profile_id)
+	print "###############################"
+	print frappe._dict()
+	db_list = get_enabled_dashboard(profile_id)
 	if db_list:
-		obj=db_list[0]
-		res_list=[]
+		obj = db_list[0]
+		res_list = []
 		if obj.get('disease_monitoring')==1:
-			data=get_diseases()
+			data = get_diseases()
 			if data:
-				res_list=build_dm_data(data,res_list)
+				res_list = build_dm_data(data,res_list)
 
-		if obj.get('visits')==1 or obj.get('events')==1:
-			data=get_data_from_solr(profile_id)
+		if obj.get('visits') == 1 or obj.get('events') == 1:
+			data = get_data_from_solr(profile_id)
 			#if data:
-			res_list=build_response(data,obj,res_list,profile_id) 
+			res_list = build_response(data,obj,res_list,profile_id) 
 		
-		if obj.get('appointments')==1:
-			data=get_appointments(profile_id)
-			res_list=build_response_for_appointments(data,obj,res_list)
+		if obj.get('appointments') == 1:
+			data = get_appointments(profile_id)
+			res_list = build_response_for_appointments(data,obj,res_list)
 		
-		if obj.get('medications')==1:
-			data=get_medications(profile_id)
-			res_list=build_response_for_medications(data,obj,res_list)
+		if obj.get('medications') == 1:
+			data = get_medications(profile_id)
+			res_list = build_response_for_medications(data,obj,res_list)
 
-		if obj.get('messages')==1:
-			data=get_logs(profile_id)
-			res_list=build_response_for_logs(data,obj,res_list)		
+		if obj.get('messages') == 1:
+			data = get_logs(profile_id)
+			res_list = build_response_for_logs(data,obj,res_list)		
 
 		return {
 				"res_list":res_list,
@@ -559,7 +561,7 @@ def build_event_data(obj,profile_id):
      		"Event Name", 
      		"Date", 
      		"Complaints", 
-     		"Complaints Desc"
+     		"Diagnosis"
     	]
    ]	
    #datetime.datetime.fromtimestamp(cint(visit['event_date'])/1000.0)
@@ -633,32 +635,37 @@ def build_logs_data(data):
 @frappe.whitelist(allow_guest=True)
 def get_user_details(profile_id=None):
 	print profile_id
+	args = {} 
 	if profile_id:
-		user = frappe.db.get_value("User", { "profile_id" : profile_id}, "name")
-		print user
-		if user:
-			user = frappe.get_doc("User", user)
+		user_name = frappe.db.get_value("User", { "profile_id" : profile_id}, "name")
+		print user_name
+		if user_name:
+			user = frappe.get_doc("User",user_name)
+			args.update({
+				"name":"{0} {1}".format(user.first_name,user.last_name),
+				"contact":user.contact,
+				"barcode":user.barcode or "",
+				"user_image":user.user_image or "",
+				"emergency_contact":user.emergemcy_contactno or "",
+				"blood_group":user.blood_group or "",
+				"profile_id":profile_id
+			})
+		else:
+			data = search_profile_data_from_solr(profile_id)
+			barcode = frappe.db.get_value("LinkedPHR Images",{"profile_id":profile_id},"barcode")
+			user_image = frappe.db.get_value("LinkedPHR Images",{"profile_id":profile_id},"profile_image")  
+			args.update({
+				"name":"{0} {1}".format(data["person_firstname"],data["person_lastname"]),
+				"contact":data["mobile"],
+				"barcode":barcode or "",
+				"user_image":user_image or "",
+				"emergency_contact":data["emergemcy_contactno"] or "",
+				"blood_group":data["blod_group"] or "",
+				"profile_id":profile_id
+			})
 
-	else:
-		user=frappe.get_doc("User",frappe.session.user)
-
-	if user:
-		name=user.first_name+' '+cstr(user.last_name)
-		contact=user.contact
-		barcode=user.barcode or ""
-		return{
-			"name":name,
-			"contact":contact,
-			"barcode":barcode,
-			"user_image":user.user_image or "",
-			"emergency_contact":user.emergemcy_contactno or "",
-			"blood_group":user.blood_group or ""
-		}
-	else:
-		return {
-			"error": "Requsted User is dissabled or removed"
-		}
-
+	return args
+	
 
 @frappe.whitelist(allow_guest=True)
 def get_advertisements(profile_id=None):
@@ -679,7 +686,7 @@ def get_advertisements(profile_id=None):
 
 @frappe.whitelist(allow_guest=True)
 def get_states():
-	states=frappe.db.sql("""select name from `tabState`""",as_list=1)
+	states = frappe.db.sql("""select name from `tabState`""",as_list=1)
 	return states
 
 
@@ -742,12 +749,14 @@ def get_patients_ids(doctype, txt, searchfield, start, page_len, filters):
 	if res['returncode']==120:
 		for data in res['list']:
 			profile_list.append([data['entityid'],data['email'],data['person_firstname']])
+
 	return profile_list
 
 @frappe.whitelist(allow_guest=True)
 def check_existing(email,mobile):
 	if frappe.db.sql("""select email from `tabUser`  where enabled=1 and email='%s'"""%(email)):
 		return {"msg":"Email Already Used"}
+	
 	elif frappe.db.sql("""select contact from `tabUser`  where enabled=1 and contact='%s'"""%(mobile)):
 		return {"msg":"Mobile No already Used"}
 
@@ -801,7 +810,7 @@ def get_pdf(profile_id,options=None):
 		'no-outline': None
 	})
 
-	user=get_user_details(profile_id)
+	user = get_user_details(profile_id)
 	html="""<html lang="en">
 	<head>
 	<title>Healthsnapp</title> 
@@ -814,7 +823,7 @@ def get_pdf(profile_id,options=None):
 	<div class="card-top">
 	<div class="card-top-left">
 	<p class="patient-name">%(name)s</p>
-	<p ><span>1429</span><span>0071</span><span>10076</span></p>
+	<p ><span>%(profile_id)s</span></p>
 	<p class="patient-blood-grp">Blood Group:  %(blood_group)s</p>
 	<p class="patient-contact">Contact: %(contact)s</p>
 	<p class="patient-emergncy-contact">Emergency Contact: %(emergency_contact)s</p>

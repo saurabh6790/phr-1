@@ -24,6 +24,10 @@ frappe.provide("frappe");
   ClassName.prototype.init(wrapper,name_of_json_file,entityid,operation_entity)
 */
 $(document).ready(function () {
+	if ((/provider/.test(self.location.href)) && frappe.get_cookie("user_type") != 'provider'){
+		frappe.msgprint("Not Allowed")
+		window.location.href = "/patient";
+	}
 	if(!window.full_name) {
 		if(localStorage) {
 			localStorage.setItem("last_visited",
@@ -45,7 +49,7 @@ $(document).ready(function () {
 			$('.save_controller').hide()
 			$('.new_controller').hide()
 			NProgress.start();
-			profile_id=sessionStorage.getItem("pid")
+			profile_id = sessionStorage.getItem("pid")
 			$('#linkedphr').show()
 			sessionStorage.setItem("cid",profile_id)
 			$('#profile').attr('data-name',profile_id)

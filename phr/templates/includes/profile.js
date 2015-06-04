@@ -1,11 +1,6 @@
 frappe.provide("templates/includes");
-{% include "templates/includes/utils.js" %}
-{% include "templates/includes/log.js" %}
-{% include "templates/includes/form_generator.js" %}
 {% include "templates/includes/linked_phr_updates.js" %}
 {% include "templates/includes/html_viewer.js" %}
-{% include "templates/includes/uploader.js" %}
-{% include "templates/includes/custom_dialog.js" %}
 
 
 var PatientDashboard = inherit(RenderFormFields, {
