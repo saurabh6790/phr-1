@@ -1,6 +1,4 @@
 frappe.provide("templates/includes");
-{% include "templates/includes/utils.js" %}
-{% include "templates/includes/form_generator.js" %}
 
 var ListView = inherit(RenderFormFields,{
 	init: function(wrapper, args){
