@@ -1,5 +1,3 @@
-{% include "templates/includes/utils.js" %}
-{% include "templates/includes/custom_dialog.js" %}
 
 
 window.MobileVerifier = function(){

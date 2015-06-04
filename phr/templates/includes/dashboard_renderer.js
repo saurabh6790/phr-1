@@ -1,7 +1,4 @@
 frappe.provide("templates/includes");
-{% include "templates/includes/utils.js" %}
-{% include "templates/includes/form_generator.js" %}
-
 
 function render_dashboard(profile_id){
 	function render_providers(profile_id){
@@ -145,6 +142,7 @@ function render_dashboard(profile_id){
     }
     function render_ed(data){
     	$wrap=$('#ed')
+    	$wrap.empty()
     	pro_data={"name": data['name'], "contact": data["contact"],"barcode":data["barcode"],"emer_con":data['emergency_contact'],"blood_group":data['blood_group']}
     	sessionStorage.setItem("barcode",pro_data["barcode"])
     	$(repl_str('<p><span class="light">Name:</span> <span class="green">%(name)s</span></p>\
@@ -183,6 +181,7 @@ function render_dashboard(profile_id){
 			render_providers($(this).attr('data-name'))
 			$('#linkedphr').hide()
 			render_middle_section($(this).attr('data-name'))
+			render_emer_details($(this).attr('data-name'))
 			$('#profile').attr('data-name',$(this).attr('data-name'))
 		})
 	

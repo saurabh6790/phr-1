@@ -1,0 +1,13 @@
+{
+	"js/phr-web.min.js": [
+		"templates/includes/form_generator.js",
+		"templates/includes/utils.js",
+		"templates/includes/list_view.js",
+		"templates/includes/inherit.js",
+		"templates/includes/uploader.js",
+		"templates/includes/treeview.js",
+		"templates/includes/list.js",
+		"templates/includes/custom_dialog.js",
+		"templates/includes/thumbnail.js"
+	]
+}

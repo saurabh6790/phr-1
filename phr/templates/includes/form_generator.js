@@ -1,5 +1,5 @@
 frappe.provide("templates/includes");
-{% include "templates/includes/utils.js" %}
+
 frappe.require("assets/frappe/js/lib/jquery/jquery.ui.min.js");
 frappe.require("assets/frappe/js/lib/jquery/bootstrap_theme/jquery-ui.selected.css");
 frappe.require("assets/frappe/js/lib/jquery/bootstrap_theme/jquery-ui.css");
