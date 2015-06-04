@@ -58,11 +58,11 @@ def update_event(data):
 	response = ''
 	request_type="POST"
 	url="%s/createupdateevent"%get_base_url()
-
+	owner = frappe.db.get_value('User', {'profile_id':data.get('profile_id')}, 'first_name')
 	event_data =	{
 			"entityid":data.get('entityid'),
 			"event_complaint_list":[],
-			"profile_owner_name": frappe.db.get_value('User', {'profile_id':data.get('profile_id')}, 'first_name'),
+			"profile_owner_name": owner if  owner else data.get("cname") ,
 			"status": "active",
 			"event_diseasemontoring": False,
 			"event_symptoms" :data.get('complaints'),
@@ -94,13 +94,17 @@ def update_event(data):
 	else:
 		response=get_response(url, json.dumps(event_data), request_type)
 		make_log(data.get('entityid'),"Event","Update","Event Updated")
-		if data.get('cname'):
+
+	return json.loads(response.text)
+
+@frappe.whitelist()
+def notify_about_update(data):
+	data = json.loads(data)
+	if data.get('cname'):
 			text_msg = "%s Has Updated Event,\n\n Team Healthsnapp"%data.get('cname')
 			email_msg = ""
 			from phr.templates.pages.profile import notify_about_linked_phrs
 			notify_about_linked_phrs(data.get('pid'),email_msg,text_msg,"Event",data.get('cname'))
-
-	return json.loads(response.text)
 
 def clear_dms_list(dms_file_list):
 	import os
@@ -349,6 +353,8 @@ def notify_provider(provider_id,patient,template,args,email_msg=None):
 		if provider.email and email_msg:
 			from frappe.utils.email_lib import sendmail
 			sendmail(provider.email, subject="HealthSnapp Updates:Data Shared With You", msg=email_msg)
+			
+		return "done"
 
 def make_sharing_request(event_data, data, files_list=None, event_dict=None, sub_event_count=None):
 	req = frappe.new_doc('Shared Requests')

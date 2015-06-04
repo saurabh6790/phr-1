@@ -58,7 +58,7 @@ def classify_method(adv_data):
 			send_adv_sms(advs)
 
 def get_contact_details(adv):
-	contact_list = frappe.db.sql("""select contact from tabUser where %(cond)s"""%{
+	contact_list = frappe.db.sql("""select contact from tabUser where contact is not null and %(cond)s"""%{
 			"cond": get_cond(adv)
 		},as_list=1)
 
@@ -71,8 +71,8 @@ def get_cond(adv):
 	return "access_type in ('Patient', 'Provider')" if adv.get("notification_to") == 'Both' else "access_type = '%s'"%adv.get("notification_to")
 
 def send_adv_email(adv):
-	send_phrs_mail(['saurabh.p@indictranstech.com', 'anand.pawar@indictranstech.com'], adv.get("title"), "templates/emails/adv_notify.html", adv)
+	send_phrs_mail(adv.get("notify_to"), adv.get("title"), "templates/emails/adv_notify.html", adv)
 
 def send_adv_sms(adv):
 	sms = get_sms_template("Advertisement Notification", adv)
-	send_sms(['9773595372', '9860733789'],sms)
+	send_sms(adv.get("notify_to"),sms)

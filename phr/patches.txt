@@ -1,2 +1,3 @@
 phr.patches.create_mobile_verification
 phr.patches.update_contact_nos_vd
+phr.patches.update_daily_medication_dosage_option

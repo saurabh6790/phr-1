@@ -166,14 +166,15 @@ $.extend(RenderFormFields.prototype,{
 			<div class="col-xs-8"><div class="control-input ">\
 			<input type="text" class="form-control" placeholder="%(placeholder)s" \
 			name="%(fieldname)s" value="%(value)s" data-toggle="tooltip" \
-			data-placement="top" title="%(label)s" aria-describedby="basic-addon2">\
+			data-placement="top" title="%(label)s" aria-describedby="basic-addon2" maxlength="10">\
 			<span id="valid"></span></div></div></div></div>', field_meta)).appendTo($(this.column))
 		
 		var val = field_meta['value'];
 		if(field_meta['required']==1){
 		    $input.find("input").prop('required',true)
-		    $input.find("label").addClass('required')
-			$('<style>.required:after{content:" *";color:red;font-size:20px;}</style>').appendTo($input)
+		    // $input.find("label").addClass('required')
+			// $('<style>.required:after{content:" *";color:red;font-size:20px;}</style>').appendTo($input)
+			$('<span class="symbol required"></span>').appendTo($input.find("label"));
 			/*if (!val){
 				$input.find("input").css({"border": "1px solid #999","border-color": "red" });
 			}*/	
@@ -201,7 +202,8 @@ $.extend(RenderFormFields.prototype,{
 		if(field_meta['required']==1){
 		    $input.find("input").prop('required',true)
 		    $input.find("label").addClass('required')
-			$('<style>.required:after{content:" *";color:red;font-size:20px;}</style>').appendTo($input)
+			// $('<style>.required:after{content:" *";color:red;font-size:20px;}</style>').appendTo($input)
+			$('<span class="symbol required"></span>').appendTo($input.find("label"));
 			/*if (!val){
 				$input.find("input").css({"border": "1px solid #999","border-color": "red" });
 			}*/	
@@ -244,7 +246,8 @@ $.extend(RenderFormFields.prototype,{
 		if(field_meta['required']==1){
 			$input.find("input").prop('required',true)
 			$input.find("label").addClass('required')
-			$('<style>.required:after{content:" *";color:red;font-size:20px;}</style>').appendTo($input)
+			// $('<style>.required:after{content:" *";color:red;font-size:20px;}</style>').appendTo($input)
+			$('<span class="symbol required"></span>').appendTo($input.find("label"));
 			/*if (!val){
 				$input.find("input").css({"border": "1px solid #999","border-color": "red" });
 			}*/	
@@ -259,9 +262,9 @@ $.extend(RenderFormFields.prototype,{
 		$input = $(repl_str('<div class="form-horizontal frappe-control" style="max-width: 600px;margin-top:10px;">\
 			<div class="form-group row" style="margin: 0px">\
 			<label class="control-label col-xs-4" style="padding-right: 0px;">%(label)s</label>\
-			<label class="col-xs-8 weight_mngnt"><div class="control-input">\
+			<div class="col-xs-8 weight_mngnt"><div class="control-input">\
 			<select type="text" class="form-control" data-toggle="tooltip" \
-			data-placement="top" title="%(label)s" name="%(fieldname)s" ></div></label></div></div>', field_meta)).appendTo($(this.column))
+			data-placement="top" title="%(label)s" name="%(fieldname)s" ></div></div></div></div>', field_meta)).appendTo($(this.column))
 
 
 		if (typeof(field_meta['options']) === "string"){
@@ -306,7 +309,8 @@ $.extend(RenderFormFields.prototype,{
 		if(field_meta['required']==1){
 			$input.find("select").prop('required',true)
 			$input.find(".control-label").addClass('required')
-			$('<style>.required:after{content:" *";color:red;font-size:20px;}</style>').appendTo($input)
+			// $('<style>.required:after{content:" *";color:red;font-size:20px;}</style>').appendTo($input)
+			$('<span class="symbol required"></span>').appendTo($input.find("label"));
 			/*if (!val){
 				$input.find("select").css({"border": "1px solid #999","border-color": "red" });
 			}*/
@@ -364,8 +368,9 @@ $.extend(RenderFormFields.prototype,{
 		var val = field_meta['value'];
 		if(field_meta['required']==1){
 			$input.find("input").prop('required',true)
-			$input.find("label").addClass('required')
-			$('<style>.required:after{content:" *";color:red;font-size:20px;}</style>').appendTo($input)
+			// $input.find("label").addClass('required')
+			// $('<style>.required:after{content:" *";color:red;font-size:20px;}</style>').appendTo($input)
+			$('<span class="symbol required"></span>').appendTo($input.find("label"));
 			/*if (!val){
 				$input.find("input").css({"border": "1px solid #999","border-color": "red" });
 			}*/
@@ -401,7 +406,7 @@ $.extend(RenderFormFields.prototype,{
 							<label class="control-label col-xs-4" style="padding-right: 0px;">%(label)s</label>\
 							<div class="col-xs-8">\
 								<div class="control-input">\
-									<textarea type="text" class="form-control" \
+									<textarea maxlength="160" type="text" class="form-control" \
 										placeholder="%(placeholder)s" name="%(fieldname)s"\
 										data-toggle="tooltip" data-placement="top" title="%(label)s"\
 										aria-describedby="basic-addon2"></textarea>\
@@ -413,8 +418,9 @@ $.extend(RenderFormFields.prototype,{
 		var val = field_meta['value'];
 		if(field_meta['required']==1){
 			$input.find("textarea").prop('required',true)
-			$input.find("label").addClass('required')
-			$('<style>.required:after{content:" *";color:red;font-size:20px;}</style>').appendTo($input)
+			// $input.find("label").addClass('required')
+			// $('<style>.required:after{content:" *";color:red;font-size:20px;}</style>').appendTo($input)
+			$('<span class="symbol required"></span>').appendTo($input.find("label"));
 			/*if (!val){
 				$input.find("textarea").css({"border": "1px solid #999","border-color": "red" });
 			}*/
@@ -480,8 +486,9 @@ $.extend(RenderFormFields.prototype,{
 		var val = field_meta['value'];
 		if(field_meta['required']==1){
 			$input.find("input").prop('required',true);
-			$input.find("label").addClass('required')
-			$('<style>.required:after{content:" *";color:red;font-size:20px;}</style>').appendTo($input)
+			// $input.find("label").addClass('required')
+			$('<span class="symbol required"></span>').appendTo($input.find("label"));
+			// $('<style>.required:after{content:" *";color:red;font-size:20px;}</style>').appendTo($input)
 			/*if (!val){
 				$input.find("input").css({"border": "1px solid #999","border-color": "red" });	
 			}*/
@@ -527,8 +534,9 @@ $.extend(RenderFormFields.prototype,{
 			}
 		if(field_meta['required']==1){
 			$input.find("input").prop('required',true);
-			$input.find("label").addClass('required')
-			$('<style>.required:after{content:" *";color:red;font-size:20px;}</style>').appendTo($input)
+			// $input.find("label").addClass('required')
+			// $('<style>.required:after{content:" *";color:red;font-size:20px;}</style>').appendTo($input)
+			$('<span class="symbol required"></span>').appendTo($input.find("label"));
 		}
 		if(field_meta['readonly']==1){
 			$input.find("input").prop('disabled',true)
@@ -573,8 +581,9 @@ $.extend(RenderFormFields.prototype,{
 
 		if(field_meta['required']==1){
 			$input.find("input").prop('required',true);
-			$input.find("label").addClass('required')
-			$('<style>.required:after{content:" *";color:red;font-size:20px;}</style>').appendTo($input)
+			// $input.find("label").addClass('required')
+			// $('<style>.required:after{content:" *";color:red;font-size:20px;}</style>').appendTo($input)
+			$('<span class="symbol required"></span>').appendTo($input.find("label"));
 			/*if (!val){
 				$input.find("input").css({"border": "1px solid #999","border-color": "red" });	
 			}*/
@@ -610,8 +619,9 @@ $.extend(RenderFormFields.prototype,{
 */
 		if(field_meta['required']==1){
 			$input.find("input").prop('required',true);
-			$input.find("label").addClass('required')
-			$('<style>.required:after{content:" *";color:red;font-size:20px;}</style>').appendTo($input)
+			// $input.find("label").addClass('required')
+			// $('<style>.required:after{content:" *";color:red;font-size:20px;}</style>').appendTo($input)
+			$('<span class="symbol required"></span>').appendTo($input.find("label"));
 			/*if (!val){
 				$input.find("input").css({"border": "1px solid #999","border-color": "red" });	
 			}*/

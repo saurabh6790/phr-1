@@ -154,7 +154,7 @@ def notify_medications():
 def get_medictions_to_notify():
 	med_list=frappe.db.sql_list("""select name from 
 		`tabMedication` 
-		where status='Active' and now() 
+		where status='Active' and CURDATE()
 		between from_date_time
 		and to_date_time""")
 	return med_list
@@ -190,14 +190,14 @@ def fetch_data_from_medications(med_list,recipient_list):
 					time_diff = 0
 					if d.fieldtype == "time":
 						time_now = datetime.datetime.strftime(datetime.datetime.now(),'%H:%M')
-						if options[d.fieldname]:
+						if options.get(d.fieldname):
 							med_time = datetime.datetime.strptime(options[d.fieldname], '%I:%M %p').strftime('%H:%M')
 							time_diff = cint((datetime.datetime.strptime(time_now,'%H:%M')-datetime.datetime.strptime(med_time,'%H:%M')).total_seconds()/60)
 									
 					elif d.fieldname == "datetime":
 						now_time = datetime.datetime.strftime(datetime.datetime.now(), '%Y-%m-%d %H:%M:%S.%f')
 						now_time_str = datetime.datetime.strptime(now_time, '%Y-%m-%d %H:%M:%S.%f')
-						if options[d.fieldname]:
+						if options.get(d.fieldname):
 							med_time = datetime.datetime.strptime(options[d.fieldname], '%Y-%m-%d %H:%M:%S.%f')
 							time_diff = cint((time_now-med_time).total_seconds()/60)
 						

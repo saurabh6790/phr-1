@@ -158,8 +158,7 @@ function render_dashboard(profile_id){
 		$wrap=$('#clphr')
 		meta= data
 		meta_dic={}
-		sessionStorage.setItem("lphrs",data["list_size"])
-		//<img style="border-radius: 4px" src="'+r.message["image"]+'" title="'+name+'" alt="'+name+'">
+		sessionStorage.setItem("lphrs",data.length)
 		$.each(meta,function(i,data){
 			data["gender"]=class_mapper[data["gender"]]
 			$(repl_str('<li><a nohref class="v_lphr %(entityid)s" data-name=%(entityid)s>\
@@ -167,9 +166,6 @@ function render_dashboard(profile_id){
 				</div>\
 				<div class="item-inner"><span class="title cn">%(person_firstname)s %(person_lastname)s</span></div>\
 				</div></a></li>',data)).appendTo($wrap)
-			/*$(repl_str('<a class="list-group-item-side v_lphr %(entityid)s" data-name=%(entityid)s>\
-			%(person_firstname)s %(person_lastname)s</a>\
-			</div>', data)).appendTo($wrap)*/
 		})
 		$(".v_lphr").unbind("click").click(function(){
 			var name=$(this).find('.cn').html()
