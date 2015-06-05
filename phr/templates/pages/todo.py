@@ -4,7 +4,7 @@ from erpnext.setup.doctype.sms_settings.sms_settings import send_sms
 from frappe.utils.email_lib import sendmail
 import json
 from phr.templates.pages.profile import search_profile_data_from_solr
-from phr.templates.pages.patient import send_phrs_mail,get_formatted_date_time,get_sms_template
+from phr.templates.pages.patient import send_phrs_mail,get_formatted_date_time,get_sms_template,send_phr_sms
 
 
 @frappe.whitelist()
@@ -42,24 +42,27 @@ def notify_to_do():
 		email_msg={}
 		for profile in profile_ids:
 			user = frappe.db.get_value("User",{"profile_id":profile['profile_id']},"name")
+			todoobj = frappe.get_doc('ToDo',profile['name'])
+			msgg = get_sms_template("todo",{"to_do":todoobj.description})
 			if user:
 				pobj = frappe.get_doc('User',user)
-				todoobj = frappe.get_doc('ToDo',profile['name'])
-				if pobj:
-					if frappe.db.get_value("Mobile Verification",{"mobile_no":pobj.contact,"mflag":1},"name"):
-						mob_no = []
-						mob_no.append(pobj.contact)
-						send_sms(mob_no,msg=get_sms_template("todo",{"to_do":todoobj.description}))
-					send_phrs_mail(pobj.name,"PHR:To Do Alert","templates/emails/todo.html",{"todo":todoobj.description,"name":pobj.first_name})
+				send_phr_sms(pobj.contact,msg=msgg)
+				send_phrs_mail(pobj.name,"PHR:To Do Alert","templates/emails/todo.html",{"todo":todoobj.description,"name":pobj.first_name})
 			else:
 				data = search_profile_data_from_solr(profile['profile_id'])
-				if data and data['mobile']:
-					if frappe.db.get_value("Mobile Verification",{"mobile_no":data['mobile'],"mflag":1},"name"):
-						mob_no = []
-						mob_no.append(data['mobile'])
-						send_sms(mob_no,msg=get_sms_template("todo",{"to_do":todoobj.description}))
-				if data and data['email']:
-					send_phrs_mail(data['email'],"PHR:To Do Alert","templates/emails/todo.html",{"todo":todoobj.description,"name":data["person_firstname"]})
+				
+				if data:
+					child = data['childProfile']
+					if child['mobile'] and frappe.db.get_value("Mobile Verification",{"mobile_no":child['mobile'],"mflag":1},"name"):
+						send_phr_sms(child['mobile'],msg=msgg)
+					else:
+						parent = data['parentProfile']
+						send_phr_sms(parent['mobile'],msg=msgg)
+					
+					if child['email']:
+						send_phrs_mail(child['email'],"PHR:To Do Alert","templates/emails/todo.html",{"todo":todoobj.description,"name":data["person_firstname"]})
+					else:
+						send_phrs_mail(parent['email'],"PHR:To Do Alert","templates/emails/todo.html",{"todo":todoobj.description,"name":data["person_firstname"]})	
 		
 def get_profile_ids():
 	profile_ids=frappe.db.sql("""select profile_id,name from 

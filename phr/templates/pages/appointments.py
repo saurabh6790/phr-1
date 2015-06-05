@@ -2,7 +2,7 @@ import frappe
 import json
 import os 
 from frappe.utils import get_site_path, get_hook_method, get_files_path, get_site_base_path,cstr
-from phr.templates.pages.patient import get_data_to_render,get_formatted_date_time,get_sms_template
+from phr.templates.pages.patient import get_data_to_render,get_formatted_date_time,get_sms_template,send_phr_sms
 import datetime
 from phr.phr.doctype.phr_activity_log.phr_activity_log import make_log
 from erpnext.setup.doctype.sms_settings.sms_settings import send_sms
@@ -89,28 +89,22 @@ def send_notification(profile_list):
 	print "##########Appointments#############"
 	print profile_list
 	if profile_list:
-		email_list=[]
-		sms_recipients=[]
 		msg={}
 		for profile in profile_list:
 			user = frappe.db.get_value("User",{"profile_id":profile['profile_id']},"name")
+			msgg = get_sms_template("appointments",{"doctor_name":profile['provider_name'],"appointment_time":profile['time']})
 			if user:
-				pobj=frappe.get_doc('User',user)
-				apobj=frappe.get_doc('Appointments',profile['name'])
-				if pobj:
-					if frappe.db.get_value("Mobile Verification",{"mobile_no":pobj.contact,"mflag":1},"name"):
-						mob_no=[]
-						mob_no.append(pobj.contact)
-						msgg = get_sms_template("appointments",{"doctor_name":profile['provider_name'],"appointment_time":profile['time']})
-						print msgg
-						send_sms(mob_no,msg=msgg)
-					
+				pobj = frappe.get_doc('User',user)
+				send_phr_sms(pobj.contact,msg=msgg)
 			else:
 				data = search_profile_data_from_solr(profile['profile_id'])
-				if data and data['mobile']:
-					mob_no=[]
-					mob_no.append(data['mobile'])
-					send_sms(mob_no,msg=get_sms_template("appointments",{"doctor_name":profile['provider_name'],"appointment_time":profile['time']}))
+				if data:
+					child = data['childProfile']
+					parent = data['parentProfile']
+					if child['mobile'] and frappe.db.get_value("Mobile Verification",{"mobile_no":child['mobile'],"mflag":1},"name"):
+						send_phr_sms(child['mobile'],msg=msgg)
+					else:
+						send_phr_sms(parent['mobile'],msg=msgg)		
 		
 		
 

@@ -109,9 +109,9 @@ def get_url(data):
 """
 @frappe.whitelist(allow_guest=True)
 def get_base_url():
-	# return "http://192.168.5.18:9090/phr-api/"
+	return "http://192.168.5.18:9090/phr-api/"
 	#return "http://88.198.52.49:7974/phr-api/"
-	return "http://115.113.66.90:8989/phr-api/"
+	#return "http://115.113.66.90:8989/phr-api/"
 
 """
 Method to get name of service in solr database.contains dictionary or map.
@@ -175,4 +175,13 @@ def get_sms_template(name,args):
 			new = cstr(args.get(key))
 			template = template.replace(old, new)
 		return template
+
+@frappe.whitelist(allow_guest=True)
+def send_phr_sms(mobile,msg):
+	from erpnext.setup.doctype.sms_settings.sms_settings import send_sms
+	if frappe.db.get_value("Mobile Verification",{"mobile_no":mobile,"mflag":1},"name"):
+		no_list = []
+		no_list.append(mobile)
+		frappe.errprint("Sending SMS.......")
+		send_sms(no_list,msg=msg)
 
