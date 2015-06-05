@@ -8,7 +8,7 @@ from phr.templates.pages.utils import formatted_date,get_sms_template
 import datetime
 from phr.phr.doctype.phr_activity_log.phr_activity_log import make_log
 from erpnext.setup.doctype.sms_settings.sms_settings import send_sms
-from phr.templates.pages.profile import search_profile_data_from_solr
+from phr.templates.pages.dashboard import search_profile_data_from_solr
 
 @frappe.whitelist(allow_guest=True)
 def get_medication_data(data):

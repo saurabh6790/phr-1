@@ -3,7 +3,7 @@
 
 from __future__ import unicode_literals
 import frappe
-from phr.templates.pages.profile import get_linked_phrs
+from phr.templates.pages.dashboard import get_linked_phrs
 
 
 def execute(filters=None):
