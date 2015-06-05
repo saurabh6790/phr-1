@@ -3,10 +3,10 @@ import json
 import os 
 from frappe.utils import getdate, date_diff, nowdate, get_site_path, get_hook_method, get_files_path, \
 		get_site_base_path, cstr, cint, today
-from phr.templates.pages.patient import get_data_to_render
+from phr.templates.pages.form_generator import get_data_to_render
 from phr.phr.phr_api import get_response
 import datetime
-from phr.templates.pages.patient import get_base_url
+from phr.templates.pages.utils import get_base_url
 from phr.phr.doctype.phr_activity_log.phr_activity_log import make_log
 
 @frappe.whitelist(allow_guest=True)
@@ -343,7 +343,7 @@ def notify_provider(provider_id,patient,template,args,email_msg=None):
 	if provider_info:
 		provider = frappe.get_doc("Provider",provider_info)
 		if provider.mobile_number:
-			from phr.templates.pages.patient import get_sms_template
+			from phr.templates.pages.utils import get_sms_template
 			msg = get_sms_template(template,args)
 			recipient_list = []
 			recipient_list.append(provider.mobile_number)

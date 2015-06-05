@@ -3,7 +3,7 @@ import json
 from frappe.utils import cstr, get_site_path, get_url
 import base64
 import frappe
-from templates.pages.patient import get_base_url
+from templates.pages.utils import get_base_url
 from phr.phr_api import get_response
 from templates.pages.login import create_profile_in_solr,get_barcode,get_image_path
 

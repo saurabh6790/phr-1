@@ -115,9 +115,9 @@ var ListView = inherit(RenderFormFields,{
 				me.new_form()
 				if(me.args['file_name'] == "event"){
 					Events.prototype.bind_save_event()
-					Events.prototype.get_linked_providers()	
+					ProviderOperations.prototype.get_linked_providers()	
 					$("#provider_name").click(function(){
-						Events.prototype.dialog_oprations()
+						ProviderOperations.prototype.dialog_oprations({'file_name':"provider_search", "wrapper":this.wrapper})
 					})
 				}
 				me.status=1

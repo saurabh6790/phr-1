@@ -1,9 +1,9 @@
 import frappe
 import json
 import os 
-from phr.templates.pages.patient import get_data_to_render
+from phr.templates.pages.form_generator import get_data_to_render
 import datetime
-from phr.templates.pages.patient import get_base_url
+from phr.templates.pages.utils import get_base_url
 import time
 from phr.phr.phr_api import get_response
 from frappe.utils import getdate, date_diff, nowdate, get_site_path, get_hook_method, get_files_path, \
