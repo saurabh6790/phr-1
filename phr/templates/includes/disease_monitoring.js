@@ -195,7 +195,7 @@ var DiseaseMonitoring = inherit(RenderFormFields, {
 		d.init({"file_name":"share_dm", "title":"Sharing Panel", "button_title": "Share Record(s)"})
 		d.show()
 		this.res = {}
-		Events.prototype.get_linked_providers(this.profile_id)
+		ProviderOperations.prototype.get_linked_providers(this.profile_id)
 
 		$('.modal-body form input[name="sharing_duration"]').bind('change', function() { 
 			val=$(this).val()

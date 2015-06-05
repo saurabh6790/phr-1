@@ -4,9 +4,8 @@
 from __future__ import unicode_literals
 import frappe
 from frappe.model.document import Document
-from phr.templates.pages.patient import send_phrs_mail
+from phr.templates.pages.utils import send_phrs_mail, get_sms_template
 from erpnext.setup.doctype.sms_settings.sms_settings import send_sms
-from phr.templates.pages.patient import get_sms_template
 
 class Advertisements(Document):
 	def send_notification(self):

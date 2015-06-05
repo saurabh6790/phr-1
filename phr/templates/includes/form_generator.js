@@ -69,7 +69,7 @@ $.extend(RenderFormFields.prototype,{
 		var me = this;
 		var arg = {};
 		
-		
+		console.log("get_field_meta")
 		if(me.args){
 			arg['data'] = JSON.stringify(me.args)
 		}
@@ -78,7 +78,7 @@ $.extend(RenderFormFields.prototype,{
 		}
 		$.ajax({
 			method: "POST",
-			url: "/api/method/phr.templates.pages.patient.get_data_to_render",
+			url: "/api/method/phr.templates.pages.form_generator.get_data_to_render",
 			data: arg,
 			async: false,
 			success: function(r) {
@@ -166,7 +166,7 @@ $.extend(RenderFormFields.prototype,{
 			<div class="col-xs-8"><div class="control-input ">\
 			<input type="text" class="form-control" placeholder="%(placeholder)s" \
 			name="%(fieldname)s" value="%(value)s" data-toggle="tooltip" \
-			data-placement="top" title="%(label)s" aria-describedby="basic-addon2" maxlength="10">\
+			data-placement="top" title="%(label)s" aria-describedby="basic-addon2" maxlength="30">\
 			<span id="valid"></span></div></div></div></div>', field_meta)).appendTo($(this.column))
 		
 		var val = field_meta['value'];
@@ -271,7 +271,7 @@ $.extend(RenderFormFields.prototype,{
 			$loc_ip = $input;
 			$.ajax({
 				method: "POST",
-				url: "/api/method/phr.templates.pages.patient.get_master_details",
+				url: "/api/method/phr.templates.pages.utils.get_master_details",
 				data: {'doctype': field_meta['options']},
 				async: false,
 				success: function(r) {
@@ -343,7 +343,7 @@ $.extend(RenderFormFields.prototype,{
 
 		if (typeof(field_meta['options']) === "string"){
 			frappe.call({
-				method:'phr.templates.pages.patient.get_master_details',
+				method:'phr.templates.pages.utils.get_master_details',
 				args:{'doctype': field_meta['options']},
 				callback: function(r){
 					$($input.find('.autocomplete')).autocomplete({
@@ -476,23 +476,10 @@ $.extend(RenderFormFields.prototype,{
         				timeFormat: 'hh:mm tt',
         				timeOnly: true
 		})
-		/*var val = field_meta['value'];
-		
-		if(val){
-			var date=new Date(val)
-			$input.find('input').val($.datetimepicker.formatDate('dd/mm/yy',date))
-		}
-*/
 		var val = field_meta['value'];
 		if(field_meta['required']==1){
 			$input.find("input").prop('required',true);
-			// $input.find("label").addClass('required')
 			$('<span class="symbol required"></span>').appendTo($input.find("label"));
-			// $('<style>.required:after{content:" *";color:red;font-size:20px;}</style>').appendTo($input)
-			/*if (!val){
-				$input.find("input").css({"border": "1px solid #999","border-color": "red" });	
-			}*/
-			
 		}
 		if(field_meta['readonly']==1){
 			$input.find("input").prop('disabled',true)

@@ -4,7 +4,7 @@
 from __future__ import unicode_literals
 import frappe
 from frappe.model.document import Document
-from phr.templates.pages.patient import get_json_data,write_json_data
+from phr.templates.pages.form_generator import get_json_data,write_json_data
 import json
 
 class Dosage(Document):

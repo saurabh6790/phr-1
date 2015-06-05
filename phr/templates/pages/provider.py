@@ -8,7 +8,8 @@ import requests
 import os
 from frappe.auth import _update_password
 from frappe import _
-from phr.templates.pages.patient import get_base_url,get_data_to_render
+from phr.templates.pages.utils import get_base_url
+from phr.templates.pages.form_generator import get_data_to_render
 import json
 from phr.phr.doctype.phr_activity_log.phr_activity_log import make_log
 import json

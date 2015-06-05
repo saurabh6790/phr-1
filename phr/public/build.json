@@ -8,6 +8,7 @@
 		"templates/includes/treeview.js",
 		"templates/includes/list.js",
 		"templates/includes/custom_dialog.js",
-		"templates/includes/thumbnail.js"
+		"templates/includes/thumbnail.js",
+		"templates/includes/provider_operations.js"
 	]
 }

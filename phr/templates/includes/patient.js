@@ -271,7 +271,8 @@ function bind_events(){
 		}).appendTo('.breadcrumb');
 		Provider.prototype.init($(document).find("#main-con"),
 				{"file_name" : "provider"},"","create_provider")*/
-		Events.prototype.dialog_oprations()
+		// Events.prototype.dialog_oprations()
+		ProviderOperations.prototype.dialog_oprations({'file_name':"provider_search", "wrapper":this.wrapper})
 		NProgress.done();
 	})
 	$(".create_todo").unbind("click").click(function(){

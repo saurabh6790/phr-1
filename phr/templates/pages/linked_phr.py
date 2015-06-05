@@ -9,7 +9,7 @@ import os
 from frappe.auth import _update_password
 from frappe import _
 from phr.phr.phr_api import get_response
-from phr.templates.pages.patient import get_base_url
+from phr.templates.pages.utils import get_base_url
 from phr.templates.pages.login import create_profile_in_db,get_barcode,get_image_path
 from phr.phr.doctype.phr_activity_log.phr_activity_log import make_log
 from frappe.utils import cint, now, get_gravatar,cstr

@@ -4,7 +4,8 @@ from erpnext.setup.doctype.sms_settings.sms_settings import send_sms
 from frappe.utils.email_lib import sendmail
 import json
 from phr.templates.pages.profile import search_profile_data_from_solr
-from phr.templates.pages.patient import send_phrs_mail,get_formatted_date_time,get_sms_template,send_phr_sms
+from phr.templates.pages.utils import send_phrs_mail,get_formatted_date_time,get_sms_template,send_phr_sms
+
 
 
 @frappe.whitelist()

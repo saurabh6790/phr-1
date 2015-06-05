@@ -2,7 +2,7 @@ import frappe
 import json
 import os 
 from frappe.utils import get_site_path, get_hook_method, get_files_path, get_site_base_path,cstr
-from phr.templates.pages.patient import get_data_to_render
+from phr.templates.pages.form_generator import get_data_to_render
 import datetime
 
 @frappe.whitelist(allow_guest=True)

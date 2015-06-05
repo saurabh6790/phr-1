@@ -5,7 +5,8 @@ from __future__ import unicode_literals
 import frappe
 from frappe.model.document import Document
 from frappe.utils import cint
-from phr.templates.pages.patient import get_base_url,get_data_to_render
+from phr.templates.pages.form_generator import get_data_to_render
+from phr.templates.pages.utils import get_base_url
 from phr.templates.pages.login import get_barcode, notify_user
 import json
 import re

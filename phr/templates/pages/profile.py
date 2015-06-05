@@ -14,7 +14,8 @@ from phr.templates.pages.login import create_profile_in_db,get_barcode,get_image
 from frappe.utils import cint, now, get_gravatar,cstr,get_site_path,get_url, get_files_path
 from phr.phr.doctype.phr_activity_log.phr_activity_log import make_log
 import datetime
-from phr.templates.pages.patient import get_base_url,send_phrs_mail,get_data_to_render,get_formatted_date_time,formatted_date,get_sms_template 
+from phr.templates.pages.utils import get_base_url, send_phrs_mail, get_formatted_date_time, formatted_date, get_sms_template 
+from phr.templates.pages.form_generator import get_data_to_render
 from erpnext.setup.doctype.sms_settings.sms_settings import send_sms
 import requests
 from frappe.utils.email_lib import sendmail
@@ -103,7 +104,7 @@ def generate_mobile_vericication_code(mobile,profile_id,name=None):
 		make_mobile_verification_entry(mobile,profile_id,mobile_code)
 	elif name:
 		edit_mobile_verification_entry(mobile,profile_id,mobile_code,name)
-	from phr.templates.pages.patient import get_sms_template
+	from phr.templates.pages.utils import get_sms_template
 	sms = get_sms_template("registration",{ "mobile_code": mobile_code })
 	rec_list=[]
 	rec_list.append(mobile)
@@ -294,7 +295,7 @@ def get_site_name():
 
 @frappe.whitelist(allow_guest=True)
 def get_linked_phrs(profile_id):
-	from phr.templates.pages.patient import get_base_url
+	from phr.templates.pages.utils import get_base_url
 	solr_op='searchchildprofile'
 	url=get_base_url()+solr_op
 	request_type='POST'

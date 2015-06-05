@@ -3,7 +3,7 @@
 
 from __future__ import unicode_literals
 import frappe
-from phr.templates.pages.patient import get_base_url
+from phr.templates.pages.utils import get_base_url
 import time
 from phr.phr.phr_api import get_response
 import json
