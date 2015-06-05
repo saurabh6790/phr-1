@@ -63,8 +63,6 @@ def make_mv_entry(mobile,profile_id):
 	elif mob_v and not frappe.db.get_value("Mobile Verification",{"mobile_no":mobile,"profile_id":profile_id},"name"):
 		generate_mobile_vericication_code(mobile,profile_id,mob_v)
 		
-
-
 @frappe.whitelist(allow_guest=True)
 def not_duplicate_contact(mobile,user):
 	print user
@@ -86,8 +84,6 @@ def verify_code(data,mobile):
 		mv.mflag = 1
 		mv.save(ignore_permissions=True)
 		return {"returncode":1,"message":"Mobile No verified"}
-
-
 
 @frappe.whitelist(allow_guest=True)
 def check_contact_verified(mobile):
@@ -140,7 +136,6 @@ def update_user_details(data):
 		emergemcy_contactno='%s' 
 		where profile_id='%s'"""%(data.get('person_firstname'),data.get('person_middlename'),data.get('person_lastname'),data.get('mobile'),data.get('blod_group'),data.get('emergemcy_contactno'),data.get('entityid')))
 	frappe.db.commit()	
-
 
 @frappe.whitelist(allow_guest=True)
 def update_password(data,dashboard=None):
@@ -234,7 +229,6 @@ def update_values(fields,name,profile_id):
 		frappe.db.sql("""update `tabShortcut` set %s=1 where name='%s'"""%(d,name))
 		frappe.db.commit()
 		
-
 @frappe.whitelist(allow_guest=True)
 def get_user_image(profile_id):
 	upexists=frappe.db.get_value("User",{"profile_id":profile_id},"user_image")
@@ -253,35 +247,12 @@ def get_user_image(profile_id):
 				"image":get_gravatar(profile_id)	
 			}
 
-
 @frappe.whitelist(allow_guest=True)
 def upload_image(profile_id,data=None,file_name=None):
 	from binascii import a2b_base64
 	import base64
-	# data_index = data.index('base64') + 7
-	# filedata = data[data_index:len(data)]
-	# decoded_image = base64.b64decode(filedata)
-	# site_name = get_site_name()
-	# path = os.path.abspath(os.path.join('.',site_name, 'public', 'files'))
-	# image=path+'/'+profile_id+'/'+file_name
 	file_path='/files/'+profile_id+'/'+file_name
 	update_user_image(file_path, profile_id)
-	# if os.path.exists(image):
-	# 	try:
-	# 		os.remove(image)
-	# 		fd = open(image, 'wb')
-	# 		fd.write(decoded_image)
-	# 		fd.close()
-	# 		update_user_image(file_path,profile_id)
-	# 		return "Profile Image Updated"
-	# 	except OSError, e:
-	# 		print ("Error: %s - %s." % (e.filename,e.strerror))
-	# else:
-	# 	fd = open(image, 'wb')
-	# 	fd.write(decoded_image)
-	# 	fd.close()
-	# 	update_user_image(file_path,profile_id)
-	# 	return "Profile Image Uploaded Successfully"
 
 def update_user_image(path, profile_id):
 	ue=frappe.db.get_value("User",{"profile_id":profile_id},"user_image")
@@ -292,7 +263,6 @@ def update_user_image(path, profile_id):
 		sub="Image Uploaded Successfully "+path
 		make_log(profile_id,"profile","Image Upload",sub)
 		frappe.local.cookie_manager.set_cookie("user_image", path or "")
-		# return "Image Uploaded Successfully"
 	else:
 		cie = frappe.db.get_value("LinkedPHR Images",{"profile_id":profile_id},"profile_image")
 		if cie:
@@ -301,7 +271,6 @@ def update_user_image(path, profile_id):
 			frappe.db.commit()
 			sub="Image Uploaded Successfully "+path
 			make_log(profile_id,"profile","Linked PHR Image Upload",sub)
-			# return "Image Uploaded Successfully"
 		else:
 			lp=frappe.new_doc("LinkedPHR Images")
 			lp.profile_id=profile_id
@@ -309,40 +278,9 @@ def update_user_image(path, profile_id):
 			lp.save(ignore_permissions=True)
 			sub="Image Uploaded Successfully "+path
 			make_log(profile_id,"profile","Linked PHR Image Upload",sub)
-			# return "Image Uploaded Successfully"
 
 def get_site_name():
 	return frappe.local.site_path.split('/')[1]
-
-@frappe.whitelist(allow_guest=True)
-def get_linked_phrs(profile_id):
-	from phr.templates.pages.utils import get_base_url
-	solr_op='searchchildprofile'
-	url=get_base_url()+solr_op
-	request_type='POST'
-	data={"to_profile_id":profile_id}
-	from phr.phr.phr_api import get_response
-	response=get_response(url,json.dumps(data),request_type)
-	res=json.loads(response.text)
-	if res['returncode']==120:
-		#linked_phr_list=get_lphrs_with_img(res)
-		return res
-
-@frappe.whitelist(allow_guest=True)		
-def get_linked_phrs_with_img(profile_id):
-	data=get_linked_phrs(profile_id)
-	if data:
-		return get_lphrs_with_img(data)
-
-
-@frappe.whitelist(allow_guest=True)
-def get_lphrs_with_img(data):
-	linked_phr_list=[]
-	for profile in data["list"]:
-		user_image=get_user_image(profile["entityid"])
-		linked_phr_list.append({"entityid":profile["entityid"],"person_firstname":profile["person_firstname"],"person_lastname":profile["person_lastname"],"user_image":user_image["image"],"gender":profile["gender"]})
-	return linked_phr_list
-
 
 @frappe.whitelist(allow_guest=True)
 def delink_phr(selected,data,profile_id,res):
@@ -406,8 +344,6 @@ def add_profile_to_db(data,profile_id):
 	make_log(profile_id,"profile","create",sub)
 	return ret_res
 
-
-
 @frappe.whitelist(allow_guest=True)
 def get_enabled_notification(profile_id):
 	ret=frappe.db.sql("""select linked_phr,to_do 
@@ -416,222 +352,11 @@ def get_enabled_notification(profile_id):
 	return ret
 
 @frappe.whitelist(allow_guest=True)
-def get_enabled_dashboard(profile_id):
-	return frappe.db.sql("""select * from `tabShortcut` where profile_id='%s'"""%(profile_id),as_dict=1)
-
-
-@frappe.whitelist(allow_guest=True)
-def get_data_for_middle_section(profile_id):
-	print "###############################"
-	print frappe._dict()
-	db_list = get_enabled_dashboard(profile_id)
-	if db_list:
-		obj = db_list[0]
-		res_list = []
-		if obj.get('disease_monitoring')==1:
-			data = get_diseases()
-			if data:
-				res_list = build_dm_data(data,res_list)
-
-		if obj.get('visits') == 1 or obj.get('events') == 1:
-			data = get_data_from_solr(profile_id)
-			#if data:
-			res_list = build_response(data,obj,res_list,profile_id) 
-		
-		if obj.get('appointments') == 1:
-			data = get_appointments(profile_id)
-			res_list = build_response_for_appointments(data,obj,res_list)
-		
-		if obj.get('medications') == 1:
-			data = get_medications(profile_id)
-			res_list = build_response_for_medications(data,obj,res_list)
-
-		if obj.get('messages') == 1:
-			data = get_logs(profile_id)
-			res_list = build_response_for_logs(data,obj,res_list)		
-
-		return {
-				"res_list":res_list,
-				"rtcode":1
-			}
-	else:
-		return
-		{
-			"message":"Please Setup Dashboard",
-			"rtcode":0
-		}
-
-
-@frappe.whitelist(allow_guest=True)
 def get_logs(profile_id):
 	log_list=frappe.db.sql("""select * from 
 		`tabPHR Activity Log` 
 		where profile_id='%s' and entity in ('Event','Visit') order by creation desc limit 5"""%(profile_id),as_dict=1)
 	return log_list
-
-@frappe.whitelist(allow_guest=True)
-def get_diseases():
-	return frappe.db.sql("""select disease_name,event_master_id 
-		from `tabDisease Monitoring`""",as_dict=1)
-
-
-
-@frappe.whitelist(allow_guest=True)
-def get_data_from_solr(profile_id):
-	solr_op='getlatesteventvisitlistbyprofileid'
-	url=get_base_url()+solr_op
-	request_type='POST'
-	data={"profileId":profile_id,"rowCountLimit":5}
-	from phr.phr.phr_api import get_response
-	response=get_response(url,json.dumps(data),request_type)
-	res=json.loads(response.text)
-	if res['returncode']==105:
-		return res['actualdata']
-
-@frappe.whitelist(allow_guest=True)
-def get_appointments(profile_id):
-	return frappe.db.sql("""select * from 
-		`tabAppointments` where profile_id='%s' 
-		order by creation desc limit 5"""%(profile_id),as_dict=1)
-
-@frappe.whitelist(allow_guest=True)
-def get_medications(profile_id):
-	return frappe.db.sql("""select * from 
-		`tabMedication` where profile_id='%s' 
-		order by creation desc limit 5"""%(profile_id),as_dict=1)
-
-
-def build_response(data,obj,res_list,profile_id):
-	if obj.get('visits')==1:
-		visit_data = build_visit_data(data)
-		res_list.append(visit_data)
-	if obj.get('events')==1:
-		event_data=build_event_data(data,profile_id)
-		res_list.append(event_data)
-	return res_list
-
-def build_response_for_medications(data,obj,res_list):
-	medication_data = build_medication_data(data)
-	res_list.append(medication_data)
-	return res_list
-	
-def build_response_for_appointments(data,obj,res_list):
-	appointments_data=build_appointments_data(data)	
-	res_list.append(appointments_data)
-	return res_list
-
-def build_response_for_logs(data,obj,res_list):
-	logs_data=build_logs_data(data)
-	res_list.append(logs_data)
-	return res_list
-
-def build_dm_data(data,res_list):
-	options=[]
-	for d in data:
-		dic={"option":d["disease_name"],"id":d["event_master_id"]}
-		options.append(dic)
-	dm_dic={"fieldname":"disease_monitoring","fieldtype": "table","label": "Disease Monitoring","options":options}
-	res_list.append(dm_dic)
-
-	return res_list
-
-def build_visit_data(obj):
-	rows=[
-    	[
-     		"Date", 
-     		"Visit Description", 
-     		"Provider's Name"
-    	]
-   ]
-	if obj:
-		data=json.loads(obj)
-		if (data["visitList"]):
-			for d in data["visitList"]:
-				rows.extend([[d["str_visit_date"],d["visit_descripton"],d["doctor_name"]]])
-		else:
-			rows.extend([["NO DATA","",""]])
-	else:
-		rows.extend([["NO DATA","",""]])
-
-	visit_dic={"fieldname":"visits","fieldtype": "table","label": "Visits","rows":rows}
-	return visit_dic
-
-def build_event_data(obj,profile_id):
-	rows=[
-    	[
-     		"Event Name", 
-     		"Date", 
-     		"Complaints", 
-     		"Diagnosis"
-    	]
-   ]	
-   #datetime.datetime.fromtimestamp(cint(visit['event_date'])/1000.0)
-	if obj:
-		data=json.loads(obj)
-		if data and data["eventList"]:
-			for d in data["eventList"]:
-				rows.extend([["""<a nohref id="%(entityid)s" onclick="Events.prototype.open_form('%(entityid)s', '%(event_title)s', '%(profile_id)s')"> %(event_title)s </a>"""%{"entityid": d['entityid'],"event_title": d['event_title'], "profile_id":profile_id},datetime.datetime.fromtimestamp(cint(d["event_date"])/1000.0).strftime('%d/%m/%Y'),d["event_symptoms"],d["diagnosis_desc"]]])
-		else:
-			rows.extend([["	NO DATA","","",""]])
-	else:
-		rows.extend([["	NO DATA","","",""]])
-
-	event_dic={"fieldname":"events","fieldtype": "table","label": "Events","rows":rows}
-	return event_dic
-
-def build_medication_data(data):
-	rows=[
-    	[
-     		"Medicine Name", 
-     		"Dosage", 
-     		"From Date", 
-     		"To Date",
-     		"Addn Info",
-     		"Status"
-    	]
-   ]	
-	if (data):
-		for d in data:
-			rows.extend([[d["medicine_name"],d["dosage"],formatted_date(d["from_date_time"]),formatted_date(d["to_date_time"]),d["additional_info"], d['status']]])
-	else:
-		rows.extend([[" NO DATA","","","",""]])		
-	
-	medication_dic={"fieldname":"medications","fieldtype": "table","label": "Medications","rows":rows}
-	return medication_dic
-
-def build_appointments_data(data):
-	rows=[
-    	[
-     		"Date Time", 
-     		"Providers Name", 
-     		"Reason For Visit", 
-    	]
-   ]	
-	if (data):
-		for d in data:
-			rows.extend([[get_formatted_date_time(d["from_date_time"]),d["provider_name"],d["reason"]]])
-	else:
-		rows.extend([["NO DATA", "",""]])
-	appointments_dic={"fieldname":"appointments","fieldtype": "table","label": "Appointments","rows":rows}
-	return appointments_dic
-
-def build_logs_data(data):
-	rows=[
-    	[
-     		"Entity", 
-     		"Operation", 
-     		"Description" 
-       	]
-   ]	
-	if (data):
-		for d in data:
-			rows.extend([[d["entity"],d["operation"],d["subject"]]])
-	else:
-		rows.extend([["NO DATA", "",""]])
-
-	logs_dic={"fieldname":"messages","fieldtype": "table","label": "Shared History","rows":rows}
-	return logs_dic
-
 
 @frappe.whitelist(allow_guest=True)
 def get_user_details(profile_id=None):
@@ -652,6 +377,7 @@ def get_user_details(profile_id=None):
 				"profile_id":profile_id
 			})
 		else:
+			from phr.templates.pages.dashboard import search_profile_data_from_solr
 			data = search_profile_data_from_solr(profile_id)
 			barcode = frappe.db.get_value("LinkedPHR Images",{"profile_id":profile_id},"barcode")
 			user_image = frappe.db.get_value("LinkedPHR Images",{"profile_id":profile_id},"profile_image")  
@@ -667,30 +393,10 @@ def get_user_details(profile_id=None):
 
 	return args
 	
-
-@frappe.whitelist(allow_guest=True)
-def get_advertisements(profile_id=None):
-	ad_list=frappe.db.sql("""select * from `tabAdvertisements` 
-		where status='Active' 
-		order by creation limit 5""",as_dict=1)
-	if ad_list:
-		return {
-			"ad_list":ad_list,
-			"rtcode":1
-		}
-	else:
-		return {
-			"Message":"No data",
-			"rtcode":1
-		}
-		
-
 @frappe.whitelist(allow_guest=True)
 def get_states():
 	states = frappe.db.sql("""select name from `tabState`""",as_list=1)
 	return states
-
-
 
 @frappe.whitelist(allow_guest=True)
 def notify_about_registration():
@@ -722,19 +428,8 @@ def notify_about_linked_phrs(profile_id,email_msg=None,text_msg=None,entity=None
 				rec_list.append(user.contact)
 				send_sms(rec_list,msg=text_msg)
 		else:
+			from phr.templates.pages.dashboard import search_profile_data_from_solr
 			search_profile_data_from_solr(profile_id)
-
-@frappe.whitelist(allow_guest=True)
-def search_profile_data_from_solr(profile_id):
-	solr_op = 'admin/searchlinkprofile'
-	url = get_base_url()+solr_op
-	request_type = 'POST'
-	data = {"from_profile_id":profile_id}
-	from phr.phr.phr_api import get_response
-	response = get_response(url,json.dumps(data),request_type)
-	res = json.loads(response.text)
-	if res['returncode'] == 120:
-		return res['list'][0]['childProfile']
 
 @frappe.whitelist(allow_guest=True)
 def get_patients_ids(doctype, txt, searchfield, start, page_len, filters):
@@ -769,7 +464,6 @@ def get_patients(doctype, txt, searchfield, start, page_len, filters):
 def verify_mobile():
 	pass	
 
-
 @frappe.whitelist(allow_guest=True)	
 def get_phr_pdf(profile_id):
 	import os, time
@@ -790,7 +484,6 @@ def get_phr_pdf(profile_id):
 		return res
 	else:
 		frappe.msgprint(_("Issue Downloading PDF"))
-
 
 @frappe.whitelist(allow_guest=True)	
 def get_pdf(profile_id,options=None):
@@ -813,46 +506,47 @@ def get_pdf(profile_id,options=None):
 
 	user = get_user_details(profile_id)
 	html="""<html lang="en">
-	<head>
-	<title>Healthsnapp</title> 
-	<link rel="stylesheet" href="assets/phr/css/styles.css">
-	</head>
-	<body>
-	<div class="row">
-	<div class="card-container">
-	<div class="card-main">
-	<div class="card-top">
-	<div class="card-top-left">
-	<p class="patient-name">%(name)s</p>
-	<p ><span>%(profile_id)s</span></p>
-	<p class="patient-blood-grp">Blood Group:  %(blood_group)s</p>
-	<p class="patient-contact">Contact: %(contact)s</p>
-	<p class="patient-emergncy-contact">Emergency Contact: %(emergency_contact)s</p>
-	<div class="clearfix"></div>
-	</div>
-	<div class="card-top-right">
-	<div class="card-photo"><img src="%(user_image)s"></div>
-	</div><div class="clearfix"></div>
-	</div>
-	<div class="card-bottom">
-	<div class="card-logo">
-	<img src="assets/phr/images/card-logo.png"></div>
-	<div class="card-barcode"><img src="%(barcode)s" style="max-height:50px">
-	</div><div class="clearfix"></div></div>
-	<div class="clearfix"></div></div></div></div></body></html>"""%user
-	
-	
+			  <head>
+			    <title>Healthsnapp</title> 
+			    <link rel="stylesheet" href="assets/phr/css/styles.css">
+			  </head>
+			  <body>
+				<div class="row">
+					<div class="card-container">
+						<div class="card-main">
+							<div class="card-top">
+								<div class="card-top-left">
+									<p class="patient-name">%(name)s</p>
+									<p ><span>%(profile_id)s</span></p>
+									<p class="patient-blood-grp">Blood Group:  %(blood_group)s</p>
+									<p class="patient-contact">Contact: %(contact)s</p>
+									<p class="patient-emergncy-contact">Emergency Contact: %(emergency_contact)s</p>
+									<div class="clearfix"></div>
+								</div>
+								<div class="card-top-right">
+									<div class="card-photo"><img src="%(user_image)s"></div>
+									</div><div class="clearfix"></div>
+								</div>
+								<div class="card-bottom">
+									<div class="card-logo">
+										<img src="assets/phr/images/card-logo.png"></div>
+										<div class="card-barcode"><img src="%(barcode)s" style="max-height:50px">
+									</div>
+									<div class="clearfix"></div>
+								</div>
+								<div class="clearfix"></div>
+							</div>
+						</div>
+					</div>
+				  </body>
+				</html>"""%user
 
 	if not options.get("page-size"):
 		options['page-size'] = "A4"
 
 	html = scrub_urls(html)
-	#fname=os.path.join(os.getcwd(), get_site_path().replace('.',"").replace('/', ""), 'public', 'files', profile_id, profile_id +"ed"+ ".pdf")
-	# pdfkit.from_string(html, fname, options=options or {})
 	fname=os.path.join(get_files_path(), profile_id, profile_id +"ed"+".pdf")
-	print fname
 	pdfkit.from_string(html, fname, options=options or {})
-
 	li=fname.split('/')
 	
 	import time
@@ -860,9 +554,6 @@ def get_pdf(profile_id,options=None):
 
 	return url
 
-
 @frappe.whitelist(allow_guest=True)	
 def check_templates(profile_id):
 	msg=get_sms_template("appointments",{"doctor_name":"ahahha","appointment_time":"4.25"})
-	
-	

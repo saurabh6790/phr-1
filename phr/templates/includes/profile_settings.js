@@ -206,7 +206,7 @@ var ProfileSettings = inherit(RenderFormFields, {
 	get_linked_phrs:function(profile_id){
 		var me=this;
 		frappe.call({
-			method:'phr.templates.pages.profile.get_linked_phrs',
+			method:'phr.templates.pages.dashboard.get_linked_phrs',
 			args:{'profile_id':profile_id},
 			callback: function(r) {
 				if(r.message) {
@@ -376,7 +376,7 @@ var ProfileSettings = inherit(RenderFormFields, {
 	get_enabled_dashboard:function(profile_id){
 		var me=this;
 		frappe.call({
-			method:'phr.templates.pages.profile.get_enabled_dashboard',
+			method:'phr.templates.pages.dashboard.get_enabled_dashboard',
 			args:{'profile_id':profile_id},
 			callback: function(r) {
 				if(r.message) {

@@ -19,7 +19,7 @@ function render_dashboard(profile_id){
 	}
 	function render_linked_phr(profile_id){
 		frappe.call({
-			method:'phr.templates.pages.profile.get_linked_phrs_with_img',
+			method:'phr.templates.pages.dashboard.get_linked_phrs_with_img',
 			args:{'profile_id':profile_id},
 			callback: function(r) {
 				if(r.message) {
@@ -38,7 +38,7 @@ function render_dashboard(profile_id){
 	}
 	function render_emer_details(profile_id){
 		frappe.call({
-			method:'phr.templates.pages.profile.get_user_details',
+			method:'phr.templates.pages.dashboard.get_user_details',
 			args:{'profile_id':profile_id},
 			callback: function(r) {
 				if(r.message) {
@@ -64,7 +64,7 @@ function render_dashboard(profile_id){
 	}
 	function render_middle_section(profile_id){
 		frappe.call({
-			method:'phr.templates.pages.profile.get_data_for_middle_section',
+			method:'phr.templates.pages.dashboard.get_data_for_middle_section',
 			args:{'profile_id':profile_id},
 			callback: function(r) {
 				if(r.message) {
@@ -87,7 +87,7 @@ function render_dashboard(profile_id){
 	}
 	function render_advertisements(profile_id){
 		frappe.call({
-			method:'phr.templates.pages.profile.get_advertisements',
+			method:'phr.templates.pages.dashboard.get_advertisements',
 			args:{'profile_id':profile_id},
 			callback: function(r) {
 				if(r.message) {

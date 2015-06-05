@@ -13,7 +13,7 @@ from phr.templates.pages.form_generator import get_data_to_render
 import json
 from phr.phr.doctype.phr_activity_log.phr_activity_log import make_log
 import json
-from phr.templates.pages.profile import get_linked_phrs
+from phr.templates.pages.dashboard import get_linked_phrs
 
 @frappe.whitelist(allow_guest=True)
 def create_provider(data,id=None,profile_id=None):
