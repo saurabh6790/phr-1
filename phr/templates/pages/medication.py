@@ -3,7 +3,8 @@ import json
 import os 
 import sys
 from frappe.utils import get_site_path, get_hook_method, get_files_path, get_site_base_path,cstr,cint, date_diff, today, add_days, getdate
-from phr.templates.pages.patient import get_data_to_render,formatted_date,get_sms_template
+from phr.templates.pages.form_generator import get_data_to_render
+from phr.templates.pages.utils import formatted_date,get_sms_template
 import datetime
 from phr.phr.doctype.phr_activity_log.phr_activity_log import make_log
 from erpnext.setup.doctype.sms_settings.sms_settings import send_sms

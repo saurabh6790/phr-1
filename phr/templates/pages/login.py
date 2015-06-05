@@ -10,7 +10,7 @@ from frappe import _
 import barcode
 import time
 import os
-from phr.templates.pages.patient import get_base_url
+from phr.templates.pages.utils import get_base_url
 from frappe.utils import cint, flt, now, cstr, strip_html
 import random
 import string
@@ -172,7 +172,7 @@ def send_welcome_mail(password,profile_id,args):
 	if not mob_already_v:
 		from phr.templates.pages.profile import make_mobile_verification_entry
 		make_mobile_verification_entry(args["mobile"],profile_id,mob_code)
-		from phr.templates.pages.patient import get_sms_template
+		from phr.templates.pages.utils import get_sms_template
 		sms = get_sms_template("registration",{ "mobile_code": mob_code })
 		rec_list = []
 		rec_list.append(args["mobile"])
