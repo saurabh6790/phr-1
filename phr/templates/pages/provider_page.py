@@ -160,13 +160,15 @@ def get_myrequests(target, provider_id):
 					</button>"""%{'req_id':d[0], 'provider_id': d[1], 'patient': d[2], 'event_id': d[3], 'doc_name': d[4]})
 
 	rows=[
-		["Date (Shared date)", "Patient Name", "Event Name",
-				"Reason for Sharing",  "Period of Sharing", 
-				"Payment Status", "Accept-Reject"]
+		[{"title":"Date (Shared date)", "width":"120px !important;"}, {"title":"Patient Name","width":"100px;"}, 
+				{"title":"Event Name","width":"100px;"}, {"title":"Reason for Sharing", "width":"150px;"}, 
+				{"title":"Period of Sharing", "width":"120px !important;"}, {"title":"Payment Status", "width":"100px;"},
+				{"title":"Accept-Reject", "width":"100px;"}]
 	]
 
 	if data:
 		for d in data:
+			frappe.errprint(d[5:])
 			rows.append(d[5:])
 	else:
 		rows.extend([["","NO DATA",""]])
@@ -205,9 +207,9 @@ def get_acc_req(target, provider_id):
 			d[7] = '<a target="_blank" href="/%s"> %s </a>' % ( file_path, dm_info['disease_name'])
 					
 	rows=[
-		["Date (Shared date)", "Patient Name", "Event Name",
-				"Reason for Sharing",  "Period of Sharing", 
-				"Payment Status"]
+		[{"title":"Date (Shared date)", "width":"120px !important;"}, {"title":"Patient Name", "width":"100px;"}, 
+				{"title":"Event Name","width":"100px;"},{"title":"Reason for Sharing", "width":"100px;"},  {"title":"Period of Sharing", "width":"100px;"}, 
+				{"title":"Payment Status", "width":"100px;"}, {"title":"Status", "width":"100px;"}]
 	]
 
 	if data:
@@ -229,9 +231,9 @@ def get_rej_req(target, provider_id):
 					and provider_id="%s" """%('%d/%m/%Y',provider_id), as_list=1)
 
 	rows=[
-		["Date (Shared date)", "Patient Name", "Event Name",
-				"Reason for Sharing",  "Period of Sharing", 
-				"Payment Status", "Reason For Rejection"]
+		[{"title":"Date (Shared date)","width":"120px !important;"}, {"title":"Patient Name", "width":"100px;"}, 
+				{"title":"Event Name","width":"100px;"},{"title":"Reason for Sharing", "width":"100px;"}, {"title":"Period of Sharing", "width":"100px;"}, 
+				{"title":"Payment Status", "width":"100px;"}, {"title":"Reason For Rejection", "width":"100px;"}]
 	]
 
 	if data:

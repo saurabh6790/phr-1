@@ -23,7 +23,7 @@ def get_disease_fields(name,profile_id=None):
 		dm = frappe.get_doc("Disease Monitoring",
 			frappe.db.get_value("Disease Monitoring",{"disease_name":name},"name"))
 		if dm:
-			fields, rows, dm_cols, field_mapper = [], [], [""], ["sr"]
+			fields, rows, dm_cols, field_mapper = [], [], [{"title":"", "width":"10px !important;"}], ["sr"]
 			row_count = 0
 			sec_label=name+' Readings'
 			fields.append({"fieldname":"","fieldtype":"section_break","label":sec_label,"options":"<i class='fa fa-pencil-square-o'></i>"})
@@ -31,7 +31,7 @@ def get_disease_fields(name,profile_id=None):
 				row_count += 1
 				f_dic = {"fieldname":d.fieldname,"fieldtype":d.fieldtype,"label":d.label,"placeholder":"", "required": d.required or 0}
 				fields.append(f_dic)
-				dm_cols.append(d.label)
+				dm_cols.append({"title":d.label,"width":cstr(d.width) and cstr(d.width) + 'px !important;' or "10px;"})
 				field_mapper.append(d.fieldname)
 
 				if row_count==4:
@@ -101,7 +101,7 @@ def build_options(dm_list,fields,field_mapper,raw_fields=None):
 				if field == 'sr':
 					dm_data.append('<input type="checkbox" name="">')
 				else:
-					dm_data.append("<div style='word-wrap: break-word;width:80%%;'>%s</div>"%field_dict.get(field))
+					dm_data.append("%s"%field_dict.get(field))
 			rows.extend([dm_data])
 
 	return fields_list
@@ -279,7 +279,8 @@ def share_via_phr(share_info, profile_id, disease):
 	dm_sharing.pdf_path = os.path.join(get_files_path(), profile_id, file_name)
 	dm_sharing.save(ignore_permissions=True)
 	make_sharing_request(share_info, disease, dm_sharing, profile_id)
-	make_log(profile_id, "Disease Monitoring", "Shared over PHR account to provider %s"% share_info.get('doctor_name') , "Shared over PHR account to provider %s"% share_info.get('doctor_name'))
+	make_log(profile_id, "Disease Monitoring", "Shared DM over PHR account to provider ", "DM of <b style='color: #89c148;'>%s</b> has been shared with  provider <b style='color: #89c148;'>%s</b> \
+			till <b style='color: #89c148;'>%s</b>"% (disease, share_info.get('doctor_name'), share_info.get('sharing_duration') ))
 	return {"returncode":1,"message_display":"Disease Monitoring records has been shared"}
 
 def make_sharing_request(event_data, disease, dm_sharing, profile_id):
