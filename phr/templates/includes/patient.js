@@ -29,6 +29,8 @@ $(document).ready(function () {
 		frappe.msgprint("Not Allowed")
 		window.location.href = "/provider";
 	}
+	console.log($('.menu-toggler'))
+    $('.menu-toggler').attr("href").replace(/\//, '')
 	if (!sessionStorage.getItem("pid") || frappe.get_cookie("profile_id")!=sessionStorage.getItem("pid")){
 		sessionStorage.setItem("pid",frappe.get_cookie("profile_id"))
 		sessionStorage.setItem("cid",frappe.get_cookie("profile_id"))

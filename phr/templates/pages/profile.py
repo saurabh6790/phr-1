@@ -817,7 +817,7 @@ def get_pdf(profile_id,options=None):
 	<div class="card-bottom">
 	<div class="card-logo">
 	<img src="assets/phr/images/card-logo.png"></div>
-	<div class="card-barcode"><img src="%(barcode)s" style="max-height:50px">
+	<div class="card-barcode"><img src="%(barcode)s" >
 	</div><div class="clearfix"></div></div>
 	<div class="clearfix"></div></div></div></div></body></html>"""%user
 	

@@ -141,6 +141,11 @@
 </div>
 {% endblock %}
 {% block topbar %}
+    <div class="breadcrumb-bar clearfix">
+        <div class="page-breadcrumbs pull-left">
+          <ul class="breadcrumb"><li></li></ul>
+        </div> 
+    </div>
    <div class="top-btns-bar clearfix">
       <div class="user_dp dropdown current-user cdd hide pull-left margin-right-20">
           <a data-toggle="dropdown" class="dropdown-toggle linked-phr" nohref>
@@ -164,9 +169,6 @@
               </li>
           </ul>
       </div>
-      <div class="page-breadcrumbs pull-left">
-        <ul class="breadcrumb"><li><a nohref=""></a></li></ul>
-      </div>
       <div class="linked-phr pull-right margin-left-20 link-phr">
       </div>
       <div class="pull-right margin-left-20" id="share">
@@ -182,7 +184,6 @@
   </div>
 {% endblock %}
 {% block content_area %}
-<script src="/assets/phr/vendor/jquery/jquery.min.js"></script>
 <script src="/assets/phr/vendor/bootstrap/js/bootstrap.min.js"></script>
 <script src="/assets/phr/vendor/modernizr/modernizr.js"></script>
 <script src="/assets/phr/vendor/jquery-cookie/jquery.cookie.js"></script>
@@ -218,8 +219,6 @@
     </script>
   <!-- end: MAIN JAVASCRIPTS -->
 
-<script src="http://jqueryvalidation.org/files/dist/jquery.validate.min.js"></script>
-<script src="http://jqueryvalidation.org/files/dist/additional-methods.min.js"></script>
 
 <div class="field-area"></div>
 <div id="main-con"></div>

@@ -2,6 +2,7 @@ frappe.provide("templates/includes");
 
 {% include "templates/includes/linked_phr_updates.js" %}
 {% include "templates/includes/html_viewer.js" %}
+frappe.require("assets/phr/bootstrap3-dialog-master/bootstrap-dialog.js")
 
 
 var ProfileSettings = inherit(RenderFormFields, {

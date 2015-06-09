@@ -265,6 +265,7 @@ h5.over-title {
     padding-top: 65px;
   }
 }
+.ui-autocomplete-multiselect-item .ui-icon { display: inline-block !important; }
 
 #app {
   height: auto;
@@ -283,6 +284,13 @@ h5.over-title {
 #app .app-content:after {
   clear: both;
 }
+
+.tree .selected-chld span, .tree li span:hover  {
+    background: #e0e0e0 !important;
+    color: #89c148 !important;
+}
+.tree .selected-chld span .badge, .tree li span:hover > .badge { background: #89c148 !important;color: #fff !important  } 
+
 @media (max-width: 991px) {
   #app {
     width: 100%;
@@ -366,7 +374,7 @@ h5.over-title {
     padding:  10px 30px 10px 290px;
     position: fixed;
     right: 0;
-    top: 65px;
+    top: 108px;
     width: 100%;
     z-index: 999;
 }
@@ -1618,7 +1626,7 @@ ul.sub-menu li ul.sub-menu li ul.sub-menu li a {
     margin-left: 260px;
   }
   .app-navbar-fixed .main-content {
-    margin-top: 58px;
+    margin-top: 100px;
   }
   .app-navbar-fixed .main-content:before, .app-navbar-fixed .main-content:after {
     content: " ";
@@ -1635,6 +1643,9 @@ ul.sub-menu li ul.sub-menu li ul.sub-menu li a {
   .main-content {
     padding-top: 65px;
   }
+}
+@media (max-width: 420px) {
+   .top-btns-bar .btn { margin-left: 5px !important; padding: 6px 7px !important; }
 }
 
 /* ---------------------------------------------------------------------- */
@@ -11401,6 +11412,10 @@ td.small-width {
 }
 @media (max-width: 980px) { 
   .profile_dtls .profile_dtls_left, .profile_dtls .profile_dtls_right { padding: 0 5% !important; }
+  .breadcrumb-bar { padding: 5px 30px !important; } 
+  .top-btns-bar { padding: 10px 30px !important; }
+  .main-content { padding-top: 165px !important; }
+
 }
 #page-title .breadcrumb > li + li {
   padding: 0 5px;
@@ -11566,7 +11581,7 @@ td.small-width {
 .manage_dashboard_right a img, .edit_profile a img { margin-right: 5px; }
 .disease_monitorg_right { margin: -5px 0; }
 .weight_mngnt{position:relative;border-radius:5px;margin-bottom:0 !important;}
-.weight_mngnt:before{ content:''; right:20px; top:0px; width:20px; height:100%; background: url(../images/selectbg.jpg) no-repeat center center; position:absolute; pointer-events:none; display:block; } 
+.weight_mngnt:before{ content:''; right:20px; top:0px; width:35px; height:100%; background: url(../images/selectbg.jpg) no-repeat center center; position:absolute; pointer-events:none; display:block; } 
 #weight_mngnt_dp { font-size: 12px; width: 100%; background: #fafafa; border: 1px solid rgba(0, 0, 0, 0.07); }
 .msg_count { font-family: 'pluto_sansmedium'; font-size: 12px; color: #ed6231; display: inline; margin: 2px 10px 0 0; }
 .navbar .navbar-right > li > a .ti-comment { margin-top: 4px; }
@@ -11599,6 +11614,16 @@ td.small-width {
 .events_tbl a:hover { color: #89c148; } 
 
 /* Save, New, Download PHR Buttons CSS */
+.breadcrumb-bar { 
+    background: #fff; 
+  border-bottom: 1px solid rgba(0, 0, 0, 0.07) !important; 
+  padding: 5px 30px 5px 290px; 
+  position: fixed;
+    right: 0;
+    top: 65px;
+    width: 100%;
+    z-index: 999;  
+}
 
 .breadcrumb { background: none !important;  border-radius: 4px; margin: 0 !important; padding: 8px 10px 8px 0px !important; }
 

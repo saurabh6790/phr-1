@@ -35,6 +35,8 @@ Built on Frappe.io. Free and Open Source Framework for the Web. https://frappe.i
         function noBack() { 
             window.history.forward(); 
         }
+        console.log($('.menu-toggler'))
+    	$('.menu-toggler').attr("href").replace(/\//, '')
 	</script>
 	{%- block head_include %}{% endblock -%}
 	{%- block head -%}

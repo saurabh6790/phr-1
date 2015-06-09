@@ -1,6 +1,7 @@
 frappe.provide("templates/includes");
 frappe.provide("frappe");
-
+frappe.require("assets/phr/js/lib/jquery/jquery.ui.timepicker-addon.js");
+frappe.require("assets/phr/bootstrap3-dialog-master/bootstrap-dialog.js")
 {% include "templates/includes/linked_phr_updates.js" %}
 
 
