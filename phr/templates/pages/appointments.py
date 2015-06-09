@@ -8,7 +8,7 @@ import datetime
 from phr.phr.doctype.phr_activity_log.phr_activity_log import make_log
 from erpnext.setup.doctype.sms_settings.sms_settings import send_sms
 from frappe.utils.email_lib import sendmail
-from phr.templates.pages.profile import search_profile_data_from_solr
+from phr.templates.pages.dashboard import search_profile_data_from_solr
 
 
 @frappe.whitelist(allow_guest=True)
