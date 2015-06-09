@@ -50,6 +50,14 @@
    "label": "Required", 
    "permlevel": 0, 
    "precision": ""
+  }, 
+  {
+   "description": "Width will considered in pixels.", 
+   "fieldname": "width", 
+   "fieldtype": "Int", 
+   "label": "Width", 
+   "permlevel": 0, 
+   "precision": ""
   }
  ], 
  "hide_heading": 0, 
@@ -59,7 +67,7 @@
  "is_submittable": 0, 
  "issingle": 0, 
  "istable": 1, 
- "modified": "2015-04-10 12:06:17.354818", 
+ "modified": "2015-06-09 11:11:15.801490", 
  "modified_by": "Administrator", 
  "module": "phr", 
  "name": "Event Parameters", 

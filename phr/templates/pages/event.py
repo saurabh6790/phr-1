@@ -244,7 +244,7 @@ def share_via_email(data):
 		sendmail([data.get('email_id')], subject="PHR-Event Data", msg=cstr(msg),
 				attachments=attachments)
 
-		make_log(data.get('profile_id'),"Event","Shared Via Email","Event Shared Via Email to %s"%(data.get('email_id')))
+		make_log(data.get('profile_id'),"Event","Shared Via Email","Event <b>%s</b> Shared Via Email to %s"%(data.get('event_title'), data.get('email_id')))
 		# args = {"patient":patient_name,"email":data.get('email_id')}
 		# notify_provider(data.get('doctor_id'),data.get('profile_id'),"Event Share Email",args)
 		return { "returncode":1,"message_summary":"Selected image(s) has been shared with %(provider_name)s for event %(event)s "%{'event': data.get('event_title'),'provider_name': data.get('doctor_name')}}
@@ -286,7 +286,8 @@ def share_via_providers_account(data):
 		
 		files_list = get_files_doc(event_data, data, None, event_dict, sub_event_count)
 		make_sharing_request(event_data, data, files_list, event_dict, sub_event_count)
-		make_log(data.get('profile_id'),"Event","Shared Via Provider","Event Shared Via Provider")
+		make_log(data.get('profile_id'),"Event","Shared Via Provider","Event <b style='color: #89c148;'>%s</b> has shared with Provider <b style='color: #89c148;'>%s</b> \
+			for duration <b style='color: #89c148;'>%s</b>"%(data.get('event_title'), data.get('doctor_name'), data.get('sharing_duration')))
 		return {"returncode":2,"message_summary":eval(json.loads(response.text).get('sharelist'))[0].get('message_summary')}
 
 	else:
@@ -318,7 +319,8 @@ def share_via_providers_account(data):
 
 		files_list = get_files_doc(event_data, data, None, event_dict, sub_event_count)
 		make_sharing_request(event_data, data, files_list, event_dict, sub_event_count)
-		make_log(data.get('profile_id'),"Event","Shared Via Provider","Event Shared Via Provider")
+		make_log(data.get('profile_id'),"Event","Shared Via Provider","Event <b style='color: #89c148;'>%s</b> has been shared with Provider <b style='color: #89c148;'>%s</b> \
+			till <b style='color: #89c148;'>%s</b>"%(data.get('event_title'), data.get('doctor_name'), data.get('sharing_duration')))
 		# args = {"patient":patient_name,"duration":data.get('sharing_duration')}
 		# email_msg = "%(patient)s has shared Event with You which is accesible upto %(duration)s. \n\n Thank you.\n Team HealthSnapp."%args
 		# notify_provider(data.get('doctor_id'),data.get('profile_id'),"Event Share",args,email_msg)

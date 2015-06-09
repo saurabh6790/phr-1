@@ -350,48 +350,6 @@ def get_enabled_notification(profile_id):
 		from `tabNotification Configuration` 
 		where profile_id='%s'"""%(profile_id),as_dict=1)
 	return ret
-
-@frappe.whitelist(allow_guest=True)
-def get_logs(profile_id):
-	log_list=frappe.db.sql("""select * from 
-		`tabPHR Activity Log` 
-		where profile_id='%s' and entity in ('Event','Visit') order by creation desc limit 5"""%(profile_id),as_dict=1)
-	return log_list
-
-@frappe.whitelist(allow_guest=True)
-def get_user_details(profile_id=None):
-	print profile_id
-	args = {} 
-	if profile_id:
-		user_name = frappe.db.get_value("User", { "profile_id" : profile_id}, "name")
-		print user_name
-		if user_name:
-			user = frappe.get_doc("User",user_name)
-			args.update({
-				"name":"{0} {1}".format(user.first_name,user.last_name),
-				"contact":user.contact,
-				"barcode":user.barcode or "",
-				"user_image":user.user_image or "",
-				"emergency_contact":user.emergemcy_contactno or "",
-				"blood_group":user.blood_group or "",
-				"profile_id":profile_id
-			})
-		else:
-			from phr.templates.pages.dashboard import search_profile_data_from_solr
-			data = search_profile_data_from_solr(profile_id)
-			barcode = frappe.db.get_value("LinkedPHR Images",{"profile_id":profile_id},"barcode")
-			user_image = frappe.db.get_value("LinkedPHR Images",{"profile_id":profile_id},"profile_image")  
-			args.update({
-				"name":"{0} {1}".format(data["person_firstname"],data["person_lastname"]),
-				"contact":data["mobile"],
-				"barcode":barcode or "",
-				"user_image":user_image or "",
-				"emergency_contact":data["emergemcy_contactno"] or "",
-				"blood_group":data["blod_group"] or "",
-				"profile_id":profile_id
-			})
-
-	return args
 	
 @frappe.whitelist(allow_guest=True)
 def get_states():
@@ -489,6 +447,7 @@ def get_phr_pdf(profile_id):
 def get_pdf(profile_id,options=None):
 	import pdfkit, os, frappe
 	from frappe.utils import scrub_urls
+	from phr.templates.pages.dashboard import get_user_details
 	if not options:
 		options = {}
 
@@ -543,9 +502,14 @@ def get_pdf(profile_id,options=None):
 
 	if not options.get("page-size"):
 		options['page-size'] = "A4"
+	
+	import os, hashlib
+	random_data = os.urandom(128)
+	fname = hashlib.md5(random_data).hexdigest()[:30]
+
 
 	html = scrub_urls(html)
-	fname=os.path.join(get_files_path(), profile_id, profile_id +"ed"+".pdf")
+	fname=os.path.join(get_files_path(), profile_id,  fname+"ed"+".pdf")
 	pdfkit.from_string(html, fname, options=options or {})
 	li=fname.split('/')
 	
@@ -557,3 +521,8 @@ def get_pdf(profile_id,options=None):
 @frappe.whitelist(allow_guest=True)	
 def check_templates(profile_id):
 	msg=get_sms_template("appointments",{"doctor_name":"ahahha","appointment_time":"4.25"})
+
+@frappe.whitelist()
+def reset_image(profile_id):
+	update_user_image("/assets/phr/images/default-user.png", profile_id)
+	return "done"

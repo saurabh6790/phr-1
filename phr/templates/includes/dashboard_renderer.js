@@ -392,7 +392,7 @@ function render_dashboard(profile_id){
 					var r = $("<tr>").appendTo($("#table1").find("thead"));
 					$.each(val,function(i, d){
 						if (i!=0){
-							$("<th>").html(d)
+							$("<th>").html(d["title"])
 								.appendTo(r);
 						}
 					})

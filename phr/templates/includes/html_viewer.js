@@ -12,9 +12,10 @@ $.extend(window.HTMLViewer.prototype,{
 	},
 	form_generator_callback: function(profile_info){
 		scroll_top()
-		var dt = new Date(profile_info['date_of_birth'])
-		profile_info['date_of_birth'] = (dt.getDate() < 10 ? "0" + (dt.getDate()) : dt.getDate())  + '/' + (dt.getMonth() < 10 ? "0" + (dt.getMonth()+1) : dt.getMonth()+1) + '/' + dt.getFullYear()
-
+    if(profile_info['date_of_birth']){
+      var dt = new Date(profile_info['date_of_birth'])
+      profile_info['date_of_birth'] = (dt.getDate() < 10 ? "0" + (dt.getDate()) : dt.getDate())  + '/' + (dt.getMonth() < 10 ? "0" + (dt.getMonth()+1) : dt.getMonth()+1) + '/' + dt.getFullYear()
+    }
 		$(repl_str('<div class="panel-body no-padding"> \
                     <div class="col-md-12">\
                         <div class="text-center profile_photo">\
@@ -43,7 +44,8 @@ $.extend(window.HTMLViewer.prototype,{
                               </li>\
                               <li>\
                                 <span class="profile_field">Mobile No:</span>\
-                                <span class="profile_value" style="display: inline-flex;">%(mobile)s <br> <span style="color:#17329E;" id="vm">Mobile Not Verified-<br> <a id="verify_mobile" style="color:#17329E;">Verify</a></span></span>\
+                                <span class="profile_value" style="display: inline-flex;">%(mobile)s </span>\
+                                <span style="color:#17329E;" id="vm">Mobile Not Verified- <a id="verify_mobile" style="color:#17329E;">Verify</a></span>\
                               </li>\
                               <li>\
                                 <span class="profile_field">Email:</span>\

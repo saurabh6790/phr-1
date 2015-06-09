@@ -226,8 +226,10 @@ var PatientDashboard = inherit(RenderFormFields, {
 
 					$('<img style="max-width:123px;max-height:119px;" src="'+r.message["image"]+'"alt="user image">\
 						<a class="edit_photo_link" nohref><img src="assets/phr/images/change-photo.png"> Edit</a>\
+						<a class="remove_image" nohref><i class="icon-remove green"></i> Remove</a>\
 					').appendTo($('.profile_photo'))
 					me.upload_image()
+					me.reset_user_image()
 					NProgress.done();
 				}
 			}
@@ -270,12 +272,20 @@ var PatientDashboard = inherit(RenderFormFields, {
 			args:{"profile_id": me.entityid, "file_name": attachment['file_name']},
 			callback: function(r) {
 				me.get_user_image(me.entityid)
-				// NProgress.done();
-				// if(r.message) {
-				// 	frappe.msgprint(r.message);
-				// }
 			}
 		});
+	},
+	reset_user_image:function(){
+		var me = this;
+		$('.remove_image').bind('click',function(event) {
+			frappe.call({
+				method:'phr.templates.pages.profile.reset_image',
+				args:{"profile_id": me.entityid},
+				callback: function(r) {
+					me.get_user_image(me.entityid)
+				}
+			});
+		})
 	},
 	get_method:function(res,cmd,me,selected){
 		frappe.call({

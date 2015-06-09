@@ -215,7 +215,6 @@ var DiseaseMonitoring = inherit(RenderFormFields, {
 	share_data:function(d){
 		var me = this;
 		me.res['lphr_name'] = sessionStorage.getItem("cname")
-		console.log(me.selected_dm,$('.fixed-table-header').find('thead').html(),me.res,me.profile_id,$('[name="disease"]').val())
 		NProgress.start();
 		if(me.validate_sharing_modal()){
 			frappe.call({
