@@ -45,7 +45,6 @@ def create_profile_solr(data):
 	request_type = "POST"
 	url = "%s/createProfile"%get_base_url()
 	args = json.loads(data)
-	
 	if args['mobile'] and not not_duplicate_contact(args['mobile']):
 		return {"message_summary":"Contact Already Registered"}
 
