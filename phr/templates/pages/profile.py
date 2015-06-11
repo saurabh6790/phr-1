@@ -52,7 +52,6 @@ def update_profile_solr(data,dashboard=None):
 		else:
 			return {"rtcode":101,"msg":"Error While Updating Profile"}
 	else:
-		
 		return {"rtcode":201,"msg":"Maintioned contact number is already registered with another profile."}
 
 @frappe.whitelist(allow_guest=True)

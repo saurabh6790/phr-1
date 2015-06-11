@@ -91,10 +91,14 @@ website_generators = ["PHR Forms"]
 
 scheduler_events = {
 	"all": [
-		"phr.templates.pages.appointments.notify_appointments","phr.templates.pages.todo.notify_to_do","phr.templates.pages.medication.notify_medications"
+		"phr.templates.pages.appointments.notify_appointments",
+		"phr.templates.pages.todo.notify_to_do",
+		"phr.templates.pages.medication.notify_medications"
 	],
 	"daily": [
-		"phr.templates.pages.profile.notify_about_registration","phr.templates.pages.medication.update_status_of_medication",
+		"phr.templates.pages.profile.notify_about_registration",
+		"phr.templates.pages.medication.update_status_of_medication", 
+		"phr.templates.pages.backup_utils.take_backup"
 	]
 }
 
