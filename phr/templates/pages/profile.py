@@ -22,31 +22,30 @@ from frappe.utils.email_lib import sendmail
 
 @frappe.whitelist(allow_guest=True)
 def update_profile(data,id,dashboard=None):
-	call_mapper={
+	call_mapper = {
 	"basic_info":update_profile_solr,
 	"password":update_password,
 	"update_phr":manage_phr,
 	"dashboard":manage_dashboard,
 	"notification":manage_notifications}
-	method=call_mapper.get(id)
-	response=method(data,dashboard)
+	method = call_mapper.get(id)
+	response = method(data,dashboard)
 	return response
 
 @frappe.whitelist(allow_guest=True)
 def update_profile_solr(data,dashboard=None):
-	request_type="POST"
+	request_type = "POST"
 	user_details = json.loads(data)
 	if not_duplicate_contact(user_details.get('mobile'),user_details.get('email')):
-		url=get_base_url()+"/updateProfile"
+		url = get_base_url()+"/updateProfile"
 		from phr.phr.phr_api import get_response
-		response=get_response(url,data,request_type)
-		res=json.loads(response.text)
-		print res['returncode']
-		p=json.loads(data)
+		response = get_response(url,data,request_type)
+		res = json.loads(response.text)
+		profile = json.loads(data)
 		if res['returncode']==102:
-			sub="Profile Updated Successfully"
-			make_log(p.get('entityid'),"profile","update",sub)
-			update_user_details(p)
+			sub = "Profile Updated Successfully"
+			make_log(profile.get('entityid'),"profile","update",sub)
+			update_user_details(profile)
 
 			return {"rtcode":100,"msg":"Profile Updated Successfully","mob_no":user_details.get('mobile'),"user":user_details.get('email')}
 		else:
@@ -98,11 +97,16 @@ def generate_mobile_vericication_code(mobile,profile_id,name=None):
 	mobile_code = get_mob_code()
 	if not name:
 		make_mobile_verification_entry(mobile,profile_id,mobile_code)
+		return mobile_code
 	elif name:
 		edit_mobile_verification_entry(mobile,profile_id,mobile_code,name)
+		return mobile_code
+	
+@frappe.whitelist(allow_guest=True)
+def send_mobile_v_code(mobile,profile_id,mobile_code):
 	from phr.templates.pages.utils import get_sms_template
 	sms = get_sms_template("registration",{ "mobile_code": mobile_code })
-	rec_list=[]
+	rec_list = []
 	rec_list.append(mobile)
 	from erpnext.setup.doctype.sms_settings.sms_settings import send_sms
 	send_sms(rec_list,sms)
@@ -139,9 +143,9 @@ def update_user_details(data):
 
 @frappe.whitelist(allow_guest=True)
 def update_password(data,dashboard=None):
-	usrobj=json.loads(data)
-	old_password=usrobj.get('old_password')
-	new_password=usrobj.get('new_password')
+	usrobj = json.loads(data)
+	old_password = usrobj.get('old_password')
+	new_password = usrobj.get('new_password')
 
 	if new_password != usrobj.get('cnf_new_password'):
 		return " Cannot Update: New Password and Confirm Password fields are not matching "
@@ -157,7 +161,7 @@ def update_password(data,dashboard=None):
 			return "Cannot Update: Old Password is Incorrect"
 	_update_password(user, new_password)
 	frappe.db.set_value("User",user,"password_str",new_password)
-	sub="Password Updated Successfully"
+	sub = "Password Updated Successfully"
 	make_log(usrobj.get('entityid'),"profile","update Password",sub)
 	return "Password Updated Successfully"
 
@@ -167,13 +171,13 @@ def manage_phr(data,dashboard=None):
 
 @frappe.whitelist(allow_guest=True)
 def manage_notifications(data,dashboard=None):
-	obj=json.loads(data)
-	dashboard_fields=json.loads(dashboard)
-	mn=frappe.db.get_value("Notification Configuration",{"profile_id":obj.get('entityid')},"name")
+	obj = json.loads(data)
+	dashboard_fields = json.loads(dashboard)
+	mn = frappe.db.get_value("Notification Configuration",{"profile_id":obj.get('entityid')},"name")
 	if mn:
 		frappe.db.sql("""update `tabNotification Configuration` set linked_phr=0,to_do=0 where name='%s'"""%(mn))
 		update_values_notify(dashboard_fields,mn,obj.get('entityid'))
-		sub="Notifications Configuration Done"
+		sub = "Notifications Configuration Done"
 		make_log(obj.get('entityid'),"profile","Notifications",sub)
 		return "Notification Settings Updated"
 	else:
@@ -185,7 +189,7 @@ def manage_notifications(data,dashboard=None):
 		mn.ignore_permissions = True
 		mn.insert()
 		update_values_notify(dashboard_fields,mn.name,obj.get('entityid'))
-		sub="Notifications Configuration Done"
+		sub = "Notifications Configuration Done"
 		make_log(obj.get('entityid'),"profile","Notifications",sub)
 		return "Notification Settings Done"
 	
@@ -193,14 +197,14 @@ def update_values_notify(dashboard_fields,name,profile_id):
 	for d in dashboard_fields:
 		frappe.db.sql("""update `tabNotification Configuration` set %s=1 where name='%s'"""%(d,name))
 		frappe.db.commit()
-		sub="Notifications Configuration Done"
+		sub = "Notifications Configuration Done"
 		make_log(profile_id,"profile","Notifications",sub)
 
 @frappe.whitelist(allow_guest=True)
 def manage_dashboard(data,dashboard=None):
-	obj=json.loads(data)
-	dashboard_fields=json.loads(dashboard)
-	sr=frappe.db.get_value("Shortcut",{"profile_id":obj.get('entityid')},"name")
+	obj = json.loads(data)
+	dashboard_fields = json.loads(dashboard)
+	sr = frappe.db.get_value("Shortcut",{"profile_id":obj.get('entityid')},"name")
 	if sr:
 		frappe.db.sql("""update `tabShortcut` set 
 			visits=0,events=0,
@@ -208,7 +212,7 @@ def manage_dashboard(data,dashboard=None):
 			appointments=0,messages=0  
 			where name='%s'"""%(sr))
 		update_values(dashboard_fields,sr,obj.get('entityid'))
-		sub="Dashboard Configuration Done"
+		sub = "Dashboard Configuration Done"
 		make_log(obj.get('entityid'),"profile","Dashboard",sub)
 		return "Dashboard Configuration Updated"
 	else:
@@ -220,7 +224,7 @@ def manage_dashboard(data,dashboard=None):
 		sr.ignore_permissions = True
 		sr.insert()
 		update_values(dashboard_fields,sr.name,obj.get('entityid'))
-		sub="Dashboard Configuration Done"
+		sub = "Dashboard Configuration Done"
 		make_log(obj.get('entityid'),"profile","Dashboard",sub)
 		return "Dashboard Configuration Done"
 
@@ -231,13 +235,13 @@ def update_values(fields,name,profile_id):
 		
 @frappe.whitelist(allow_guest=True)
 def get_user_image(profile_id):
-	upexists=frappe.db.get_value("User",{"profile_id":profile_id},"user_image")
+	upexists = frappe.db.get_value("User",{"profile_id":profile_id},"user_image")
 	if upexists:
 		return {
 			"image":upexists
 		}
 	else:
-		up=frappe.db.get_value("LinkedPHR Images",{"profile_id":profile_id},"profile_image")
+		up = frappe.db.get_value("LinkedPHR Images",{"profile_id":profile_id},"profile_image")
 		if up:
 			return{
 				"image":up	
@@ -255,12 +259,12 @@ def upload_image(profile_id,data=None,file_name=None):
 	update_user_image(file_path, profile_id)
 
 def update_user_image(path, profile_id):
-	ue=frappe.db.get_value("User",{"profile_id":profile_id},"user_image")
+	ue = frappe.db.get_value("User",{"profile_id":profile_id},"user_image")
 	if ue:
-		user=frappe.get_doc("User",frappe.session.user)
-		user.user_image=path
+		user = frappe.get_doc("User",frappe.session.user)
+		user.user_image = path
 		user.save(ignore_permissions=True)
-		sub="Image Uploaded Successfully "+path
+		sub = "Image Uploaded Successfully "+path
 		make_log(profile_id,"profile","Image Upload",sub)
 		frappe.local.cookie_manager.set_cookie("user_image", path or "")
 	else:
@@ -269,14 +273,14 @@ def update_user_image(path, profile_id):
 			frappe.db.sql("""update `tabLinkedPHR Images` 
 				set profile_image='%s' where profile_id='%s'"""%(path,profile_id))
 			frappe.db.commit()
-			sub="Image Uploaded Successfully "+path
+			sub = "Image Uploaded Successfully "+path
 			make_log(profile_id,"profile","Linked PHR Image Upload",sub)
 		else:
-			lp=frappe.new_doc("LinkedPHR Images")
-			lp.profile_id=profile_id
-			lp.profile_image=path
+			lp = frappe.new_doc("LinkedPHR Images")
+			lp.profile_id = profile_id
+			lp.profile_image = path
 			lp.save(ignore_permissions=True)
-			sub="Image Uploaded Successfully "+path
+			sub = "Image Uploaded Successfully "+path
 			make_log(profile_id,"profile","Linked PHR Image Upload",sub)
 
 def get_site_name():
@@ -504,40 +508,9 @@ def get_pdf(profile_id,options=None):
 		'encoding': "UTF-8",
 		'no-outline': None
 	})
-
+	from phr.templates.pages.dashboard import get_user_details
 	user = get_user_details(profile_id)
 	html="""<html lang="en">
-<<<<<<< HEAD
-	<head>
-	<title>Healthsnapp</title> 
-	<link rel="stylesheet" href="assets/phr/css/styles.css">
-	</head>
-	<body>
-	<div class="row">
-	<div class="card-container">
-	<div class="card-main">
-	<div class="card-top">
-	<div class="card-top-left">
-	<p class="patient-name">%(name)s</p>
-	<p ><span>%(profile_id)s</span></p>
-	<p class="patient-blood-grp">Blood Group:  %(blood_group)s</p>
-	<p class="patient-contact">Contact: %(contact)s</p>
-	<p class="patient-emergncy-contact">Emergency Contact: %(emergency_contact)s</p>
-	<div class="clearfix"></div>
-	</div>
-	<div class="card-top-right">
-	<div class="card-photo"><img src="%(user_image)s"></div>
-	</div><div class="clearfix"></div>
-	</div>
-	<div class="card-bottom">
-	<div class="card-logo">
-	<img src="assets/phr/images/card-logo.png"></div>
-	<div class="card-barcode"><img src="%(barcode)s" >
-	</div><div class="clearfix"></div></div>
-	<div class="clearfix"></div></div></div></div></body></html>"""%user
-	
-	
-=======
 			  <head>
 			    <title>Healthsnapp</title> 
 			    <link rel="stylesheet" href="assets/phr/css/styles.css">
@@ -562,7 +535,7 @@ def get_pdf(profile_id,options=None):
 								<div class="card-bottom">
 									<div class="card-logo">
 										<img src="assets/phr/images/card-logo.png"></div>
-										<div class="card-barcode"><img src="%(barcode)s" style="max-height:50px">
+										<div class="card-barcode"><img src="%(barcode)s">
 									</div>
 									<div class="clearfix"></div>
 								</div>
@@ -572,7 +545,7 @@ def get_pdf(profile_id,options=None):
 					</div>
 				  </body>
 				</html>"""%user
->>>>>>> d0da3f506841237a2ecc2d7b6d95ee4d985947ea
+
 
 	if not options.get("page-size"):
 		options['page-size'] = "A4"

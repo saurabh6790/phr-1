@@ -79,6 +79,7 @@ def get_barcode():
 @frappe.whitelist(allow_guest=True)    
 def get_image_path(ean,entityid):
 	path = get_path(entityid)
+	ean.writer.set_options({"module_height":6.0})
 	fullname = ean.save(path)
 	return fullname
 

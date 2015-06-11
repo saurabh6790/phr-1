@@ -374,7 +374,7 @@ h5.over-title {
     padding:  10px 30px 10px 290px;
     position: fixed;
     right: 0;
-    top: 108px;
+    top: 100px;
     width: 100%;
     z-index: 999;
 }
@@ -11675,11 +11675,11 @@ td.small-width {
   background: linear-gradient(#1b7ab2, #85c23f); /* Standard syntax (must be last) */
   color: #fff;
   width: 100%;
-  height: 190px;
+  height: 160px;
   border-top-left-radius: 15px;
   border-top-right-radius: 15px; 
 }
-.card-top-left { width: 260px; padding: 35px 25px 15px; background: none; float: left; }
+.card-top-left { width: 260px; padding: 15px 25px 15px; background: none; float: left; }
 .patient-name { font-family: 'futura_md_btmedium'; font-size: 18px; margin: 0 0 10px; }
 .patient-number { font-family: 'futura_md_btmedium'; font-size: 20px; margin: 0 0 25px; letter-spacing: 2px; }
 .patient-number span { display: inline-block; margin-right: 5px; }  
@@ -11687,7 +11687,7 @@ td.small-width {
 .card-top-right { width: 92px; padding: 35px 28px 45px 0; background: none; float: left; }
 .card-photo {  border-radius: 10px; height: 101px; }
 .card-photo img { border-radius: 10px; width: 100%; }
-.card-bottom { background: #fff; height: 50px; padding: 10px 25px; border-bottom-left-radius: 15px; border-bottom-right-radius: 15px;  }
+.card-bottom { background: #fff; height: 105px; padding: 2px 15px; border-bottom-left-radius: 15px; border-bottom-right-radius: 15px;,overflow:hidden; }
+.card-logo img { margin-top:0px;}
 .card-logo { float: left; }
-.card-logo img { margin-top: 6px; }
 .card-barcode { float: right; }
