@@ -111,13 +111,34 @@
    "label": "Medications", 
    "rows": [
     [
-     {"title":"<i class='icon-unlock'></i>/<i class='icon-lock'></i>","width":"5px;"}, 
-     {"title":"Medicine Name","width":"100px; !important;"}, 
-     {"title":"Dosage","width":"80px;"}, 
-     {"title":"From Date","width":"120px !important;"}, 
-     {"title":"To Date", "width":"120px !important;"},
-     {"title":"Additional Info", "width":"300px;"}, 
-     {"title":"Status","width":"150px;"}
+     {
+      "title": "<i class='icon-unlock'></i>/<i class='icon-lock'></i>", 
+      "width": "5px;"
+     }, 
+     {
+      "title": "Medicine Name", 
+      "width": "100px; !important;"
+     }, 
+     {
+      "title": "Dosage", 
+      "width": "80px;"
+     }, 
+     {
+      "title": "From Date", 
+      "width": "120px !important;"
+     }, 
+     {
+      "title": "To Date", 
+      "width": "120px !important;"
+     }, 
+     {
+      "title": "Additional Info", 
+      "width": "300px;"
+     }, 
+     {
+      "title": "Status", 
+      "width": "150px;"
+     }
     ]
    ]
   }
