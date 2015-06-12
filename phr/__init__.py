@@ -19,6 +19,20 @@ def create_profile(data):
 	return res
 
 @frappe.whitelist(allow_guest=True)
+def updateProfile(data):
+	from templates.pages.profile import update_profile_solr, make_mv_entry,send_mobile_v_code
+
+	data = json.loads(data)
+	res = update_profile_solr(json.dumps(data))
+
+	if res.get('rtcode') == 100:
+		mob_code = make_mv_entry(res.get('mob_no'), data.get('entityid'))
+		if mob_code:
+			send_mobile_v_code(res.get('mob_no'),data.get('entityid'),mob_code)
+		return res
+	else: return res
+
+@frappe.whitelist(allow_guest=True)
 def validate_mobile_code(data):
 	from phr.verifier import verify_mobile
 	data = json.loads(data)
@@ -69,11 +83,9 @@ def update_oauth_user(user, data, provider):
 	}
 
 	if not frappe.db.exists("User", user):
-
 		# is signup disabled?
 		if frappe.utils.cint(frappe.db.get_single_value("Website Settings", "disable_signup")):
 			raise SignupDisabledError
-		
 		
 		profile_res=create_profile_in_solr(args)
 		response=json.loads(profile_res)
@@ -155,8 +167,6 @@ def update_oauth_user(user, data, provider):
 		user.no_welcome_mail = True
 		user.save()
 
-
-
 """ Event Calls """
 @frappe.whitelist(allow_guest=True)
 def get_event_name():
@@ -179,7 +189,6 @@ def getProfileVisitData(data):
 	TAG_RE = re.compile(r'<[^>]+>')
 
 	return eval(TAG_RE.sub('', cstr(res.get('rows')[1:])))
-
 
 @frappe.whitelist(allow_guest=True)
 def getProfileEventData(data):
@@ -242,7 +251,6 @@ def getProfileMedications(data):
 
 	return fetch_values_from_db(data)
 
-
 """Disease Monitoring Calls"""
 
 @frappe.whitelist(allow_guest=True)
@@ -259,7 +267,6 @@ def getDiseaseMonitoringFields():
 		for field_dict in dm_fields:
 			field_mapper.append(field_dict['fieldname'])			
 		
-
 		disease_details['fields'] = dm_fields
 		disease_details['field_mapper'] = field_mapper
 		disease_list.append(disease_details)
@@ -424,7 +431,6 @@ def get_specialization_list():
 def silgle_dlist(multi_dlist):
 	return [i[0] for i in multi_dlist]
 
-
 """image writer"""
 @frappe.whitelist(allow_guest=True)
 def image_writter(data):
@@ -451,9 +457,6 @@ def setProfileImage():
  	return {"filestatus": res}
 
 def update_profile_image(profile_id, file_name=None):
-	# from templates.pages.profile import update_user_image
-	# return update_user_image("/files/%s/%s"%(profile_id, file_name), profile_id)
-
 	user_id = frappe.db.get_value('User', {'profile_id': profile_id}, 'name')
 	if user_id:
 		user = frappe.get_doc('User', user_id)
@@ -500,7 +503,6 @@ def getProfileImage(data):
 		return {
 			'exe':"Profile Not Found"
 		}
-
 
 """Patient's Emergency Details"""
 @frappe.whitelist(allow_guest=True)
@@ -577,7 +579,6 @@ def shareDM(data):
 	return share_dm(json.dumps(share_data["data_row"]), share_data["header"], json.dumps(share_info), \
 		share_info["profile_id"], share_info["event_title"])
 
-
 def build_dm_share_data(share_info):
 	dm_doc=frappe.get_doc("Disease Monitoring",share_info["event_id"])
 	field_dic={}
@@ -623,3 +624,28 @@ def not_matching_docname(data):
 	if [data.get('docname')] not in medication_list:
 		return True
 	return False
+
+@frappe.whitelist(allow_guest=True)
+def getAdvertisements():
+	return frappe.db.sql("""select ad_title, ad_link, ad_description from tabAdvertisements 
+		where ifnull(status,'') = 'Active'""", as_dict=1)
+
+@frappe.whitelist(allow_guest=True)
+def createLinkedPHR(data):
+	from templates.pages.linked_phr import create_linkedphr
+	from templates.pages.profile import make_mv_entry
+	data = json.loads(data)
+	res = create_linkedphr(json.dumps(data))
+
+	if res.get('returncode') == 122 and data.get('mobile'):
+		mob_code = make_mv_entry(data.get('mobile'), res.get('entityid'))
+		if mob_code:
+			send_mobile_v_code(res.get('mobile'),data.get('entityid'),mob_code)
+
+
+	return {
+		"returncode": res.get('returncode'),
+		"actualdata": json.loads(res.get('actualdata')),
+		"entityid": res.get('entityid'),
+		"message_summary": res.get('message_summary')
+	}

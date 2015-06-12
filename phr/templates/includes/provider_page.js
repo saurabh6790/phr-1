@@ -94,10 +94,10 @@ $(document).ready(function () {
 		profile_id=sessionStorage.getItem("cid")
 		$('.breadcrumb').empty()
 		NProgress.start();
-		$('<li><a nohref>Profile</a></li>').click(function(){
-			PatientDashboard.prototype.init($(document).find("#main-con"),
-				{"file_name" : "profile", "method": "profile"},profile_id)
-		}).appendTo('.breadcrumb');
+		// $('<li><a nohref>Profile</a></li>').click(function(){
+		// 	PatientDashboard.prototype.init($(document).find("#main-con"),
+		// 		{"file_name" : "profile", "method": "profile"},profile_id)
+		// }).appendTo('.breadcrumb');
 		PatientDashboard.prototype.init($(document).find("#main-con"),
 				{"file_name" : "profile", "method": "profile"},profile_id)	
 		NProgress.done();
@@ -107,11 +107,11 @@ $(document).ready(function () {
 		$('.breadcrumb').empty()
 		$('#main-con').empty()
 		NProgress.start();
-		$('<li><a nohref>Profile</a></li>').click(function(){
-			ListView.prototype.init($(document).find(".field-area"), {"file_name" : "patients",
-			'cmd':"provider.get_pateint_data",
-			'profile_id':profile_id})
-		}).appendTo('.breadcrumb');
+		// $('<li><a nohref>Profile</a></li>').click(function(){
+		// 	ListView.prototype.init($(document).find(".field-area"), {"file_name" : "patients",
+		// 	'cmd':"provider.get_pateint_data",
+		// 	'profile_id':profile_id})
+		// }).appendTo('.breadcrumb');
 		ListView.prototype.init($(document).find(".field-area"), {"file_name" : "patients",
 		'cmd':"provider.get_patient_data",
 		'profile_id':profile_id})

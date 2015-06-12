@@ -197,7 +197,7 @@ def build_event_data(obj,profile_id):
 		data=json.loads(obj)
 		if data and data["eventList"]:
 			for d in data["eventList"]:
-				rows.extend([["""<a nohref id="%(entityid)s" onclick="Events.prototype.open_form('%(entityid)s', '%(event_title)s', '%(profile_id)s')"> %(event_title)s </a>"""%{"entityid": d['entityid'],"event_title": d['event_title'], "profile_id":profile_id},datetime.datetime.fromtimestamp(cint(d["event_date"])/1000.0).strftime('%d/%m/%Y'),d["event_symptoms"],d["diagnosis_desc"]]])
+				rows.extend([["""<a nohref id="%(entityid)s" onclick="Events.prototype.open_form('%(entityid)s', '%(event_title)s', '%(profile_id)s')"> %(event_title)s </a>"""%{"entityid": d['entityid'],"event_title": d['event_title'], "profile_id":profile_id},datetime.datetime.fromtimestamp(cint(d["event_date"])/1000.0).strftime('%d/%m/%Y'), ', '.join(d["event_symptoms"]), d["diagnosis_desc"]]])
 		else:
 			rows.extend([["	NO DATA","","",""]])
 	else:
@@ -301,3 +301,10 @@ def get_advertisements(profile_id=None):
 			"Message":"No data",
 			"rtcode":1
 		}
+
+@frappe.whitelist(allow_guest=True)
+def get_logs(profile_id):
+	log_list=frappe.db.sql("""select * from 
+		`tabPHR Activity Log` 
+		where profile_id='%s' and entity in ('Event','Visit') order by creation desc limit 5"""%(profile_id),as_dict=1)
+	return log_list

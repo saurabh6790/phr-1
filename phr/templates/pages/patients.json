@@ -6,9 +6,9 @@
             "label": "My Patients",
             "rows": [
                 [
-                    "Name",
-                    "Email",
-                    "Mobile No"
+                    {"title":"Name", "width":"200px;"},
+                    {"title":"Email", "width":"200px;"},
+                    {"title":"Mobile No","width":"200px;"}
                 ]
             ]
         }

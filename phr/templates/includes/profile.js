@@ -226,8 +226,10 @@ var PatientDashboard = inherit(RenderFormFields, {
 
 					$('<img style="max-width:123px;max-height:119px;" src="'+r.message["image"]+'"alt="user image">\
 						<a class="edit_photo_link" nohref><img src="assets/phr/images/change-photo.png"> Edit</a>\
+						<a class="remove_image" nohref><i class="icon-remove green"></i> Remove</a>\
 					').appendTo($('.profile_photo'))
 					me.upload_image()
+					me.reset_user_image()
 					NProgress.done();
 				}
 			}
@@ -270,12 +272,20 @@ var PatientDashboard = inherit(RenderFormFields, {
 			args:{"profile_id": me.entityid, "file_name": attachment['file_name']},
 			callback: function(r) {
 				me.get_user_image(me.entityid)
-				// NProgress.done();
-				// if(r.message) {
-				// 	frappe.msgprint(r.message);
-				// }
 			}
 		});
+	},
+	reset_user_image:function(){
+		var me = this;
+		$('.remove_image').bind('click',function(event) {
+			frappe.call({
+				method:'phr.templates.pages.profile.reset_image',
+				args:{"profile_id": me.entityid},
+				callback: function(r) {
+					me.get_user_image(me.entityid)
+				}
+			});
+		})
 	},
 	get_method:function(res,cmd,me,selected){
 		frappe.call({
@@ -286,7 +296,7 @@ var PatientDashboard = inherit(RenderFormFields, {
 				response = r.message
 				frappe.msgprint(response["msg"])
 				if(response["rtcode"]==100) {
-					me.make_mv_entry(sessionStorage.getItem("cid"),response["mob_no"],response["user"])
+					me.send_mobile_v_code(sessionStorage.getItem("cid"),response["mob_no"],response["user"],response['mob_code'])
 					$(me.wrapper).empty()
 					$('.field-area').empty()
 					HTMLViewer.prototype.init(me.wrapper, me.args, me.entityid)
@@ -305,10 +315,10 @@ var PatientDashboard = inherit(RenderFormFields, {
 			}
 		})
 	},
-	make_mv_entry:function(profile_id,mobile,user){
+	send_mobile_v_code:function(profile_id,mobile,user,mob_code){
 		frappe.call({
-			method:'phr.templates.pages.profile.make_mv_entry',
-			args:{"mobile":mobile,"profile_id":profile_id},
+			method:'phr.templates.pages.profile.send_mobile_v_code',
+			args:{"mobile":mobile,"profile_id":profile_id,"mobile_code":mob_code},
 			callback: function(r) {
 			}
 		})

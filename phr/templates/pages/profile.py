@@ -36,7 +36,7 @@ def update_profile(data,id,dashboard=None):
 def update_profile_solr(data,dashboard=None):
 	request_type = "POST"
 	user_details = json.loads(data)
-	if not_duplicate_contact(user_details.get('mobile'),user_details.get('email')):
+	if 	not_duplicate_contact(user_details.get('mobile'),user_details.get('email')):
 		url = get_base_url()+"/updateProfile"
 		from phr.phr.phr_api import get_response
 		response = get_response(url,data,request_type)
@@ -46,28 +46,31 @@ def update_profile_solr(data,dashboard=None):
 			sub = "Profile Updated Successfully"
 			make_log(profile.get('entityid'),"profile","update",sub)
 			update_user_details(profile)
-
-			return {"rtcode":100,"msg":"Profile Updated Successfully","mob_no":user_details.get('mobile'),"user":user_details.get('email')}
+			mob_code = make_mv_entry(user_details.get('mobile'),profile.get('entityid'))
+			return {"rtcode":100,"msg":"Profile Updated Successfully","mob_no":user_details.get('mobile'),"user":user_details.get('email'),"mobile_code":mob_code}
 		else:
 			return {"rtcode":101,"msg":"Error While Updating Profile"}
 	else:
-		
 		return {"rtcode":201,"msg":"Maintioned contact number is already registered with another profile."}
 
 @frappe.whitelist(allow_guest=True)
 def make_mv_entry(mobile,profile_id):
 	mob_v = frappe.db.get_value("Mobile Verification",{"mobile_no":mobile},"name")
+	mobile_code = get_mob_code()
 	if not mob_v:
-		generate_mobile_vericication_code(mobile,profile_id)
+		make_mobile_verification_entry(mobile,profile_id,mobile_code)
+		return mobile_code
 	elif mob_v and not frappe.db.get_value("Mobile Verification",{"mobile_no":mobile,"profile_id":profile_id},"name"):
-		generate_mobile_vericication_code(mobile,profile_id,mob_v)
+		edit_mobile_verification_entry(mobile,profile_id,mobile_code,mob_v)
+		return mobile_code
+
 		
 @frappe.whitelist(allow_guest=True)
 def not_duplicate_contact(mobile,user):
 	print user
 	if frappe.db.sql("""select count(*) from tabUser 
-		where contact = '%s' and name != "%s" 
-	"""%(mobile,user), as_list=1)[0][0] == 0:
+		where contact = '%s' and name != "%s"
+	"""%(mobile,user), as_list=1,debug=1)[0][0] == 0:
 		return True
 	else:
 		return False
@@ -92,25 +95,18 @@ def check_contact_verified(mobile):
 	else:
 		return False
 
-@frappe.whitelist(allow_guest=True)		
-def generate_mobile_vericication_code(mobile,profile_id,name=None):
-	mobile_code = get_mob_code()
-	if not name:
-		make_mobile_verification_entry(mobile,profile_id,mobile_code)
-		return mobile_code
-	elif name:
-		edit_mobile_verification_entry(mobile,profile_id,mobile_code,name)
-		return mobile_code
+
 	
 @frappe.whitelist(allow_guest=True)
-def send_mobile_v_code(mobile,profile_id,mobile_code):
-	from phr.templates.pages.utils import get_sms_template
-	sms = get_sms_template("registration",{ "mobile_code": mobile_code })
-	rec_list = []
-	rec_list.append(mobile)
-	from erpnext.setup.doctype.sms_settings.sms_settings import send_sms
-	send_sms(rec_list,sms)
-	return "done"
+def send_mobile_v_code(mobile,profile_id,mobile_code=None):
+	if mobile_code:
+		from phr.templates.pages.utils import get_sms_template
+		sms = get_sms_template("registration",{ "mobile_code": mobile_code })
+		rec_list = []
+		rec_list.append(mobile)
+		from erpnext.setup.doctype.sms_settings.sms_settings import send_sms
+		send_sms(rec_list,sms)
+		return "done"
 
 def make_mobile_verification_entry(mobile,profile_id,mobile_code):
 	mv = frappe.get_doc({
@@ -255,7 +251,7 @@ def get_user_image(profile_id):
 def upload_image(profile_id,data=None,file_name=None):
 	from binascii import a2b_base64
 	import base64
-	file_path='/files/'+profile_id+'/'+file_name
+	file_path = '/files/'+profile_id+'/'+file_name
 	update_user_image(file_path, profile_id)
 
 def update_user_image(path, profile_id):
@@ -288,10 +284,10 @@ def get_site_name():
 
 @frappe.whitelist(allow_guest=True)
 def delink_phr(selected,data,profile_id,res):
-	obj=json.loads(data)
-	id=selected
+	obj = json.loads(data)
+	id = selected
 	if id:
-		ret_res=delink_phr_solr(obj[id],id,profile_id,res)
+		ret_res = delink_phr_solr(obj[id],id,profile_id,res)
 		return {
 			"message":"Profile Delinked Successfully",
 			"response":ret_res
@@ -302,102 +298,59 @@ def delink_phr(selected,data,profile_id,res):
 		}
 
 def delink_phr_solr(data,id,profile_id,res):
-	args=json.loads(res)
-	solr_op='unlinkProfile'
-	url=get_base_url()+solr_op
-	request_type='POST'
-	data["recieved_from"]="Desktop"
-	jsonobj={"entityid":id,"linking_id":profile_id,"received_from":"Desktop","mobile":args["mobile"],"email":args["email"]}
+	args = json.loads(res)
+	solr_op = 'unlinkProfile'
+	url = get_base_url()+solr_op
+	request_type = 'POST'
+	data["recieved_from"] = "Desktop"
+	jsonobj = {"entityid":id,"linking_id":profile_id,"received_from":"Desktop","mobile":args["mobile"],"email":args["email"]}
 	from phr.phr.phr_api import get_response
-	response=get_response(url,json.dumps(jsonobj),request_type)
-	res=json.loads(response.text)
+	response = get_response(url,json.dumps(jsonobj),request_type)
+	res = json.loads(response.text)
 	if res['returncode']==121:
 		return res
 
 @frappe.whitelist(allow_guest=True)
 def add_profile_to_db(data,profile_id):
-	res=json.loads(data)
-	actdata=res['actualdata']		
-	dt=json.loads(actdata)
-	sub=dt['person_firstname']+" "+dt['person_lastname']+" "+"delinked Successfully"
+	res = json.loads(data)
+	actdata = res['actualdata']		
+	dt = json.loads(actdata)
+	sub = dt['person_firstname']+" "+dt['person_lastname']+" "+"delinked Successfully"
 	make_log(profile_id,"profile","delink",sub)
-	args={'person_firstname':dt['person_firstname'],'person_middlename':dt['person_middlename'],'person_lastname':dt['person_lastname'],'email':dt['email'],'mobile':dt['mobile'],'received_from':'Desktop','provider':'false'}
+	args = {'person_firstname':dt['person_firstname'],'person_middlename':dt['person_middlename'],'person_lastname':dt['person_lastname'],'email':dt['email'],'mobile':dt['mobile'],'received_from':'Desktop','provider':'false'}
 	
-	cie=frappe.db.get_value("LinkedPHR Images",{"profile_id":res['entityid']}, ["barcode", "profile_image"], as_dict=1)
+	cie = frappe.db.get_value("LinkedPHR Images",{"profile_id":res['entityid']}, ["barcode", "profile_image"], as_dict=1)
 
-	path=""
+	path = ""
 	if cie.get('barcode'):
-		path=cie.get('barcode')
+		path = cie.get('barcode')
 	else:
-		path=""
+		path = ""
 
 	if cie.get('profile_image'):
 		args['user_image'] = cie.get('profile_image')
 	else:
 		args['user_image']= ""
 
-	ret_res=create_profile_in_db(res['entityid'],args,res,path)
-	user=frappe.get_doc("User",frappe.session.user)
+	ret_res = create_profile_in_db(res['entityid'],args,res,path)
+	user = frappe.get_doc("User",frappe.session.user)
 	send_phrs_mail(user.email,"PHR:Linked PHR Account Delinked","templates/emails/delink_phr.html",{"name":args['person_firstname']})
-	msg=get_sms_template("delink",{"phr_name":args['person_firstname']})
+	msg = get_sms_template("delink",{"phr_name":args['person_firstname']})
 	if user.contact:
-		rec_list=[]
+		rec_list = []
 		rec_list.append(user.contact)
 		send_sms(rec_list,msg=msg)
-	sub=dt['person_firstname']+" "+dt['person_lastname']+" "+"Profile Created Successfully"
+	sub = dt['person_firstname']+" "+dt['person_lastname']+" "+"Profile Created Successfully"
 	make_log(profile_id,"profile","create",sub)
 	return ret_res
 
 @frappe.whitelist(allow_guest=True)
 def get_enabled_notification(profile_id):
-	ret=frappe.db.sql("""select linked_phr,to_do 
+	ret = frappe.db.sql("""select linked_phr,to_do 
 		from `tabNotification Configuration` 
 		where profile_id='%s'"""%(profile_id),as_dict=1)
 	return ret
 
-@frappe.whitelist(allow_guest=True)
-def get_logs(profile_id):
-	log_list=frappe.db.sql("""select * from 
-		`tabPHR Activity Log` 
-		where profile_id='%s' and entity in ('Event','Visit') order by creation desc limit 5"""%(profile_id),as_dict=1)
-	return log_list
-
-@frappe.whitelist(allow_guest=True)
-def get_user_details(profile_id=None):
-	print profile_id
-	args = {} 
-	if profile_id:
-		user_name = frappe.db.get_value("User", { "profile_id" : profile_id}, "name")
-		print user_name
-		if user_name:
-			user = frappe.get_doc("User",user_name)
-			args.update({
-				"name":"{0} {1}".format(user.first_name,user.last_name),
-				"contact":user.contact,
-				"barcode":user.barcode or "",
-				"user_image":user.user_image or "",
-				"emergency_contact":user.emergemcy_contactno or "",
-				"blood_group":user.blood_group or "",
-				"profile_id":profile_id
-			})
-		else:
-			from phr.templates.pages.dashboard import search_profile_data_from_solr
-			data = search_profile_data_from_solr(profile_id)
-			child = data['childProfile']
-			barcode = frappe.db.get_value("LinkedPHR Images",{"profile_id":profile_id},"barcode")
-			user_image = frappe.db.get_value("LinkedPHR Images",{"profile_id":profile_id},"profile_image")  
-			args.update({
-				"name":"{0} {1}".format(child["person_firstname"],child["person_lastname"]),
-				"contact":child["mobile"],
-				"barcode":barcode or "",
-				"user_image":user_image or "",
-				"emergency_contact":child["emergemcy_contactno"] or "",
-				"blood_group":child["blod_group"] or "",
-				"profile_id":profile_id
-			})
-
-	return args
-	
 @frappe.whitelist(allow_guest=True)
 def get_states():
 	states = frappe.db.sql("""select name from `tabState`""",as_list=1)
@@ -405,12 +358,12 @@ def get_states():
 
 @frappe.whitelist(allow_guest=True)
 def notify_about_registration():
-	mobile_nos=get_mobile_nos()
+	mobile_nos = get_mobile_nos()
 	if mobile_nos:
 		send_sms(mobile_nos,msg='Please Complete Your Healthsnapp Registration')
 		
 def get_mobile_nos():
-	nos=frappe.db.sql_list("""select contact from 
+	nos = frappe.db.sql_list("""select contact from 
 		`tabUser` where 
 		profile_id in (SELECT profile_id 
 			FROM `tabVerification Details` 
@@ -429,7 +382,7 @@ def notify_about_linked_phrs(profile_id,email_msg=None,text_msg=None,entity=None
 		if user:
 			send_phrs_mail(user.name,"HealthSnapp Updates:"+entity+" Updated","templates/emails/linked_phrs_updates.html",{"user_name":user_name,"entity":entity})
 			if frappe.db.get_value("Mobile Verification",{"mobile_no":user.contact,"mflag":1},"name"):
-				rec_list=[]
+				rec_list = []
 				rec_list.append(user.contact)
 				send_sms(rec_list,msg=text_msg)
 		else:
@@ -438,15 +391,15 @@ def notify_about_linked_phrs(profile_id,email_msg=None,text_msg=None,entity=None
 
 @frappe.whitelist(allow_guest=True)
 def get_patients_ids(doctype, txt, searchfield, start, page_len, filters):
-	solr_op='admin/searchallprofile'
+	solr_op = 'admin/searchallprofile'
 	url=get_base_url()+solr_op
-	request_type='POST'
-	data={}
+	request_type = 'POST'
+	data = {}
 	from phr.phr.phr_api import get_response
-	response=get_response(url,json.dumps(data),request_type)
-	res=json.loads(response.text)
-	profile_list=[]
-	profile_dic={}
+	response = get_response(url,json.dumps(data),request_type)
+	res = json.loads(response.text)
+	profile_list = []
+	profile_dic = {}
 	if res['returncode']==120:
 		for data in res['list']:
 			profile_list.append([data['entityid'],data['email'],data['person_firstname']])
@@ -476,7 +429,7 @@ def get_phr_pdf(profile_id):
 	solr_op = 'dms/getPhrPdfwithfilelocation'
 	url = get_base_url()+solr_op
 	request_type = 'POST'
-	path+="/"
+	path += "/"
 	data = {"profileId":profile_id,"file_location": [path]}
 	from phr.phr.phr_api import get_response
 	response = get_response(url,json.dumps(data),request_type)
@@ -494,6 +447,7 @@ def get_phr_pdf(profile_id):
 def get_pdf(profile_id,options=None):
 	import pdfkit, os, frappe
 	from frappe.utils import scrub_urls
+	from phr.templates.pages.dashboard import get_user_details
 	if not options:
 		options = {}
 
@@ -549,11 +503,16 @@ def get_pdf(profile_id,options=None):
 
 	if not options.get("page-size"):
 		options['page-size'] = "A4"
+	
+	import os, hashlib
+	random_data = os.urandom(128)
+	fname = hashlib.md5(random_data).hexdigest()[:30]
+
 
 	html = scrub_urls(html)
-	fname=os.path.join(get_files_path(), profile_id, profile_id +"ed"+".pdf")
+	fname = os.path.join(get_files_path(), profile_id,  fname+"ed"+".pdf")
 	pdfkit.from_string(html, fname, options=options or {})
-	li=fname.split('/')
+	li = fname.split('/')
 	
 	import time
 	url = get_url()+"/".join(["",li[-3],li[-2],li[-1]]) +'?id='+str(int(round(time.time() * 1000)))
@@ -562,4 +521,10 @@ def get_pdf(profile_id,options=None):
 
 @frappe.whitelist(allow_guest=True)	
 def check_templates(profile_id):
-	msg=get_sms_template("appointments",{"doctor_name":"ahahha","appointment_time":"4.25"})
+	msg = get_sms_template("appointments",{"doctor_name":"ahahha","appointment_time":"4.25"})
+
+@frappe.whitelist()
+def reset_image(profile_id):
+	update_user_image("/assets/phr/images/default-user.png", profile_id)
+	return "done"
+

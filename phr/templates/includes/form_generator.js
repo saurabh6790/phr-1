@@ -645,7 +645,8 @@ $.extend(RenderFormFields.prototype,{
 		$.each(val,function(i, d){
 			// $("<th>").html(d)
 			// 	.appendTo($(input_area).find("thead tr"));
-			me.cols.push({"field": i, "title": d})
+			console.log(d)
+			me.cols.push({"field": i, "title": d['title'], "width":d["width"]})
 		})
 	},
 	render_table_body:function(val, cols, input_area){
