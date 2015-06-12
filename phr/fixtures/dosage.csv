@@ -19,6 +19,7 @@
 "Info:","","","","Leave blank for new records","","One of: data, date, datetime, time, select","","",""
 "Start entering data below this line"
 "","""Daily""","Daily","","""a6933214d2150ef89f15a752bea5408dfdde56d7be7befa65f22fb20""","Morning","time","morning","",""
+"","","","","""a389274e4732e44edb1a1eaafcd63b1fdecc375cec8148e6ed827f1f""","Afternoon","time","afternoon","",""
 "","","","","""48ef01062b42cbf79c0db31840f45fe7cb2ad71b2814341d3ef95d1f""","Evening","time","evening","",""
 "","","","","""493d73196a5111c0b9d71c296faf3d1a449e0a3ae53bcd3488ab5285""","Night","time","night","",""
 "","""Weekly""","Weekly","","""b2732ace16425fff7aa4fdeb75680a972c36092109e0b4314ed30d6e""","Day","select","day","Sunday
