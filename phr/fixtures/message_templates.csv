@@ -18,6 +18,10 @@
 "Type:","Data (text)","Data","Text"
 "Info:","","",""
 "Start entering data below this line"
+"","""Advertisement Notification""","Advertisement Notification","Dear  [access_type] , 
+[title],  [sms_desc]
+Thank you.  
+Team HealthSnapp."
 "","""registration""","registration","Dear Customer, Your Mobile number verification code for HealthSnapp account is [mobile_code] Thank you.Team HealthSnapp."
 "","""DM Share""","DM Share","Dear [dr], [patient] has shared DM with You which is accesible upto [duration]. Thank you. Team HealthSnapp."
 "","""Event Share Email""","Event Share Email","Dear Customer, [patient] has shared Event with you to [email]. Thank you. Team HealthSnapp."

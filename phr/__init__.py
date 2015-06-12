@@ -580,27 +580,26 @@ def shareDM(data):
 		share_info["profile_id"], share_info["event_title"])
 
 def build_dm_share_data(share_info):
-	dm_doc=frappe.get_doc("Disease Monitoring",share_info["event_id"])
-	field_dic={}
-	for d in dm_doc.get('parameters'):
-		field_dic[d.label]=d.fieldname
-	rows=[]
-	tr = "<th></th>"
-	for label in reversed(field_dic.keys()):
-		tr += """<th>%s</th>"""%label
-	
-	header_row="""<tr>%s</tr>"""%tr	
+	header_row = ["<th></th>"]
+	body_rows = []
+
+	dm_details = frappe.db.sql(""" select label,fieldname,idx from `tabEvent Parameters` 
+			where parent = "%s" order by idx """%(share_info["event_id"]), as_dict=1)
 
 	for data in share_info["data"]:
 		row = "<td></td>"
-		for label in reversed(field_dic.keys()):
-			row_list=[]
-			row+="""<td>%s</td>"""%data[field_dic[label]]
-		rows.append(row)
-	
+		for dm_info in dm_details:
+			try:
+				header_row[dm_info.get("idx")] = "<th>%s</th>"%dm_info.get("label")
+			except IndexError:
+				header_row.insert(dm_info.get("idx"), "<th>%s</th>"%dm_info.get("label"))
+
+			row+="""<td>%s</td>"""%data[dm_info.get("fieldname")]
+		body_rows.append(row)
+
 	return {
-		"header":header_row,
-		"data_row":rows
+		"header": "".join(header_row),
+		"data_row": body_rows
 	}
 
 @frappe.whitelist(allow_guest=True)
