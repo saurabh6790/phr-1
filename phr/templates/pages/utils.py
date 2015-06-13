@@ -1,15 +1,16 @@
 from __future__ import unicode_literals
 import frappe
 from frappe.core.doctype.user.user import STANDARD_USERS
-from frappe.utils import cint,cstr
+from frappe.utils import cint, cstr, get_site_path
 import datetime
+
 
 """ Solr api address """
 @frappe.whitelist(allow_guest=True)
 def get_base_url():
-	# return "http://192.168.5.18:9090/phr-api/"
+	return "http://192.168.5.18:9090/phr-api/"
 	#return "http://88.198.52.49:7974/phr-api/"
-	return "http://115.113.66.90:8989/phr-api/"
+	# return "http://115.113.66.90:8989/phr-api/"
 
 @frappe.whitelist(allow_guest=True)
 def get_master_details(doctype):
@@ -73,3 +74,18 @@ def send_phr_sms(mobile,msg):
 		no_list = []
 		no_list.append(mobile)
 		send_sms(no_list,msg=msg)
+
+def remove_event_files():
+	import os, shutil
+	path = os.path.join(os.getcwd(), get_site_path().replace('.',"").replace('/', ""), 'public', 'files')
+	session_users = get_active_sessions()
+	if os.path.exists(path):
+		for root in os.walk(path).next()[1]:
+			if root not in session_users:
+				for dictn in os.walk(os.path.join(path, root)).next()[1]:
+					shutil.rmtree(os.path.join(path, root, dictn))
+
+def get_active_sessions():
+	sessions = frappe.db.sql("""select distinct u.profile_id, s.user from tabSessions as s, tabUser as u 
+		where s.status = "Active" and s.user = u.name""", as_list=1)
+	return [user[0] for user in sessions]
