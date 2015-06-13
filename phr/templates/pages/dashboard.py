@@ -54,15 +54,16 @@ def get_user_details(profile_id=None):
 			})
 		else:
 			data = search_profile_data_from_solr(profile_id)
+			child = data['childProfile']
 			barcode = frappe.db.get_value("LinkedPHR Images",{"profile_id":profile_id},"barcode")
 			user_image = frappe.db.get_value("LinkedPHR Images",{"profile_id":profile_id},"profile_image")  
 			args.update({
-				"name":"{0} {1}".format(data["person_firstname"],data["person_lastname"]),
-				"contact":data["mobile"],
+				"name":"{0} {1}".format(child["person_firstname"],child["person_lastname"]),
+				"contact":child["mobile"],
 				"barcode":barcode or "",
 				"user_image":user_image or "",
-				"emergency_contact":data["emergemcy_contactno"] or "",
-				"blood_group":data["blod_group"] or "",
+				"emergency_contact":child["emergemcy_contactno"] or "",
+				"blood_group":child["blod_group"] or "",
 				"profile_id":profile_id
 			})
 
@@ -78,7 +79,7 @@ def search_profile_data_from_solr(profile_id):
 	response = get_response(url,json.dumps(data),request_type)
 	res = json.loads(response.text)
 	if res['returncode'] == 120:
-		return res['list'][0]['childProfile']
+		return res['list'][0]
 
 @frappe.whitelist(allow_guest=True)
 def get_data_for_middle_section(profile_id):

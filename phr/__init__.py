@@ -20,13 +20,15 @@ def create_profile(data):
 
 @frappe.whitelist(allow_guest=True)
 def updateProfile(data):
-	from templates.pages.profile import update_profile_solr, make_mv_entry
+	from templates.pages.profile import update_profile_solr, make_mv_entry,send_mobile_v_code
 
 	data = json.loads(data)
 	res = update_profile_solr(json.dumps(data))
 
 	if res.get('rtcode') == 100:
-		make_mv_entry(res.get('mob_no'), data.get('entityid'))
+		mob_code = make_mv_entry(res.get('mob_no'), data.get('entityid'))
+		if mob_code:
+			send_mobile_v_code(res.get('mob_no'),data.get('entityid'),mob_code)
 		return res
 	else: return res
 
@@ -635,7 +637,10 @@ def createLinkedPHR(data):
 	res = create_linkedphr(json.dumps(data))
 
 	if res.get('returncode') == 122 and data.get('mobile'):
-		make_mv_entry(data.get('mobile'), res.get('entityid'))
+		mob_code = make_mv_entry(data.get('mobile'), res.get('entityid'))
+		if mob_code:
+			send_mobile_v_code(res.get('mobile'),data.get('entityid'),mob_code)
+
 
 	return {
 		"returncode": res.get('returncode'),

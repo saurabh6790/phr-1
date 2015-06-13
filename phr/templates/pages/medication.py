@@ -4,7 +4,7 @@ import os
 import sys
 from frappe.utils import get_site_path, get_hook_method, get_files_path, get_site_base_path,cstr,cint, date_diff, today, add_days, getdate
 from phr.templates.pages.form_generator import get_data_to_render
-from phr.templates.pages.utils import formatted_date,get_sms_template
+from phr.templates.pages.utils import formatted_date,get_sms_template,send_phr_sms
 import datetime
 from phr.phr.doctype.phr_activity_log.phr_activity_log import make_log
 from erpnext.setup.doctype.sms_settings.sms_settings import send_sms
@@ -47,10 +47,10 @@ def fetch_values_from_db(data):
 def make_medication_entry(data):
 	if day_exists(data):
 		try:
-			c_medication=save_data(data)
-			response=get_medication_data(data)
-			medication=json.loads(data)
-			sub="Medication for"+" "+medication.get('medicine_name')+" created"
+			c_medication = save_data(data)
+			response = get_medication_data(data)
+			medication = json.loads(data)
+			sub = "Medication for"+" "+medication.get('medicine_name')+" created"
 			make_log(medication.get('profile_id'),"Medication","create",sub)
 			return response
 		except ValueError:
@@ -85,11 +85,11 @@ def get_dosage_types():
 	return dt
 
 def save_data(data):
-	obj=json.loads(data)
-	from_date=get_formatted_date(obj.get('from_date_time'))
-	to_date=get_formatted_date(obj.get('to_date_time'))
-	options=get_options(obj)
-	user=frappe.get_doc("User",frappe.user.name)
+	obj = json.loads(data)
+	from_date = get_formatted_date(obj.get('from_date_time'))
+	to_date = get_formatted_date(obj.get('to_date_time'))
+	options = get_options(obj)
+	user = frappe.get_doc("User",frappe.user.name)
 	med = frappe.get_doc({
 		"doctype":"Medication",
 		"profile_id":obj.get('profile_id'),
@@ -120,12 +120,12 @@ def get_formatted_date(strdate=None):
 		return datetime.datetime.strptime(strdate,"%d/%m/%Y")
 
 def get_options(obj):
-	options={}
-	dt=frappe.get_doc("Dosage",obj.get('dosage_type'))
+	options = {}
+	dt = frappe.get_doc("Dosage",obj.get('dosage_type'))
 	if dt:
-		dtc=dt.get('dosage_fields')
+		dtc = dt.get('dosage_fields')
 		for d in dtc:
-			options[d.fieldname]=obj.get(d.fieldname)
+			options[d.fieldname] = obj.get(d.fieldname)
 	return json.dumps(options)
 
 
@@ -204,20 +204,19 @@ def fetch_data_from_medications(med_list,recipient_list):
 						
 					if time_diff and (time_diff >= 0 and time_diff <= 5):
 						uexists = frappe.db.get_value("User",{"profile_id":mobj.profile_id},"name")
+						msgg = get_sms_template("medication",{"medication":mobj.get('medicine_name')})
 						if uexists:
 							user = frappe.get_doc("User",uexists)
-							if user:
-								if frappe.db.get_value("Mobile Verification",{"mobile_no":user.contact,"mflag":1},"name"):
-									no_list = []
-									no_list.append(user.contact)
-									send_sms(no_list,msg=get_sms_template("medication",{"medication":mobj.get('medicine_name')}))
+							send_phr_sms(user.contact,msg=msgg)
 						else:
 							data = search_profile_data_from_solr(mobj.profile_id)
-							if data and data['mobile']:
-								if frappe.db.get_value("Mobile Verification",{"mobile_no":data['mobile'],"mflag":1},"name"):
-									no_list = []
-									no_list.append(data['mobile'])
-									send_sms(no_list,msg=get_sms_template("medication",{"medication":mobj.get('medicine_name')}))
+							if data:
+								child = data['childProfile']
+								if child['mobile'] and frappe.db.get_value("Mobile Verification",{"mobile_no":child['mobile'],"mflag":1},"name"):
+									send_phr_sms(child['mobile'],msg=msgg)
+								else:
+									parent = data['parentProfile']
+									send_phr_sms(parent['mobile'],msg=msgg)
 		return "done"
 
 

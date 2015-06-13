@@ -296,7 +296,7 @@ var PatientDashboard = inherit(RenderFormFields, {
 				response = r.message
 				frappe.msgprint(response["msg"])
 				if(response["rtcode"]==100) {
-					me.make_mv_entry(sessionStorage.getItem("cid"),response["mob_no"],response["user"])
+					me.send_mobile_v_code(sessionStorage.getItem("cid"),response["mob_no"],response["user"],response['mob_code'])
 					$(me.wrapper).empty()
 					$('.field-area').empty()
 					HTMLViewer.prototype.init(me.wrapper, me.args, me.entityid)
@@ -315,10 +315,10 @@ var PatientDashboard = inherit(RenderFormFields, {
 			}
 		})
 	},
-	make_mv_entry:function(profile_id,mobile,user){
+	send_mobile_v_code:function(profile_id,mobile,user,mob_code){
 		frappe.call({
-			method:'phr.templates.pages.profile.make_mv_entry',
-			args:{"mobile":mobile,"profile_id":profile_id},
+			method:'phr.templates.pages.profile.send_mobile_v_code',
+			args:{"mobile":mobile,"profile_id":profile_id,"mobile_code":mob_code},
 			callback: function(r) {
 			}
 		})

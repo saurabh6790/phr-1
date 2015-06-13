@@ -1,5 +1,6 @@
 frappe.provide("frappe");
 frappe.provide("templates/includes");
+frappe.require("assets/phr/pdfjs/build/pdf.js")
 {% include "templates/includes/list_view.js" %}
 {% include "templates/includes/share_phr.js" %}
 {% include "templates/includes/treeview.js" %}
@@ -8,6 +9,7 @@ frappe.provide("templates/includes");
 {% include "templates/includes/uploader.js" %}
 {% include "templates/includes/thumbnail.js" %}
 {% include "templates/includes/provider_operations.js" %}
+
 
 window.Events = inherit(ListView,{
 	init: function(wrapper, json_file, profile_id, entity_id){
