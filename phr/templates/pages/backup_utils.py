@@ -8,11 +8,11 @@ verbose = 0
 
 backup_conf = {
 	"DMS":{
-		"source_dir" : "/home/saurabh/Documents/DMS/DMS_SERVER_03122014",
+		"source_dir" : "/home/medsynaptic/java/DMS_SERVER/DMS_SERVER_03122014",
 		"filename" : "dms"
 	},
 	"SOLR":{
-		"source_dir" : "/home/saurabh/Documents/SOLR/solr-4.8.0",
+		"source_dir" : "/home/medsynaptic/java/SOLRNEW11/solr-4.8.0",
 		"filename" : "solr"
 	}
 }
