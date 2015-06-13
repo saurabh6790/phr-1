@@ -43,6 +43,7 @@ $(document).ready(function () {
 		$("#home").on("click",function(){
 			$('#phr').addClass("hide");
 			$('.breadcrumb').empty()
+			$('<li></li>').appendTo('.breadcrumb')
 			//$('.linked-phr').empty()
 			$('#cphrname').empty()
 			$('.cdd').addClass('hide')

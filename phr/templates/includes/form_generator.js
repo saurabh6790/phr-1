@@ -470,8 +470,6 @@ $.extend(RenderFormFields.prototype,{
 			}
 		if(field_meta['required']==1){
 			$input.find("input").prop('required',true);
-			// $input.find("label").addClass('required')
-			// $('<style>.required:after{content:" *";color:red;font-size:20px;}</style>').appendTo($input)
 			$('<span class="symbol required"></span>').appendTo($input.find("label"));
 		}
 		if(field_meta['readonly']==1){
@@ -517,12 +515,7 @@ $.extend(RenderFormFields.prototype,{
 
 		if(field_meta['required']==1){
 			$input.find("input").prop('required',true);
-			// $input.find("label").addClass('required')
-			// $('<style>.required:after{content:" *";color:red;font-size:20px;}</style>').appendTo($input)
 			$('<span class="symbol required"></span>').appendTo($input.find("label"));
-			/*if (!val){
-				$input.find("input").css({"border": "1px solid #999","border-color": "red" });	
-			}*/
 		}
 
 		this.set_description($input.find('.control-input'), field_meta)
@@ -547,20 +540,9 @@ $.extend(RenderFormFields.prototype,{
         				timeOnly: true
 		})
 		var val = field_meta['value'];
-		
-		/*if(val){
-			var date=new Date(val)
-			$input.find('input').val($.datetimepicker.formatDate('dd/mm/yy',date))
-		}
-*/
 		if(field_meta['required']==1){
 			$input.find("input").prop('required',true);
-			// $input.find("label").addClass('required')
-			// $('<style>.required:after{content:" *";color:red;font-size:20px;}</style>').appendTo($input)
 			$('<span class="symbol required"></span>').appendTo($input.find("label"));
-			/*if (!val){
-				$input.find("input").css({"border": "1px solid #999","border-color": "red" });	
-			}*/
 		}
 		if(field_meta['readonly']==1){
 			$input.find("input").prop('disabled',true)
