@@ -7,10 +7,9 @@ def execute():
 		vd_name = frappe.db.get_value("Verification Details",{"profile_id":usr.profile_id},"name")
 		if vd_name:
 			vd = frappe.get_doc("Verification Details",vd_name)
-			if vd:
-				vd.mobile_no = usr.contact
-				vd.created_via = 'Desktop'
-				vd.save(ignore_permissions=True)	
+			vd.mobile_no = usr.contact
+			vd.created_via = 'Desktop'
+			vd.save(ignore_permissions=True)	
  
 
 		

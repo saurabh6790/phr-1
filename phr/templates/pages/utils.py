@@ -64,3 +64,13 @@ def get_sms_template(name,args):
 			new = cstr(args.get(key))
 			template = template.replace(old, new)
 		return template
+
+
+@frappe.whitelist(allow_guest=True)
+def send_phr_sms(mobile,msg):
+	from erpnext.setup.doctype.sms_settings.sms_settings import send_sms
+	if frappe.db.get_value("Mobile Verification",{"mobile_no":mobile,"mflag":1},"name"):
+		no_list = []
+		no_list.append(mobile)
+		frappe.errprint("Sending SMS.......")
+		send_sms(no_list,msg=msg)

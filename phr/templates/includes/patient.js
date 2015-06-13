@@ -95,6 +95,7 @@ function bind_events(){
 	profile_id=sessionStorage.getItem("cid")
 	$("#home").on("click",function(){
 		$('.breadcrumb').empty()
+		$('<li></li>').appendTo('.breadcrumb')
 		//$('.linked-phr').empty()
 		$('#cphrname').empty()
 		$('.cdd').addClass('hide')

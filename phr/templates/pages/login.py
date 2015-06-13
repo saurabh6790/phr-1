@@ -78,7 +78,8 @@ def get_barcode():
    
 @frappe.whitelist(allow_guest=True)    
 def get_image_path(ean,entityid):
-	path=get_path(entityid)
+	path = get_path(entityid)
+	ean.writer.set_options({"module_height":6.0})
 	fullname = ean.save(path)
 	return fullname
 
@@ -139,7 +140,7 @@ def notify_user(res_data,user_args,profile_id):
 		profile_id = new user's profile id
 	"""
 	from frappe.utils import random_string
-	new_password=random_string(10)
+	new_password = random_string(10)
 	_update_password(user_args["email"], new_password)
 	db_set(user_args,"password_str",new_password)
 	send_welcome_mail(new_password,profile_id,user_args)
@@ -164,7 +165,7 @@ def send_welcome_mail(password,profile_id,args):
 	db_set(args,"reset_password_key", key)
 	link = get_url("/verify_email?id="+profile_id+"&key=" + key)
 	
-	mob_code=get_mob_code()
+	mob_code = get_mob_code()
 	update_verification_details(args,password,key,mob_code,link,profile_id)
 	
 	send_login_mail(args,"Verify Your Account", "templates/emails/new_user.html", {"link": link,"password":password})

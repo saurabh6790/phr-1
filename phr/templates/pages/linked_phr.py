@@ -37,7 +37,7 @@ def update_profile_solr(data):
 
 @frappe.whitelist(allow_guest=True)
 def create_linkedphr(data):
-	response=create_profile_solr(data)
+	response = create_profile_solr(data)
 	return response
 
 @frappe.whitelist(allow_guest=True)
@@ -50,10 +50,10 @@ def create_profile_solr(data):
 
 	barcode = get_barcode()
 	args["barcode"]=str(barcode)
-	data=json.dumps(args)
+	data = json.dumps(args)
 	from phr.phr.phr_api import get_response
-	response=get_response(url,data,request_type)
-	res=json.loads(response.text)
+	response = get_response(url,data,request_type)
+	res = json.loads(response.text)
 	if res and res.get('returncode')==101:
 		data = json.loads(data)
 		path = get_image_path(barcode,res['entityid'])

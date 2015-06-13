@@ -1,5 +1,6 @@
 frappe.provide("templates/includes");
 frappe.provide("frappe");
+frappe.require("assets/phr/pdfjs/build/pdf.js")
 
 SharePhr = function(){
 	this.wrapper = '';

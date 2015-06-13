@@ -29,7 +29,7 @@ def get_disease_fields(name,profile_id=None):
 			fields.append({"fieldname":"","fieldtype":"section_break","label":sec_label,"options":"<i class='fa fa-pencil-square-o'></i>"})
 			for d in dm.get('parameters'):
 				row_count += 1
-				f_dic = {"fieldname":d.fieldname,"fieldtype":d.fieldtype,"label":d.label,"placeholder":"", "required": d.required or 0}
+				f_dic = {"fieldname":d.fieldname,"fieldtype":d.fieldtype,"label":d.label,"placeholder":"", "required": d.required or 0,}
 				fields.append(f_dic)
 				dm_cols.append({"title":d.label,"width":cstr(d.width) and cstr(d.width) + 'px !important;' or "10px;"})
 				field_mapper.append(d.fieldname)
