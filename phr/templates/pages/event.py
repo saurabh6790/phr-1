@@ -13,7 +13,6 @@ from phr.phr.doctype.phr_activity_log.phr_activity_log import make_log
 def create_update_event(data=None, req_id=None):
 	# url="http://88.198.52.49:7974/phr/createEvent"
 	data = json.loads(data)
-	frappe.errprint(['req_id', req_id])
 	if not data.get('entityid'):
 		return create_event(data)
 	else:
@@ -153,15 +152,15 @@ def copy_files_to_visit(dms_file_list, visit_id, profile_id, pid, req_id):
 @frappe.whitelist(allow_guest=True)
 def get_attachments(profile_id, folder, sub_folder, event_id, visit_id=None, req_id=None):
 	files = []
-	frappe.errprint([profile_id, folder, sub_folder, event_id, visit_id, req_id])
+	# frappe.errprint([profile_id, folder, sub_folder, event_id, visit_id, req_id])
 	# frappe.errprint([visit_id, req_id])
 	if visit_id:
-		frappe.errprint([visit_id])
+		# frappe.errprint([visit_id])
 		path = os.path.join(get_files_path(), profile_id, event_id, folder, sub_folder, visit_id)
 		if req_id:
 			path = os.path.join(get_files_path(), profile_id, req_id, event_id, folder, sub_folder, visit_id)
 	else:
-		frappe.errprint(os.path.join(get_files_path(), profile_id, event_id, folder, sub_folder))
+		# frappe.errprint(os.path.join(get_files_path(), profile_id, event_id, folder, sub_folder))
 		path = os.path.join(get_files_path(), profile_id, event_id, folder, sub_folder)
 		if req_id:
 			path = os.path.join(get_files_path(), profile_id, req_id, event_id, folder, sub_folder)
@@ -169,21 +168,21 @@ def get_attachments(profile_id, folder, sub_folder, event_id, visit_id=None, req
 		
 	# frappe.errprint(['path', path])
 	if os.path.exists(path):
-		frappe.errprint(['path1', path])
+		# frappe.errprint(['path1', path])
 		for root, dirc, filenames in os.walk(path):
 			for di in dirc:
 				for fl in os.listdir(os.path.join(path,di)):
-					frappe.errprint([fl, di, fl.split('.')[-1:][0]])
+					# frappe.errprint([fl, di, fl.split('.')[-1:][0]])
 
 					if fl.split('.')[-1:][0].lower() in ['jpg','jpeg','pdf','png', 'PDF']:
-						frappe.errprint(fl.split('.')[-1:][0])
+						# frappe.errprint(fl.split('.')[-1:][0])
 						if req_id:
 							files.append({'file_name': fl, 'type':fl.split('.')[-1:][0], 
 								'path': os.path.join('files', profile_id, req_id, event_id, folder, sub_folder, di)})
 
 						else:
-							frappe.errprint({'file_name': fl, 'type':fl.split('.')[-1:][0], 
-								'path': os.path.join('files', profile_id, event_id, folder, sub_folder, di)})
+							# frappe.errprint({'file_name': fl, 'type':fl.split('.')[-1:][0], 
+								# 'path': os.path.join('files', profile_id, event_id, folder, sub_folder, di)})
 							files.append({'file_name': fl, 'type':fl.split('.')[-1:][0], 
 								'path': os.path.join('files', profile_id, event_id, folder, sub_folder, di)})
 
@@ -196,7 +195,7 @@ def get_attachments(profile_id, folder, sub_folder, event_id, visit_id=None, req
 					files.append({'file_name': fl, 'type':fl.split('.')[-1:][0], 
 						'path': os.path.join('files', profile_id, event_id, folder, sub_folder, visit_id)})
 					
-	frappe.errprint(files)
+	# frappe.errprint(files)
 	return files
 
 @frappe.whitelist(allow_guest=True)
@@ -362,7 +361,7 @@ def make_sharing_request(event_data, data, files_list=None, event_dict=None, sub
 	req = frappe.new_doc('Shared Requests')
 	d = event_data.get('sharelist')[0]
 
-	frappe.errprint([d, type(d), data])
+	# frappe.errprint([d, type(d), data])
 
 	req.event_id = d.get("event_tag_id")
 	req.provider_id = d.get("to_profile_id")
@@ -421,7 +420,7 @@ def shared_file_count(fl, event_dict, sub_event_count, main_loc=2, sub_loc=3):
 
 @frappe.whitelist(allow_guest=True)
 def marked_files_doc(event_data, data, selected_files=None):
-	frappe.errprint([selected_files])
+	# frappe.errprint([selected_files])
 	if isinstance(event_data, basestring):
 		event_data = json.loads(event_data)
 
@@ -597,7 +596,7 @@ def get_individual_visit_count_for_badges(visit_id,profile_id, req_id=None):
 			jsonobj=json.loads(res)
 			if jsonobj["returncode"]==139:
 				for visit in json.loads(jsonobj["list"]):
-					frappe.errprint([visit['visit']['entityid'], visit_id])
+					# frappe.errprint([visit['visit']['entityid'], visit_id])
 					if visit['visit']['entityid']==visit_id:
 						event_wise_count_dict(visit['visitFileMapCount'], event_dict,sub_event_count)
 						break
@@ -705,12 +704,10 @@ sub_tag_dict = {
 }
 
 @frappe.whitelist()
-def image_writter(profile_id, event_id):
+def image_writter(profile_id, event_id=None, visit_id=None):
 	import os, base64
-	data = {"profile_id": profile_id, "event_id": event_id}
-	
+	data = {"profile_id": profile_id, "event_id": event_id, "visit_id": visit_id}
 	filelist = get_image_details(data)
-
 	for file_obj in filelist:
 		
 		tags = file_obj.get('tag_id').split('-')[2]
@@ -723,9 +720,9 @@ def image_writter(profile_id, event_id):
 			frappe.create_folder(path)
 			img_path = os.path.join(path,  wfile_name)
 			data = {
-				"entityid": file_obj.get('visit_id'),
+				"entityid": data.get('visit_id') if data.get('visit_id') else file_obj.get('visit_id'),
 				"profile_id": data.get('profile_id'),
-				"event_id": data.get("event_id"),
+				"event_id": data.get("event_id") or "",
 				"tag_id": file_obj.get('tag_id'),
 				"file_id": [
 					file_obj.get('temp_file_id')
@@ -734,7 +731,6 @@ def image_writter(profile_id, event_id):
 					img_path
 				]
 			}
-			
 			res = write_file(data)
 			
 def write_file(data):

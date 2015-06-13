@@ -26,7 +26,9 @@ $.extend(SharePhr.prototype,{
 		this.bind_controller()
 		//console.log(["ss",me.args['event_id']])
 		this.render_folder_section(args['event_id'],args['method'])
+		Events.prototype.write_visit_file($('form input[name="event_id"]').val(), this.args['profile_id'], $('form input[name="entityid"]').val())
 		ProviderOperations.prototype.get_linked_providers(this.args['profile_id'])
+
 	},
 	bind_controller: function(){
 		var me = this;
