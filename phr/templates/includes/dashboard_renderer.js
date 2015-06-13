@@ -168,6 +168,8 @@ function render_dashboard(profile_id){
 				</div></a></li>',data)).appendTo($wrap)
 		})
 		$(".v_lphr").unbind("click").click(function(){
+			$('.main-navigation-menu li ul li a').removeClass('active');       
+          	$(this).addClass('active');
 			var name=$(this).find('.cn').html()
 			sessionStorage.setItem("cname",name)
 			sessionStorage.setItem("cid",$(this).attr('data-name'))
