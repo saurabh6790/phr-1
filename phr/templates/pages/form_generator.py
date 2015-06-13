@@ -7,7 +7,6 @@ import os
 """	read json for paticular to get the fields also get values if available """	
 @frappe.whitelist(allow_guest=True)
 def get_data_to_render(data=None,entityid=None):
-	print "get_data_to_render"
 	json_data, fields, values, tab = None, None, None, None
 	if data:
 		data = json.loads(data)
@@ -31,8 +30,6 @@ def get_data_to_render(data=None,entityid=None):
 		
 		tab = json_data.get('tab')
 		values = get_values(data,entityid) if not json_data.get('values') else json_data.get('values')
-
-	# print fields, values, tab
 
 	return fields, values, tab
 	

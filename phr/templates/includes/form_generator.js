@@ -51,25 +51,13 @@ $.extend(RenderFormFields.prototype,{
 			<button class="btn btn-primary">\
 			<i class="fa fa-share-square"></i>Share Data</button></div>').appendTo($('.top-btns-bar')).addClass(me.operation)
 
-		
 		$('<div class="pull-right margin-left-20 save_controller">\
 			<button class="btn btn-primary"><i class="fa fa-save"></i> Save</button></div>').appendTo($('.top-btns-bar')).addClass(me.operation)
-		//$('<button class="btn btn-primary pull-right margin-left-20 new_controller"><i class="fa fa-plus-square"></i> New</button>').appendTo($('top-btns-bar')).addClass(me.operation)
-
-		/*$('<div class="save_controller" style="width:45%;display:inline-block;text-align:right;">\
-				<button class="btn btn-primary">\
-					<i class="icon-save"></i> Save \
-				</button>\
-			</div>').appendTo($('.sub-top-bar')).addClass(me.operation)*/
-	
-		
-		
 	},
 	get_field_meta:function(){
 		var me = this;
 		var arg = {};
 		
-		console.log("get_field_meta")
 		if(me.args){
 			arg['data'] = JSON.stringify(me.args)
 		}
@@ -91,7 +79,6 @@ $.extend(RenderFormFields.prototype,{
 	},
 	render_fields:function(fields, values, tab){
 		var me = this;
-		// console.log(fields, values, tab)
 		if(tab==1) me.tab_field_renderer()
 		$.each(fields,function(indx, meta){
 			!me.section && meta['fieldtype'] !== 'section_break' && tab!=1 && me.section_break_field_renderer()
@@ -117,7 +104,6 @@ $.extend(RenderFormFields.prototype,{
 				</div>', field_meta)).appendTo($(this.column))
 		if(field_meta['required']==1){
 			$input.find("input").prop('required',true)
-			//$input.find("input").css({"border": "1px solid #999","border-color": "red" });
 		}
 	},
 	depends_on:function(meta){
@@ -172,12 +158,7 @@ $.extend(RenderFormFields.prototype,{
 		var val = field_meta['value'];
 		if(field_meta['required']==1){
 		    $input.find("input").prop('required',true)
-		    // $input.find("label").addClass('required')
-			// $('<style>.required:after{content:" *";color:red;font-size:20px;}</style>').appendTo($input)
 			$('<span class="symbol required"></span>').appendTo($input.find("label"));
-			/*if (!val){
-				$input.find("input").css({"border": "1px solid #999","border-color": "red" });
-			}*/	
 		}
 		if(field_meta['display']){
 			$($('[name="'+field_meta['fieldname']+'"]').parents()[3]).css("display", field_meta['display']);
@@ -202,11 +183,7 @@ $.extend(RenderFormFields.prototype,{
 		if(field_meta['required']==1){
 		    $input.find("input").prop('required',true)
 		    $input.find("label").addClass('required')
-			// $('<style>.required:after{content:" *";color:red;font-size:20px;}</style>').appendTo($input)
 			$('<span class="symbol required"></span>').appendTo($input.find("label"));
-			/*if (!val){
-				$input.find("input").css({"border": "1px solid #999","border-color": "red" });
-			}*/	
 		}
 		if(field_meta['readonly']==1){
 			$input.find("input").prop('disabled',true)
@@ -246,11 +223,7 @@ $.extend(RenderFormFields.prototype,{
 		if(field_meta['required']==1){
 			$input.find("input").prop('required',true)
 			$input.find("label").addClass('required')
-			// $('<style>.required:after{content:" *";color:red;font-size:20px;}</style>').appendTo($input)
 			$('<span class="symbol required"></span>').appendTo($input.find("label"));
-			/*if (!val){
-				$input.find("input").css({"border": "1px solid #999","border-color": "red" });
-			}*/	
 		}
 		if(field_meta['readonly']==1){
 			$input.find("input").prop('disabled',true)
@@ -309,11 +282,7 @@ $.extend(RenderFormFields.prototype,{
 		if(field_meta['required']==1){
 			$input.find("select").prop('required',true)
 			$input.find(".control-label").addClass('required')
-			// $('<style>.required:after{content:" *";color:red;font-size:20px;}</style>').appendTo($input)
 			$('<span class="symbol required"></span>').appendTo($input.find("label"));
-			/*if (!val){
-				$input.find("select").css({"border": "1px solid #999","border-color": "red" });
-			}*/
 		}
 		if(field_meta['readonly']==1){
 			$input.find("select").prop('disabled',true)
@@ -368,12 +337,7 @@ $.extend(RenderFormFields.prototype,{
 		var val = field_meta['value'];
 		if(field_meta['required']==1){
 			$input.find("input").prop('required',true)
-			// $input.find("label").addClass('required')
-			// $('<style>.required:after{content:" *";color:red;font-size:20px;}</style>').appendTo($input)
 			$('<span class="symbol required"></span>').appendTo($input.find("label"));
-			/*if (!val){
-				$input.find("input").css({"border": "1px solid #999","border-color": "red" });
-			}*/
 		}
 
 		this.set_description($input.find('.control-input'), field_meta)
@@ -389,15 +353,6 @@ $.extend(RenderFormFields.prototype,{
 		if(field_meta['readonly']==1){
 			$input.find("input").prop('disabled',true)
 		}
-
-		// $($input.find('.autocomplete')).autocomplete({
-  //       source: function(request, response){
-  //           var matcher = new RegExp( $.ui.autocomplete.escapeRegex( request.term ), "i" );
-  //           response( $.grep( field_meta['options'], function( value ) {
-  //           return matcher.test(value['constructor']) || matcher.test(value.model) || matcher.test(value.type);
-  //       }));
-  //       }
-    // });
 	},
 	text_field_renderer: function(field_meta){
 		var me = this;
@@ -418,12 +373,7 @@ $.extend(RenderFormFields.prototype,{
 		var val = field_meta['value'];
 		if(field_meta['required']==1){
 			$input.find("textarea").prop('required',true)
-			// $input.find("label").addClass('required')
-			// $('<style>.required:after{content:" *";color:red;font-size:20px;}</style>').appendTo($input)
 			$('<span class="symbol required"></span>').appendTo($input.find("label"));
-			/*if (!val){
-				$input.find("textarea").css({"border": "1px solid #999","border-color": "red" });
-			}*/
 		}
 
 		if(field_meta['display']){
@@ -455,7 +405,6 @@ $.extend(RenderFormFields.prototype,{
  			 </div>\
  			 <div class="upload"><span class="btn btn-default fileinput-exists">Upload</span></div>\
  			</div>').appendTo($(this.column))
-		/*$('.fileinput').fileinput()*/
 	},
 	time_field_renderer:function(field_meta){
 		var me = this;
@@ -643,9 +592,6 @@ $.extend(RenderFormFields.prototype,{
 	render_table_heads:function(val, input_area){
 		var me = this;
 		$.each(val,function(i, d){
-			// $("<th>").html(d)
-			// 	.appendTo($(input_area).find("thead tr"));
-			console.log(d)
 			me.cols.push({"field": i, "title": d['title'], "width":d["width"]})
 		})
 	},
@@ -654,8 +600,6 @@ $.extend(RenderFormFields.prototype,{
 		var dict = {};
 		// 
 		$.each(val,function(i, d){
-			// $("<td>").html(d)
-			// 	.appendTo(row);
 			dict[i] = d; 
 		})
 		me.data_row.push(dict)

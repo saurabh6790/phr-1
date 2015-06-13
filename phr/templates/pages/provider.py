@@ -44,7 +44,6 @@ def link_provider(res, data, profile_id):
 		data = json.loads(data)
 	else:
 		data = data
-	# print "add new provider", profile_id
 	pl = frappe.get_doc({
 		"doctype": "Providers Linked",
 		"patient": profile_id,
@@ -140,7 +139,6 @@ def get_patient_data(data):
 		data=json.loads(data)
 
 	pateints=get_linked_phrs(data["profile_id"])
-	print pateints['list']
 
 	for patient in pateints['list']:
 		pi=frappe.db.get_value("LinkedPHR Images",{"profile_id":patient['entityid']},"profile_image")

@@ -93,19 +93,12 @@ upload = {
 					"method": "phr.templates.pages.uploader.upload",
 					args: args,
 					callback: function(r) {
-						// console.log(r)
-						console.log("test")
 						if(!r._server_messages){
 							msgbox.hide();
 							$('.modal').remove()
 							$('.modal-backdrop').remove()
 							frappe.msgprint(r.message['success_meg'])
 						}
-						// if(r.exc) {
-						// 	// if no onerror, assume callback will handle errors
-						// 	opts.onerror ? opts.onerror(r) : opts.callback(null, null, r);
-						// 	return;
-						// }
 						var attachment = r.message;
 						opts.callback(attachment, r);
 						$(document).trigger("upload_complete", attachment);
@@ -123,20 +116,10 @@ upload = {
 
 			freader.onload = function() {
 				args.filename = fileobj.name;
-				// _upload_file();
-				// if((opts.max_width || opts.max_height) && (/\.(gif|jpg|jpeg|tiff|png)$/i).test(args.filename)) {
-				// 	frappe.utils.resize_image(freader, function(_dataurl) {
-				// 		dataurl = _dataurl;
-				// 		args.filedata = _dataurl.split(",")[1];
-				// 		console.log("resized!")
-				// 		_upload_file();
-				// 	})
-				// } 
-				// else {
-					dataurl = freader.result;
-					args.filedata = freader.result.split(",")[1];
-					_upload_file();
-				// }
+				dataurl = freader.result;
+				args.filedata = freader.result.split(",")[1];
+				_upload_file();
+
 			};
 
 			freader.readAsDataURL(fileobj);

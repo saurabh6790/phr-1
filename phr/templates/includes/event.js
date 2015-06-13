@@ -133,10 +133,10 @@ window.Events = inherit(ListView,{
 			})
 		}
 	},
-	write_visit_file: function(event_id, profile_id){
+	write_visit_file: function(event_id, profile_id, visit_id){
 		frappe.call({
 			method:"phr.templates.pages.event.image_writter",
-			args:{'profile_id': profile_id, "event_id": event_id},
+			args:{'profile_id': profile_id, "event_id": event_id, "visit_id": visit_id},
 			callback:function(r){
 				// no callback
 			}

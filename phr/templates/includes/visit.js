@@ -34,7 +34,6 @@ window.Visit = inherit(ListView,{
 		var me=this;
 		$("#share").click(function(){
 			var fg = false;
-
 			$('.table').find('thead').each(function(){
 				var row = $(this);
 				$('th', row).map(function(index, th) {
@@ -65,6 +64,7 @@ window.Visit = inherit(ListView,{
 						'doc_list': me.doc_list, 
 						"profile_id":me.profile_id
 					})
+					// Events.prototype.write_visit_file($(me.selected_files).last()[0], me.profile_id)
 					
 				}).appendTo('.breadcrumb');	
 
@@ -75,6 +75,7 @@ window.Visit = inherit(ListView,{
 					'doc_list': me.doc_list, 
 					"profile_id":me.profile_id
 				})
+				// Events.prototype.write_visit_file($(me.selected_files).last()[0], me.profile_id)
 			}
 			else{
 				frappe.msgprint("Please first select a Visit. ")

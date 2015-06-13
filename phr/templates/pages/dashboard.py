@@ -36,11 +36,9 @@ def get_lphrs_with_img(data):
 
 @frappe.whitelist(allow_guest=True)
 def get_user_details(profile_id=None):
-	print profile_id
 	args = {} 
 	if profile_id:
 		user_name = frappe.db.get_value("User", { "profile_id" : profile_id}, "name")
-		print user_name
 		if user_name:
 			user = frappe.get_doc("User",user_name)
 			args.update({
@@ -83,8 +81,6 @@ def search_profile_data_from_solr(profile_id):
 
 @frappe.whitelist(allow_guest=True)
 def get_data_for_middle_section(profile_id):
-	print "###############################"
-	print frappe._dict()
 	db_list = get_enabled_dashboard(profile_id)
 	if db_list:
 		obj = db_list[0]

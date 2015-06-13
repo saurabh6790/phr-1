@@ -18,7 +18,6 @@ def get_profile_list(data):
 	pos = 0
 
 	for filed_dict in fields:
-		print filed_dict 
 		pos =+ 1
 		if 'rows' in filed_dict.keys(): 
 			rows = filed_dict.get('rows')
@@ -28,7 +27,6 @@ def get_profile_list(data):
 
 	response=get_response(url, json.dumps({"to_profile_id":data.get('profile_id')}), request_type)
 
-	print response.text
 	if response.text:
 		res_data = json.loads(response.text)
 
@@ -36,7 +34,6 @@ def get_profile_list(data):
 
 		if res_data.get('visitshareProfileList'):
 			for profile in res_data.get('visitshareProfileList'):
-				print profile.get("entityid"), profile.get("person_firstname"), profile.get("person_lastname")
 				data = ['<a nohref id="%s"> %s %s </a>'%(profile.get("entityid"), profile.get("person_firstname"), profile.get("person_lastname"))]
 				rows.extend([data])
 
@@ -93,7 +90,6 @@ def get_patient_data(data):
 		request_type="POST"
 		url="%s/dms/getvisitmultiplefile"%get_base_url()
 		from phr.phr.phr_api import get_response
-		print dms_files
 		param = {"filelist": dms_files}
 		response=get_response(url, json.dumps(param), request_type)
 
@@ -126,7 +122,6 @@ def get_shared_request(profile_id):
 
 @frappe.whitelist()
 def update_flag(req_id, provider_id, profile_id, event_id, doc_name):
-	frappe.errprint(['update_flag',doc_name])
 	if doc_name == 'Event' or doc_name == 'Visit':
 		d = get_patient_data({'profile_id': provider_id, 
 			'other_param':{'patient_profile_id': profile_id, 'event_id': event_id, 'req_id': req_id}
@@ -168,7 +163,6 @@ def get_myrequests(target, provider_id):
 
 	if data:
 		for d in data:
-			frappe.errprint(d[5:])
 			rows.append(d[5:])
 	else:
 		rows.extend([["","NO DATA",""]])
