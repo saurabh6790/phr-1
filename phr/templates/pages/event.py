@@ -125,8 +125,6 @@ def copy_files_to_visit(dms_file_list, visit_id, profile_id, pid, req_id):
 		frappe.create_folder(file_path)
 
 		for filename in glob.glob(os.path.join('/'.join(path_lst[0:len(path_lst)-1]), '*.*')):
-			print filename
-			print "\n\n id checker \n\n", profile_id, pid, "\n\n"
 			if profile_id != pid:
 				base_path = file_path.split('/files/')[1].split('/')
 				base_path[0] = pid
@@ -135,7 +133,6 @@ def copy_files_to_visit(dms_file_list, visit_id, profile_id, pid, req_id):
 					req_id = frappe.get_doc('Shared Requests', req_id)
 					event_dict = json.loads(req_id.event_dict)
 					sub_event_count = json.loads(req_id.sub_event_count)
-					print "\n\n base path \n\n",base_path
 					shared_file_count('/'.join(base_path)[:-1], event_dict, sub_event_count, 3, 4)
 
 					req_id.event_dict = json.dumps(event_dict)
@@ -152,37 +149,24 @@ def copy_files_to_visit(dms_file_list, visit_id, profile_id, pid, req_id):
 @frappe.whitelist(allow_guest=True)
 def get_attachments(profile_id, folder, sub_folder, event_id, visit_id=None, req_id=None):
 	files = []
-	# frappe.errprint([profile_id, folder, sub_folder, event_id, visit_id, req_id])
-	# frappe.errprint([visit_id, req_id])
 	if visit_id:
-		# frappe.errprint([visit_id])
 		path = os.path.join(get_files_path(), profile_id, event_id, folder, sub_folder, visit_id)
 		if req_id:
 			path = os.path.join(get_files_path(), profile_id, req_id, event_id, folder, sub_folder, visit_id)
 	else:
-		# frappe.errprint(os.path.join(get_files_path(), profile_id, event_id, folder, sub_folder))
 		path = os.path.join(get_files_path(), profile_id, event_id, folder, sub_folder)
 		if req_id:
 			path = os.path.join(get_files_path(), profile_id, req_id, event_id, folder, sub_folder)
-		# frappe.errprint(path)
-		
-	# frappe.errprint(['path', path])
+
 	if os.path.exists(path):
-		# frappe.errprint(['path1', path])
 		for root, dirc, filenames in os.walk(path):
 			for di in dirc:
 				for fl in os.listdir(os.path.join(path,di)):
-					# frappe.errprint([fl, di, fl.split('.')[-1:][0]])
-
 					if fl.split('.')[-1:][0].lower() in ['jpg','jpeg','pdf','png', 'PDF']:
-						# frappe.errprint(fl.split('.')[-1:][0])
 						if req_id:
 							files.append({'file_name': fl, 'type':fl.split('.')[-1:][0], 
 								'path': os.path.join('files', profile_id, req_id, event_id, folder, sub_folder, di)})
-
 						else:
-							# frappe.errprint({'file_name': fl, 'type':fl.split('.')[-1:][0], 
-								# 'path': os.path.join('files', profile_id, event_id, folder, sub_folder, di)})
 							files.append({'file_name': fl, 'type':fl.split('.')[-1:][0], 
 								'path': os.path.join('files', profile_id, event_id, folder, sub_folder, di)})
 
@@ -194,8 +178,6 @@ def get_attachments(profile_id, folder, sub_folder, event_id, visit_id=None, req
 				else:
 					files.append({'file_name': fl, 'type':fl.split('.')[-1:][0], 
 						'path': os.path.join('files', profile_id, event_id, folder, sub_folder, visit_id)})
-					
-	# frappe.errprint(files)
 	return files
 
 @frappe.whitelist(allow_guest=True)
@@ -251,12 +233,8 @@ def share_via_email(data):
 		return {"returncode":0,"message_summary":"Please select file(s) for sharing"}
 
 def share_via_providers_account(data):
-	# frappe.errprint([data.get('files'), not data.get('files')])
 	event_dict = {}
 	sub_event_count = {}
-	# return [event_dict, sub_event_count] 
-
-	
 	if not data.get('files'):
 		event_data =	{
 				"sharelist": [
@@ -292,7 +270,6 @@ def share_via_providers_account(data):
 	else:
 		sharelist = []
 		file_path = []
-		print "\n\n\n\n share event files \n\n\n", data.get('files')
 		for fl in data.get('files'):
 			file_path.append(fl)
 			file_details = fl.split('/')
@@ -320,10 +297,6 @@ def share_via_providers_account(data):
 		make_sharing_request(event_data, data, files_list, event_dict, sub_event_count)
 		make_log(data.get('profile_id'),"Event","Shared Via Provider","Event <b style='color: #89c148;'>%s</b> has been shared with Provider <b style='color: #89c148;'>%s</b> \
 			till <b style='color: #89c148;'>%s</b>"%(data.get('event_title'), data.get('doctor_name'), data.get('sharing_duration')))
-		# args = {"patient":patient_name,"duration":data.get('sharing_duration')}
-		# email_msg = "%(patient)s has shared Event with You which is accesible upto %(duration)s. \n\n Thank you.\n Team HealthSnapp."%args
-		# notify_provider(data.get('doctor_id'),data.get('profile_id'),"Event Share",args,email_msg)
-
 		return {"returncode":2,"message_summary":json.loads(json.loads(response.text).get('sharelist'))[0].get('message_summary')}
 
 @frappe.whitelist(allow_guest=True)
@@ -361,8 +334,6 @@ def make_sharing_request(event_data, data, files_list=None, event_dict=None, sub
 	req = frappe.new_doc('Shared Requests')
 	d = event_data.get('sharelist')[0]
 
-	# frappe.errprint([d, type(d), data])
-
 	req.event_id = d.get("event_tag_id")
 	req.provider_id = d.get("to_profile_id")
 	req.date = today()
@@ -384,7 +355,6 @@ def make_sharing_request(event_data, data, files_list=None, event_dict=None, sub
 	req.save(ignore_permissions=True)
 
 def get_files_doc(event_data, data, selected_files=None, event_dict = None, sub_event_count = None):
-	print "\n\n get_files_doc \n\n", [event_dict, sub_event_count]
 	tag_dict = {'11': "consultancy-11", "12": "event_snap-12", "13": "lab_reports-13", "14":"prescription-14", "15": "cost_of_care-15"}
 
 	if selected_files and len(selected_files) > 1:
@@ -397,7 +367,6 @@ def get_files_doc(event_data, data, selected_files=None, event_dict = None, sub_
 				for sub_tab in ['A_51', 'B_52', 'C_53']:
 					attachments = get_attachments(d.get("from_profile_id"), values, sub_tab, d.get("event_tag_id"), d.get("visit_tag_id"))
 					for att in attachments:
-						print "\n\n test \n\n", [os.path.join(att.get('path').split('files/')[1], att.get('file_name'))]
 						shared_file_count(os.path.join(att.get('path').split('files/')[1], att.get('file_name')), event_dict, sub_event_count)
 						files_list.append(os.path.join(get_files_path(), att.get('path').split('files/')[1], att.get('file_name')))
 		return files_list
@@ -416,11 +385,8 @@ def shared_file_count(fl, event_dict, sub_event_count, main_loc=2, sub_loc=3):
 		event_dict[main_folder] = event_dict[main_folder] + 1 if event_dict.get(main_folder) else 1
 		sub_event_count[folder] = sub_event_count[folder] + 1 if sub_event_count.get(folder) else 1
 
-		print event_dict, sub_event_count
-
 @frappe.whitelist(allow_guest=True)
 def marked_files_doc(event_data, data, selected_files=None):
-	# frappe.errprint([selected_files])
 	if isinstance(event_data, basestring):
 		event_data = json.loads(event_data)
 
@@ -596,7 +562,6 @@ def get_individual_visit_count_for_badges(visit_id,profile_id, req_id=None):
 			jsonobj=json.loads(res)
 			if jsonobj["returncode"]==139:
 				for visit in json.loads(jsonobj["list"]):
-					# frappe.errprint([visit['visit']['entityid'], visit_id])
 					if visit['visit']['entityid']==visit_id:
 						event_wise_count_dict(visit['visitFileMapCount'], event_dict,sub_event_count)
 						break
@@ -677,7 +642,6 @@ def get_provider_info(cond):
 					concat(ifnull(address,'') , ', ' ,ifnull(address_2,''), ', ', ifnull(city,''), ', ', 
 					ifnull(state,''), ', ', ifnull(country,''), ', ', ifnull(pincode,'')) as addr
 					from tabProvider where %s """%cond, as_dict=1)
-		# frappe.errprint(ret)
 		return ((len(ret[0]) > 1) and ret) if ret else None
 	
 	else:
@@ -734,7 +698,6 @@ def image_writter(profile_id, event_id=None, visit_id=None):
 			res = write_file(data)
 			
 def write_file(data):
-	print "write_file"
 	request_type="POST"
 	url="%sdms/getvisitsinglefile"%get_base_url()
 	
