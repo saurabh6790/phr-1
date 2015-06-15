@@ -33,7 +33,7 @@ window.Events = inherit(ListView,{
 		$('.save_controller').remove();
 		this.add_share_event()
 		this.render_spans()
-		ProviderOperations.prototype.get_linked_providers(this.profile_id)
+		this.get_linked_providers()
 		this.add_search_event()
 		scroll_top()
 	},
@@ -121,10 +121,18 @@ window.Events = inherit(ListView,{
 		
   		this.write_visit_file(event_id, profile_id)
   		this.make_tree_view(event_id, visit_id)
-  		ProviderOperations.prototype.get_linked_providers(this.profile_id)
+		this.get_linked_providers()
   		this.set_provider_details()
   		this.make_share_pannel(event_id)
 		this.make_comment_section(event_title, profile_id)
+	},
+	get_linked_providers:function(){
+		if(frappe.get_cookie("user_type")=='provider'){
+			ProviderOperations.prototype.get_linked_providers(sessionStorage.getItem("pid"))
+		}
+		else{
+			ProviderOperations.prototype.get_linked_providers(this.profile_id)
+		}
 	},
 	set_values: function(res){
 		if(res && res['entityid']){

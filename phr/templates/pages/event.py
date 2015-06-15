@@ -681,10 +681,10 @@ def image_writter(profile_id, event_id=None, visit_id=None):
 		
 		wfile_name = file_obj.get('temp_file_id').split('.')[0] + '-watermark.' + file_obj.get('temp_file_id').split('.')[1]
 		if not os.path.exists(os.path.join(path, wfile_name)):
-			frappe.create_folder(path)
 			img_path = os.path.join(path,  wfile_name)
+			frappe.errprint(["visit_id", data.get('visit_id')])
 			data = {
-				"entityid": data.get('visit_id') if data.get('visit_id') else file_obj.get('visit_id'),
+				"entityid": file_obj.get('visit_id'),
 				"profile_id": data.get('profile_id'),
 				"event_id": data.get("event_id") or "",
 				"tag_id": file_obj.get('tag_id'),
@@ -698,6 +698,7 @@ def image_writter(profile_id, event_id=None, visit_id=None):
 			res = write_file(data)
 			
 def write_file(data):
+	frappe.errprint(data)
 	request_type="POST"
 	url="%sdms/getvisitsinglefile"%get_base_url()
 	
