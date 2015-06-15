@@ -19,14 +19,9 @@ def get_file_url(file_data_name):
 
 @frappe.whitelist(allow_guest=True)
 def upload():
-	# # get record details
-	# dt = frappe.form_dict.doctype
-	# dn = frappe.form_dict.docname
-
 	file_url = frappe.form_dict.file_url
 	filename = frappe.form_dict.filename
 
-	# frappe.errprint([file_url, filename])
 	if not filename and not file_url:
 		frappe.msgprint(_("Please select a file or url"),
 			raise_exception=True)
@@ -34,10 +29,7 @@ def upload():
 	# save
 	if filename:
 		filedata = save_uploaded()
-	# elif file_url:
-	# 	filedata = save_url(file_url, dt, dn)
 
-	frappe.errprint(["testing image uploader", filedata])
 	return {
 		"site_path" : os.path.join(os.getcwd(), get_site_path().replace('.',"").replace('/', ""), 'public', 'files'),
 		"file_name": filedata['fname'],
@@ -46,16 +38,12 @@ def upload():
 
 def save_uploaded():
 	fname, content = get_uploaded_content()
-	print mimetypes.guess_type(content)
 	if content:
 		return save_file(fname, content);
 	else:
 		raise Exception
 
 def save_url(file_url, dt, dn):
-	# if not (file_url.startswith("http://") or file_url.startswith("https://")):
-	# 	frappe.msgprint("URL must start with 'http://' or 'https://'")
-	# 	return None, None
 
 	f = frappe.get_doc({
 		"doctype": "File Data",
@@ -118,33 +106,12 @@ def save_file(fname, content, decode=False):
 	content_hash = get_content_hash(content)
 	content_type = mimetypes.guess_type(fname)[0]
 	fname = get_file_name(fname, content_hash[-6:])
-	# frappe.errprint([file_size, content_hash, content_type, fname])
-	# file_data = get_file_data_from_hash(content_hash)
-	# frappe.errprint(file_data)
-	# if not file_data:
 	method = get_hook_method('write_file', fallback=save_file_on_filesystem)
 	file_data = method(fname, content, content_type=content_type)
 	file_data = copy(file_data)
 	return {"msg":"Attachment Successful", "fname": fname}
 
-	# # file_data.update({
-	# # 	"doctype": "File Data",
-	# # 	"attached_to_doctype": dt,
-	# # 	"attached_to_name": dn,
-	# # 	"file_size": file_size,
-	# # 	"content_hash": content_hash,
-	# # })
-
-	# # f = frappe.get_doc(file_data)
-	# # f.ignore_permissions = True
-	# try:
-	# 	f.insert();
-	# except frappe.DuplicateEntryError:
-	# 	return frappe.get_doc("File Data", f.duplicate_entry)
-	# return f
-
 def get_file_data_from_hash(content_hash):
-	# frappe.errprint("in get_file_data_from_hash")
 	for name in frappe.db.sql_list("select name from `tabFile Data` where content_hash=%s", content_hash):
 		b = frappe.get_doc('File Data', name)
 		return {k:b.get(k) for k in frappe.get_hooks()['write_file_keys']}
@@ -156,17 +123,13 @@ def save_file_on_filesystem(fname, content, content_type=None):
 	sub_folder = frappe.form_dict.sub_folder
 	event_id = frappe.form_dict.event_id
 
-	# frappe.errprint([profile_id, folder, sub_folder])
-
 	public_path = os.path.join(frappe.local.site_path, "public")
-	# frappe.errprint([get_files_path(), profile_id, event_id, folder, sub_folder])
 	if event_id and folder and sub_folder:
 		folder_path = os.path.join(get_files_path(), profile_id, event_id, folder, sub_folder)
 
 	elif profile_id:
 		folder_path = os.path.join(get_files_path(), profile_id)
 
-	# frappe.errprint(folder_path)
 	fpath = write_file(content, folder_path, fname)
 	path =  os.path.relpath(fpath, public_path)
 	return {
@@ -179,9 +142,6 @@ def check_max_file_size(content):
 	file_size = len(content)
 
 	if file_size > max_file_size:
-		# frappe.msgprint(_("File size exceeded the maximum allowed size of {0} MB").format(
-		# 	max_file_size / 1048576),
-		# 	raise_exception=MaxFileSizeReachedError)
 		return {'exe': "File size exceeded the maximum allowed size of {0} MB".format(
 			max_file_size / 1048576)}
 

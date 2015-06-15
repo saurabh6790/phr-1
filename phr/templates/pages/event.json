@@ -168,13 +168,13 @@
 			"label":"Event Table",
 		 	"rows":[
  				[
- 					"","Event Name","Event Date", 
- 					"Complaints", 
- 					"<i class='icon-user-md' data-toggle='tooltip' data-placement='top' title='Consultation'></i><input type='checkbox' id='11'  value='Consultancy' >", 
- 					"<i class='icon-camera' data-toggle='tooltip' data-placement='top' title='Event Snaps'></i><input type='checkbox' id='12'  value='Consultancy' >", 
- 					"<i class='icon-beaker' data-toggle='tooltip' data-placement='top' title='Lab Reports'></i><input type='checkbox' id='13'  value='Consultancy' >", 
- 					"<i class='icon-file' data-toggle='tooltip' data-placement='top' title='Prescription'></i><input type='checkbox' id='14'  value='Consultancy' >", 
- 					"<i class='icon-credit-card' data-toggle='tooltip' data-placement='top' title='Cost of Care'></i><input type='checkbox' id='15'  value='Consultancy' >"
+ 					{"title":"", "width":"20px;"},{"title":"Event Name", "width":"200px !important;"},{"title":"Event Date", "width":"150px;"}, 
+ 					{"title":"Complaints", "width":"450px !important;"}, 
+ 					{"title":"<i class='icon-user-md' data-toggle='tooltip' data-placement='top' title='Consultation'></i><input type='checkbox' id='11'  value='Consultancy' >", "width":"20px;"}, 
+ 					{"title":"<i class='icon-camera' data-toggle='tooltip' data-placement='top' title='Event Snaps'></i><input type='checkbox' id='12'  value='Consultancy' >", "width":"20px;"}, 
+ 					{"title":"<i class='icon-beaker' data-toggle='tooltip' data-placement='top' title='Lab Reports'></i><input type='checkbox' id='13'  value='Consultancy' >", "width":"20px;"}, 
+ 					{"title":"<i class='icon-file' data-toggle='tooltip' data-placement='top' title='Prescription'></i><input type='checkbox' id='14'  value='Consultancy' >", "width":"20px;"}, 
+ 					{"title":"<i class='icon-credit-card' data-toggle='tooltip' data-placement='top' title='Cost of Care'></i><input type='checkbox' id='15'  value='Consultancy' >", "width":"20px;"}
  				]
 	 		]
 		}

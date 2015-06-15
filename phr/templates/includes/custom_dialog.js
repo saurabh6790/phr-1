@@ -1,8 +1,5 @@
 frappe.provide("templates/includes");
 frappe.provide("frappe");
-{% include "templates/includes/inherit.js" %}
-{% include "templates/includes/utils.js" %}
-{% include "templates/includes/form_generator.js" %}
 
 var Dialog = function(){
 	this.wrapper=""
@@ -32,7 +29,8 @@ $.extend(Dialog.prototype,{
 				      <div class="modal-body">\
 					  </div>\
 				      <div class="modal-footer">\
-				      	<button type="button" class="btn btn-primary btn-sm"></button>\
+				      	<button type="button" class="btn btn-primary btn-sm" \
+				      		style="background-color: #89c148;border-color: #89c148;color: #ffffff;"></button>\
 				      </div>\
 				    </div>\
 				  </div>\

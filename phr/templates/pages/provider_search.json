@@ -27,7 +27,8 @@
 			"fieldname":"specialization", 
 			"fieldtype":"select",
 			"label":"Specialization",
-			"options":"Specialization"
+			"options":"Specialization",
+			"depends_on": "provider_type:Doctor" 
 		},
 		{
 			"fieldname":"provider_loc", 

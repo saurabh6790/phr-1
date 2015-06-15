@@ -198,6 +198,20 @@
    "label": "Files List", 
    "permlevel": 0, 
    "precision": ""
+  }, 
+  {
+   "fieldname": "event_dict", 
+   "fieldtype": "Small Text", 
+   "label": "event_dict", 
+   "permlevel": 0, 
+   "precision": ""
+  }, 
+  {
+   "fieldname": "sub_event_count", 
+   "fieldtype": "Small Text", 
+   "label": "sub_event_count", 
+   "permlevel": 0, 
+   "precision": ""
   }
  ], 
  "hide_heading": 0, 
@@ -208,7 +222,7 @@
  "is_submittable": 0, 
  "issingle": 0, 
  "istable": 0, 
- "modified": "2015-03-30 13:11:26.255777", 
+ "modified": "2015-05-25 15:53:19.322761", 
  "modified_by": "Administrator", 
  "module": "phr", 
  "name": "Shared Requests", 

@@ -1,12 +1,6 @@
 frappe.provide("templates/includes");
 frappe.provide("frappe");
-{% include "templates/includes/inherit.js" %}
-{% include "templates/includes/utils.js" %}
-// {% include "templates/includes/form_generator.js" %}
-{% include "templates/includes/list.js" %}
-{% include "templates/includes/uploader.js" %}
-{% include "templates/includes/treeview.js" %}
-
+frappe.require("assets/phr/pdfjs/build/pdf.js")
 
 SharePhr = function(){
 	this.wrapper = '';
@@ -33,7 +27,9 @@ $.extend(SharePhr.prototype,{
 		this.bind_controller()
 		//console.log(["ss",me.args['event_id']])
 		this.render_folder_section(args['event_id'],args['method'])
-		Events.prototype.get_linked_providers(this.args['profile_id'])
+		Events.prototype.write_visit_file($('form input[name="event_id"]').val(), this.args['profile_id'], $('form input[name="entityid"]').val())
+		ProviderOperations.prototype.get_linked_providers(this.args['profile_id'])
+
 	},
 	bind_controller: function(){
 		var me = this;
@@ -214,10 +210,21 @@ $.extend(SharePhr.prototype,{
 				args:{"data":me.res},
 				callback:function(r){
 					NProgress.done();
-					frappe.msgprint(r.message)
+					frappe.msgprint(r.message.message_summary)
+					if (r.message.returncode != 0){
+						me.notify_provider(me.res,r.message)	
+					}
 				}
 			})
 		}
+	},
+	notify_provider:function(data,res){
+		frappe.call({
+			method:"phr.templates.pages.event.build_provider_notification",
+			args:{"res":data},
+			callback:function(r){
+			}
+		})
 	},
 	validate_form:function(){
   		var me=this;
@@ -225,7 +232,7 @@ $.extend(SharePhr.prototype,{
   		$("form input[required], form textarea[required], form select[required]").each(function(i, obj) {
   			if ($(this).val()=="" && $(this).is(':visible')){
   				$(this).css({"border": "1px solid #999","border-color": "red" });
-  				frappe.msgprint("Fields Marked as Red Are Mandatory")
+  				// frappe.msgprint("Field(s) Marked as Red Are Mandatory")
   				fg=false
   			}
   		})
@@ -247,6 +254,9 @@ $.extend(SharePhr.prototype,{
   				frappe.msgprint("Please select files for sharing")
   				fg=false
   			}
+  		}
+  		else{
+  			frappe.msgprint("Field(s) Marked as Red Are Mandatory")
   		} 
   		return fg
   	}

@@ -50,9 +50,9 @@
             "label": "Appointments",
             "rows": [
                 [
-                    "Date time",
-                    "Provider's Name",
-                    "Reason For Visit"
+                    {"title":"Date time","width":"200px !important"},
+                    {"title":"Provider's Name", "width": "200px;"},
+                    {"title":"Reason For Visit", "width":"200px;"}
                 ]
             ]
         }

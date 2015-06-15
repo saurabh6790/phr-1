@@ -3,10 +3,6 @@ frappe.provide("frappe");
 {% include "templates/includes/inherit.js" %}
 {% include "templates/includes/utils.js" %}
 {% include "templates/includes/form_generator.js" %}
-{% include "templates/includes/list.js" %}
-{% include "templates/includes/uploader.js" %}
-{% include "templates/includes/list_view.js" %}
-{% include "templates/includes/thumbnail.js" %}
 {% include "templates/includes/share_phr.js" %}
 {% include "templates/includes/custom_dialog.js" %}
 {% include "templates/includes/dashboard_renderer.js" %}
@@ -28,7 +24,7 @@ var ToDo = inherit(ListView,{
 				val=$(this).val()
 				if (diffDays(parseDate(val),new Date().setHours(0,0,0,0)) > 0) { 
 					$(this).val("")
-    				frappe.msgprint("Td Dd Date Should not be less than Current Date")
+    				frappe.msgprint("Due Date Date Should not be less than Current Date")
 				}
 		});
 		$('.modal-footer .btn-primary').unbind('click').click(function(){

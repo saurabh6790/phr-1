@@ -10,8 +10,11 @@ from frappe import _
 import barcode
 import time
 import os
-from phr.templates.pages.patient import get_base_url
-#STANDARD_USERS = ("Guest", "Administrator")
+from phr.templates.pages.utils import get_base_url
+from frappe.utils import cint, flt, now, cstr, strip_html
+import random
+import string
+STANDARD_USERS = ("Guest", "Administrator")
 
 
 @frappe.whitelist(allow_guest=True)
@@ -22,6 +25,11 @@ def create_profile(first_name,middle_name,last_name,email_id,contact,created_via
 		3.After Successful Profile Creation genarate link
 		4.Complete Registration 
 	"""
+	from phr.templates.pages.profile import not_duplicate_contact
+	
+	if not not_duplicate_contact(contact,email_id):
+		return {"returncode" : 409, "message_summary":"Contact Already Used.","msg_display":"Contact Already Used."}
+
 	user = frappe.db.get("User", {"email": email_id})
 	if user:
 		if user.disabled:
@@ -29,16 +37,16 @@ def create_profile(first_name,middle_name,last_name,email_id,contact,created_via
 		else:
 			return {"returncode" : 409, "message_summary" : "Already Registered","msg_display":"Already Registered"}
 	else:
-		barcode=get_barcode()
-		args={'person_firstname':first_name,'person_middlename':middle_name,'person_lastname':last_name,'email':email_id,'mobile':contact,'received_from':created_via,'provider':'false',"barcode":str(barcode)}
+		barcode = get_barcode()
+		args = {'person_firstname':first_name,'person_middlename':middle_name,'person_lastname':last_name,'email':email_id,'mobile':contact,'received_from':created_via,'provider':'false',"barcode":str(barcode)}
 		# return args
-		profile_res=create_profile_in_solr(args)
-		response=json.loads(profile_res)
+		profile_res = create_profile_in_solr(args)
+		response = json.loads(profile_res)
 		if response['returncode']==101:
-			path=get_image_path(barcode,response['entityid'])
-			file_path='/files/'+response['entityid']+'/'+response['entityid']+".svg"
-			res=create_profile_in_db(response['entityid'],args,response,file_path)
-			db=set_default_dashboard(response['entityid'])
+			path = get_image_path(barcode,response['entityid'])
+			file_path = '/files/'+response['entityid']+'/'+response['entityid']+".svg"
+			res = create_profile_in_db(response['entityid'],args,response,file_path)
+			db = set_default_dashboard(response['entityid'])
 			response['msg_display']='Profile created successfully, please check your email and complete signup process'
 			return response
 		else:
@@ -69,7 +77,8 @@ def get_barcode():
    
 @frappe.whitelist(allow_guest=True)    
 def get_image_path(ean,entityid):
-	path=get_path(entityid)
+	path = get_path(entityid)
+	ean.writer.set_options({"module_height":6.0})
 	fullname = ean.save(path)
 	return fullname
 
@@ -94,7 +103,7 @@ def get_site_name():
 @frappe.whitelist(allow_guest=True)
 def create_profile_in_db(id,args,response,path=None):
 	from frappe.utils import random_string
-	password=random_string(10)
+	password = random_string(10)
 	user = frappe.get_doc({
 		"doctype":"User",
 		"email": args["email"],
@@ -113,8 +122,115 @@ def create_profile_in_db(id,args,response,path=None):
 		"password_str":password
 	})
 	user.ignore_permissions = True
+	user.no_welcome_mail = True
 	user.insert()
+	notify = notify_user(response,args,id)
 	return _("Registration Details Emailed.")
+
+
+"""
+	Send Welcome Mail to User
+"""
+@frappe.whitelist(allow_guest=True)
+def notify_user(res_data,user_args,profile_id):
+	"""
+		res_data = profile response from Solr
+		user_args = arguments that are sent to createProfile Service of Solr
+		profile_id = new user's profile id
+	"""
+	from frappe.utils import random_string
+	new_password = random_string(10)
+	_update_password(user_args["email"], new_password)
+	db_set(user_args,"password_str",new_password)
+	send_welcome_mail(new_password,profile_id,user_args)
+
+"""
+	Set values of str_password
+"""
+@frappe.whitelist(allow_guest=True)
+def db_set(args,fieldname, value):
+	#args.set(fieldname, value)
+	args["modified"] = now()
+	args["modified_by"] = frappe.session.user
+	frappe.db.set_value("User", args["email"], fieldname, value, args["modified"], args["modified_by"])
+
+"""
+	Send Mail and SMS to User
+"""
+@frappe.whitelist(allow_guest=True)
+def send_welcome_mail(password,profile_id,args):
+	from frappe.utils import random_string, get_url
+	key = random_string(32)
+	db_set(args,"reset_password_key", key)
+	link = get_url("/verify_email?id="+profile_id+"&key=" + key)
+	
+	mob_code = get_mob_code()
+	update_verification_details(args,password,key,mob_code,link,profile_id)
+	
+	send_login_mail(args,"Verify Your Account", "templates/emails/new_user.html", {"link": link,"password":password})
+	mob_already_v = frappe.db.get_value("Mobile Verification",{"mobile_no":args["mobile"],"mflag":1},"name")
+	if not mob_already_v:
+		from phr.templates.pages.profile import make_mobile_verification_entry
+		make_mobile_verification_entry(args["mobile"],profile_id,mob_code)
+		from phr.templates.pages.utils import get_sms_template
+		sms = get_sms_template("registration",{ "mobile_code": mob_code })
+		rec_list = []
+		rec_list.append(args["mobile"])
+		from erpnext.setup.doctype.sms_settings.sms_settings import send_sms
+		send_sms(rec_list,sms)
+	elif mob_already_v:
+		vd = frappe.get_doc("Verification Details",profile_id)
+		vd.mflag = 1
+		vd.save(ignore_permissions=True)
+
+@frappe.whitelist(allow_guest=True)
+def get_mob_code():
+	return ''.join(random.SystemRandom().choice(string.ascii_uppercase + string.digits) for _ in range(6))
+
+
+def update_verification_details(args,password,key,mob_code,link,profile_id):
+	vd = frappe.get_doc({
+		"doctype":"Verification Details",
+		"profile_id":profile_id,
+		"email": args["email"],
+		"mobile_no": args["mobile"],
+		"hash": key,
+		"verification_link": link,
+		"temp_password": password,
+		"mobile_verification_code":mob_code
+	})
+	vd.ignore_permissions = True
+	vd.insert()
+
+	return vd.name
+
+def send_login_mail(user_args, subject, template, add_args):
+	"""send mail with login details"""
+	from frappe.utils.user import get_user_fullname
+	from frappe.utils import get_url
+
+	mail_titles = frappe.get_hooks().get("login_mail_title", [])
+	title = frappe.db.get_default('company') or (mail_titles and mail_titles[0]) or ""
+
+	full_name = get_user_fullname(frappe.session['user'])
+	if full_name == "Guest":
+		full_name = "Administrator"
+
+	args = {
+		'first_name': user_args["person_firstname"] or user_args["person_lastname"] or "user",
+		'user': user_args["email"],
+		'title': title,
+		'login_url': get_url(),
+		'user_fullname': full_name
+	}
+
+	args.update(add_args)
+
+	sender = frappe.session.user not in STANDARD_USERS and frappe.session.user or None
+
+	frappe.sendmail(recipients=user_args["email"], sender=sender, subject=subject,
+		message=frappe.get_template(template).render(args))
+
 
 def create_profile_in_solr(args):
 	request_type="POST"
@@ -122,7 +238,6 @@ def create_profile_in_solr(args):
 	data=json.dumps(args)
 	from phr.phr.phr_api import get_response
 	response=get_response(url,data,request_type)
-	print response
 	return response.text
 
 @frappe.whitelist(allow_guest=True)

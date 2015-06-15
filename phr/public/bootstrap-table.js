@@ -289,7 +289,6 @@
             '<div class="bootstrap-table">',
                 '<div class="fixed-table-toolbar"></div>',
                 '<div class="fixed-table-container">',
-                    '<div class="fixed-table-header"><table></table></div>',
                     '<div class="fixed-table-body">',
                         '<div class="fixed-table-loading">',
                             this.options.formatLoadingMessage(),
@@ -393,7 +392,7 @@
             halign = sprintf('text-align: %s; ', column.halign ? column.halign : column.align);
             align = sprintf('text-align: %s; ', column.align);
             style = sprintf('vertical-align: %s; ', column.valign);
-            style += sprintf('width: %spx; ', column.checkbox || column.radio ? 36 : column.width);
+            style += sprintf('width: %s', column.checkbox || column.radio ? 36 : column.width);
 
             visibleColumns.push(column);
             that.header.fields.push(column.field);
@@ -750,6 +749,7 @@
     };
 
     BootstrapTable.prototype.initPagination = function () {
+        this.$container.find('.fixed-table-pagination').css('margin-top', this.$header.height());
         this.$pagination = this.$container.find('.fixed-table-pagination');
 
         if (!this.options.pagination) {
@@ -1311,8 +1311,7 @@
                 'height': '37px',
                 'border-bottom': '1px solid #dddddd',
                 'margin-right': scrollWidth
-            }).find('table').css('width', that.$el.css('width'))
-                .html('').attr('class', that.$el.attr('class'))
+            }).find('table').html('').attr('class', that.$el.attr('class'))
                 .append(that.$header_);
 
             // fix bug: $.data() is not working as expected after $.append()
@@ -1324,7 +1323,7 @@
                 that.$header_.find('div.fht-cell').eq(i).width($(this).innerWidth());
             });
 
-            that.$el.css('margin-top', -that.$header.height());
+            // that.$el.css('margin-top', -that.$header.height());
 
             // horizontal scroll event
             $fixedBody.off('scroll').on('scroll', function () {
@@ -1390,7 +1389,7 @@
         }
 
         if (this.options.height && this.options.showHeader) {
-            this.$container.find('.fixed-table-container').css('padding-bottom', '37px');
+            this.$container.find('.fixed-table-container').css('padding-bottom', '0');
         }
     };
 

@@ -1,11 +1,7 @@
 frappe.provide("templates/includes");
 frappe.provide("frappe");
-{% include "templates/includes/inherit.js" %}
-{% include "templates/includes/utils.js" %}
-{% include "templates/includes/form_generator.js" %}
-{% include "templates/includes/list.js" %}
-{% include "templates/includes/uploader.js" %}
-{% include "templates/includes/list_view.js" %}
+frappe.require("assets/phr/js/lib/jquery/jquery.ui.timepicker-addon.js");
+frappe.require("assets/phr/bootstrap3-dialog-master/bootstrap-dialog.js")
 {% include "templates/includes/linked_phr_updates.js" %}
 
 
@@ -93,7 +89,7 @@ var Medications = inherit(ListView,{
 							me.update_list_view(r.message)
 							me.bind_save_event()
 							email_msg='Linked PHR Has Created Medication'
-							text_msg='Linked PHR Has Created Medication'
+							text_msg=sessionStorage.getItem('cname')+' Has Created Medication'
 							send_linkedphr_updates(email_msg,text_msg,"Medication")
 						}
 						else{

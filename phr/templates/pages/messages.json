@@ -12,11 +12,11 @@
             "label": "Message Logs",
             "rows": [
                 [
-                    "",
-                    "Entity",
-                    "Operation",
-                    "Description",
-                    "Date Time"
+                    {"title":"", "width":"2px !important;"},
+                    {"title":"Entity", "width":"100px !important"},
+                    {"title":"Operation","width":"200px !important;"},
+                    {"title":"Description", "width":"200px;"},
+                    {"title":"Date Time","width":"80px !important;"}
                 ]
             ]
         }

@@ -1,7 +1,6 @@
 frappe.provide("templates/includes");
-{% include "templates/includes/utils.js" %}
-{% include "templates/includes/form_generator.js" %}
 {% include "templates/includes/dashboard_renderer.js" %}
+
 
 var LinkedPHR = inherit(RenderFormFields, {
 	init: function(wrapper,cmd, entityid,operation, other_param){
@@ -47,7 +46,7 @@ var LinkedPHR = inherit(RenderFormFields, {
 					me.res["received_from"]="Desktop"
 					if (me.operation=='create_linkphr'){
 						me.res["parent_linked"]=true
-						me.create_linkedphr(me.res,me)
+						me.create_linkedphr(me.res,me,$("form input[name='mobile']").val())
 					}
 				}
 				else{
@@ -91,8 +90,9 @@ var LinkedPHR = inherit(RenderFormFields, {
   		return {'fg':fg, 'msg':msg}	
   		
   	},
-	create_linkedphr:function(res,me){
+	create_linkedphr:function(res,me,mobile){
 		var me = this;
+		var mobile = mobile
 		frappe.call({
 				method:'phr.templates.pages.linked_phr.create_linkedphr',
 				args:{'data': res},
@@ -106,6 +106,14 @@ var LinkedPHR = inherit(RenderFormFields, {
 							if(me.source=="Patient"){
 								var db = new render_dashboard();
 								db.render_linked_phr(sessionStorage.getItem("pid"))
+							}
+							if (mobile){
+								frappe.call({
+									method:'phr.templates.pages.profile.make_mv_entry',
+									args:{"mobile":mobile,"profile_id":r.message.entityid},
+									callback: function(r) {
+									}
+								})
 							}
 						}
 						else{

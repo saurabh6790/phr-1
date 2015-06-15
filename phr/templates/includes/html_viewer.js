@@ -1,6 +1,4 @@
 frappe.provide("templates/includes");
-{% include "templates/includes/utils.js" %}
-{% include "templates/includes/form_generator.js" %}
 
 window.HTMLViewer = function(){
 	this.wrapper = ""
@@ -14,9 +12,10 @@ $.extend(window.HTMLViewer.prototype,{
 	},
 	form_generator_callback: function(profile_info){
 		scroll_top()
-		var dt = new Date(profile_info['date_of_birth'])
-		profile_info['date_of_birth'] = (dt.getDate() < 10 ? "0" + (dt.getDate()) : dt.getDate())  + '/' + (dt.getMonth() < 10 ? "0" + (dt.getMonth()+1) : dt.getMonth()+1) + '/' + dt.getFullYear()
-
+    if(profile_info['date_of_birth']){
+      var dt = new Date(profile_info['date_of_birth'])
+      profile_info['date_of_birth'] = (dt.getDate() < 10 ? "0" + (dt.getDate()) : dt.getDate())  + '/' + (dt.getMonth() < 10 ? "0" + (dt.getMonth()+1) : dt.getMonth()+1) + '/' + dt.getFullYear()
+    }
 		$(repl_str('<div class="panel-body no-padding"> \
                     <div class="col-md-12">\
                         <div class="text-center profile_photo">\
@@ -45,7 +44,8 @@ $.extend(window.HTMLViewer.prototype,{
                               </li>\
                               <li>\
                                 <span class="profile_field">Mobile No:</span>\
-                                <span class="profile_value">%(mobile)s</span>\
+                                <span class="profile_value" style="display: inline-flex;">%(mobile)s </span>\
+                                <span style="color:#17329E;" id="vm">Mobile Not Verified- <a id="verify_mobile" style="color:#17329E;">Verify</a></span>\
                               </li>\
                               <li>\
                                 <span class="profile_field">Email:</span>\
@@ -96,5 +96,6 @@ $.extend(window.HTMLViewer.prototype,{
                 </div>\
             <!--Events End--> \
 		</div>',profile_info)).appendTo($('.profile_viewer'))
+    MobileVerifier.prototype.check_contact_verified(profile_info['mobile'])
 	}
 })

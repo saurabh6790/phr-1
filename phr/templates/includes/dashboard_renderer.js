@@ -1,7 +1,4 @@
 frappe.provide("templates/includes");
-{% include "templates/includes/utils.js" %}
-{% include "templates/includes/form_generator.js" %}
-
 
 function render_dashboard(profile_id){
 	function render_providers(profile_id){
@@ -22,7 +19,7 @@ function render_dashboard(profile_id){
 	}
 	function render_linked_phr(profile_id){
 		frappe.call({
-			method:'phr.templates.pages.profile.get_linked_phrs_with_img',
+			method:'phr.templates.pages.dashboard.get_linked_phrs_with_img',
 			args:{'profile_id':profile_id},
 			callback: function(r) {
 				if(r.message) {
@@ -41,7 +38,7 @@ function render_dashboard(profile_id){
 	}
 	function render_emer_details(profile_id){
 		frappe.call({
-			method:'phr.templates.pages.profile.get_user_details',
+			method:'phr.templates.pages.dashboard.get_user_details',
 			args:{'profile_id':profile_id},
 			callback: function(r) {
 				if(r.message) {
@@ -67,7 +64,7 @@ function render_dashboard(profile_id){
 	}
 	function render_middle_section(profile_id){
 		frappe.call({
-			method:'phr.templates.pages.profile.get_data_for_middle_section',
+			method:'phr.templates.pages.dashboard.get_data_for_middle_section',
 			args:{'profile_id':profile_id},
 			callback: function(r) {
 				if(r.message) {
@@ -90,7 +87,7 @@ function render_dashboard(profile_id){
 	}
 	function render_advertisements(profile_id){
 		frappe.call({
-			method:'phr.templates.pages.profile.get_advertisements',
+			method:'phr.templates.pages.dashboard.get_advertisements',
 			args:{'profile_id':profile_id},
 			callback: function(r) {
 				if(r.message) {
@@ -145,6 +142,7 @@ function render_dashboard(profile_id){
     }
     function render_ed(data){
     	$wrap=$('#ed')
+    	$wrap.empty()
     	pro_data={"name": data['name'], "contact": data["contact"],"barcode":data["barcode"],"emer_con":data['emergency_contact'],"blood_group":data['blood_group']}
     	sessionStorage.setItem("barcode",pro_data["barcode"])
     	$(repl_str('<p><span class="light">Name:</span> <span class="green">%(name)s</span></p>\
@@ -160,8 +158,7 @@ function render_dashboard(profile_id){
 		$wrap=$('#clphr')
 		meta= data
 		meta_dic={}
-		sessionStorage.setItem("lphrs",data["list_size"])
-		//<img style="border-radius: 4px" src="'+r.message["image"]+'" title="'+name+'" alt="'+name+'">
+		sessionStorage.setItem("lphrs",data.length)
 		$.each(meta,function(i,data){
 			data["gender"]=class_mapper[data["gender"]]
 			$(repl_str('<li><a nohref class="v_lphr %(entityid)s" data-name=%(entityid)s>\
@@ -169,11 +166,10 @@ function render_dashboard(profile_id){
 				</div>\
 				<div class="item-inner"><span class="title cn">%(person_firstname)s %(person_lastname)s</span></div>\
 				</div></a></li>',data)).appendTo($wrap)
-			/*$(repl_str('<a class="list-group-item-side v_lphr %(entityid)s" data-name=%(entityid)s>\
-			%(person_firstname)s %(person_lastname)s</a>\
-			</div>', data)).appendTo($wrap)*/
 		})
 		$(".v_lphr").unbind("click").click(function(){
+			$('.main-navigation-menu li ul li a').removeClass('active');       
+          	$(this).addClass('active');
 			var name=$(this).find('.cn').html()
 			sessionStorage.setItem("cname",name)
 			sessionStorage.setItem("cid",$(this).attr('data-name'))
@@ -187,6 +183,7 @@ function render_dashboard(profile_id){
 			render_providers($(this).attr('data-name'))
 			$('#linkedphr').hide()
 			render_middle_section($(this).attr('data-name'))
+			render_emer_details($(this).attr('data-name'))
 			$('#profile').attr('data-name',$(this).attr('data-name'))
 		})
 	
@@ -397,7 +394,7 @@ function render_dashboard(profile_id){
 					var r = $("<tr>").appendTo($("#table1").find("thead"));
 					$.each(val,function(i, d){
 						if (i!=0){
-							$("<th>").html(d)
+							$("<th>").html(d["title"])
 								.appendTo(r);
 						}
 					})

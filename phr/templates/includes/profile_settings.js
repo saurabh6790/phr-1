@@ -1,11 +1,9 @@
 frappe.provide("templates/includes");
-{% include "templates/includes/utils.js" %}
-{% include "templates/includes/log.js" %}
-{% include "templates/includes/form_generator.js" %}
+
 {% include "templates/includes/linked_phr_updates.js" %}
 {% include "templates/includes/html_viewer.js" %}
-{% include "templates/includes/uploader.js" %}
-{% include "templates/includes/custom_dialog.js" %}
+frappe.require("assets/phr/bootstrap3-dialog-master/bootstrap-dialog.js")
+
 
 var ProfileSettings = inherit(RenderFormFields, {
 	init: function(wrapper,cmd, entityid){
@@ -159,29 +157,9 @@ var ProfileSettings = inherit(RenderFormFields, {
 			me.upload_image(object,profile_id)
 			
   		})
-  		me.get_user_image(profile_id)
+  		//me.get_user_image(profile_id)
   		//var image=frappe.get_cookie("user_image")
   		
-  	},
-  	get_states:function(){
-  		frappe.call({
-			method:"phr.templates.pages.profile.get_states",
-			callback:function(r){
-			if(r.message){
-				$.each(r.message,function(i, val){
-					$option=$('<option>', { 
-						'value': val[0],
-						'text' : val[0] 
-					}).appendTo($('select[name="state"]'))
-					
-				})
-			}
-			else{
-					
-				}
-			}
-		})
-
   	},
   	validate_form:function(){
   		var me=this;
@@ -210,30 +188,6 @@ var ProfileSettings = inherit(RenderFormFields, {
   			"msg":msg
   		}	
   	},
-  	get_user_image:function(profile_id){
-  		frappe.call({
-			method:'phr.templates.pages.profile.get_user_image',
-			args:{"profile_id":profile_id},
-			callback: function(r) {
-				if (r.message["image"]){
-					$('<img src="'+r.message["image"]+'"alt="user image">').appendTo($('.fileinput-preview'))
-				}
-			}
-		});
-  		
-  	},
-	upload_image:function(object,profile_id){
-		frappe.call({
-			method:'phr.templates.pages.profile.upload_image',
-			args:{"profile_id":profile_id,"data":object.data,"file_name":object.filename},
-			callback: function(r) {
-				NProgress.done();
-				if(r.message) {
-					frappe.msgprint(r.message);
-				}
-			}
-		});
-	},
 	get_method:function(res,cmd,me,selected){
 		frappe.call({
 			method:'phr.templates.pages.profile.update_profile',
@@ -253,7 +207,7 @@ var ProfileSettings = inherit(RenderFormFields, {
 	get_linked_phrs:function(profile_id){
 		var me=this;
 		frappe.call({
-			method:'phr.templates.pages.profile.get_linked_phrs',
+			method:'phr.templates.pages.dashboard.get_linked_phrs',
 			args:{'profile_id':profile_id},
 			callback: function(r) {
 				if(r.message) {
@@ -347,11 +301,11 @@ var ProfileSettings = inherit(RenderFormFields, {
 			if (validate_mobile(res['mobile']) && validate_email(res['email'])) {
 				frappe.call({
 					method:'phr.templates.pages.profile.check_existing',
-					args:{'email':res['email']},
+					args:{'email':res['email'],"mobile":res["mobile"]},
 					callback: function(r) {
 						// console.log(r)
 						if (r.message){
-							frappe.msgprint('Email Already Used')
+							frappe.msgprint(r.message.msg)
 						}
 						else{
 							// console.log(['delink_phr', meta_dic])
@@ -423,7 +377,7 @@ var ProfileSettings = inherit(RenderFormFields, {
 	get_enabled_dashboard:function(profile_id){
 		var me=this;
 		frappe.call({
-			method:'phr.templates.pages.profile.get_enabled_dashboard',
+			method:'phr.templates.pages.dashboard.get_enabled_dashboard',
 			args:{'profile_id':profile_id},
 			callback: function(r) {
 				if(r.message) {

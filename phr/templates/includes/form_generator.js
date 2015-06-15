@@ -1,5 +1,5 @@
 frappe.provide("templates/includes");
-{% include "templates/includes/utils.js" %}
+
 frappe.require("assets/frappe/js/lib/jquery/jquery.ui.min.js");
 frappe.require("assets/frappe/js/lib/jquery/bootstrap_theme/jquery-ui.selected.css");
 frappe.require("assets/frappe/js/lib/jquery/bootstrap_theme/jquery-ui.css");
@@ -51,19 +51,8 @@ $.extend(RenderFormFields.prototype,{
 			<button class="btn btn-primary">\
 			<i class="fa fa-share-square"></i>Share Data</button></div>').appendTo($('.top-btns-bar')).addClass(me.operation)
 
-		
 		$('<div class="pull-right margin-left-20 save_controller">\
 			<button class="btn btn-primary"><i class="fa fa-save"></i> Save</button></div>').appendTo($('.top-btns-bar')).addClass(me.operation)
-		//$('<button class="btn btn-primary pull-right margin-left-20 new_controller"><i class="fa fa-plus-square"></i> New</button>').appendTo($('top-btns-bar')).addClass(me.operation)
-
-		/*$('<div class="save_controller" style="width:45%;display:inline-block;text-align:right;">\
-				<button class="btn btn-primary">\
-					<i class="icon-save"></i> Save \
-				</button>\
-			</div>').appendTo($('.sub-top-bar')).addClass(me.operation)*/
-	
-		
-		
 	},
 	get_field_meta:function(){
 		var me = this;
@@ -77,7 +66,7 @@ $.extend(RenderFormFields.prototype,{
 		}
 		$.ajax({
 			method: "POST",
-			url: "/api/method/phr.templates.pages.patient.get_data_to_render",
+			url: "/api/method/phr.templates.pages.form_generator.get_data_to_render",
 			data: arg,
 			async: false,
 			success: function(r) {
@@ -90,7 +79,6 @@ $.extend(RenderFormFields.prototype,{
 	},
 	render_fields:function(fields, values, tab){
 		var me = this;
-		// console.log(fields, values, tab)
 		if(tab==1) me.tab_field_renderer()
 		$.each(fields,function(indx, meta){
 			!me.section && meta['fieldtype'] !== 'section_break' && tab!=1 && me.section_break_field_renderer()
@@ -116,7 +104,6 @@ $.extend(RenderFormFields.prototype,{
 				</div>', field_meta)).appendTo($(this.column))
 		if(field_meta['required']==1){
 			$input.find("input").prop('required',true)
-			//$input.find("input").css({"border": "1px solid #999","border-color": "red" });
 		}
 	},
 	depends_on:function(meta){
@@ -165,17 +152,13 @@ $.extend(RenderFormFields.prototype,{
 			<div class="col-xs-8"><div class="control-input ">\
 			<input type="text" class="form-control" placeholder="%(placeholder)s" \
 			name="%(fieldname)s" value="%(value)s" data-toggle="tooltip" \
-			data-placement="top" title="%(label)s" aria-describedby="basic-addon2">\
+			data-placement="top" title="%(label)s" aria-describedby="basic-addon2" maxlength="30">\
 			<span id="valid"></span></div></div></div></div>', field_meta)).appendTo($(this.column))
 		
 		var val = field_meta['value'];
 		if(field_meta['required']==1){
 		    $input.find("input").prop('required',true)
-		    $input.find("label").addClass('required')
-			$('<style>.required:after{content:" *";color:red;font-size:20px;}</style>').appendTo($input)
-			/*if (!val){
-				$input.find("input").css({"border": "1px solid #999","border-color": "red" });
-			}*/	
+			$('<span class="symbol required"></span>').appendTo($input.find("label"));
 		}
 		if(field_meta['display']){
 			$($('[name="'+field_meta['fieldname']+'"]').parents()[3]).css("display", field_meta['display']);
@@ -200,10 +183,7 @@ $.extend(RenderFormFields.prototype,{
 		if(field_meta['required']==1){
 		    $input.find("input").prop('required',true)
 		    $input.find("label").addClass('required')
-			$('<style>.required:after{content:" *";color:red;font-size:20px;}</style>').appendTo($input)
-			/*if (!val){
-				$input.find("input").css({"border": "1px solid #999","border-color": "red" });
-			}*/	
+			$('<span class="symbol required"></span>').appendTo($input.find("label"));
 		}
 		if(field_meta['readonly']==1){
 			$input.find("input").prop('disabled',true)
@@ -243,10 +223,7 @@ $.extend(RenderFormFields.prototype,{
 		if(field_meta['required']==1){
 			$input.find("input").prop('required',true)
 			$input.find("label").addClass('required')
-			$('<style>.required:after{content:" *";color:red;font-size:20px;}</style>').appendTo($input)
-			/*if (!val){
-				$input.find("input").css({"border": "1px solid #999","border-color": "red" });
-			}*/	
+			$('<span class="symbol required"></span>').appendTo($input.find("label"));
 		}
 		if(field_meta['readonly']==1){
 			$input.find("input").prop('disabled',true)
@@ -258,16 +235,16 @@ $.extend(RenderFormFields.prototype,{
 		$input = $(repl_str('<div class="form-horizontal frappe-control" style="max-width: 600px;margin-top:10px;">\
 			<div class="form-group row" style="margin: 0px">\
 			<label class="control-label col-xs-4" style="padding-right: 0px;">%(label)s</label>\
-			<label class="col-xs-8 weight_mngnt"><div class="control-input">\
+			<div class="col-xs-8 weight_mngnt"><div class="control-input">\
 			<select type="text" class="form-control" data-toggle="tooltip" \
-			data-placement="top" title="%(label)s" name="%(fieldname)s" ></div></label></div></div>', field_meta)).appendTo($(this.column))
+			data-placement="top" title="%(label)s" name="%(fieldname)s" ></div></div></div></div>', field_meta)).appendTo($(this.column))
 
 
 		if (typeof(field_meta['options']) === "string"){
 			$loc_ip = $input;
 			$.ajax({
 				method: "POST",
-				url: "/api/method/phr.templates.pages.patient.get_master_details",
+				url: "/api/method/phr.templates.pages.utils.get_master_details",
 				data: {'doctype': field_meta['options']},
 				async: false,
 				success: function(r) {
@@ -305,10 +282,7 @@ $.extend(RenderFormFields.prototype,{
 		if(field_meta['required']==1){
 			$input.find("select").prop('required',true)
 			$input.find(".control-label").addClass('required')
-			$('<style>.required:after{content:" *";color:red;font-size:20px;}</style>').appendTo($input)
-			/*if (!val){
-				$input.find("select").css({"border": "1px solid #999","border-color": "red" });
-			}*/
+			$('<span class="symbol required"></span>').appendTo($input.find("label"));
 		}
 		if(field_meta['readonly']==1){
 			$input.find("select").prop('disabled',true)
@@ -338,7 +312,7 @@ $.extend(RenderFormFields.prototype,{
 
 		if (typeof(field_meta['options']) === "string"){
 			frappe.call({
-				method:'phr.templates.pages.patient.get_master_details',
+				method:'phr.templates.pages.utils.get_master_details',
 				args:{'doctype': field_meta['options']},
 				callback: function(r){
 					$($input.find('.autocomplete')).autocomplete({
@@ -363,11 +337,7 @@ $.extend(RenderFormFields.prototype,{
 		var val = field_meta['value'];
 		if(field_meta['required']==1){
 			$input.find("input").prop('required',true)
-			$input.find("label").addClass('required')
-			$('<style>.required:after{content:" *";color:red;font-size:20px;}</style>').appendTo($input)
-			/*if (!val){
-				$input.find("input").css({"border": "1px solid #999","border-color": "red" });
-			}*/
+			$('<span class="symbol required"></span>').appendTo($input.find("label"));
 		}
 
 		this.set_description($input.find('.control-input'), field_meta)
@@ -383,15 +353,6 @@ $.extend(RenderFormFields.prototype,{
 		if(field_meta['readonly']==1){
 			$input.find("input").prop('disabled',true)
 		}
-
-		// $($input.find('.autocomplete')).autocomplete({
-  //       source: function(request, response){
-  //           var matcher = new RegExp( $.ui.autocomplete.escapeRegex( request.term ), "i" );
-  //           response( $.grep( field_meta['options'], function( value ) {
-  //           return matcher.test(value['constructor']) || matcher.test(value.model) || matcher.test(value.type);
-  //       }));
-  //       }
-    // });
 	},
 	text_field_renderer: function(field_meta){
 		var me = this;
@@ -400,7 +361,7 @@ $.extend(RenderFormFields.prototype,{
 							<label class="control-label col-xs-4" style="padding-right: 0px;">%(label)s</label>\
 							<div class="col-xs-8">\
 								<div class="control-input">\
-									<textarea type="text" class="form-control" \
+									<textarea maxlength="160" type="text" class="form-control" \
 										placeholder="%(placeholder)s" name="%(fieldname)s"\
 										data-toggle="tooltip" data-placement="top" title="%(label)s"\
 										aria-describedby="basic-addon2"></textarea>\
@@ -412,11 +373,7 @@ $.extend(RenderFormFields.prototype,{
 		var val = field_meta['value'];
 		if(field_meta['required']==1){
 			$input.find("textarea").prop('required',true)
-			$input.find("label").addClass('required')
-			$('<style>.required:after{content:" *";color:red;font-size:20px;}</style>').appendTo($input)
-			/*if (!val){
-				$input.find("textarea").css({"border": "1px solid #999","border-color": "red" });
-			}*/
+			$('<span class="symbol required"></span>').appendTo($input.find("label"));
 		}
 
 		if(field_meta['display']){
@@ -448,7 +405,6 @@ $.extend(RenderFormFields.prototype,{
  			 </div>\
  			 <div class="upload"><span class="btn btn-default fileinput-exists">Upload</span></div>\
  			</div>').appendTo($(this.column))
-		/*$('.fileinput').fileinput()*/
 	},
 	time_field_renderer:function(field_meta){
 		var me = this;
@@ -469,22 +425,10 @@ $.extend(RenderFormFields.prototype,{
         				timeFormat: 'hh:mm tt',
         				timeOnly: true
 		})
-		/*var val = field_meta['value'];
-		
-		if(val){
-			var date=new Date(val)
-			$input.find('input').val($.datetimepicker.formatDate('dd/mm/yy',date))
-		}
-*/
 		var val = field_meta['value'];
 		if(field_meta['required']==1){
 			$input.find("input").prop('required',true);
-			$input.find("label").addClass('required')
-			$('<style>.required:after{content:" *";color:red;font-size:20px;}</style>').appendTo($input)
-			/*if (!val){
-				$input.find("input").css({"border": "1px solid #999","border-color": "red" });	
-			}*/
-			
+			$('<span class="symbol required"></span>').appendTo($input.find("label"));
 		}
 		if(field_meta['readonly']==1){
 			$input.find("input").prop('disabled',true)
@@ -526,8 +470,7 @@ $.extend(RenderFormFields.prototype,{
 			}
 		if(field_meta['required']==1){
 			$input.find("input").prop('required',true);
-			$input.find("label").addClass('required')
-			$('<style>.required:after{content:" *";color:red;font-size:20px;}</style>').appendTo($input)
+			$('<span class="symbol required"></span>').appendTo($input.find("label"));
 		}
 		if(field_meta['readonly']==1){
 			$input.find("input").prop('disabled',true)
@@ -572,11 +515,7 @@ $.extend(RenderFormFields.prototype,{
 
 		if(field_meta['required']==1){
 			$input.find("input").prop('required',true);
-			$input.find("label").addClass('required')
-			$('<style>.required:after{content:" *";color:red;font-size:20px;}</style>').appendTo($input)
-			/*if (!val){
-				$input.find("input").css({"border": "1px solid #999","border-color": "red" });	
-			}*/
+			$('<span class="symbol required"></span>').appendTo($input.find("label"));
 		}
 
 		this.set_description($input.find('.control-input'), field_meta)
@@ -601,19 +540,9 @@ $.extend(RenderFormFields.prototype,{
         				timeOnly: true
 		})
 		var val = field_meta['value'];
-		
-		/*if(val){
-			var date=new Date(val)
-			$input.find('input').val($.datetimepicker.formatDate('dd/mm/yy',date))
-		}
-*/
 		if(field_meta['required']==1){
 			$input.find("input").prop('required',true);
-			$input.find("label").addClass('required')
-			$('<style>.required:after{content:" *";color:red;font-size:20px;}</style>').appendTo($input)
-			/*if (!val){
-				$input.find("input").css({"border": "1px solid #999","border-color": "red" });	
-			}*/
+			$('<span class="symbol required"></span>').appendTo($input.find("label"));
 		}
 		if(field_meta['readonly']==1){
 			$input.find("input").prop('disabled',true)
@@ -645,9 +574,7 @@ $.extend(RenderFormFields.prototype,{
 	render_table_heads:function(val, input_area){
 		var me = this;
 		$.each(val,function(i, d){
-			// $("<th>").html(d)
-			// 	.appendTo($(input_area).find("thead tr"));
-			me.cols.push({"field": i, "title": d})
+			me.cols.push({"field": i, "title": d['title'], "width":d["width"]})
 		})
 	},
 	render_table_body:function(val, cols, input_area){
@@ -655,8 +582,6 @@ $.extend(RenderFormFields.prototype,{
 		var dict = {};
 		// 
 		$.each(val,function(i, d){
-			// $("<td>").html(d)
-			// 	.appendTo(row);
 			dict[i] = d; 
 		})
 		me.data_row.push(dict)

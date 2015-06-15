@@ -24,6 +24,10 @@ frappe.provide("frappe");
   ClassName.prototype.init(wrapper,name_of_json_file,entityid,operation_entity)
 */
 $(document).ready(function () {
+	if ((/provider/.test(self.location.href)) && frappe.get_cookie("user_type") != 'provider'){
+		frappe.msgprint("Not Allowed")
+		window.location.href = "/patient";
+	}
 	if(!window.full_name) {
 		if(localStorage) {
 			localStorage.setItem("last_visited",
@@ -39,13 +43,14 @@ $(document).ready(function () {
 		$("#home").on("click",function(){
 			$('#phr').addClass("hide");
 			$('.breadcrumb').empty()
+			$('<li></li>').appendTo('.breadcrumb')
 			//$('.linked-phr').empty()
 			$('#cphrname').empty()
 			$('.cdd').addClass('hide')
 			$('.save_controller').hide()
 			$('.new_controller').hide()
 			NProgress.start();
-			profile_id=sessionStorage.getItem("pid")
+			profile_id = sessionStorage.getItem("pid")
 			$('#linkedphr').show()
 			sessionStorage.setItem("cid",profile_id)
 			$('#profile').attr('data-name',profile_id)
@@ -90,10 +95,10 @@ $(document).ready(function () {
 		profile_id=sessionStorage.getItem("cid")
 		$('.breadcrumb').empty()
 		NProgress.start();
-		$('<li><a nohref>Profile</a></li>').click(function(){
-			PatientDashboard.prototype.init($(document).find("#main-con"),
-				{"file_name" : "profile", "method": "profile"},profile_id)
-		}).appendTo('.breadcrumb');
+		// $('<li><a nohref>Profile</a></li>').click(function(){
+		// 	PatientDashboard.prototype.init($(document).find("#main-con"),
+		// 		{"file_name" : "profile", "method": "profile"},profile_id)
+		// }).appendTo('.breadcrumb');
 		PatientDashboard.prototype.init($(document).find("#main-con"),
 				{"file_name" : "profile", "method": "profile"},profile_id)	
 		NProgress.done();
@@ -103,11 +108,11 @@ $(document).ready(function () {
 		$('.breadcrumb').empty()
 		$('#main-con').empty()
 		NProgress.start();
-		$('<li><a nohref>Profile</a></li>').click(function(){
-			ListView.prototype.init($(document).find(".field-area"), {"file_name" : "patients",
-			'cmd':"provider.get_pateint_data",
-			'profile_id':profile_id})
-		}).appendTo('.breadcrumb');
+		// $('<li><a nohref>Profile</a></li>').click(function(){
+		// 	ListView.prototype.init($(document).find(".field-area"), {"file_name" : "patients",
+		// 	'cmd':"provider.get_pateint_data",
+		// 	'profile_id':profile_id})
+		// }).appendTo('.breadcrumb');
 		ListView.prototype.init($(document).find(".field-area"), {"file_name" : "patients",
 		'cmd':"provider.get_patient_data",
 		'profile_id':profile_id})

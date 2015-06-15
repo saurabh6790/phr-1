@@ -1,7 +1,7 @@
 import frappe
-from phr.templates.pages.patient import get_data_to_render
+from phr.templates.pages.form_generator import get_data_to_render
 from phr.phr.phr_api import get_response
-from phr.templates.pages.patient import get_base_url
+from phr.templates.pages.utils import get_base_url
 import json
 import datetime
 from frappe.utils import getdate, date_diff, nowdate, get_site_path, get_hook_method, get_files_path, \
@@ -18,7 +18,6 @@ def get_profile_list(data):
 	pos = 0
 
 	for filed_dict in fields:
-		print filed_dict 
 		pos =+ 1
 		if 'rows' in filed_dict.keys(): 
 			rows = filed_dict.get('rows')
@@ -28,7 +27,6 @@ def get_profile_list(data):
 
 	response=get_response(url, json.dumps({"to_profile_id":data.get('profile_id')}), request_type)
 
-	print response.text
 	if response.text:
 		res_data = json.loads(response.text)
 
@@ -36,7 +34,6 @@ def get_profile_list(data):
 
 		if res_data.get('visitshareProfileList'):
 			for profile in res_data.get('visitshareProfileList'):
-				print profile.get("entityid"), profile.get("person_firstname"), profile.get("person_lastname")
 				data = ['<a nohref id="%s"> %s %s </a>'%(profile.get("entityid"), profile.get("person_firstname"), profile.get("person_lastname"))]
 				rows.extend([data])
 
@@ -93,7 +90,6 @@ def get_patient_data(data):
 		request_type="POST"
 		url="%s/dms/getvisitmultiplefile"%get_base_url()
 		from phr.phr.phr_api import get_response
-		print dms_files
 		param = {"filelist": dms_files}
 		response=get_response(url, json.dumps(param), request_type)
 
@@ -126,7 +122,6 @@ def get_shared_request(profile_id):
 
 @frappe.whitelist()
 def update_flag(req_id, provider_id, profile_id, event_id, doc_name):
-	frappe.errprint(['update_flag',doc_name])
 	if doc_name == 'Event' or doc_name == 'Visit':
 		d = get_patient_data({'profile_id': provider_id, 
 			'other_param':{'patient_profile_id': profile_id, 'event_id': event_id, 'req_id': req_id}
@@ -160,9 +155,10 @@ def get_myrequests(target, provider_id):
 					</button>"""%{'req_id':d[0], 'provider_id': d[1], 'patient': d[2], 'event_id': d[3], 'doc_name': d[4]})
 
 	rows=[
-		["Date (Shared date)", "Patient Name", "Event Name",
-				"Reason for Sharing",  "Period of Sharing", 
-				"Payment Status", "Accept-Reject"]
+		[{"title":"Date (Shared date)", "width":"120px !important;"}, {"title":"Patient Name","width":"100px;"}, 
+				{"title":"Event Name","width":"100px;"}, {"title":"Reason for Sharing", "width":"150px;"}, 
+				{"title":"Period of Sharing", "width":"120px !important;"}, {"title":"Payment Status", "width":"100px;"},
+				{"title":"Accept-Reject", "width":"100px;"}]
 	]
 
 	if data:
@@ -205,9 +201,9 @@ def get_acc_req(target, provider_id):
 			d[7] = '<a target="_blank" href="/%s"> %s </a>' % ( file_path, dm_info['disease_name'])
 					
 	rows=[
-		["Date (Shared date)", "Patient Name", "Event Name",
-				"Reason for Sharing",  "Period of Sharing", 
-				"Payment Status"]
+		[{"title":"Date (Shared date)", "width":"120px !important;"}, {"title":"Patient Name", "width":"100px;"}, 
+				{"title":"Event Name","width":"100px;"},{"title":"Reason for Sharing", "width":"100px;"},  {"title":"Period of Sharing", "width":"100px;"}, 
+				{"title":"Payment Status", "width":"100px;"}, {"title":"Status", "width":"100px;"}]
 	]
 
 	if data:
@@ -229,9 +225,9 @@ def get_rej_req(target, provider_id):
 					and provider_id="%s" """%('%d/%m/%Y',provider_id), as_list=1)
 
 	rows=[
-		["Date (Shared date)", "Patient Name", "Event Name",
-				"Reason for Sharing",  "Period of Sharing", 
-				"Payment Status", "Reason For Rejection"]
+		[{"title":"Date (Shared date)","width":"120px !important;"}, {"title":"Patient Name", "width":"100px;"}, 
+				{"title":"Event Name","width":"100px;"},{"title":"Reason for Sharing", "width":"100px;"}, {"title":"Period of Sharing", "width":"100px;"}, 
+				{"title":"Payment Status", "width":"100px;"}, {"title":"Reason For Rejection", "width":"100px;"}]
 	]
 
 	if data:

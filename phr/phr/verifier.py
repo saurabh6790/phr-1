@@ -10,8 +10,8 @@ from frappe import _
 
 @frappe.whitelist(allow_guest=True)
 def verify_email(id,key):
-	hash=frappe.db.get_value('Verification Details',{"name":id},"hash")
-	if hash!=key:
+	hash = frappe.db.get_value('Verification Details',{"name":id},"hash")
+	if hash != key:
 		frappe.msgprint("Email Verifcation not done")
 	else:
 		return "Email Verified"		
@@ -19,21 +19,24 @@ def verify_email(id,key):
 @frappe.whitelist(allow_guest=True)
 def verify_mobile(id,code):
 	print id, code
-	mob_code=frappe.db.get_value('Verification Details',{"name":id},"mobile_verification_code")
-	if mob_code!=code:
+	mob_code = frappe.db.get_value('Verification Details',{"name":id},"mobile_verification_code")
+	if mob_code != code:
 		# frappe.msgprint("Please Enter valid code")
 		return {"returncode" : 404, "message_summary":"Please Enter valid code"}
 	else:
-		vd=frappe.get_doc('Verification Details',id)
-		vd.mflag=1
+		vd = frappe.get_doc('Verification Details',id)
+		vd.mflag = 1
 		vd.save(ignore_permissions=True)
+		mv = frappe.get_doc('Mobile Verification',vd.get('mobile_no'))
+		mv.mflag = 1
+		mv.save(ignore_permissions=True)
 		return {"returncode" : 100, "message_summary":"Mobile Number Verified"}
 
 @frappe.whitelist(allow_guest=True)
 def update_password(new_password, id=None, old_password=None):
 	# verify old password
 	if id:
-		user=frappe.db.get_value("User",{"profile_id":id})
+		user = frappe.db.get_value("User",{"profile_id":id})
 		# if old_password:
 		# 	if not frappe.db.sql("""select user from __Auth where password=password(%s)
 		# 		and user=%s""", (old_password, user)):
@@ -42,9 +45,18 @@ def update_password(new_password, id=None, old_password=None):
 		_update_password(user, new_password)
 
 		frappe.db.set_value("User", user, "reset_password_key", "")
+		frappe.db.set_value("User",user,"password_str",new_password)
 
 		frappe.local.login_manager.logout()
-		vd=frappe.get_doc('Verification Details',id)
-		vd.pwdflag=1
+		vd = frappe.get_doc('Verification Details',id)
+		vd.pwdflag = 1
 		vd.save(ignore_permissions=True)
 		return _("Password Updated")
+
+@frappe.whitelist(allow_guest=True)
+def check_verified(profile_id):
+	mflag = frappe.db.get_value("Verification Details",{"name":profile_id},"mflag")
+	if mflag==1:
+		return "verified"
+	else:
+		return "not_verified"

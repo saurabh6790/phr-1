@@ -6,4 +6,9 @@ import frappe
 from frappe.model.document import Document
 
 class VerificationDetails(Document):
-	pass
+	def on_update(self):
+		if self.mflag == 1:
+			mv = frappe.get_doc("Mobile Verification",self.mobile_no)
+			if mv:
+				mv.mflag = 1
+				mv.save(ignore_permissions=True)

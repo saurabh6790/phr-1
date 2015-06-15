@@ -1,6 +1,4 @@
 frappe.provide("templates/includes");
-{% include "templates/includes/utils.js" %}
-{% include "templates/includes/form_generator.js" %}
 
 var ListView = inherit(RenderFormFields,{
 	init: function(wrapper, args){
@@ -13,14 +11,35 @@ var ListView = inherit(RenderFormFields,{
 			this.get_data()
 		}
 		else if(args['search']){
-			cmd=''
+			var cmd='';
+			var search_args ='';
+
 			if (args['search']== "event"){
-				cmd="get_event_data"
+				cmd="get_event_data";
+				search_args = {'data':
+								{'profile_id':me.args['profile_id'],
+								 'file_name':'event',
+								 'param':'listview',
+								 'tab_at':4,
+								 "event_date_from":me.args['event_date_from'],
+								 'event_date_to':me.args['event_date_to']
+								}
+							}
 			}
+
 			else if(args['search']== "visit"){
-				cmd="get_visit_data"
+				cmd="get_visit_data";
+				search_args = {'data':
+								{'profile_id':me.args['profile_id'],
+								 'file_name':'visit',
+								 'param':'listview',
+								 'tab_at':4,
+								 "visit_date_from":me.args['visit_date_from'],
+								 'visit_date_to':me.args['visit_date_to']
+								}
+							}
 			}
-			this.rerender_event_visit(cmd)
+			this.rerender_event_visit(cmd, search_args)
 		}
 		else{
 			RenderFormFields.prototype.init(this.wrapper, {'file_name': me.args['file_name'], 'param':'listview'})
@@ -47,8 +66,6 @@ var ListView = inherit(RenderFormFields,{
 					r.message['listview'][me.args['tab_at']]['rows'] = r.message['rows'];	
 				}
 				RenderFormFields.prototype.init(this.wrapper, {'fields': r.message['listview']})
-				// me.create_pagination(r.message['options'], r.message['page_size'])
-				//console.log(me.args)
 				if(me.args['file_name'] == "event"){
 					Events.prototype.add_search_event()
 				}
@@ -56,11 +73,11 @@ var ListView = inherit(RenderFormFields,{
 			}
 		});
 	},
-	rerender_event_visit:function(cmd){
+	rerender_event_visit:function(cmd, search_args){
 		var me=this;
 		frappe.call({
 			method:"phr.templates.pages.event."+cmd,
-			args:{'data':{'profile_id':me.args['profile_id'],'file_name':'event','param':'listview','tab_at':4,"event_date_from":me.args['event_date_from'],'event_date_to':me.args['event_date_to']}},
+			args:search_args,
 			callback:function(r){
 				if (r.message){
 					r.message['listview'][4]['rows'] = r.message['rows'];	
@@ -87,36 +104,6 @@ var ListView = inherit(RenderFormFields,{
 		//$('<button class="btn btn-default">Search Events</button>').appendTo($('.search_event'))
 		//Events.prototype.add_search_event()
 	},
-	create_pagination: function(table_data, page_size){
-		this.table_data = table_data;
-		this.page_size = page_size;
-
-		no_of_pages = (table_data.length-1) / page_size;
-
-		$('<ul class="pagination ">\
-				<li ><a nohref>&laquo;</a></li>\
-		</ul>').appendTo($('.field-area'))
-
-		for(i=1 ;i<=no_of_pages; i++){
-			$(repl_str('<li ><a nohref>%(count)s</a></li>',{'count':i})).appendTo('.pagination')
-		}
-
-		$('<li><a nohref>&raquo;</a></li>').appendTo('.pagination')
-		this.page_controller()
-	},
-	page_controller : function(){
-		var me = this;
-		$('ul li a').click(function(){
-			me.render_page($(this).html())
-		})
-		
-	},
-	render_page: function(page_id){
-		next = parseInt(this.page_size) * parseInt(page_id);
-		this.listview[this.args['tab_at']]['rows'] = this.table_data.slice((next - parseInt(this.page_size)), next)
-		RenderFormFields.prototype.init(this.wrapper, {'fields': this.listview})
-		this.create_pagination(this.table_data, this.page_size)
-	},
 	render_top_section: function(){
 		var me = this;
 		$('.new_controller').remove();
@@ -128,9 +115,9 @@ var ListView = inherit(RenderFormFields,{
 				me.new_form()
 				if(me.args['file_name'] == "event"){
 					Events.prototype.bind_save_event()
-					Events.prototype.get_linked_providers()	
+					ProviderOperations.prototype.get_linked_providers()	
 					$("#provider_name").click(function(){
-						Events.prototype.dialog_oprations()
+						ProviderOperations.prototype.dialog_oprations({'file_name':"provider_search", "wrapper":this.wrapper})
 					})
 				}
 				me.status=1

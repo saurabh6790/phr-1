@@ -8,11 +8,12 @@ import requests
 import os
 from frappe.auth import _update_password
 from frappe import _
-from phr.templates.pages.patient import get_base_url,get_data_to_render
+from phr.templates.pages.utils import get_base_url
+from phr.templates.pages.form_generator import get_data_to_render
 import json
 from phr.phr.doctype.phr_activity_log.phr_activity_log import make_log
 import json
-from phr.templates.pages.profile import get_linked_phrs
+from phr.templates.pages.dashboard import get_linked_phrs
 
 @frappe.whitelist(allow_guest=True)
 def create_provider(data,id=None,profile_id=None):
@@ -43,7 +44,6 @@ def link_provider(res, data, profile_id):
 		data = json.loads(data)
 	else:
 		data = data
-	# print "add new provider", profile_id
 	pl = frappe.get_doc({
 		"doctype": "Providers Linked",
 		"patient": profile_id,
@@ -139,7 +139,6 @@ def get_patient_data(data):
 		data=json.loads(data)
 
 	pateints=get_linked_phrs(data["profile_id"])
-	print pateints['list']
 
 	for patient in pateints['list']:
 		pi=frappe.db.get_value("LinkedPHR Images",{"profile_id":patient['entityid']},"profile_image")

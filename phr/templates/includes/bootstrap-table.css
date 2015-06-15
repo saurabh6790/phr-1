@@ -178,6 +178,7 @@
 }
 
 .table th, .table td {
+    width: auto !important;
     vertical-align: middle;
     box-sizing: border-box;
 }

@@ -1,9 +1,9 @@
 import frappe
 import json
 import os 
-from phr.templates.pages.patient import get_data_to_render
+from phr.templates.pages.form_generator import get_data_to_render
 import datetime
-from phr.templates.pages.patient import get_base_url
+from phr.templates.pages.utils import get_base_url
 import time
 from phr.phr.phr_api import get_response
 from frappe.utils import getdate, date_diff, nowdate, get_site_path, get_hook_method, get_files_path, \
@@ -23,15 +23,15 @@ def get_disease_fields(name,profile_id=None):
 		dm = frappe.get_doc("Disease Monitoring",
 			frappe.db.get_value("Disease Monitoring",{"disease_name":name},"name"))
 		if dm:
-			fields, rows, dm_cols, field_mapper = [], [], [""], ["sr"]
+			fields, rows, dm_cols, field_mapper = [], [], [{"title":"", "width":"10px !important;"}], ["sr"]
 			row_count = 0
 			sec_label=name+' Readings'
 			fields.append({"fieldname":"","fieldtype":"section_break","label":sec_label,"options":"<i class='fa fa-pencil-square-o'></i>"})
 			for d in dm.get('parameters'):
 				row_count += 1
-				f_dic = {"fieldname":d.fieldname,"fieldtype":d.fieldtype,"label":d.label,"placeholder":"", "required": d.required or 0}
+				f_dic = {"fieldname":d.fieldname,"fieldtype":d.fieldtype,"label":d.label,"placeholder":"", "required": d.required or 0,}
 				fields.append(f_dic)
-				dm_cols.append(d.label)
+				dm_cols.append({"title":d.label,"width":cstr(d.width) and cstr(d.width) + 'px !important;' or "10px;"})
 				field_mapper.append(d.fieldname)
 
 				if row_count==4:
@@ -101,7 +101,7 @@ def build_options(dm_list,fields,field_mapper,raw_fields=None):
 				if field == 'sr':
 					dm_data.append('<input type="checkbox" name="">')
 				else:
-					dm_data.append("<div style='word-wrap: break-word;width:80%%;'>%s</div>"%field_dict.get(field))
+					dm_data.append("%s"%field_dict.get(field))
 			rows.extend([dm_data])
 
 	return fields_list
@@ -184,6 +184,15 @@ def share_dm(data, header, share_info, profile_id, disease):
 	else:
 		return share_via_phr(share_info, profile_id, disease)
 
+@frappe.whitelist(allow_guest=True)
+def notify_provider_of_sharing(data,profile_id):
+	share_info = json.loads(data)
+	if share_info.get('share_via') == 'Provider Account':
+		args = {"dr":share_info.get('doctor_name')}
+		email_msg = "Patient has shared DM with You. \n\n Thank you. \n\n Team HealthSnapp."
+		from phr.templates.pages.event import notify_provider
+		notify_provider(share_info.get('doctor_id'),profile_id,"DM Share",args,email_msg)
+
 @frappe.whitelist()
 def save_pdf(data, header, profile_id, disease):
 	import pdfkit
@@ -259,7 +268,7 @@ def send_email(share_info, profile_id, disease):
 				attachments=attachments)
 
 		make_log(profile_id, "Disease Monitoring", "Shared Via Email to provider %s"% share_info.get('doctor_name') , "Shared Via Email to provider %s"% share_info.get('doctor_name'))
-		return "Disease Monitoring records has been shared"
+		return {"returncode":1,"message_display":"Disease Monitoring records has been shared"}
 
 def share_via_phr(share_info, profile_id, disease):
 	dm_sharing = frappe.new_doc('Disease Sharing Log')
@@ -270,8 +279,9 @@ def share_via_phr(share_info, profile_id, disease):
 	dm_sharing.pdf_path = os.path.join(get_files_path(), profile_id, file_name)
 	dm_sharing.save(ignore_permissions=True)
 	make_sharing_request(share_info, disease, dm_sharing, profile_id)
-	make_log(profile_id, "Disease Monitoring", "Shared over PHR account to provider %s"% share_info.get('doctor_name') , "Shared over PHR account to provider %s"% share_info.get('doctor_name'))
-	return "Disease Monitoring records has been shared"
+	make_log(profile_id, "Disease Monitoring", "Shared DM over PHR account to provider ", "DM of <b style='color: #89c148;'>%s</b> has been shared with  provider <b style='color: #89c148;'>%s</b> \
+			till <b style='color: #89c148;'>%s</b>"% (disease, share_info.get('doctor_name'), share_info.get('sharing_duration') ))
+	return {"returncode":1,"message_display":"Disease Monitoring records has been shared"}
 
 def make_sharing_request(event_data, disease, dm_sharing, profile_id):
 	req = frappe.new_doc('Shared Requests')

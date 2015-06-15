@@ -19,17 +19,14 @@ base_template="templates/phr_base.html"
 #app_include_js = "assets/js/frappe.min.js"
 
 # include js, css files in header of web template
+
 #
 
-web_include_js = ["assets/phr/bootstrap3-dialog-master/bootstrap-dialog.js",
-					"/assets/phr/pdfjs/build/pdf.js", 
-					"assets/js/frappe-web.min.js", "website_script.js", 
-					"assets/phr/jasny-bootstrap/js/jasny-bootstrap.js", 
-					"assets/phr/jasny-bootstrap/js/jasny-bootstrap.min.js",
-					"assets/phr/bootstrap-table.js","assets/phr/js/nprogress.js","public/js/frappe/misc/datetime.js"
+web_include_js = [	"assets/js/frappe-web.min.js",  
+					"assets/phr/bootstrap-table.js","assets/phr/js/nprogress.js","assets/frappe/js/frappe/misc/datetime.js","assets/js/phr-web.min.js"
 				]
 
-fixtures=["Disease Monitoring","Dosage", "State", "Events", "Specialization", "Provider Type", "Provider Category"]
+fixtures=["Disease Monitoring","Dosage", "State", "Events", "Specialization", "Provider Type", "Provider Category","Message Templates"]
 
 # Home Pages
 # ----------
@@ -90,10 +87,14 @@ website_generators = ["PHR Forms"]
 
 scheduler_events = {
 	"all": [
-		"phr.templates.pages.appointments.notify_appointments","phr.templates.pages.todo.notify_to_do","phr.templates.pages.medication.notify_medications"
+		"phr.templates.pages.appointments.notify_appointments",
+		"phr.templates.pages.todo.notify_to_do",
+		"phr.templates.pages.medication.notify_medications"
 	],
 	"daily": [
-		"phr.templates.pages.profile.notify_about_registration","phr.templates.pages.medication.update_status_of_medication",
+		"phr.templates.pages.profile.notify_about_registration",
+		"phr.templates.pages.medication.update_status_of_medication", 
+		"phr.templates.pages.backup_utils.take_backup"
 	]
 }
 
