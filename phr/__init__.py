@@ -639,7 +639,7 @@ def createLinkedPHR(data):
 	if res.get('returncode') == 122 and data.get('mobile'):
 		mob_code = make_mv_entry(data.get('mobile'), res.get('entityid'))
 		if mob_code:
-			send_mobile_v_code(res.get('mobile'),data.get('entityid'),mob_code)
+			send_mobile_v_code(data.get('mobile'),res.get('entityid'),mob_code)
 
 
 	return {
