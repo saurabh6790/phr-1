@@ -632,7 +632,7 @@ def getAdvertisements():
 @frappe.whitelist(allow_guest=True)
 def createLinkedPHR(data):
 	from templates.pages.linked_phr import create_linkedphr
-	from templates.pages.profile import make_mv_entry
+	from templates.pages.profile import make_mv_entry, send_mobile_v_code
 	data = json.loads(data)
 	res = create_linkedphr(json.dumps(data))
 
