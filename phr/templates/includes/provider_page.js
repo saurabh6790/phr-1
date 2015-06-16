@@ -12,7 +12,7 @@ frappe.provide("frappe");
 {% include "templates/includes/linked_phr.js" %}
 {% include "templates/includes/provider.js" %}
 {% include "templates/includes/medication.js" %}
-{% include "templates/includes/appointments.js" %}
+{% include "templates/includes/appointments_pro.js" %}
 {% include "templates/includes/messages.js" %}
 {% include "templates/includes/custom_dialog.js" %}
 {% include "templates/includes/disease_monitoring.js" %}
@@ -198,9 +198,9 @@ $(document).ready(function () {
 		NProgress.start();
 		$('<li><a nohref>Appointments</a></li>').click(function(){
 			$('.breadcrumb li').nextAll().remove()
-			Appointments.prototype.init($(document).find("#main-con"), '', sessionStorage.getItem("cid"))
+			AppointmentsPro.prototype.init($(document).find("#main-con"), '', sessionStorage.getItem("cid"))
 		}).appendTo('.breadcrumb');
-		Appointments.prototype.init($(document).find("#main-con"),'', sessionStorage.getItem("cid"))
+		AppointmentsPro.prototype.init($(document).find("#main-con"),'', sessionStorage.getItem("cid"))
 		NProgress.done();
 	})
 	$('.msg').unbind("click").click(function(){

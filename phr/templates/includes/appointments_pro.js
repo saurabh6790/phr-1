@@ -2,7 +2,7 @@ frappe.provide("templates/includes");
 frappe.provide("frappe");
 {% include "templates/includes/linked_phr_updates.js" %}
 
-var Appointments = inherit(ListView,{
+var AppointmentsPro = inherit(ListView,{
 	init: function(wrapper, json_file, profile_id, entity_id){
 		this.wrapper = wrapper;
 		var me = this;
@@ -10,13 +10,14 @@ var Appointments = inherit(ListView,{
 		$(this.wrapper).empty()
 		$('.field_area').empty();
 		//RenderFormFields.prototype.init(this.wrapper,{"file_name" : "appointments",'profile_id':profile_id},this.entityid)
-		ListView.prototype.init($(document).find(".field-area"), {"file_name" : "appointments",
+		ListView.prototype.init($(document).find(".field-area"), {"file_name" : "appointments_pro",
 			'cmd':"appointments.get_appointments",
 			'profile_id':profile_id})
+
 		$('.new_controller').remove();
 		$('#share').remove()
 		me.bind_save_event()
-		this.get_linked_providers(profile_id)
+		this.get_linked_patients(profile_id)
 		scroll_top()
 	},
 	bind_save_event: function(){
@@ -24,7 +25,7 @@ var Appointments = inherit(ListView,{
 		this.res = {}
 		this.result_set = {};
 		this.doc_list = [] 
-		this.get_linked_providers(this.profile_id)
+		this.get_linked_patients(this.profile_id)
 
 		$('form input[required],form textarea[required],form select[required]').unbind('change').bind('change', function() { 
    			if (!$(this).val()){
@@ -51,7 +52,7 @@ var Appointments = inherit(ListView,{
 					me.res[obj.name] = $(obj).val();
 				})
 				me.res['profile_id'] = me.profile_id;
-				me.res['file_name']="appointments";
+				me.res['file_name']="appointments_pro";
 				me.res['param']="listview";
 
 				date =new Date()
@@ -106,12 +107,13 @@ var Appointments = inherit(ListView,{
 		$('#share').remove()
 		//$('.save_controller').remove();
 	},
-	get_linked_providers:function(profile_id){
+	get_linked_patients:function(profile_id){
 		var me = this;
 		frappe.call({
-			method:"phr.templates.pages.event.get_linked_providers",
+			method:"phr.templates.pages.appointments.get_linked_patients",
 			args:{'profile_id':this.profile_id},
 			callback:function(r){
+				console.log([r.message,"dsads"])
 				$('[name="provider"]').autocomplete({
 					open: function(){
 						setTimeout(function () {
