@@ -17,7 +17,7 @@ def create_update_event(data=None, req_id=None):
 		return create_event(data)
 	else:
 		res = update_event(data)
-
+		print "\n\n",[req_id]
 		if res.get('returncode') == 116:
 			clear_dms_list(data.get('dms_file_list'))
 			copy_files_to_visit(data.get('dms_file_list'), res.get('visit').get('entityid'), data.get('profile_id'), data.get('pid'), req_id)
@@ -129,16 +129,17 @@ def copy_files_to_visit(dms_file_list, visit_id, profile_id, pid, req_id):
 				base_path = file_path.split('/files/')[1].split('/')
 				base_path[0] = pid
 				if req_id:
+					print ['testing for multifile upload',req_id]
 					base_path.insert(1, req_id)	
-					req_id = frappe.get_doc('Shared Requests', req_id)
-					event_dict = json.loads(req_id.event_dict)
-					sub_event_count = json.loads(req_id.sub_event_count)
+					req = frappe.get_doc('Shared Requests', req_id)
+					event_dict = json.loads(req.event_dict)
+					sub_event_count = json.loads(req.sub_event_count)
 					shared_file_count('/'.join(base_path)[:-1], event_dict, sub_event_count, 3, 4)
 
-					req_id.event_dict = json.dumps(event_dict)
-					req_id.sub_event_count = json.dumps(sub_event_count)
+					req.event_dict = json.dumps(event_dict)
+					req.sub_event_count = json.dumps(sub_event_count)
 
-					req_id.save()
+					req.save()
 
 				provider_path = os.path.join(file_path.split('/files/')[0], 'files', '/'.join(base_path)[:-1])
 				frappe.create_folder(provider_path)
@@ -683,8 +684,9 @@ def image_writter(profile_id, event_id=None, visit_id=None):
 		if not os.path.exists(os.path.join(path, wfile_name)):
 			frappe.create_folder(path)
 			img_path = os.path.join(path,  wfile_name)
+			frappe.errprint(["visit_id", data.get('visit_id')])
 			data = {
-				"entityid": data.get('visit_id') if data.get('visit_id') else file_obj.get('visit_id'),
+				"entityid": file_obj.get('visit_id'),
 				"profile_id": data.get('profile_id'),
 				"event_id": data.get("event_id") or "",
 				"tag_id": file_obj.get('tag_id'),
@@ -698,6 +700,7 @@ def image_writter(profile_id, event_id=None, visit_id=None):
 			res = write_file(data)
 			
 def write_file(data):
+	frappe.errprint(["write file",data])
 	request_type="POST"
 	url="%sdms/getvisitsinglefile"%get_base_url()
 	

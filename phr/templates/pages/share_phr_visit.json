@@ -90,7 +90,8 @@
 			"fieldtype":"data", 
 			"label":"Provider Name",
 			"placeholder":"",
-			"required":1 
+			"required":1 ,
+			"description": "<a id='provider_name' style='color:#17329E;'>Add New Provider</a>"
 		},
 		{
 			"fieldname":"sharing_duration",

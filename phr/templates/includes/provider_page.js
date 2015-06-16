@@ -38,6 +38,7 @@ $(document).ready(function () {
 	else{
 		var db = new render_dashboard();
 		// db.render_emer_details(sessionStorage.getItem("pid"))
+		db.render_providers(sessionStorage.getItem("pid"))
 		db.render_to_do(sessionStorage.getItem("pid"))
 		db.render_advertisements(sessionStorage.getItem("pid"))
 		$("#home").on("click",function(){
@@ -59,6 +60,7 @@ $(document).ready(function () {
 			render_middle(profile_id);
 			var db = new render_dashboard();
 			// db.render_emer_details(profile_id)
+			db.render_providers(profile_id)
 			db.render_to_do(profile_id)
 			db.render_advertisements(profile_id)
 			NProgress.done();
@@ -71,10 +73,11 @@ $(document).ready(function () {
 			LinkedPHR.prototype.init('',{"file_name" : "linked_patient"},"","create_linkphr", {"source": "provider"})
 		})	
 	}
-
-	// $("#home").on("click",function(){
-	// 	render_middle(sessionStorage.getItem("pid"))
-	// })
+	$(".create_provider").unbind("click").click(function(){
+		$('.breadcrumb').empty()
+		ProviderOperations.prototype.dialog_oprations({'file_name':"provider_search", "wrapper":this.wrapper})
+		NProgress.done();
+	})
 
 	$("#pprofile").unbind("click").click(function(){
 		$('.cdd').addClass('hide')
@@ -95,10 +98,6 @@ $(document).ready(function () {
 		profile_id=sessionStorage.getItem("cid")
 		$('.breadcrumb').empty()
 		NProgress.start();
-		// $('<li><a nohref>Profile</a></li>').click(function(){
-		// 	PatientDashboard.prototype.init($(document).find("#main-con"),
-		// 		{"file_name" : "profile", "method": "profile"},profile_id)
-		// }).appendTo('.breadcrumb');
 		PatientDashboard.prototype.init($(document).find("#main-con"),
 				{"file_name" : "profile", "method": "profile"},profile_id)	
 		NProgress.done();
@@ -108,11 +107,6 @@ $(document).ready(function () {
 		$('.breadcrumb').empty()
 		$('#main-con').empty()
 		NProgress.start();
-		// $('<li><a nohref>Profile</a></li>').click(function(){
-		// 	ListView.prototype.init($(document).find(".field-area"), {"file_name" : "patients",
-		// 	'cmd':"provider.get_pateint_data",
-		// 	'profile_id':profile_id})
-		// }).appendTo('.breadcrumb');
 		ListView.prototype.init($(document).find(".field-area"), {"file_name" : "patients",
 		'cmd':"provider.get_patient_data",
 		'profile_id':profile_id})
@@ -125,8 +119,6 @@ $(document).ready(function () {
 			NProgress.done();
 		})	
 		$(".csettings").unbind("click").click(function(){
-			// $('.cdd').addClass('hide')
-			// $('#cphrname').empty()
 			NProgress.start();
 			profile_id=sessionStorage.getItem('cid')
 			sessionStorage.setItem("cid",profile_id)
@@ -139,19 +131,18 @@ $(document).ready(function () {
 		$(".new_controller").remove()
 
 		NProgress.done();
-
 	})
 	
 	$(".psettings").unbind("click").click(function(){
-			$('.cdd').addClass('hide')
-			$('#cphrname').empty()
-			NProgress.start();
-			profile_id=sessionStorage.getItem('pid')
-			sessionStorage.setItem("cid",profile_id)
-			ProfileSettings.prototype.init($(document).find("#main-con"),
-					{"file_name" : "provider_profile_settings", "method": "profile"},profile_id)	
-			NProgress.done();
-		})
+		$('.cdd').addClass('hide')
+		$('#cphrname').empty()
+		NProgress.start();
+		profile_id=sessionStorage.getItem('pid')
+		sessionStorage.setItem("cid",profile_id)
+		ProfileSettings.prototype.init($(document).find("#main-con"),
+				{"file_name" : "provider_profile_settings", "method": "profile"},profile_id)	
+		NProgress.done();
+	})
 
 	$('.event').unbind("click").click(function(){
 		profile_id=sessionStorage.getItem("cid")
@@ -164,6 +155,7 @@ $(document).ready(function () {
 		window.Events.prototype.init('', '', profile_id)
 		NProgress.done();
 	})
+
 	$('.visit').unbind("click").click(function(){
 		$('.breadcrumb').empty()
 		NProgress.start();
@@ -174,6 +166,7 @@ $(document).ready(function () {
 		Visit.prototype.init('', '', sessionStorage.getItem("cid"))
 		NProgress.done();
 	})
+
 	$('.medications').unbind("click").click(function(){
 		$('.breadcrumb').empty()
 		NProgress.start();
@@ -184,6 +177,7 @@ $(document).ready(function () {
 		Medications.prototype.init($(document).find("#main-con"),'', sessionStorage.getItem("cid"))
 		NProgress.done();
 	})
+
 	$('.dmonit').unbind("click").click(function(){
 		$('.breadcrumb').empty()
 		NProgress.start();
@@ -194,6 +188,7 @@ $(document).ready(function () {
 		DiseaseMonitoring.prototype.init($(document).find("#main-con"),'', sessionStorage.getItem("cid"))
 		NProgress.done();
 	})
+
 	$('.appoint').unbind("click").click(function(){
 		$('.breadcrumb').empty()
 		NProgress.start();
@@ -204,6 +199,7 @@ $(document).ready(function () {
 		Appointments.prototype.init($(document).find("#main-con"),'', sessionStorage.getItem("cid"))
 		NProgress.done();
 	})
+
 	$('.msg').unbind("click").click(function(){
 		$('.breadcrumb').empty()
 		NProgress.start();
@@ -214,6 +210,7 @@ $(document).ready(function () {
 		Messages.prototype.init($(document).find("#main-con"),'', sessionStorage.getItem("cid"))
 		NProgress.done();
 	})
+
 	$(".create_todo").unbind("click").click(function(){
 		NProgress.start();
 		ToDo.prototype.init($(document).find("#main-con"),

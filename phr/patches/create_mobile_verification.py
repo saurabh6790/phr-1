@@ -17,4 +17,3 @@ def execute():
 				if frappe.db.get_value("Verification Details",{"mobile_no":usr_details.contact,"name":usr_details.profile_id,"mflag":1},"name"):
 					mv.mflag = 1
 					mv.save(ignore_permissions=True)
-

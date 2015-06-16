@@ -10,6 +10,3 @@ def execute():
 			vd.mobile_no = usr.contact
 			vd.created_via = 'Desktop'
 			vd.save(ignore_permissions=True)	
- 
-
-		
