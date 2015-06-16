@@ -6,7 +6,7 @@ var ProviderOperations = function(){
 }
 
 $.extend(ProviderOperations.prototype, {
-		dialog_oprations: function(args){
+	dialog_oprations: function(args){
 		var me = this;
 		this.filters = {};
 		this.wrapper = args['wrapper'];
@@ -14,6 +14,8 @@ $.extend(ProviderOperations.prototype, {
 		$('#myModal').remove();
 		$('.modal').remove();
 		$('.modal-backdrop').remove();;
+
+		this.profile_id_setter()
 
 		d = new Dialog();
 		d.init({"file_name": args['file_name'], "title":"Provider Search", "button_title": "Add"})
@@ -28,6 +30,14 @@ $.extend(ProviderOperations.prototype, {
 				me.render_result_table(me.filters, d)
 			})
 			.appendTo($('.modal-body .panel'))
+	},
+	profile_id_setter:function(){
+		if(frappe.get_cookie("user_type")=='provider'){
+			this.profile_id = sessionStorage.getItem("pid");
+		}
+		else{
+			this.profile_id = sessionStorage.getItem("cid");
+		}
 	},
 	render_result_table:function(filters, d){
 		var me = this;
@@ -105,9 +115,6 @@ $.extend(ProviderOperations.prototype, {
 					$('[name="number"]').val($($td[3]).html())
 					me.check_existing($td.find('input[name="provider"]').attr('id'),$($td[4]).html(),$($td[3]).html(),$($td[2]).html(), $($td[1]).html(),d)
 				}
-				// else{
-				// 	flag = true;
-				// }
 			})
 			if(flag){
 				frappe.msgprint("First Select provider then click on Add")
@@ -118,7 +125,7 @@ $.extend(ProviderOperations.prototype, {
 		var me=this;
 		frappe.call({
 			method:"phr.templates.pages.provider.check_existing_provider",
-			args:{'provider_id':provider_id, 'profile_id':sessionStorage.getItem("cid")},
+			args:{'provider_id':provider_id, 'profile_id':me.profile_id},
 			callback:function(r){
 				// console.log(r.message)
 				if (r.message!=true){
@@ -135,15 +142,14 @@ $.extend(ProviderOperations.prototype, {
 		})
 	},
 	attach_provider:function(res, data, d){
-		profile_id=sessionStorage.getItem("cid")
 		var me = this;
 		NProgress.start();
 		frappe.call({
 			method:"phr.templates.pages.provider.link_provider",
-			args:{'res': res, 'data':data, 'profile_id':profile_id},
+			args:{'res': res, 'data':data, 'profile_id':me.profile_id},
 			callback:function(r){
 				var db = new render_dashboard();
-				db.render_providers(profile_id);
+				db.render_providers(me.profile_id);
 				me.get_linked_providers();
 				NProgress.done();
 				$('#myModal').remove();
@@ -203,7 +209,7 @@ $.extend(ProviderOperations.prototype, {
 		NProgress.start();
 		frappe.call({
 			method: "phr.templates.pages.provider.create_provider",
-			args:{'data':res, "profile_id": sessionStorage.getItem("cid")},
+			args:{'data':res, "profile_id": me.profile_id},
 			callback:function(r){
 				if(r.message.returncode==129){
 
@@ -214,7 +220,7 @@ $.extend(ProviderOperations.prototype, {
 					$('[name="provider_type"]').val(res.provider_type);
 
 					var db = new render_dashboard();
-					db.render_providers(profile_id);
+					db.render_providers(me.profile_id);
 					me.get_linked_providers()
 					NProgress.done();
 
@@ -227,10 +233,10 @@ $.extend(ProviderOperations.prototype, {
 	},
 	get_linked_providers:function(profile_id){
 		var me = this;
-		this.profile_id = profile_id ? profile_id : this.profile_id;
+		this.profile_id = profile_id ? profile_id : this.profile_id_setter();
 		frappe.call({
 			method:"phr.templates.pages.event.get_linked_providers",
-			args:{'profile_id':this.profile_id},
+			args:{'profile_id':me.profile_id},
 			callback:function(r){
 				console.log("test")
 				var flag = false;

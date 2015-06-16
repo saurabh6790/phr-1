@@ -14,7 +14,7 @@ $.extend(SharePhr.prototype,{
 		$('.field-area').empty();
 		var me = this;
 		this.selected_files = args['selected_files'];
-		this.doc_list = args.doc_list;
+		this.doc_list = args['doc_list'];
 		RenderFormFields.prototype.init(this.wrapper, {'file_name':args['file_name'], 
 			'values': args['values'], 'method': args['method']}, args['event_id']);
 		$('.save_controller').remove();
