@@ -48,9 +48,9 @@ def write_json_data(file_name,data):
 """ get data generic method from all db's return plain dictionary """	
 def get_values(data,entityid=None):
 	if entityid:
-		url=get_url(data)
-		args=get_args(entityid)
-		values=get_data(url,args)
+		url = get_url(data)
+		args = get_args(entityid)
+		values = get_data(url,args)
 		return 	values
 	return {}
 

@@ -138,6 +138,8 @@ function bind_events(){
 		NProgress.start();
 		profile_id=sessionStorage.getItem('pid')
 		sessionStorage.setItem("cid",profile_id)
+		var db = new render_dashboard();
+		db.render_emer_details(sessionStorage.getItem("pid"))
 		PatientDashboard.prototype.init($(document).find("#main-con"),
 				{"file_name" : "profile", "method": "profile"},profile_id)	
 		NProgress.done();
@@ -148,6 +150,8 @@ function bind_events(){
 		NProgress.start();
 		profile_id=sessionStorage.getItem('pid')
 		sessionStorage.setItem("cid",profile_id)
+		var db = new render_dashboard();
+		db.render_emer_details(sessionStorage.getItem("pid"))
 		ProfileSettings.prototype.init($(document).find("#main-con"),
 				{"file_name" : "profile_settings", "method": "profile"},profile_id)	
 		NProgress.done();

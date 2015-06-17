@@ -138,12 +138,16 @@ def get_patient_data(data):
 	if isinstance(data, unicode):
 		data=json.loads(data)
 
-	pateints=get_linked_phrs(data["profile_id"])
+	pateints = get_linked_phrs(data["profile_id"])
+	print pateints
+	
+	if pateints:
+		for patient in pateints['list']:
+			pi = frappe.db.get_value("LinkedPHR Images",{"profile_id":patient['entityid']},"profile_image")
+			import datetime
+			creation_time = datetime.datetime.fromtimestamp(float(patient['entityid'].split('-',1)[0])/1000).strftime('%d/%m/%Y %H:%M')
+			rows.extend([["""<a nohref class='popen' onclick="open_patient('%(entityid)s','%(name)s')" id='%(entityid)s'><img class='user-picture' src='%(pi)s' style='min-width: 20px; max-height: 20px; border-radius: 4px'/> %(name)s %(lname)s</i></a>"""%{"entityid":patient['entityid'],"pi":pi,"name":patient['person_firstname'],"lname":patient['person_lastname']},patient["email"],patient['mobile'],creation_time]])
 
-	for patient in pateints['list']:
-		pi=frappe.db.get_value("LinkedPHR Images",{"profile_id":patient['entityid']},"profile_image")
-		rows.extend([["""<a nohref class='popen' onclick="open_patient('%(entityid)s','%(name)s')" id='%(entityid)s'><img class='user-picture' src='%(pi)s' style='min-width: 20px; max-height: 20px; border-radius: 4px'/> %(name)s %(lname)s</i></a>"""%{"entityid":patient['entityid'],"pi":pi,"name":patient['person_firstname'],"lname":patient['person_lastname']},patient["email"],patient['mobile']]])
-		
 
 	return {
 		'rows': rows,
