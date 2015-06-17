@@ -1,0 +1,60 @@
+{
+    "listview": [
+         {
+            "fieldname":"", 
+            "fieldtype":"section_break", 
+            "label":"Appointment Details",
+            "options": "<i class='fa fa-calendar-o'></i>"
+
+         },
+         {
+            "fieldname": "from_date_time",
+            "fieldtype": "datetime",
+            "label": "Date time",
+            "placeholder":"",
+            "required":1,
+            "placeholder":""
+        },
+        {
+            "fieldname": "provider",
+            "fieldtype": "data",
+            "label": "Patient's Name",
+            "placeholder": "",
+            "description": "Select Patient from Linked Patient List",
+            "required":1,
+            "placeholder":""
+        },
+                {
+            "fieldname": "",
+            "fieldtype": "column_break",
+            "label": ""
+        },
+        {
+            "fieldname": "reason",
+            "fieldtype": "text",
+            "label": "Reason For Visit",
+            "placeholder":"",
+            "required":1,
+            "placeholder":""
+        },
+         {
+            "fieldname": "",
+            "fieldtype": "section_break",
+            "label": "Appointment logs",
+            "options":"<i class='fa fa-list-alt'></i>"
+
+        },
+        {
+            "fieldname": "tab",
+            "fieldtype": "table",
+            "label": "Appointments",
+            "rows": [
+                [
+                    {"title":"Date time","width":"200px !important"},
+                    {"title":"Patient's Name", "width": "200px;"},
+                    {"title":"Reason For Visit", "width":"200px;"}
+                ]
+            ]
+        }
+    ]
+}

@@ -8,13 +8,13 @@ from phr.templates.pages.utils import get_formatted_date_time, formatted_date
 
 @frappe.whitelist(allow_guest=True)		
 def get_linked_phrs_with_img(profile_id):
-	data=get_linked_phrs(profile_id)
+	data = get_linked_phrs(profile_id)
 	if data:
 		return get_lphrs_with_img(data)
 
 @frappe.whitelist(allow_guest=True)
 def get_linked_phrs(profile_id):
-	solr_op='searchchildprofile'
+	solr_op = 'searchchildprofile'
 	url=get_base_url()+solr_op
 	request_type='POST'
 	data={"to_profile_id":profile_id}

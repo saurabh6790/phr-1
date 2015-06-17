@@ -57,7 +57,7 @@ def formatted_date(strdate=None):
 @frappe.whitelist(allow_guest=True)
 def get_sms_template(name,args):
 	import re
-	template=frappe.db.get_value("Message Templates",{"name":name},"message_body")
+	template = frappe.db.get_value("Message Templates",{"name":name},"message_body")
 	tempStr = ""
 	if template:
 		for key in re.findall(r"(?<=\[)(.*?)(?=\])",template):

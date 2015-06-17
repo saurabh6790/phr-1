@@ -8,7 +8,8 @@
                 [
                     {"title":"Name", "width":"200px;"},
                     {"title":"Email", "width":"200px;"},
-                    {"title":"Mobile No","width":"200px;"}
+                    {"title":"Mobile No","width":"200px;"},
+                    {"title":"Creation Date","width":"200px;"}
                 ]
             ]
         }

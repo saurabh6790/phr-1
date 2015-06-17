@@ -123,7 +123,6 @@ window.Events = inherit(ListView,{
   		this.make_tree_view(event_id, visit_id)
 		this.get_linked_providers()
   		this.set_provider_details()
-  		console.log([this.req_id,"hjhgdsgdhashg	"])
   		if(this.req_id && frappe.get_cookie("user_type")=='provider'){
   			$('#share').remove()
   		}

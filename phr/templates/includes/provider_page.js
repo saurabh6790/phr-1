@@ -12,7 +12,7 @@ frappe.provide("frappe");
 {% include "templates/includes/linked_phr.js" %}
 {% include "templates/includes/provider.js" %}
 {% include "templates/includes/medication.js" %}
-{% include "templates/includes/appointments.js" %}
+{% include "templates/includes/appointments_pro.js" %}
 {% include "templates/includes/messages.js" %}
 {% include "templates/includes/custom_dialog.js" %}
 {% include "templates/includes/disease_monitoring.js" %}
@@ -105,6 +105,7 @@ $(document).ready(function () {
 	$(".patients").unbind("click").click(function(){
 		profile_id=sessionStorage.getItem("pid")
 		$('.breadcrumb').empty()
+		$('<li></li>').appendTo('.breadcrumb')
 		$('#main-con').empty()
 		NProgress.start();
 		ListView.prototype.init($(document).find(".field-area"), {"file_name" : "patients",
@@ -194,9 +195,9 @@ $(document).ready(function () {
 		NProgress.start();
 		$('<li><a nohref>Appointments</a></li>').click(function(){
 			$('.breadcrumb li').nextAll().remove()
-			Appointments.prototype.init($(document).find("#main-con"), '', sessionStorage.getItem("cid"))
+			AppointmentsPro.prototype.init($(document).find("#main-con"), '', sessionStorage.getItem("cid"))
 		}).appendTo('.breadcrumb');
-		Appointments.prototype.init($(document).find("#main-con"),'', sessionStorage.getItem("cid"))
+		AppointmentsPro.prototype.init($(document).find("#main-con"),'', sessionStorage.getItem("cid"))
 		NProgress.done();
 	})
 
@@ -219,7 +220,7 @@ $(document).ready(function () {
 	})
 
 })
-open_patient=function(profile_id,name){
+open_patient = function(profile_id,name){
 	sessionStorage.setItem("cname",name)
 	var db = new render_dashboard();
 	db.render_LPHR_name()
@@ -228,6 +229,7 @@ open_patient=function(profile_id,name){
 	$('.field-area').empty()
 	$('#main-con').empty()
 	$('.breadcrumb').empty()
+	$('<li></li>').appendTo('.breadcrumb')
 	$('.new_controller').hide()
 	$('.save_controller').hide()
 	$('#linkedphr').hide()
