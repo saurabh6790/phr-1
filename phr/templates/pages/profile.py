@@ -67,7 +67,6 @@ def make_mv_entry(mobile,profile_id):
 		
 @frappe.whitelist(allow_guest=True)
 def not_duplicate_contact(mobile,user):
-	print user
 	if frappe.db.sql("""select count(*) from tabUser 
 		where contact = '%s' and name != "%s"
 	"""%(mobile,user), as_list=1,debug=1)[0][0] == 0:

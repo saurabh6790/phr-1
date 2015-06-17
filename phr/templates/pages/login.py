@@ -42,7 +42,6 @@ def create_profile(first_name,middle_name,last_name,email_id,contact,created_via
 		# return args
 		profile_res = create_profile_in_solr(args)
 		response = json.loads(profile_res)
-		print response
 		if response['returncode']==101:
 			path = get_image_path(barcode,response['entityid'])
 			file_path = '/files/'+response['entityid']+'/'+response['entityid']+".svg"
@@ -239,7 +238,6 @@ def create_profile_in_solr(args):
 	data=json.dumps(args)
 	from phr.phr.phr_api import get_response
 	response=get_response(url,data,request_type)
-	print response
 	return response.text
 
 @frappe.whitelist(allow_guest=True)

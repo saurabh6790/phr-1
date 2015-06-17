@@ -44,7 +44,6 @@ def link_provider(res, data, profile_id):
 		data = json.loads(data)
 	else:
 		data = data
-	# print "add new provider", profile_id
 	pl = frappe.get_doc({
 		"doctype": "Providers Linked",
 		"patient": profile_id,
@@ -148,7 +147,7 @@ def get_patient_data(data):
 			import datetime
 			creation_time = datetime.datetime.fromtimestamp(float(patient['entityid'].split('-',1)[0])/1000).strftime('%d/%m/%Y %H:%M')
 			rows.extend([["""<a nohref class='popen' onclick="open_patient('%(entityid)s','%(name)s')" id='%(entityid)s'><img class='user-picture' src='%(pi)s' style='min-width: 20px; max-height: 20px; border-radius: 4px'/> %(name)s %(lname)s</i></a>"""%{"entityid":patient['entityid'],"pi":pi,"name":patient['person_firstname'],"lname":patient['person_lastname']},patient["email"],patient['mobile'],creation_time]])
-		
+
 
 	return {
 		'rows': rows,

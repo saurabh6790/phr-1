@@ -89,7 +89,8 @@ scheduler_events = {
 	"all": [
 		"phr.templates.pages.appointments.notify_appointments",
 		"phr.templates.pages.todo.notify_to_do",
-		"phr.templates.pages.medication.notify_medications"
+		"phr.templates.pages.medication.notify_medications",
+		"phr.templates.pages.utils.remove_event_files"
 	],
 	"daily": [
 		"phr.templates.pages.profile.notify_about_registration",

@@ -632,14 +632,14 @@ def getAdvertisements():
 @frappe.whitelist(allow_guest=True)
 def createLinkedPHR(data):
 	from templates.pages.linked_phr import create_linkedphr
-	from templates.pages.profile import make_mv_entry
+	from templates.pages.profile import make_mv_entry, send_mobile_v_code
 	data = json.loads(data)
 	res = create_linkedphr(json.dumps(data))
 
 	if res.get('returncode') == 122 and data.get('mobile'):
 		mob_code = make_mv_entry(data.get('mobile'), res.get('entityid'))
 		if mob_code:
-			send_mobile_v_code(res.get('mobile'),data.get('entityid'),mob_code)
+			send_mobile_v_code(data.get('mobile'), data.get('entityid'), mob_code)
 
 
 	return {

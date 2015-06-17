@@ -22,6 +22,21 @@
       <li>
         <a nohref>
           <div class="item-content">
+            <div class="item-media healthcare_provider create_provider" data-toggle="tooltip" data-placement="top" title="Create Provider">
+              
+            </div>
+            <div class="item-inner">
+              <span class="title"> My Associates </span><i class="icon-arrow"></i>
+            </div>
+          </div>
+        </a>
+        <ul class="sub-menu" id="hps">
+           
+        </ul>
+      </li>
+      <li>
+        <a nohref>
+          <div class="item-content">
             <div class="item-media health_records">
                
             </div>
@@ -209,6 +224,11 @@
 </div>
 {% endblock %}
 {% block topbar %}
+    <div class="breadcrumb-bar clearfix">
+        <div class="page-breadcrumbs pull-left">
+          <ul class="breadcrumb"><li></li></ul>
+        </div> 
+    </div>
    <div class="top-btns-bar clearfix">
       <div class="user_dp dropdown current-user cdd hide pull-left margin-right-20">
           <a data-toggle="dropdown" class="dropdown-toggle linked-phr" nohref>
@@ -231,9 +251,6 @@
                   </a>
               </li>
           </ul>
-      </div>
-      <div class="page-breadcrumbs pull-left">
-        <ul class="breadcrumb"><li><a nohref=""></a></li></ul>
       </div>
       <div class="linked-phr pull-right margin-left-20 link-phr">
       </div>
@@ -271,9 +288,9 @@
           $(this).addClass('active');
         });
         
-        $('.main-navigation-menu > li > ul > li > a').click(function(){     
+        $('.main-navigation-menu > li > ul > li').click(function(){     
           $('.main-navigation-menu li ul li a').removeClass('active');             
-          $(this).addClass('active');
+          $(this).find('a').addClass('active');
         });
         Main.init();
         
