@@ -47,10 +47,10 @@ def update_password(new_password, id=None, old_password=None):
 		frappe.db.set_value("User", user, "reset_password_key", "")
 		frappe.db.set_value("User",user,"password_str",new_password)
 
-		frappe.local.login_manager.logout()
 		vd = frappe.get_doc('Verification Details',id)
 		vd.pwdflag = 1
 		vd.save(ignore_permissions=True)
+		frappe.local.login_manager.logout()
 		return _("Password Updated")
 
 @frappe.whitelist(allow_guest=True)

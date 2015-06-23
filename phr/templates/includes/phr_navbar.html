@@ -27,13 +27,8 @@
 				</a>
 				<ul class="dropdown-menu dropdown-dark">
 					<li>
-						<a nohref class="pprofile">
-							My Profile
-						</a>
-					</li> 
-					<li>
-						<a nohref class="pprofile psettings">
-							Account Settings
+						<a nohref onclick="switch_to_db()">
+							Switch to Dashboard							
 						</a>
 					</li> 
 					{%- for child in post_login -%}
@@ -65,4 +60,11 @@
 		<!-- end: MENU TOGGLER FOR MOBILE DEVICES -->
 	</div> 
 </header>
-
+<script>
+$(function() { $('.dropdown-toggle').dropdown(); });
+var switch_to_db=function(){
+	user_type = frappe.get_cookie('user_type')
+	if (user_type == 'patient') window.location.href = "/patient";
+	else if (user_type == 'provider') window.location.href = "/provider";
+}
+</script>

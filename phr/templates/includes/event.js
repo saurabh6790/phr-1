@@ -220,12 +220,14 @@ window.Events = inherit(ListView,{
 	render_spans: function(){
 		var me = this;
 		$('.new_controller').bind('click',function(event) {
+			$('.breadcrumb li').nextAll().remove()
 			me.bind_save_event()
 			$('<li><a nohref> New Event </a></li>').appendTo('.breadcrumb');	
 		})
 	},
 	bind_save_event: function(){
 		var me = this;
+		me.bind_date_validation()
 		this.res = {}
 		this.result_set = {};
 		this.doc_list = []
@@ -283,6 +285,15 @@ window.Events = inherit(ListView,{
 				frappe.msgprint(validate['msg'])
 			}			
 		})
+	},
+	bind_date_validation:function(){
+		$('form input[name="event_date"]').bind('change', function() { 
+			val=$(this).val()
+			if (diffDays(parseDate(val),new Date().setHours(0,0,0,0)) < 0) { 
+				$(this).val("")
+				frappe.msgprint("Event Date should be past or current")
+			}
+		});
 	},
 	notify_about_update: function(data){
 		frappe.call({

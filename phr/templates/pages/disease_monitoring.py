@@ -266,7 +266,7 @@ def send_email(share_info, profile_id, disease):
 		sendmail([share_info.get('email_id')], subject="PHR-Disease Monitoring Data", msg=cstr(msg),
 				attachments=attachments)
 
-		make_log(profile_id, "Disease Monitoring", "Shared Via Email to provider %s"% share_info.get('doctor_name') , "Shared Via Email to provider %s"% share_info.get('doctor_name'))
+		make_log(profile_id, "Disease Monitoring", "Shared Via Email to provider %s"% share_info.get('doctor_name') , "DM of <b style='color: #89c148;'>%s</b> Shared Via Email to provider %s"%(disease,share_info.get('doctor_name')))
 		return {"returncode":1,"message_display":"Disease Monitoring records has been shared"}
 
 def share_via_phr(share_info, profile_id, disease):

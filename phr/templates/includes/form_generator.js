@@ -28,7 +28,7 @@ $.extend(RenderFormFields.prototype,{
 		if(modal_wrapper) this.wrapper = modal_wrapper.find('.modal-body');
 		else this.wrapper=wrapper ? wrapper:$('.field-area') 
 		this.result_set = {}
-		this.visibility_dict = {}
+		//this.visibility_dict = {}
 		this.labelled_section_count = 0;
 		
 
@@ -108,26 +108,26 @@ $.extend(RenderFormFields.prototype,{
 	},
 	depends_on:function(meta){
 		parent_field = meta['depends_on'].split(':')[0]
-
-		if(this.visibility_dict[parent_field]) this.set_dict_param(parent_field, meta)
+		visibility_dict = JSON.parse(sessionStorage.getItem('visibility_dict'))
+		if(visibility_dict[parent_field]) this.set_dict_param(parent_field, meta,visibility_dict)
 		else{
-			this.visibility_dict[parent_field] = {}
-			this.set_dict_param(parent_field, meta)	
+			visibility_dict[parent_field] = {}
+			this.set_dict_param(parent_field, meta,visibility_dict)	
 		}
-		this.add_onchange_event(parent_field)
-		
+		this.add_onchange_event(parent_field,visibility_dict)
+		sessionStorage.setItem('visibility_dict',JSON.stringify(visibility_dict))
 	},
-	set_dict_param:function(parent_field, meta){
-		if(!this.visibility_dict[parent_field][meta['depends_on'].split(':')[1]]){
-			this.visibility_dict[parent_field][meta['depends_on'].split(':')[1]] = []
+	set_dict_param:function(parent_field, meta,visibility_dict){
+		if(!visibility_dict[parent_field][meta['depends_on'].split(':')[1]]){
+			visibility_dict[parent_field][meta['depends_on'].split(':')[1]] = []
 		} 
-		this.visibility_dict[parent_field][meta['depends_on'].split(':')[1]].push(meta['fieldname'])
+		visibility_dict[parent_field][meta['depends_on'].split(':')[1]].push(meta['fieldname'])
 		$($('[name="'+meta['fieldname']+'"]').parents()[3]).css("display", "none");		
 	},
-	add_onchange_event:function(parent_field){
+	add_onchange_event:function(parent_field,visibility_dict){
 		var me = this;
 		$('[name="'+parent_field+'"]').on('change', function(){
-			me.visibility_setter($(this).attr('name'), $(this).val(), me.visibility_dict)
+			me.visibility_setter($(this).attr('name'), $(this).val(),visibility_dict)
 		})
 	},
 	visibility_setter:function(parent, val, dict_of_fileds){

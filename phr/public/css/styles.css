@@ -11691,3 +11691,22 @@ td.small-width {
 .card-logo img { margin-top:0px;}
 .card-logo { float: left; }
 .card-barcode { float: right; }
+
+/* Healthsnapp PDF Header and Footer CSS */
+.pdf-container { 
+    margin: 50px; 
+  font-size: 14px; 
+  font-family: 'pluto_sanslight'; 
+  color: #070707; 
+  position: relative; 
+  height: 100%;  
+}
+.pdf-header { padding: 0 25px 25px; border-bottom: 1px solid #0b7abd; height: 140px; }
+.pdf-creation p, .top-dtls p, .bottom-dtls p { margin-bottom: 2px; }
+.pdf-creation p span { color: #117cb5; }
+.pdf-body { padding: 35px 25px; }
+.top-dtls, .bottom-dtls { display: inline-block; max-width: 40%; padding: 10px 0; }
+.top-dtls { border-bottom: 1px dashed #070707; } 
+.top-dtls p span, .bottom-dtls p span { font-weight: bold; }
+.pdf-content { padding: 20px 0; }
+.pdf-footer { padding: 0 75px 20px; position: fixed; bottom: 0; left: 0; width: 100%; }

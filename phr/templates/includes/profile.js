@@ -79,7 +79,6 @@ var PatientDashboard = inherit(RenderFormFields, {
   			}
 		});
 		$('form input[name="email"]').bind('change', function() {
-			console.log(this) 
 			if (validate_email($(this).val())) {
 				$(this).closest('.control-input').find('#valid').html('Valid');
 		       	$(this).closest('.control-input').find('#valid').css('color', 'green');
@@ -121,6 +120,9 @@ var PatientDashboard = inherit(RenderFormFields, {
 			}
 			//me.verify_mobile()  				
   		}
+  		if (frappe.get_cookie("user_type") && frappe.get_cookie("user_type")=="provider"){
+			$($('input[name="relationship"]').parents()[3]).css("display", "none");
+		}
   		
 
 	},

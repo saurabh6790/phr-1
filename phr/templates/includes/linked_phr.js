@@ -31,6 +31,7 @@ var LinkedPHR = inherit(RenderFormFields, {
 		});
 		if (frappe.get_cookie("user_type") && frappe.get_cookie("user_type")=="provider"){
 			$("form input[name='relationship']").val("patient")
+			$($('input[name="relationship"]').parents()[3]).css("display", "none");
 		}
 		var me = this;
 		$('.save_controller').bind('click',function(event) {
@@ -103,6 +104,10 @@ var LinkedPHR = inherit(RenderFormFields, {
 							frappe.msgprint(r.message.message_summary)
 							$("input").val("");
 							$("form input[name='relationship']").prop("placeholder","")
+							if (frappe.get_cookie("user_type") && frappe.get_cookie("user_type")=="provider"){
+								$("form input[name='relationship']").val("patient")
+								$($('input[name="relationship"]').parents()[3]).css("display", "none");
+							}
 							if(me.source=="Patient"){
 								var db = new render_dashboard();
 								db.render_linked_phr(sessionStorage.getItem("pid"))

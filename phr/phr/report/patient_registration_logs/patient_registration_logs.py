@@ -39,11 +39,11 @@ def get_verification_log(filters):
 			pwdflag,hash,verification_link,created_via,name	
 			from `tabVerification Details`
 			where %s order by creation""" %
-			conditions, as_dict=1,debug=1)
+			conditions, as_dict=1)
 	else:
 		return frappe.db.sql("""select email,temp_password,mobile_verification_code,temp_password, mflag,
 			pwdflag,hash,verification_link,created_via,name	
-			from `tabVerification Details` order by creation""", as_dict=1,debug=1)
+			from `tabVerification Details` order by creation""", as_dict=1)
 
 def get_conditions(filters):
 	conditions = ""

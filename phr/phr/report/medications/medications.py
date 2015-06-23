@@ -34,11 +34,11 @@ def get_medications(filters):
 		return frappe.db.sql("""select profile_id,medicine_name,dosage,from_date_time,to_date_time
 			from `tabMedication`
 			where %s order by creation""" %
-			conditions, as_dict=1,debug=1)
+			conditions, as_dict=1)
 	else:
 		return frappe.db.sql("""select profile_id,medicine_name,dosage,from_date_time,to_date_time
 			from `tabMedication`
-			order by creation""", as_dict=1,debug=1)
+			order by creation""", as_dict=1)
 
 def get_conditions(filters):
 	conditions = ""
