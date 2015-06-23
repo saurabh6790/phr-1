@@ -26,7 +26,7 @@ def create_todo(data):
 @frappe.whitelist(allow_guest=True)
 def get_todo(profile_id):
 	todo_list = []
-	todo = frappe.db.sql("select name from tabToDo where profile_id = '%s' and date >= CURDATE() order by creation desc limit 5"%profile_id)
+	todo = frappe.db.sql("select name from tabToDo where profile_id = '%s' and date >= CURDATE() order by creation desc"%profile_id)
 	for td in todo:
 		td = frappe.get_doc("ToDo", td[0])
 		todo_list.append({"desc": td.description, "todo_id": td.name,"date":get_formatted_date_time(td.date),"priority":td.priority})
@@ -54,6 +54,7 @@ def notify_to_do():
 				
 				if data:
 					child = data['childProfile']
+					
 					if child['mobile'] and frappe.db.get_value("Mobile Verification",{"mobile_no":child['mobile'],"mflag":1},"name"):
 						send_phr_sms(child['mobile'],msg=msgg)
 					else:

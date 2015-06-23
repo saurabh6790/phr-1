@@ -21,6 +21,7 @@ $.extend(SharePhr.prototype,{
 		$('#share').click(function(){
 			me.share_phr();
 		});
+		this.make_visits_details_blank() 
 		this.bind_controller();
 		this.render_folder_section(args['event_id'],args['method']);
 		this.get_event_details();
@@ -28,7 +29,19 @@ $.extend(SharePhr.prototype,{
 		$("#provider_name").click(function(){
 			ProviderOperations.prototype.dialog_oprations({'file_name':"provider_search", "wrapper":this.wrapper})
 		});
-		ProviderOperations.prototype.get_linked_providers(this.args['profile_id']);
+
+		if(frappe.get_cookie("user_type")=='provider'){
+			ProviderOperations.prototype.get_linked_providers(sessionStorage.getItem("pid"))
+		}
+		else{
+			ProviderOperations.prototype.get_linked_providers(this.profile_id)
+		}
+	},
+	make_visits_details_blank:function(){
+		if ((frappe.get_cookie('user_type')=='provider') && (sessionStorage.getItem("pid")==$('form input[name="doctor_id"]').val())){
+			$('form input[name="doctor_name"]').val("")
+			$('form input[name="doctor_id"]').val("")
+		}
 	},
 	bind_controller: function(){
 		var me = this;
@@ -151,6 +164,8 @@ $.extend(SharePhr.prototype,{
 				callback:function(r){
 					NProgress.done();
 					frappe.msgprint(r.message.message_summary)
+					$('[name="doctor_id"]').val("");
+					$('[name="doctor_name"]').val("");
 					if (r.message.returncode != 0){
 						me.notify_provider(me.res,r.message)	
 					}

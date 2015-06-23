@@ -18,6 +18,7 @@ frappe.provide("frappe");
 {% include "templates/includes/disease_monitoring.js" %}
 {% include "templates/includes/dashboard_renderer.js" %}
 {% include "templates/includes/todo.js" %}
+{% include "templates/includes/mobile_verifier.js" %}
 
 /*
   Format for method Classes
@@ -222,9 +223,9 @@ $(document).ready(function () {
 })
 open_patient = function(profile_id,name){
 	sessionStorage.setItem("cname",name)
+	sessionStorage.setItem("cid",profile_id)
 	var db = new render_dashboard();
 	db.render_LPHR_name()
-	sessionStorage.setItem("cid",profile_id)
 	$('#phr').removeClass("hide");
 	$('.field-area').empty()
 	$('#main-con').empty()

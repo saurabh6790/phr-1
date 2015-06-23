@@ -16,7 +16,7 @@ def get_base_url():
 def get_master_details(doctype):
 	import itertools 
 	ret = frappe.db.sql("""select name from `tab%s` 
-		order by creation desc """%doctype,as_list=1,debug=1)
+		order by creation desc """%doctype,as_list=1)
 	return list(itertools.chain(*ret))
 
 

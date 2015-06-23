@@ -125,21 +125,33 @@ $.extend(ThumbNails.prototype,{
 	convert_txt_to_pdf:function(desc){
 		var me = this;
 		if($('[name="attch_desc"]').val()){
+			
+			pid = sessionStorage.getItem('pid')
+			cid = sessionStorage.getItem('cid')
+			owner = (pid==cid)?frappe.get_cookie('full_name'):sessionStorage.getItem('cname')  			
+
+			event_data = {
+				"event_title":$('input[name="event_title"]').val(),
+				"event_date":$('input[name="event_date"]').val(),
+				"provider":$('input[name="doctor_name"]').val(),
+				"owner":owner,
+				"print_data":$('[name="attch_desc"]').val()
+			}
 			frappe.call({
-				method:"phr.templates.pages.uploader.get_pdf_site_path",
+				method:"phr.templates.pages.uploader.convert_text_to_pdf",
 				args:{'profile_id': me.args['profile_id'], 'folder':me.folder, 
-				'sub_folder': me.sub_folder, 'event_id': $('input[name="entityid"]').val(), 'timestamp' : String(new Date().getTime())},
+				'sub_folder': me.sub_folder, 'event_id': $('input[name="entityid"]').val(), 'timestamp' : String(new Date().getTime()),"event_data":event_data},
 				callback:function(r){
 					me.args['dms_file_list'] = me.args['dms_file_list'] ? me.args['dms_file_list'] : [];
 					me.args['dms_file_list'].push(			{
 						"tag_id": me.folder.split('-')[1]+''+me.sub_folder.split('_')[1],
 						"tag_name": me.folder.split('-')[0],
 			    		"sub_tag_name": me.sub_folder.split('_')[0],
-			    		"file_id": [],
-			    		"file_location": [],
-						"text_file_desc": $('[name="attch_desc"]').val() ? $('[name="attch_desc"]').val() : "" ,
-						"text_file_id": $('[name="attch_desc"]').val() ? r.message['timestamp']+'_'+ me.folder+'_'+me.sub_folder+'.pdf' : "",
-						"text_file_loc": $('[name="attch_desc"]').val() ? r.message['site_path'] +'/'+ me.args['profile_id'] + '/' +  $('input[name="entityid"]').val() + '/' + me.folder + '/' +  me.sub_folder + '/' + r.message['timestamp']+'_'+ me.folder+'_'+me.sub_folder+'.pdf' : ""
+			    		"file_id": [r.message.fname],
+			    		"file_location": [r.message.path],
+						"text_file_desc": "",
+						"text_file_id": "",
+						"text_file_loc": ""
 					})
 				
 					var $modal = $("#myModal").detach().modal();
@@ -148,6 +160,7 @@ $.extend(ThumbNails.prototype,{
 					
 					frappe.msgprint("Description added as pdf, click on save to make it as attachment")
 					$('[name="attch_desc"]').val('')
+					
 				}
 			})
 		}

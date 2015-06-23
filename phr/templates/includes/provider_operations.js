@@ -28,8 +28,28 @@ $.extend(ProviderOperations.prototype, {
 					me.filters[obj.name] = $(obj).val();
 				})
 				me.render_result_table(me.filters, d)
+				//me.add_depends_on()
 			})
 			.appendTo($('.modal-body .panel'))
+	},
+	add_depends_on:function(){
+		visibility_dict={
+			"Email":["email_id","email_body"],
+			"Provider Account":["sharing_duration"]
+		}
+		var me = this;
+		console.log([$('form select[name="share_via"]'),"sdas"])
+		$('form select[name="share_via"]').on('change', function(){
+			me.visibility_setter($(this).attr('name'), $(this).val(),visibility_dict)
+		})
+	},
+	visibility_setter:function(parent,val,dict){
+		$.each(dict, function(key, filed_list){
+			$.each(filed_list, function(i,field){
+				if(key == val) $($('form input[name="'+field+'"]').parents()[3]).css("display", "inherit");
+				else $($('form input[name="'+field+'"]').parents()[3]).css("display", "none");
+			})	
+		})
 	},
 	profile_id_setter:function(){
 		if(frappe.get_cookie("user_type")=='provider'){
@@ -105,7 +125,6 @@ $.extend(ProviderOperations.prototype, {
 
 			$('.modal-body .table').find('tr').each(function () {
 				var row = $(this);
-				console.log(row)
 				var $td = $('td', row);
 				if ($td.find('input[name="provider"]').is(':checked')) {
 					flag = true;
@@ -116,7 +135,7 @@ $.extend(ProviderOperations.prototype, {
 					me.check_existing($td.find('input[name="provider"]').attr('id'),$($td[4]).html(),$($td[3]).html(),$($td[2]).html(), $($td[1]).html(),d)
 				}
 			})
-			if(flag){
+			if(!flag){
 				frappe.msgprint("First Select provider then click on Add")
 			}
 		})
@@ -137,6 +156,8 @@ $.extend(ProviderOperations.prototype, {
 					$('#myModal').remove();
 					$('.modal').remove();
 					$('.modal-backdrop').remove();
+					//$( '.modal' ).modal( 'hide' ).data( 'bs.modal', null );
+					me.add_depends_on()
 				}
 			}
 		})
@@ -155,6 +176,8 @@ $.extend(ProviderOperations.prototype, {
 				$('#myModal').remove();
 				$('.modal').remove();
 				$('.modal-backdrop').remove();
+				consloe.log("attach")
+				me.add_depends_on()
 			}
 		})
 	},
@@ -238,7 +261,6 @@ $.extend(ProviderOperations.prototype, {
 			method:"phr.templates.pages.event.get_linked_providers",
 			args:{'profile_id':me.profile_id},
 			callback:function(r){
-				console.log("test")
 				var flag = false;
 				$('[name="doctor_name"]').autocomplete({
 					open: function(){

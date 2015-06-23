@@ -29,13 +29,16 @@ $(document).ready(function () {
 		frappe.msgprint("Not Allowed")
 		window.location.href = "/provider";
 	}
+	$(document).bind("contextmenu",function(e) {
+ 		e.preventDefault();
+	});
 	if (!sessionStorage.getItem("pid") || frappe.get_cookie("profile_id")!=sessionStorage.getItem("pid")){
 		sessionStorage.setItem("pid",frappe.get_cookie("profile_id"))
 		sessionStorage.setItem("cid",frappe.get_cookie("profile_id"))
 	}
 
 	$("[data-toggle='popover']").popover();
-	
+
 	if(!window.full_name) {
 		if(localStorage) {
 			localStorage.setItem("last_visited",
@@ -68,10 +71,12 @@ $(document).ready(function () {
 		$('#share').remove()
 		NProgress.done();
 	}
+	visibility_dict={}
+	sessionStorage.setItem("visibility_dict",JSON.stringify(visibility_dict))
 })
 function download_phr(){
 	$('.link-phr').empty()
-	$('<a class="btn btn-primary" href="#"><div><i class="fa fa-arrow-circle-down"></i> Download PHR</div></a> ').appendTo('.link-phr').unbind("click").click(function(){
+	$('<div class="btn btn-primary"><i class="fa fa-arrow-circle-down"></i> Download PHR</div>').appendTo('.link-phr').unbind("click").click(function(){
 		args={
 			"cmd": "phr.templates.pages.profile.get_phr_pdf",
 			'profile_id': sessionStorage.getItem("pid")
@@ -239,7 +244,7 @@ function bind_events(){
 	$('.msg').unbind("click").click(function(){
 		$('.breadcrumb').empty()
 		NProgress.start();
-		$('<li><a nohref>Messages</a></li>').click(function(){
+		$('<li><a nohref>Shared History</a></li>').click(function(){
 			$('.breadcrumb li').nextAll().remove()
 			Messages.prototype.init($(document).find("#main-con"), '', sessionStorage.getItem("cid"))
 		}).appendTo('.breadcrumb');

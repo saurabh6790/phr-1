@@ -79,9 +79,15 @@ upload = {
 			NProgress.done();
 			return;
 		}
+		if (!getFileExtension(fileobj.name)){
+			frappe.msgprint(__("File Extension Not Supported!Allowed Formats are pdf,jpg,png "));
+			NProgress.done();
+			return;	
+		}
 		// args["dialog"].hide();
 
 		delete args["dialog"];
+		
 
 		var dataurl = null;
 		var _upload_file = function() {
