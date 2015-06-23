@@ -25,6 +25,7 @@ $.extend(SharePhr.prototype,{
 		this.bind_controller();
 		this.render_folder_section(args['event_id'],args['method']);
 		this.get_event_details();
+		console.log()
 		Events.prototype.write_visit_file(this.event_tag_id, this.profile_id, this.visit_tag_id);
 		$("#provider_name").click(function(){
 			ProviderOperations.prototype.dialog_oprations({'file_name':"provider_search", "wrapper":this.wrapper})

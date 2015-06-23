@@ -123,9 +123,10 @@ window.Events = inherit(ListView,{
   		this.make_tree_view(event_id, visit_id)
 		this.get_linked_providers()
   		this.set_provider_details()
-  		if (!this.req_id){
-  			this.make_share_pannel(event_id)
-  		}	
+  		if(this.req_id && frappe.get_cookie("user_type")=='provider'){
+  			$('#share').remove()
+  		}
+  		this.make_share_pannel(event_id)
 		this.make_comment_section(event_title, profile_id)
 	},
 	get_linked_providers:function(){
