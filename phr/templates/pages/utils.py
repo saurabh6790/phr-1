@@ -89,3 +89,8 @@ def get_active_sessions():
 	sessions = frappe.db.sql("""select distinct u.profile_id, s.user from tabSessions as s, tabUser as u 
 		where s.status = "Active" and s.user = u.name""", as_list=1)
 	return [user[0] for user in sessions]
+
+@frappe.whitelist(allow_guest=True)
+def set_user_info():
+	print "###################################################@@@@@@@@@@@@@"
+	frappe.local.login_manager.set_user_info()

@@ -177,6 +177,7 @@ function render_dashboard(profile_id){
 			$('.field-area').empty()
 			$('#main-con').empty()
 			$('.breadcrumb').empty()
+			$('<li></li>').appendTo('.breadcrumb')
 			$('.new_controller').hide()
 			$('.save_controller').hide()
 			$('.link-phr').empty()

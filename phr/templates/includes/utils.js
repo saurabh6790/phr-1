@@ -39,9 +39,11 @@ function validate_currentdatetime(val){
 
 
 function getFileExtension(filename){
+  console.log(["sa",filename])  
   var ext = /^.+\.([^.]+)$/.exec(filename);
   ext == null ? "" : ext[1];
-  if (!/jpg|pdf|png|PDF|JPG|PNG|JPEG/.test(ext)) {
+  console.log(["sa",filename,ext[1]])
+  if (!/(.*?)(jpg|pdf|png|PDF|JPG|PNG|JPEG)$/.test(ext)) {
     return false
   }
   else{

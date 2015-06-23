@@ -14,6 +14,8 @@ frappe.provide("frappe");
 {% include "templates/includes/dashboard_renderer.js" %}
 {% include "templates/includes/todo.js" %}
 {% include "templates/includes/mobile_verifier.js" %}
+{% include "templates/includes/app_info.js" %}
+
 /*
   Format for method Classes
   ClassName.prototype.init(wrapper,name_of_json_file,entityid,operation_entity)
@@ -25,13 +27,17 @@ frappe.provide("frappe");
     window.history.forward();
  }
 $(document).ready(function () {
-	if ((/patient/.test(self.location.href)) && frappe.get_cookie("user_type") != 'patient'){
+	user_info_setter()
+	if (frappe.get_cookie("user_type") && (/patient/.test(self.location.href)) && frappe.get_cookie("user_type") != 'patient'){
+		user_info_setter()
 		frappe.msgprint("Not Allowed")
 		window.location.href = "/provider";
 	}
+	
 	$(document).bind("contextmenu",function(e) {
  		e.preventDefault();
 	});
+	
 	if (!sessionStorage.getItem("pid") || frappe.get_cookie("profile_id")!=sessionStorage.getItem("pid")){
 		sessionStorage.setItem("pid",frappe.get_cookie("profile_id"))
 		sessionStorage.setItem("cid",frappe.get_cookie("profile_id"))
@@ -71,8 +77,8 @@ $(document).ready(function () {
 		$('#share').remove()
 		NProgress.done();
 	}
-	visibility_dict={}
-	sessionStorage.setItem("visibility_dict",JSON.stringify(visibility_dict))
+	/*visibility_dict={}
+	sessionStorage.setItem("visibility_dict",JSON.stringify(visibility_dict))*/
 })
 function download_phr(){
 	$('.link-phr').empty()
@@ -99,6 +105,7 @@ function preventBack() {
 function bind_events(){
 	profile_id=sessionStorage.getItem("cid")
 	$("#home").on("click",function(){
+		user_info_setter()
 		$('.breadcrumb').empty()
 		$('<li></li>').appendTo('.breadcrumb')
 		//$('.linked-phr').empty()

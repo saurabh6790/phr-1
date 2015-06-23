@@ -23,6 +23,16 @@ def create_todo(data):
 	
 	return todo
 
+@frappe.whitelist()
+def validate_date_time(todo_datetime):
+	now_time = datetime.datetime.strftime(datetime.datetime.now(), '%Y-%m-%d %H:%M:%S.%f')
+	now_time_str = datetime.datetime.strptime(now_time, '%Y-%m-%d %H:%M:%S.%f')
+	if todo_datetime:
+		todo_time = datetime.datetime.strptime(todo_datetime, '%d/%m/%Y %H:%M')
+		time_diff = int((now_time_str-todo_time).total_seconds()/60)
+		if time_diff > 0:
+			return "Due Date Should not be less than Current Date"
+
 @frappe.whitelist(allow_guest=True)
 def get_todo(profile_id):
 	todo_list = []
