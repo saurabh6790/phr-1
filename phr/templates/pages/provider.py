@@ -103,7 +103,8 @@ def get_self_details(profile_id):
 
 @frappe.whitelist(allow_guest=True)
 def create_addr(res, provider_id):
-	res = eval(res)
+	import json
+	res = json.loads(res)
 	addr = frappe.new_doc('PHRAddress')
 	addr.addr_line1 = res.get('address1')
 	addr.addr_line2 = res.get('address2')
@@ -120,7 +121,7 @@ def create_addr(res, provider_id):
 def get_address(provider_id):
 	return frappe.db.sql("""select addr_line1, addr_line2, city, state, country, pincode, visiting_hours 
 					from tabPHRAddress 
-					where provider_id = '%s' order by creation desc"""%(provider_id), as_dict=1,  debug=1)
+					where provider_id = '%s' order by creation desc"""%(provider_id), as_dict=1)
 
 
 @frappe.whitelist(allow_guest=True)
