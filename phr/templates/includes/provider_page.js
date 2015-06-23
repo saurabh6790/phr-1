@@ -19,13 +19,14 @@ frappe.provide("frappe");
 {% include "templates/includes/dashboard_renderer.js" %}
 {% include "templates/includes/todo.js" %}
 {% include "templates/includes/mobile_verifier.js" %}
-
+{% include "templates/includes/app_info.js" %}
 /*
   Format for method Classes
   ClassName.prototype.init(wrapper,name_of_json_file,entityid,operation_entity)
 */
 $(document).ready(function () {
-	if ((/provider/.test(self.location.href)) && frappe.get_cookie("user_type") != 'provider'){
+	user_info_setter()
+	if (frappe.get_cookie("user_type") && (/provider/.test(self.location.href)) && frappe.get_cookie("user_type") != 'provider'){
 		frappe.msgprint("Not Allowed")
 		window.location.href = "/patient";
 	}

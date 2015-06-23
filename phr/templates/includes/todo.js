@@ -22,9 +22,17 @@ var ToDo = inherit(ListView,{
 		d.show()
 		$('.modal-body form input[name="due_date"]').bind('blur', function() { 
 			val=$(this).val()
-			if (!validate_currentdatetime(val)){ 
-				$(this).val("")
-				frappe.msgprint("Due Date Should not be less than Current Date")
+			if (val){
+				frappe.call({
+					method:"phr.templates.pages.todo.validate_date_time",
+					args: {'todo_datetime':val},
+					callback:function(r){
+						if (r.message){
+							frappe.msgprint(r.message)
+						}
+						
+					}
+				})
 			}
 		});
 		$('.modal-footer .btn-primary').unbind('click').click(function(){
