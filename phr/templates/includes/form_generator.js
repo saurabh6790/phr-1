@@ -109,11 +109,18 @@ $.extend(RenderFormFields.prototype,{
 	depends_on:function(meta){
 		parent_field = meta['depends_on'].split(':')[0]
 		visibility_dict = JSON.parse(sessionStorage.getItem('visibility_dict'))
+		
+		if (!visibility_dict){
+			visibility_dict={}
+			sessionStorage.setItem("visibility_dict",JSON.stringify(visibility_dict))
+		} 
+		
 		if(visibility_dict[parent_field]) this.set_dict_param(parent_field, meta,visibility_dict)
 		else{
 			visibility_dict[parent_field] = {}
 			this.set_dict_param(parent_field, meta,visibility_dict)	
 		}
+		
 		this.add_onchange_event(parent_field,visibility_dict)
 		sessionStorage.setItem('visibility_dict',JSON.stringify(visibility_dict))
 	},

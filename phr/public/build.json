@@ -2,6 +2,7 @@
 	"js/phr-web.min.js": [
 		"templates/includes/form_generator.js",
 		"templates/includes/utils.js",
+		"templates/includes/app_info.js",
 		"templates/includes/list_view.js",
 		"templates/includes/inherit.js",
 		"templates/includes/uploader.js",

@@ -200,7 +200,7 @@ def fetch_data_from_medications(med_list,recipient_list):
 						now_time_str = datetime.datetime.strptime(now_time, '%Y-%m-%d %H:%M:%S.%f')
 						if options.get(d.fieldname):
 							med_time = datetime.datetime.strptime(options[d.fieldname], '%Y-%m-%d %H:%M:%S.%f')
-							time_diff = cint((time_now-med_time).total_seconds()/60)
+							time_diff = cint((now_time-med_time).total_seconds()/60)
 						
 					if time_diff and (time_diff >= 0 and time_diff <= 5):
 						uexists = frappe.db.get_value("User",{"profile_id":mobj.profile_id},"name")
