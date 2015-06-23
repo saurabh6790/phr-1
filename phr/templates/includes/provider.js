@@ -55,9 +55,13 @@ var Provider = inherit(RenderFormFields, {
 		db.render_providers(sessionStorage.getItem("cid"))
 	},
 	open_record:function(provider_id){
-		$(this.wrapper).empty()
+		$('.main-navigation-menu li ul li a').removeClass('active');
+		$('.main-navigation-menu li ul li a[data-name="'+provider_id+'"]').addClass('active')       
+        $(this.wrapper).empty()
 		$('.field-area').empty()
 		$('#main-con').empty()
+		$('.breadcrumb').empty()
+		$('<li><a nohref>Provider</a></li>').appendTo('.breadcrumb')
 		RenderFormFields.prototype.init(this.wrapper, {"file_name" : "provider", "method": 'provider'}, provider_id)
 		this.get_addr(provider_id)
 		this.add_address(provider_id)

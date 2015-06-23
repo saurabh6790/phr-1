@@ -226,7 +226,7 @@ def share_via_email(data):
 		sendmail([data.get('email_id')], subject="PHR-Event Data", msg=cstr(msg),
 				attachments=attachments)
 
-		make_log(data.get('profile_id'),"Event","Shared Via Email","Event <b>%s</b> Shared Via Email to %s"%(data.get('event_title'), data.get('email_id')))
+		make_log(data.get('profile_id'),"Event","Shared Via Email","Event <b style='color: #89c148;'>%s</b> Shared Via Email %s"%(data.get('event_title'), data.get('email_id')))
 		# args = {"patient":patient_name,"email":data.get('email_id')}
 		# notify_provider(data.get('doctor_id'),data.get('profile_id'),"Event Share Email",args)
 		return { "returncode":1,"message_summary":"Selected image(s) has been shared with %(provider_name)s for event %(event)s "%{'event': data.get('event_title'),'provider_name': data.get('doctor_name')}}
@@ -652,7 +652,7 @@ def get_provider_info(cond):
 def get_linked_providers(profile_id=None):
 	import itertools
 	if profile_id:
-		ret = frappe.db.sql("select name1, provider, mobile, email, provider_type from  `tabProviders Linked` where patient = '%s' and status = 'Active' "%profile_id, as_dict=1, debug=1)
+		ret = frappe.db.sql("select name1, provider, mobile, email, provider_type from  `tabProviders Linked` where patient = '%s' and status = 'Active' "%profile_id, as_dict=1)
 		
 		for r in ret:
 			r.update({'label': r['name1'], 'value': r['name1']})
@@ -700,20 +700,19 @@ def image_writter(profile_id, event_id=None, visit_id=None):
 			res = write_file(data)
 			
 def write_file(data):
-	frappe.errprint(["write file",data])
-	request_type="POST"
-	url="%sdms/getvisitsinglefile"%get_base_url()
+	request_type = "POST"
+	url = "%sdms/getvisitsinglefile"%get_base_url()
 	
-	response=get_response(url, json.dumps(data), request_type)
+	response = get_response(url, json.dumps(data), request_type)
 	res_data = json.loads(response.text)
 
 	return res_data
 
 def get_image_details(data):
 	request_type="POST"
-	url="%smobile/dms/getalleventfiles"%get_base_url()
+	url = "%smobile/dms/getalleventfiles"%get_base_url()
 	
-	response=get_response(url, json.dumps({"profile_id":data.get('profile_id'), "event_id": data.get("event_id")}), request_type)
+	response = get_response(url, json.dumps({"profile_id":data.get('profile_id'), "event_id": data.get("event_id")}), request_type)
 	res_data = json.loads(response.text)
 
 	return res_data.get('filelist')

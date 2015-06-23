@@ -16,9 +16,37 @@ function getfdate(date) {
     return result;
 }
 
+function getfdatetime(date){
+    console.log(["ss",type(date)])
+    var result = new Date(date);
+    
+
+}
+
 var millisecondsPerDay = 24 * 60 * 60 * 1000;
 function diffDays(startDate, endDate) {
     return Math.floor(getfdate(endDate) / millisecondsPerDay) - Math.floor(getfdate(startDate) / millisecondsPerDay);
+}
+
+function validate_currentdatetime(val){
+    getfdatetime(val)
+    /*
+    if (diffDays(parseDate(val),new Date()) > 0){
+        return false
+    }*/
+    return true
+}
+
+
+function getFileExtension(filename){
+  var ext = /^.+\.([^.]+)$/.exec(filename);
+  ext == null ? "" : ext[1];
+  if (!/jpg|pdf|png|PDF|JPG|PNG|JPEG/.test(ext)) {
+    return false
+  }
+  else{
+    return true
+  }
 }
 
 

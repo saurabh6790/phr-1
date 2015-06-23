@@ -8,7 +8,7 @@ import datetime
 """ Solr api address """
 @frappe.whitelist(allow_guest=True)
 def get_base_url():
-	return "http://192.168.5.18:9090/phr-api/"
+	return "http://192.168.5.15:9090/phr-api/"
 	#return "http://88.198.52.49:7974/phr-api/"
 	# return "http://115.113.66.90:8989/phr-api/"
 
@@ -16,7 +16,7 @@ def get_base_url():
 def get_master_details(doctype):
 	import itertools 
 	ret = frappe.db.sql("""select name from `tab%s` 
-		order by creation desc """%doctype,as_list=1,debug=1)
+		order by creation desc """%doctype,as_list=1)
 	return list(itertools.chain(*ret))
 
 

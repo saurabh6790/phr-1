@@ -17,13 +17,15 @@
 			"fieldname":"event_date", 
 			"fieldtype":"date", 
 			"label":"Event Date",
-			"placeholder":""
+			"placeholder":"",
+			"readonly":1
 		},
 		{
 			"fieldname":"event_title", 
 			"fieldtype":"data", 
 			"label":"Event Name",
-			"placeholder":""
+			"placeholder":"",
+			"readonly":1
 		},
 		{
 			"fieldname":"", 
@@ -37,7 +39,7 @@
 			"placeholder":""
 		},
 		{
-			"fieldname":"",
+			"fieldname":"sharing_details",
 			"fieldtype":"section_break",
 			"options":"<i class='fa fa-share-alt-square'></i>",
 			"label":"Sharing Details"

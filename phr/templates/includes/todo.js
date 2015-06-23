@@ -21,11 +21,11 @@ var ToDo = inherit(ListView,{
 		d.init({"file_name":"todo", "title":"To Do", "button_title": "Create To Do"})
 		d.show()
 		$('.modal-body form input[name="due_date"]').bind('blur', function() { 
-				val=$(this).val()
-				if (diffDays(parseDate(val),new Date().setHours(0,0,0,0)) > 0) { 
-					$(this).val("")
-    				frappe.msgprint("Due Date Should not be less than Current Date")
-				}
+			val=$(this).val()
+			if (diffDays(parseDate(val),new Date().setHours(0,0,0,0)) > 0) { 
+				$(this).val("")
+				frappe.msgprint("Due Date Should not be less than Current Date")
+			}
 		});
 		$('.modal-footer .btn-primary').unbind('click').click(function(){
 			var validated=me.validate_form_model()

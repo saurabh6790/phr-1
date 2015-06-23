@@ -13,7 +13,7 @@ def get_comments(profile_id, provider_id, event_id):
 			from `tabPHR Comment` pc, tabUser u
 			where event_id = '%s' %s
 				and u.profile_id = pc.provider_id
-			order by pc.creation desc"""%(event_id, cond), as_dict=1, debug=1)
+			order by pc.creation desc"""%(event_id, cond), as_dict=1)
 
 	return comments
 

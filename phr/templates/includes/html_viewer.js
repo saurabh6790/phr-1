@@ -38,7 +38,7 @@ $.extend(window.HTMLViewer.prototype,{
                                 <span class="profile_field">Marital status:</span>\
                                 <span class="profile_value">%(marital_status)s</span>\
                               </li>\
-                              <li>\
+                              <li class="rel">\
                                 <span class="profile_field">Relation:</span>\
                                 <span class="profile_value">%(relationship)s</span>\
                               </li>\
@@ -96,6 +96,7 @@ $.extend(window.HTMLViewer.prototype,{
                 </div>\
             <!--Events End--> \
 		</div>',profile_info)).appendTo($('.profile_viewer'))
+    if (sessionStorage.getItem('pid')==sessionStorage.getItem('cid') || frappe.get_cookie('user_type')=='provider') $('.rel').remove()
     MobileVerifier.prototype.check_contact_verified(profile_info['mobile'])
 	}
 })

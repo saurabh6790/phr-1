@@ -223,9 +223,9 @@ $(document).ready(function () {
 })
 open_patient = function(profile_id,name){
 	sessionStorage.setItem("cname",name)
+	sessionStorage.setItem("cid",profile_id)
 	var db = new render_dashboard();
 	db.render_LPHR_name()
-	sessionStorage.setItem("cid",profile_id)
 	$('#phr').removeClass("hide");
 	$('.field-area').empty()
 	$('#main-con').empty()

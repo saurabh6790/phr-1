@@ -33,11 +33,11 @@ def get_appointments(filters):
 		return frappe.db.sql("""select profile_id,provider_name,from_date_time,reason,created_via
 			from `tabAppointments`
 			where %s order by creation""" %
-			conditions, as_dict=1,debug=1)
+			conditions, as_dict=1)
 	else:
 		return frappe.db.sql("""select profile_id,provider_name,from_date_time,reason,created_via
 			from `tabAppointments`
-			order by creation""", as_dict=1,debug=1)
+			order by creation""", as_dict=1)
 
 def get_conditions(filters):
 	conditions = ""

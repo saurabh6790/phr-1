@@ -109,7 +109,7 @@ def save_file(fname, content, decode=False):
 	method = get_hook_method('write_file', fallback=save_file_on_filesystem)
 	file_data = method(fname, content, content_type=content_type)
 	file_data = copy(file_data)
-	return {"msg":"Attachment Successful", "fname": fname}
+	return {"msg":"File Uploaded Successfully", "fname": fname}
 
 def get_file_data_from_hash(content_hash):
 	for name in frappe.db.sql_list("select name from `tabFile Data` where content_hash=%s", content_hash):
@@ -245,5 +245,94 @@ def get_pdf_site_path(profile_id, folder, sub_folder, event_id, timestamp):
 	frappe.create_folder(path)
 	return {
 		'site_path': site_path,
-		'timestamp': timestamp 
+		'timestamp': timestamp,
+		'path':path 
 	}
+
+@frappe.whitelist()
+def convert_text_to_pdf(profile_id, folder, sub_folder, event_id, timestamp,event_data):
+	file_info =  get_pdf_site_path(profile_id, folder, sub_folder, event_id, timestamp)
+	html = build_html(profile_id,event_data)
+	file_path = write_html_to_pdf(file_info,html)
+
+	return file_path
+
+@frappe.whitelist()
+def write_html_to_pdf(file_info,html):
+	import time
+	import pdfkit, os, frappe
+	from frappe.utils import scrub_urls
+
+	fname = 'HLSNP-{filename}.pdf'.format(filename=str(int(round(time.time() * 1000))))
+	fpath = os.path.join(file_info.get('path'),fname)
+	
+	options = {}
+	options.update({
+		"print-media-type": None,
+		"background": None,
+		"images": None,
+		'margin-top': '15mm',
+		'margin-right': '15mm',
+		'margin-bottom': '15mm',
+		'margin-left': '15mm',
+		'encoding': "UTF-8",
+		'no-outline': None
+	})
+	html = scrub_urls(html)
+	pdfkit.from_string(html, fpath, options=options or {})
+
+	return {
+		"path":fpath,
+		"fname":fname
+	}
+
+@frappe.whitelist()
+def build_html(profile_id,event_data):
+	import json
+
+	data = json.loads(event_data)
+	data['print_data'] = '<br>'.join(data.get('print_data').split('\n')) 
+	
+	html = """<!DOCTYPE html>
+	 		<!--[if IE 8]><html class="ie8" lang="en"><![endif]-->
+			<!--[if IE 9]><html class="ie9" lang="en"><![endif]-->
+			<!--[if !IE]><!-->
+			<html lang="en">
+			<!--<![endif]--> 
+			<!-- start: HEAD -->
+			<head>
+				<title>Healthsnapp</title>  
+				<link rel="stylesheet" href="assets/phr/css/styles.css">
+			    <link rel="stylesheet" href="assets/phr/vendor/bootstrap/css/bootstrap.min.css"> 
+			</head>
+			<!-- end: HEAD -->
+			<!-- start: BODY -->
+			<body id="pdf-bg">
+				<!-- start: CARD -->
+				<div class="row">
+					<div class="pdf-container">  
+						<div class="pdf-header">
+			              <div class="pdf-creation pull-left">
+			              	<p>Date: <span>%(event_date)s</span></p>
+			              	<p>Event Title: <span>%(event_title)s</span></p>
+			                <p>Provider Name: <span>%(provider)s</span></p>
+			                <p>Created By: <span>%(owner)s</span></p>        
+			                <p>Powered By: <span>HealthSnapp</span></p>  
+			              </div>
+			              <div class="pdf-logo pull-right"><img src="assets/phr/images/card-logo.png"></div>
+			              <div class="clearfix"></div>
+			            </div>
+			            <div>
+			            	<div class="pdf-content">
+			                	<p>%(print_data)s</p>
+			              	</div>
+			            </div>
+			            <div class="clearfix"></div>
+					</div>
+				</div>
+				<!-- end: CARD --> 
+			</body>
+			<!-- end: BODY -->
+			</html>"""%data
+
+	return html

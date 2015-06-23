@@ -69,7 +69,7 @@ def make_mv_entry(mobile,profile_id):
 def not_duplicate_contact(mobile,user):
 	if frappe.db.sql("""select count(*) from tabUser 
 		where contact = '%s' and name != "%s"
-	"""%(mobile,user), as_list=1,debug=1)[0][0] == 0:
+	"""%(mobile,user), as_list=1)[0][0] == 0:
 		return True
 	else:
 		return False
