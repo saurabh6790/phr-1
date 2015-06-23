@@ -17,59 +17,16 @@ var Medications = inherit(ListView,{
 			'profile_id':profile_id})
 		$('.new_controller').hide();
 		$('#share').remove()
-		//me.update_select_options()
 		me.bind_save_event()
 		scroll_top()
-
+		me.bind_change_event()
 	},
-	/*update_select_options:function(){
-		frappe.call({
-		method:"phr.templates.pages.medication.get_dosage_types",
-		callback:function(r){
-			if(r.message){
-				$.each(r.message,function(i, val){
-					$option=$('<option>', { 
-						'value': val[0],
-						'text' : val[0] 
-					}).appendTo($('select[name="dosage_type"]'))
-				})
-			}
-			else{
-					
-				}
-			}
-		})
-	},*/
 	bind_save_event: function(){
 		var me = this;
 		this.res = {}
 		this.result_set = {};
 		this.doc_list = []
-		$('form input[required],form textarea[required],form select[required]').bind('change', function() { 
-   			if (!$(this).val()){
-   				$(this).css({"border": "1px solid #999","border-color": "red" });
-   			}
-   			else{
-   				$(this).css({"border": "1px solid #999","border-color": "F3F2F5" });	
-   			}
-		});
-		$('form input[name="to_date_time"]').bind('change', function() { 
-			val=$(this).val()
-			if (diffDays(parseDate(val),parseDate($('form input[name="from_date_time"]').val())) > 0) { 
-				$(this).val("")
-    			frappe.msgprint("To Date Should not be less than From date")
-			}
-		}); 
-		$('form input[name="from_date_time"]').bind('change', function() { 
-			if($('form input[name="to_date_time"]').val()){
-				val = $('form input[name="to_date_time"]').val();
-				if (diffDays(parseDate(val),parseDate($('form input[name="from_date_time"]').val())) > 0) { 
-					$('form input[name="to_date_time"]').val("");
-					$(this).val("");
-	    			frappe.msgprint("To Date Should not be less than From date")
-				}
-			}
-		}); 
+		this.validate();
 		$('.save_controller').bind('click',function(event) {
 			NProgress.start();
 			var validated=me.validate_form()
@@ -117,11 +74,8 @@ var Medications = inherit(ListView,{
 				if(result){
 					me.update_status(data)
 				}
-
 			});
-			
 		})
-		
 	},
 	update_status:function(data){
 		var me=this;
@@ -139,6 +93,33 @@ var Medications = inherit(ListView,{
 			}
 		})
 	},
+	validate:function(){
+		$('form input[required],form textarea[required],form select[required]').bind('change', function() { 
+   			if (!$(this).val()){
+   				$(this).css({"border": "1px solid #999","border-color": "red" });
+   			}
+   			else{
+   				$(this).css({"border": "1px solid #999","border-color": "F3F2F5" });	
+   			}
+		});
+		$('form input[name="to_date_time"]').bind('change', function() { 
+			val=$(this).val()
+			if (diffDays(parseDate(val),parseDate($('form input[name="from_date_time"]').val())) > 0) { 
+				$(this).val("")
+    			frappe.msgprint("To Date Should not be less than From date")
+			}
+		}); 
+		$('form input[name="from_date_time"]').bind('change', function() { 
+			if($('form input[name="to_date_time"]').val()){
+				val = $('form input[name="to_date_time"]').val();
+				if (diffDays(parseDate(val),parseDate($('form input[name="from_date_time"]').val())) > 0) { 
+					$('form input[name="to_date_time"]').val("");
+					$(this).val("");
+	    			frappe.msgprint("To Date Should not be less than From date")
+				}
+			}
+		}); 
+	},
   	validate_form:function(){
   		var me=this;
   		var fg=true
@@ -154,6 +135,15 @@ var Medications = inherit(ListView,{
 	update_list_view:function(data){
 		RenderFormFields.prototype.init($(".field-area"), {'fields': data['listview']})
 		$('#share').remove()
-		//$('.save_controller').remove();
+	},
+	bind_change_event:function(){
+		$('[name="dosage_type"]').on('change', function(){
+			var visibility_dict = JSON.parse(sessionStorage.getItem("visibility_dict"));
+			$.each(visibility_dict['dosage_type'], function(idx, field_list){
+				$.each(field_list, function(idx, field){
+					$('[name="'+field+'"]').val("")
+				})
+			})
+		})
 	}
 })

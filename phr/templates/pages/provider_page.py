@@ -203,7 +203,7 @@ def get_acc_req(target, provider_id):
 	rows=[
 		[{"title":"Date (Shared date)", "width":"120px !important;"}, {"title":"Patient Name", "width":"100px;"}, 
 				{"title":"Event Name","width":"100px;"},{"title":"Reason for Sharing", "width":"100px;"},  {"title":"Period of Sharing", "width":"100px;"}, 
-				{"title":"Payment Status", "width":"100px;"}, {"title":"Status", "width":"100px;"}]
+				{"title":"Payment Status", "width":"100px;"}]
 	]
 
 	if data:

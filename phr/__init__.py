@@ -302,11 +302,15 @@ def getAppointments(data):
 def getMessages(data):
 	import datetime
 	from templates.pages.messages import fetch_values_from_db
+	import re
+
+	TAG_RE = re.compile(r'<[^>]+>')
 	log_details = fetch_values_from_db(json.loads(data))
 	
 	for log in log_details:
 		log.creation = datetime.datetime.strptime(log.creation, '%Y-%m-%d %H:%M:%S.%f').strftime('%d/%m/%Y %H:%M')
-	
+		log.subject = TAG_RE.sub('', cstr(log.subject))
+
 	return log_details
 
 @frappe.whitelist(allow_guest=True)
@@ -354,6 +358,26 @@ def createProvider(data):
 	res = create_provider(json.dumps(data.get('data')), '', data.get('profile_id'))
 	del res['actualdata']
 	return res
+
+@frappe.whitelist(allow_guest=True)
+def setSecondaryAddrForProvider(data):
+	import json
+	data = json.loads(data)
+	res = data.get('res')
+	provider_id = data.get('provider_id')
+	
+	from templates.pages.provider import create_addr
+	create_addr(json.dumps(res), provider_id)
+
+	return "Address attached to provider"
+
+@frappe.whitelist(allow_guest=True)
+def getSecondaryAddrForProvider(data):
+	import json
+	data = json.loads(data)
+
+	from templates.pages.provider import get_address
+	return get_address(data.get("provider_id"))
 
 """ Event/Visit Sharing """
 @frappe.whitelist(allow_guest=True)
