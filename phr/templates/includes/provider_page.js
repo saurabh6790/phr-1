@@ -18,6 +18,7 @@ frappe.provide("frappe");
 {% include "templates/includes/disease_monitoring.js" %}
 {% include "templates/includes/dashboard_renderer.js" %}
 {% include "templates/includes/todo.js" %}
+{% include "templates/includes/mobile_verifier.js" %}
 
 /*
   Format for method Classes
