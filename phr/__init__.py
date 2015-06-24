@@ -33,6 +33,43 @@ def updateProfile(data):
 	else: return res
 
 @frappe.whitelist(allow_guest=True)
+def deLinkProfile(data):
+	"""
+		1. check for duplicate profile
+		2. delink from solr
+		3. create profile on frappe
+	"""
+	import json
+	from templates.pages.profile import check_existing, delink_phr_solr
+	data = json.loads(data)
+	msg = check_existing(data['email'], data['mobile'])
+	if not msg:
+		res = delink_phr(data)
+		if res.get('returncode') == 121:
+			return create_profile(res, data)
+		else:
+			{"msg": "Something went wrong. Please try again."}
+	else:
+		return msg
+
+def delink_phr(data):
+	"""
+		def delink_phr_solr(data,id,profile_id,res)
+
+			data = blank dictionary
+			id = child_id
+			profile_id = parent_id
+			res = ip data dict
+	"""
+	from templates.pages.profile import delink_phr_solr
+	res = delink_phr_solr({}, data.get("child_id"), data.get("parent_id"), json.dumps(data))
+	return res
+
+def create_profile(solr_res, data):
+	from templates.pages.profile import add_profile_to_db
+	return add_profile_to_db(json.dumps(solr_res), data.get("profile_id"))
+
+@frappe.whitelist(allow_guest=True)
 def validate_mobile_code(data):
 	from phr.verifier import verify_mobile
 	data = json.loads(data)
