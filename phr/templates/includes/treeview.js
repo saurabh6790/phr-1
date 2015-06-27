@@ -28,7 +28,7 @@ $.extend(TreeView.prototype, {
 							{'label':'Test Images', 'id':'B_52',"count":me.args['sub_event_count']['1352']}],
 					'prescription-14':[{'label':'Prescribed Medication', 'id':'A_51',"count":me.args['sub_event_count']['1451']},
 							{'label':'Prescribed Advice','id':'B_52',"count":me.args['sub_event_count']['1452']},
-							{'label':'Discharge Summery', 'id': 'C_53',"count":me.args['sub_event_count']['1453']}],
+							{'label':'Discharge Summary', 'id': 'C_53',"count":me.args['sub_event_count']['1453']}],
 					'cost_of_care-15':[{'label': 'Medical Bills', 'id': 'A_51',"count":me.args['sub_event_count']['1551']}]
 				}
 
@@ -82,6 +82,18 @@ $.extend(TreeView.prototype, {
 			$('.tree li.parent_li').find(' > ul > li').hide('fast');
 			
 			$('.tree li.parent_li > span').unbind('click').on('click', function (e) {
+
+				$(".thumb").empty();
+				$('<div align="center"><h4> Document Uploader and Viewer </h4></div>\
+					<div style="word-wrap: break-word;width:100%;">\
+						<p>You can upload images and pdfs of your here.</p>\
+						<p>Click any opion on left and select a right head to upload.</p>\
+						<p><b>Image/PDF size: 20 MB max</b></p>\
+						<p>Further you have options to:</p>\
+						<p style="text-indent: 1em;">1. <b> Upload Image/PDF </b>: Do you have report handy, upload it from here. </p>\
+						<p style="text-indent: 1em;">2. <b> Write Description </b>: Don\'t have an Image/PDF. Write description, this will be saved as a pdf.</p>\
+						<p style="text-indent: 1em;">3. <b> Capture Image </b>: Capture direct image from webcam -- <b>Comming Soon !!!!!!</b></p>\
+				</div>').appendTo($(".thumb"));
 
 				$('.tree li.parent_li').find(' > ul > li').hide('fast');
 				$('.tree li.parent_li > span').removeClass('selected')

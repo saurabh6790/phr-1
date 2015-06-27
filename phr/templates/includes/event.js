@@ -272,7 +272,8 @@ window.Events = inherit(ListView,{
 								}
 							}
 							else{
-								frappe.msgprint(r.message.message_summary);
+								if(r.message.returncode == -114) frappe.msgprint("Please attach files and then save a event");
+								else frappe.msgprint(r.message.message_summary);
 							}
 						}
 						else{

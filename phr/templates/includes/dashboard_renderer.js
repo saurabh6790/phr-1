@@ -181,6 +181,8 @@ function render_dashboard(profile_id){
 			$('.new_controller').hide()
 			$('.save_controller').hide()
 			$('.link-phr').empty()
+			$("#share").remove();
+			$(".edit_profile").remove();
 			render_providers($(this).attr('data-name'))
 			$('#linkedphr').hide()
 			render_middle_section($(this).attr('data-name'))

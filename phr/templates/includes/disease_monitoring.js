@@ -199,9 +199,9 @@ var DiseaseMonitoring = inherit(RenderFormFields, {
 
 		$('.modal-body form input[name="sharing_duration"]').bind('change', function() { 
 			val=$(this).val()
-			if (diffDays(parseDate(val),new Date().setHours(0,0,0,0)) >= 0) { 
+			if (diffDays(parseDate(val),new Date().setHours(0,0,0,0)) > 0) { 
 				$(this).val("")
-    			frappe.msgprint("Sharing Duration date should not be less than or equal Current Date")
+    			frappe.msgprint("Sharing Duration date should not be less than Current Date")
 			}
 		});
 

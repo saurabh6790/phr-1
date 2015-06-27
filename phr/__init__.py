@@ -56,13 +56,12 @@ def delink_phr(data):
 	"""
 		def delink_phr_solr(data,id,profile_id,res)
 
-			data = blank dictionary
 			id = child_id
 			profile_id = parent_id
 			res = ip data dict
 	"""
 	from templates.pages.profile import delink_phr_solr
-	res = delink_phr_solr({}, data.get("child_id"), data.get("parent_id"), json.dumps(data))
+	res = delink_phr_solr(data.get("child_id"), data.get("parent_id"), json.dumps(data))
 	return res
 
 def create_profile(solr_res, data):

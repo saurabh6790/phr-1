@@ -149,6 +149,7 @@ def get_data_from_solr(profile_id):
 	if res['returncode']==105:
 		return res['actualdata']
 
+
 def build_response(data,obj,res_list,profile_id):
 	if obj.get('visits')==1:
 		visit_data = build_visit_data(data)
@@ -161,6 +162,7 @@ def build_response(data,obj,res_list,profile_id):
 def build_visit_data(obj):
 	rows=[
     	[
+    		"Event Name",
      		"Date", 
      		"Visit Description", 
      		"Provider's Name"
@@ -170,7 +172,7 @@ def build_visit_data(obj):
 		data=json.loads(obj)
 		if (data["visitList"]):
 			for d in data["visitList"]:
-				rows.extend([[d["str_visit_date"],d["visit_descripton"],d["doctor_name"]]])
+				rows.extend([[d['event_title'],d["str_visit_date"],d["visit_descripton"],d["doctor_name"]]])
 		else:
 			rows.extend([["NO DATA","",""]])
 	else:

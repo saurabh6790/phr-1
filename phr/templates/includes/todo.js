@@ -28,6 +28,7 @@ var ToDo = inherit(ListView,{
 					args: {'todo_datetime':val},
 					callback:function(r){
 						if (r.message){
+							$('.modal-body form input[name="due_date"]').val("");
 							frappe.msgprint(r.message)
 						}
 						

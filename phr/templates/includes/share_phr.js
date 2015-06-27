@@ -184,7 +184,7 @@ $.extend(SharePhr.prototype,{
 	},
 	validate_form:function(){
   		var me=this;
-  		var fg=true
+  		var fg=true;
   		$("form input[required], form textarea[required], form select[required]").each(function(i, obj) {
   			if ($(this).val()=="" && $(this).is(':visible')){
   				$(this).css({"border": "1px solid #999","border-color": "red" });
@@ -205,7 +205,7 @@ $.extend(SharePhr.prototype,{
   				frappe.msgprint("Please mention sharing duration")
   				fg=false	
   			}
-  			if(me.doc_list.length === 0){
+  			if(!me.doc_list || me.doc_list.length === 0){
   				frappe.msgprint("Please select files for sharing")
   				fg=false
   			}
