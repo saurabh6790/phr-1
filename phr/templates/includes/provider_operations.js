@@ -176,7 +176,6 @@ $.extend(ProviderOperations.prototype, {
 				$('#myModal').remove();
 				$('.modal').remove();
 				$('.modal-backdrop').remove();
-				consloe.log("attach")
 				me.add_depends_on()
 			}
 		})
