@@ -166,12 +166,16 @@ def send_welcome_mail(password,profile_id,args):
 	
 	mob_code = get_mob_code()
 	update_verification_details(args,password,key,mob_code,link,profile_id)
-	
 	send_login_mail(args,"Verify Your Account", "templates/emails/new_user.html", {"link": link,"password":password})
+
 	mob_already_v = frappe.db.get_value("Mobile Verification",{"mobile_no":args["mobile"],"mflag":1},"name")
 	if not mob_already_v:
 		from phr.templates.pages.profile import make_mobile_verification_entry
-		make_mobile_verification_entry(args["mobile"],profile_id,mob_code)
+		if not frappe.db.get_value("Mobile Verification",{"mobile_no":args["mobile"]},"name"):
+			make_mobile_verification_entry(args["mobile"],profile_id,mob_code)
+		else:
+			pass
+
 		from phr.templates.pages.utils import get_sms_template
 		sms = get_sms_template("registration",{ "mobile_code": mob_code })
 		rec_list = []

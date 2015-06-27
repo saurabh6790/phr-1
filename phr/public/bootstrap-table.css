@@ -52,6 +52,7 @@
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+    
 }
 
 .fixed-table-container thead th .sortable {
@@ -60,6 +61,7 @@
 
 .fixed-table-container tbody td {
     border-left: 1px solid #dddddd;
+    margin-top: 24px;
 }
 
 .fixed-table-container tbody tr:first-child td {
