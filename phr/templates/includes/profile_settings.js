@@ -249,8 +249,9 @@ var ProfileSettings = inherit(RenderFormFields, {
 								</div>\
 							</div>\
 						</div>\
-				</div>', data)).appendTo($wrapper)	
+				</div>', data)).appendTo($wrapper)
 			me.meta_dic[data.entityid]=data
+
 			// console.log(['meta rendering', me.meta_dic])
 		})
 		$('<div class="update" style="width:45%;display:inline-block;text-align:right;">\
