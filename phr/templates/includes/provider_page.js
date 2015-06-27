@@ -13,6 +13,7 @@ frappe.provide("frappe");
 {% include "templates/includes/provider.js" %}
 {% include "templates/includes/medication.js" %}
 {% include "templates/includes/appointments_pro.js" %}
+{% include "templates/includes/appointments.js" %}
 {% include "templates/includes/messages.js" %}
 {% include "templates/includes/custom_dialog.js" %}
 {% include "templates/includes/disease_monitoring.js" %}
@@ -192,14 +193,25 @@ $(document).ready(function () {
 		NProgress.done();
 	})
 
+	$('.appoint_pro').unbind("click").click(function(){
+		$('.breadcrumb').empty()
+		NProgress.start();
+		$('<li><a nohref>Appointments</a></li>').click(function(){
+			$('.breadcrumb li').nextAll().remove()
+			AppointmentsPro.prototype.init($(document).find("#main-con"), '', sessionStorage.getItem("pid"))
+		}).appendTo('.breadcrumb');
+		AppointmentsPro.prototype.init($(document).find("#main-con"),'', sessionStorage.getItem("pid"))
+		NProgress.done();
+	})
+
 	$('.appoint').unbind("click").click(function(){
 		$('.breadcrumb').empty()
 		NProgress.start();
 		$('<li><a nohref>Appointments</a></li>').click(function(){
 			$('.breadcrumb li').nextAll().remove()
-			AppointmentsPro.prototype.init($(document).find("#main-con"), '', sessionStorage.getItem("cid"))
+			Appointments.prototype.init($(document).find("#main-con"), '', sessionStorage.getItem("cid"))
 		}).appendTo('.breadcrumb');
-		AppointmentsPro.prototype.init($(document).find("#main-con"),'', sessionStorage.getItem("cid"))
+		Appointments.prototype.init($(document).find("#main-con"),'', sessionStorage.getItem("cid"))
 		NProgress.done();
 	})
 

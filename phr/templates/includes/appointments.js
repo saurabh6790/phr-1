@@ -15,8 +15,9 @@ var Appointments = inherit(ListView,{
 			'profile_id':profile_id})
 		$('.new_controller').remove();
 		$('#share').remove()
+		this.pro_id = frappe.get_cookie("user_type")=='provider'? sessionStorage.getItem("pid"):this.profile_id
 		me.bind_save_event()
-		this.get_linked_providers(profile_id)
+		this.get_linked_providers(this.pro_id)
 		scroll_top()
 	},
 	bind_save_event: function(){
@@ -24,7 +25,7 @@ var Appointments = inherit(ListView,{
 		this.res = {}
 		this.result_set = {};
 		this.doc_list = [] 
-		this.get_linked_providers(this.profile_id)
+		this.get_linked_providers(this.pro_id)
 
 		$('form input[required],form textarea[required],form select[required]').unbind('change').bind('change', function() { 
    			if (!$(this).val()){
@@ -110,7 +111,7 @@ var Appointments = inherit(ListView,{
 		var me = this;
 		frappe.call({
 			method:"phr.templates.pages.event.get_linked_providers",
-			args:{'profile_id':this.profile_id},
+			args:{'profile_id':profile_id},
 			callback:function(r){
 				$('[name="provider"]').autocomplete({
 					open: function(){
