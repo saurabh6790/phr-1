@@ -179,8 +179,8 @@ var ProfileSettings = inherit(RenderFormFields, {
  		}
   		if($('.tab-pane.active form input[name="mobile"]').val()){
   			if (!validate_mobile($('.tab-pane.active form input[name="mobile"]').val())) {
-  				msg="Mobile No Invalid"
-  				fg=false
+  				msg = "Mobile No Invalid"
+  				fg = false
   			}
   		}
   		return {
@@ -197,15 +197,15 @@ var ProfileSettings = inherit(RenderFormFields, {
 				if(r.message) {
 					frappe.msgprint(r.message);
 					$('#share').remove();
-					email_msg='Linked PHR Has Updated His Profile';
-					text_msg='Linked PHR Has Updated His Profile';
+					email_msg = 'Linked PHR Has Updated His Profile';
+					text_msg = 'Linked PHR Has Updated His Profile';
 					send_linkedphr_updates(email_msg,text_msg,"Profile");
 				}
 			}
 		})
 	},
 	get_linked_phrs:function(profile_id){
-		var me=this;
+		var me = this;
 		frappe.call({
 			method:'phr.templates.pages.dashboard.get_linked_phrs',
 			args:{'profile_id':profile_id},
@@ -218,7 +218,7 @@ var ProfileSettings = inherit(RenderFormFields, {
 					// console.log(["if non linked phr"])
 					var $wrapper=$('#manage_phr').find('form')
 					$wrapper.empty();
-					$input=$('<div class="form-horizontal frappe-control" style="max-width: 600px;margin-top:10px;">\
+					$input = $('<div class="form-horizontal frappe-control" style="max-width: 600px;margin-top:10px;">\
 						<div class="form-group row" style="margin: 0px">\
 								<div class="col-xs-8">\
 								<div class="control-input">\
@@ -232,15 +232,15 @@ var ProfileSettings = inherit(RenderFormFields, {
 		})
 	},
 	render_phrs:function(data,profile_id){
-		var me=this;
-		var $wrapper=$('#manage_phr').find('form')		
+		var me = this;
+		var $wrapper = $('#manage_phr').find('form')		
 		meta = data['list']
 		// console.log(data)
 		this.meta_dic={}
 		$wrapper.empty();
 		// console.log(['Render PHRs', meta, data])
 		$.each(meta,function(i,data){
-			$input=$(repl_str('<div class="form-horizontal frappe-control" style="max-width: 600px;margin-top:10px;">\
+			$input = $(repl_str('<div class="form-horizontal frappe-control" style="max-width: 600px;margin-top:10px;">\
 						<div class="form-group row" style="margin: 0px">\
 								<div class="col-xs-8">\
 								<div class="control-input">\
@@ -249,9 +249,8 @@ var ProfileSettings = inherit(RenderFormFields, {
 								</div>\
 							</div>\
 						</div>\
-				</div>', data)).appendTo($wrapper)
-			me.meta_dic[data.entityid]=data
-
+				</div>', data)).appendTo($wrapper)	
+			me.meta_dic[data.entityid] = data
 			// console.log(['meta rendering', me.meta_dic])
 		})
 		$('<div class="update" style="width:45%;display:inline-block;text-align:right;">\
@@ -259,7 +258,7 @@ var ProfileSettings = inherit(RenderFormFields, {
 					Delink \
 				</button>\
 			</div>').appendTo($wrapper).unbind("click").click(function(){
-				selected=[]
+				selected = []
 				if ($('.chk_phr:checked').length>0){
 					BootstrapDialog.confirm('Are You Sure?', function(result){
 						if(result) {
@@ -274,7 +273,7 @@ var ProfileSettings = inherit(RenderFormFields, {
 			})
 	},
 	delink_phr:function(meta,selected,meta_dic,profile_id,me){
-	fields=[{
+	fields = [{
    				"fieldname": "email", 
 				"fieldtype": "data", 
    				"label": "Email", 
@@ -293,8 +292,8 @@ var ProfileSettings = inherit(RenderFormFields, {
 		d = new Dialog();
 		d.init({'fields':fields,"values":meta_dic[selected],"title":"Add Email And Mobile"})
 		d.show()
-		var me=this;
-		res={}
+		var me = this;
+		res = {}
 		$('.modal-footer .btn-primary').click(function(){
 			$(".modal-body .form-column input").each(function(i, obj) {
 				res[obj.name] = $(obj).val();
@@ -325,10 +324,9 @@ var ProfileSettings = inherit(RenderFormFields, {
 		})
 	},
 	delink_profile:function(meta,selected,meta_dic,profile_id,me,res){
-		//console.log([meta,selected,meta_dic,profile_id,me,res])
 		frappe.call({
 				method:'phr.templates.pages.profile.delink_phr',
-				args:{'selected':selected,"data":meta_dic,"profile_id":profile_id,"res":res},
+				args:{'selected':selected,"parent":profile_id,"res":res},
 				callback: function(r) {
 					if (r.message['response']['returncode']==121){
 						frappe.msgprint(r.message['message'])
@@ -350,7 +348,7 @@ var ProfileSettings = inherit(RenderFormFields, {
 			})
 	},
 	get_enabled_notification:function(profile_id){
-		var me=this;
+		var me = this;
 		frappe.call({
 			method:'phr.templates.pages.profile.get_enabled_notification',
 			args:{'profile_id':profile_id},
@@ -363,10 +361,9 @@ var ProfileSettings = inherit(RenderFormFields, {
 		})
 	},
 	render_notifications:function(data){
-		var me=this;
-		var $wrapper=$("#notification").find("form");		
-		//meta=JSON.parse(data);
-		meta_dic={};
+		var me = this;
+		var $wrapper = $("#notification").find("form");		
+		meta_dic = {};
 		$('#notification.tab-pane form').find("input:checkbox:checked").prop('checked', false);
 		if(data[0].linked_phr==1){
 			$('input[type="checkbox"][name="linked_phr"]').prop('checked', true);		
@@ -376,7 +373,7 @@ var ProfileSettings = inherit(RenderFormFields, {
 		}
 	},
 	get_enabled_dashboard:function(profile_id){
-		var me=this;
+		var me = this;
 		frappe.call({
 			method:'phr.templates.pages.dashboard.get_enabled_dashboard',
 			args:{'profile_id':profile_id},
@@ -388,9 +385,9 @@ var ProfileSettings = inherit(RenderFormFields, {
 		})
 	},
 	render_dashboard_values:function(data){
-		var me=this;
-		var $wrapper=$("#dashboard").find("form");		
-		meta_dic={};
+		var me = this;
+		var $wrapper = $("#dashboard").find("form");		
+		meta_dic = {};
 		$('#dashboard.tab-pane form').find("input:checkbox:checked").prop('checked', false);
 		if(data["medications"]==1){
 			$('input[type="checkbox"][name="medications"]').prop('checked', true);		

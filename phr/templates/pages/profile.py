@@ -282,11 +282,9 @@ def get_site_name():
 	return frappe.local.site_path.split('/')[1]
 
 @frappe.whitelist(allow_guest=True)
-def delink_phr(selected,data,profile_id,res):
-	obj = json.loads(data)
-	id = selected
-	if id:
-		ret_res = delink_phr_solr(obj[id],id,profile_id,res)
+def delink_phr(selected,parent,res):
+	if selected:
+		ret_res = delink_phr_solr(selected,parent,res)
 		return {
 			"message":"Profile Delinked Successfully",
 			"response":ret_res
@@ -296,13 +294,12 @@ def delink_phr(selected,data,profile_id,res):
 			"message":"Please Select PHR to Delink"
 		}
 
-def delink_phr_solr(data,id,profile_id,res):
+def delink_phr_solr(id,parent,res):
 	args = json.loads(res)
 	solr_op = 'unlinkProfile'
 	url = get_base_url()+solr_op
 	request_type = 'POST'
-	data["recieved_from"] = "Desktop"
-	jsonobj = {"entityid":id,"linking_id":profile_id,"received_from":"Desktop","mobile":args["mobile"],"email":args["email"]}
+	jsonobj = {"entityid":id,"linking_id":parent,"received_from":"Desktop","mobile":args["mobile"],"email":args["email"]}
 	from phr.phr.phr_api import get_response
 	response = get_response(url,json.dumps(jsonobj),request_type)
 	res = json.loads(response.text)
