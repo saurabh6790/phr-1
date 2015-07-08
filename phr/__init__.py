@@ -66,7 +66,7 @@ def delink_phr(data):
 
 def create_profile(solr_res, data):
 	from templates.pages.profile import add_profile_to_db
-	return add_profile_to_db(json.dumps(solr_res), data.get("profile_id"))
+	return {"msg":add_profile_to_db(json.dumps(solr_res), data.get("profile_id"))}
 
 @frappe.whitelist(allow_guest=True)
 def validate_mobile_code(data):
@@ -427,16 +427,23 @@ def sharingViaEmail(data):
 	from templates.pages.event import share_via_email
 	data=json.loads(data)
 	res = write_docfile(data)
+	# return data.get('files')
 	return share_via_email(data)
 
 def write_docfile(data):
 	import os
-	for file_path in data.get('files'):
+	for indx, file_path in enumerate(data.get('files')):
 		base_dir_path = os.path.join(os.getcwd(), get_site_path().replace('.',"").replace('/', ""), 'public', 'files')
 		folder_lst = file_path.split('/')
 		file_path =  '/'.join(folder_lst[:-1]) 
 		doc_name = folder_lst[-1:][0]
 		doc_base_path = os.path.join(base_dir_path, file_path)
+
+		if '-watermark' not in doc_name:
+			dname = doc_name.split('.')
+			doc_name = dname[0]+'-watermark.'+dname[1]
+
+		data.get('files')[indx] = "{doc_base_path}/{doc_name}".format(doc_base_path=doc_base_path, doc_name=doc_name)
 
 		if not os.path.exists(doc_base_path + '/' +doc_name):
 			frappe.create_folder(doc_base_path)
@@ -446,7 +453,7 @@ def write_docfile(data):
 				"event_id": folder_lst[1],
 				"tag_id": folder_lst[4] + '-' + cstr(folder_lst[2].split('-')[1]) + cstr(folder_lst[3].split('_')[1]),
 				"file_id": [
-					doc_name.replace('-watermark', '')
+					doc_name.replace('-watermark','')
 				],
 				"file_location": [
 					doc_base_path + '/' + doc_name

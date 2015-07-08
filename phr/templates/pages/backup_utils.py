@@ -8,11 +8,11 @@ verbose = 0
 
 backup_conf = {
 	"DMS":{
-		"source_dir" : "/home/medsynaptic/java/DMS_SERVER/DMS_SERVER_03122014",
+		"source_dir" : frappe.db.get_value("Server Settings", None, "dms_path"),
 		"filename" : "dms"
 	},
 	"SOLR":{
-		"source_dir" : "/home/medsynaptic/java/SOLRNEW11/solr-4.8.0",
+		"source_dir" : frappe.db.get_value("Server Settings", None, "solr_path"),
 		"filename" : "solr"
 	}
 }

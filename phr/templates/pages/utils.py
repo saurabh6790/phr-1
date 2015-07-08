@@ -8,9 +8,10 @@ import datetime
 """ Solr api address """
 @frappe.whitelist(allow_guest=True)
 def get_base_url():
+	return frappe.db.get_value("Server Settings", None, "server_conf")
 	# return "http://192.168.5.18:9090/phr-api/"
 	#return "http://88.198.52.49:7974/phr-api/"
-	return "http://115.113.66.90:8989/phr-api/"
+	# return "http://115.113.66.90:8989/phr-api/"
 
 @frappe.whitelist(allow_guest=True)
 def get_master_details(doctype):

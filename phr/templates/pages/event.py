@@ -204,9 +204,8 @@ def share_via_email(data):
 	patient_name = frappe.db.get_value("User", {"profile_id":data.get('profile_id')}, 'concat(first_name, " ", last_name)') or  data.get('lphr_name')
 	for fl in files:
 		fname = os.path.join(get_files_path(), fl)
-
 		attachments.append({
-				"fname": fname,
+				"fname": fname.split('/')[-1:][0],
 				"fcontent": file(fname).read()
 			})
 
