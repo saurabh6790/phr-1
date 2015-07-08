@@ -113,6 +113,11 @@ def get_data():
 					"name": "Message Templates",
 					"description": _("Manage SMS Templates"),
 				},
+				{
+					"type": "doctype",
+					"name": "Server Settings",
+					"description": _("Apache and Backup Settings"),
+				}
 			]
 		},
 		{
