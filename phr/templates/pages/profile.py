@@ -243,7 +243,7 @@ def get_user_image(profile_id):
 			}
 		else:
 			return{
-				"image":get_gravatar(profile_id)	
+				"image": "/assets/phr/images/default-user.png"
 			}
 
 @frappe.whitelist(allow_guest=True)
