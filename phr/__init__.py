@@ -695,3 +695,33 @@ def createLinkedPHR(data):
 		"entityid": res.get('entityid'),
 		"message_summary": res.get('message_summary')
 	}
+
+"""AES test method"""
+
+BLOCK_SIZE = 64
+PADDING = '\f'
+
+pad = lambda s: s + (BLOCK_SIZE - len(s) % BLOCK_SIZE) * PADDING
+
+EncodeAES = lambda c, s: base64.b64encode(c.encrypt(pad(s)))
+DecodeAES = lambda c, e: c.decrypt(base64.b64decode(e)).rstrip(PADDING)
+
+def get_key():
+	return '0123456789abcdef'
+
+@frappe.whitelist(allow_guest=True)
+def get_decoded_result(data):
+	from Crypto.Cipher import AES
+	import os
+	import  json
+
+	cipher = AES.new('0123456789abcdef')
+
+	data =json.loads(data)
+	decoded = DecodeAES(cipher,data.get('encoded'))
+	decoded = json.loads(decoded)
+	decoded['success-code'] = "test code 102"
+
+	encoded = EncodeAES(cipher, str(decoded))
+
+	return encoded

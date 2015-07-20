@@ -115,7 +115,7 @@ def create_addr(res, provider_id):
 	addr.visiting_hours = res.get('visiting_hours')
 	addr.provider_id = provider_id
 	addr.provider_name = frappe.db.get_value('User', {"profile_id": provider_id}, 'concat(first_name, " ", last_name)')
-	addr.save()
+	addr.save(ignore_permissions=True)
 
 @frappe.whitelist(allow_guest=True)
 def get_address(provider_id):
