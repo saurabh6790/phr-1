@@ -275,8 +275,12 @@ def getMedicationFields():
 
 @frappe.whitelist(allow_guest=True)
 def createMedication(data):
-	from templates.pages.medication import save_data
-	medication = save_data(data)
+	from templates.pages.medication import make_medication_entry
+	
+	data = json.loads(data)
+	data['received_from'] = "Mobile"
+
+	medication = make_medication_entry(json.dumps(data))
 	return medication
 
 @frappe.whitelist(allow_guest=True)
@@ -420,6 +424,12 @@ def getSecondaryAddrForProvider(data):
 def sharingViaProvider(data):
 	from templates.pages.event import share_via_providers_account
 	data = json.loads(data)
+	if data.get("event_id") and data.get("visit_id"):
+		data['entityid'] = data.get("visit_id")
+	else:
+		data['entityid'] = data.get("event_id")
+		data.pop("event_id")
+
 	return share_via_providers_account(data)
 
 @frappe.whitelist(allow_guest=True)
