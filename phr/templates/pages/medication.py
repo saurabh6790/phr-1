@@ -45,10 +45,17 @@ def fetch_values_from_db(data):
 
 @frappe.whitelist(allow_guest=True)
 def make_medication_entry(data):
+	mdata = json.loads(data)
+
 	if day_exists(data):
 		try:
 			c_medication = save_data(data)
-			response = get_medication_data(data)
+			
+			if mdata.get('received_from') and mdata.get('received_from') == "Mobile":
+				response = c_medication
+			else:
+				response = get_medication_data(data)
+
 			medication = json.loads(data)
 			sub = "Medication for"+" "+medication.get('medicine_name')+" created"
 			make_log(medication.get('profile_id'),"Medication","create",sub)
