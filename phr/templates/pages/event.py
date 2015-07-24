@@ -232,7 +232,7 @@ def share_via_email(data):
 	else:
 		return {"returncode":0,"message_summary":"Please select file(s) for sharing"}
 
-def share_via_providers_account	(data):
+def share_via_providers_account(data):
 	event_dict = {}
 	sub_event_count = {}
 	if not data.get('files'):
