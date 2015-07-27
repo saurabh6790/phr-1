@@ -23,6 +23,9 @@ class Provider(Document):
 			if not self.mobile_number or not self.email:
 				frappe.msgprint("Mobile Number And Email id are mandetory",raise_exception=1)
 
+		if not self.provider_id:
+			self.create_solr_profile()
+
 		if self.provider_category == "TieUp":
 			self.create_user()
 			frappe.db.commit()
@@ -36,13 +39,8 @@ class Provider(Document):
 	def create_user(self):
 		if self.exisitng_user():
 			self.update_user(enabled=1)
-
 		else:
-			if not self.provider_id:
-				self.create_solr_profile()
-				self.create_user_login()
-			else:
-				self.create_user_login()
+			self.create_user_login()
 
 	def create_solr_profile(self):
 		request_type="POST"
@@ -55,7 +53,7 @@ class Provider(Document):
 		from phr.phr.phr_api import get_response
 		response=get_response(url, json.dumps(data),request_type)
 		res=json.loads(response.text)
-		print res
+		
 		if res['returncode']==129:
 			self.provider_id = res['entityid']
 
