@@ -46,7 +46,7 @@ def deLinkProfile(data):
 	if not msg:
 		res = delink_phr(data)
 		if res.get('returncode') == 121:
-			return create_profile(res, data)
+			return createProfile(res, data)
 		else:
 			{"msg": "Something went wrong. Please try again."}
 	else:
@@ -64,7 +64,7 @@ def delink_phr(data):
 	res = delink_phr_solr(data.get("child_id"), data.get("parent_id"), json.dumps(data))
 	return res
 
-def create_profile(solr_res, data):
+def createProfile(solr_res, data):
 	from templates.pages.profile import add_profile_to_db
 	return {"msg":add_profile_to_db(json.dumps(solr_res), data.get("profile_id"))}
 
