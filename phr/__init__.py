@@ -261,6 +261,23 @@ def searchEvent(data):
 
 	return {"event":json.loads(event_data), "bucket_count": bucket_count, "linked_provider": linked_provider}
 
+@frappe.whitelist(allow_guest=True)
+def searchVisit(data):
+	data = json.loads(data)
+
+	from templates.pages.event import get_individual_visit_count_for_badges
+	
+	request_type="POST"
+	url=get_base_url()+'/searchVisit'
+	args={"entityid":data.get("entityid")}
+	response=get_response(url,json.dumps(args),request_type)
+	
+	visit_data = json.loads(response.text).pop("actualdata")
+	bucket_count = get_individual_visit_count_for_badges(data.get("entityid"), data.get("profile_id"))
+	linked_provider = get_linked_provides(json.dumps(data))
+
+	return {"visit":json.loads(visit_data), "bucket_count": bucket_count, "linked_provider": linked_provider}
+
 """Medication Calls"""
 @frappe.whitelist(allow_guest=True)
 def getMedicationFields():
