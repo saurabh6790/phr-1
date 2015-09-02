@@ -15,7 +15,8 @@
    "label": "User", 
    "options": "User", 
    "permlevel": 0, 
-   "precision": ""
+   "precision": "", 
+   "read_only": 1
   }, 
   {
    "fieldname": "profile_id", 
@@ -38,7 +39,7 @@
    "permlevel": 0, 
    "precision": "", 
    "print_hide": 0, 
-   "read_only": 0, 
+   "read_only": 1, 
    "report_hide": 0, 
    "reqd": 0, 
    "search_index": 0, 
@@ -57,7 +58,7 @@
    "permlevel": 0, 
    "precision": "", 
    "print_hide": 0, 
-   "read_only": 0, 
+   "read_only": 1, 
    "report_hide": 0, 
    "reqd": 0, 
    "search_index": 0, 
@@ -68,7 +69,8 @@
    "fieldtype": "Data", 
    "label": "options", 
    "permlevel": 0, 
-   "precision": ""
+   "precision": "", 
+   "read_only": 1
   }, 
   {
    "allow_on_submit": 0, 
@@ -83,7 +85,7 @@
    "permlevel": 0, 
    "precision": "", 
    "print_hide": 0, 
-   "read_only": 0, 
+   "read_only": 1, 
    "report_hide": 0, 
    "reqd": 0, 
    "search_index": 0, 
@@ -102,7 +104,7 @@
    "permlevel": 0, 
    "precision": "", 
    "print_hide": 0, 
-   "read_only": 0, 
+   "read_only": 1, 
    "report_hide": 0, 
    "reqd": 0, 
    "search_index": 0, 
@@ -121,7 +123,8 @@
    "label": "Status", 
    "options": "\nActive\nInactive", 
    "permlevel": 0, 
-   "precision": ""
+   "precision": "", 
+   "read_only": 1
   }
  ], 
  "hide_heading": 0, 
@@ -132,7 +135,7 @@
  "is_submittable": 0, 
  "issingle": 0, 
  "istable": 0, 
- "modified": "2015-02-27 16:16:38.843944", 
+ "modified": "2015-09-02 17:11:21.578044", 
  "modified_by": "Administrator", 
  "module": "phr", 
  "name": "Medication", 
@@ -145,13 +148,13 @@
    "cancel": 0, 
    "create": 1, 
    "delete": 1, 
-   "email": 1, 
-   "export": 1, 
+   "email": 0, 
+   "export": 0, 
    "import": 0, 
    "permlevel": 0, 
-   "print": 1, 
+   "print": 0, 
    "read": 1, 
-   "report": 1, 
+   "report": 0, 
    "role": "All", 
    "set_user_permissions": 0, 
    "submit": 0, 
