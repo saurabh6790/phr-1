@@ -86,6 +86,7 @@ def get_formatted_date(strdate=None):
 
 @frappe.whitelist(allow_guest=True)
 def notify_appointments():
+	print "##########Appointments#############"
 	profile_list = get_list_to_notify()
 	if profile_list:
 		send_notification(profile_list)
