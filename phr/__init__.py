@@ -726,15 +726,17 @@ def createLinkedPHR(data):
 
 @frappe.whitelist(allow_guest=True)
 def forgotPassword(data):
-	data = json.loads(data)
-	user = data.get("user")
+	try:
+		data = json.loads(data)
+		user = data.get("user")
 
-	if not user:
-		return _("Invalid Email ID")
-	else:
-		from templates.pages.login import reset_password
-		return reset_password(user)
-
+		if not user:
+			return _("Invalid Email ID, Email ID can not be None")
+		else:
+			from templates.pages.login import reset_password
+			return reset_password(user)
+	except ValueError, e:
+		return _("Invalid Parameters, Please mention the user's email id ..")
 
 # """AES test method"""
 
