@@ -3,6 +3,7 @@ import json
 from frappe.utils import cstr, get_site_path, get_url
 import base64
 import frappe
+from frappe import _
 from templates.pages.utils import get_base_url
 from phr.phr_api import get_response
 from templates.pages.login import create_profile_in_solr,get_barcode,get_image_path
@@ -722,6 +723,18 @@ def createLinkedPHR(data):
 		"entityid": res.get('entityid'),
 		"message_summary": res.get('message_summary')
 	}
+
+@frappe.whitelist(allow_guest=True)
+def forgotPassword(data):
+	data = json.loads(data)
+	user = data.get("user")
+
+	if not user:
+		return _("Invalid Email ID")
+	else:
+		from templates.pages.login import reset_password
+		return reset_password(user)
+
 
 # """AES test method"""
 
