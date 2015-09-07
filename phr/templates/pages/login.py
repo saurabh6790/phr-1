@@ -23,10 +23,10 @@ def create_profile(first_name,middle_name,last_name,email_id,contact,created_via
 		1.Create Profile in Core PHR(Solr)
 		2.When Successful Create Profile  in ERPNext
 		3.After Successful Profile Creation genarate link
-		4.Complete Registration 
+		4.Complete Registration
 	"""
 	from phr.templates.pages.profile import not_duplicate_contact
-	
+
 	if not not_duplicate_contact(contact,email_id):
 		return {"returncode" : 409, "message_summary":"Contact Already Used.","msg_display":"Contact Already Used."}
 
@@ -47,8 +47,11 @@ def create_profile(first_name,middle_name,last_name,email_id,contact,created_via
 			file_path = '/files/'+response['entityid']+'/'+response['entityid']+".svg"
 			res = create_profile_in_db(response['entityid'],args,response,file_path)
 			db = set_default_dashboard(response['entityid'])
-			response['msg_display']='Profile created successfully, please check your email and complete signup process'
-			return response
+			if res.get("returncode") == 101:
+				response['msg_display']='Profile created successfully, please check your email and complete signup process'
+				return response
+			else:
+				return res
 		else:
 			return response
 
@@ -56,7 +59,7 @@ def create_profile(first_name,middle_name,last_name,email_id,contact,created_via
 def set_default_dashboard(profile_id):
 	sr = frappe.get_doc({
 		"doctype":"Shortcut",
-		"profile_id":profile_id,	
+		"profile_id":profile_id,
 		"created_via": "Web",
 		"visits":1,
 		"medications":1,
@@ -64,38 +67,38 @@ def set_default_dashboard(profile_id):
 		"events":1
 	})
 	sr.ignore_permissions = True
-	sr.insert()	
+	sr.insert()
 
 
 @frappe.whitelist(allow_guest=True)
 def get_barcode():
 	barcode.PROVIDED_BARCODES
-	EAN = barcode.get_barcode_class('ean13')        
+	EAN = barcode.get_barcode_class('ean13')
 	m = str(int(round(time.time() * 1000)))
-	ean = EAN(m) 
-	return ean       
-   
-@frappe.whitelist(allow_guest=True)    
+	ean = EAN(m)
+	return ean
+
+@frappe.whitelist(allow_guest=True)
 def get_image_path(ean,entityid):
 	path = get_path(entityid)
 	ean.writer.set_options({"module_height":6.0})
 	fullname = ean.save(path)
 	return fullname
 
-@frappe.whitelist(allow_guest=True)  
+@frappe.whitelist(allow_guest=True)
 def get_path(entityid):
 	site_name = get_site_name()
 	path = os.path.abspath(os.path.join('.',site_name, 'public', 'files'))
 	directory = '/%s/%s/'%(path,entityid)
-	if not os.path.exists(directory):                
+	if not os.path.exists(directory):
 		os.makedirs(directory)
-	
+
 	if directory:
 		filepath = directory+entityid
-	
+
 	return filepath or None
 
-@frappe.whitelist(allow_guest=True)  
+@frappe.whitelist(allow_guest=True)
 def get_site_name():
        return frappe.local.site_path.split('/')[1]
 
@@ -112,7 +115,7 @@ def create_profile_in_db(id,args,response,path=None):
 		"middle_name": args["person_middlename"],
 		"last_name": args["person_lastname"],
 		"enabled": 1,
-		"user_image": args.get('user_image'), 
+		"user_image": args.get('user_image'),
 		"contact":args["mobile"],
 		"new_password": password,
 		"user_type": "Website User",
@@ -124,9 +127,9 @@ def create_profile_in_db(id,args,response,path=None):
 	user.ignore_permissions = True
 	user.no_welcome_mail = True
 	user.insert()
-	notify = notify_user(response,args,id)
-	return _("Registration Details Emailed.")
-
+	# notify = notify_user(response,args,id)
+	# return _("Registration Details Emailed.")
+	return notify_user(response,args,id)
 
 """
 	Send Welcome Mail to User
@@ -142,7 +145,7 @@ def notify_user(res_data,user_args,profile_id):
 	new_password = random_string(10)
 	_update_password(user_args["email"], new_password)
 	db_set(user_args,"password_str",new_password)
-	send_welcome_mail(new_password,profile_id,user_args)
+	return send_welcome_mail(new_password,profile_id,user_args)
 
 """
 	Set values of str_password
@@ -163,10 +166,10 @@ def send_welcome_mail(password,profile_id,args):
 	key = random_string(32)
 	db_set(args,"reset_password_key", key)
 	link = get_url("/verify_email?id="+profile_id+"&key=" + key)
-	
+
 	mob_code = get_mob_code()
 	update_verification_details(args,password,key,mob_code,link,profile_id)
-	send_login_mail(args,"Verify Your Account", "templates/emails/new_user.html", {"link": link,"password":password})
+	mail_response = send_login_mail(args,"Verify Your Account", "templates/emails/new_user.html", {"link": link,"password":password})
 
 	mob_already_v = frappe.db.get_value("Mobile Verification",{"mobile_no":args["mobile"],"mflag":1},"name")
 	if not mob_already_v:
@@ -186,6 +189,8 @@ def send_welcome_mail(password,profile_id,args):
 		vd = frappe.get_doc("Verification Details",profile_id)
 		vd.mflag = 1
 		vd.save(ignore_permissions=True)
+
+	return mail_response
 
 @frappe.whitelist(allow_guest=True)
 def get_mob_code():
@@ -212,29 +217,40 @@ def send_login_mail(user_args, subject, template, add_args):
 	"""send mail with login details"""
 	from frappe.utils.user import get_user_fullname
 	from frappe.utils import get_url
+	try:
+		mail_titles = frappe.get_hooks().get("login_mail_title", [])
+		title = frappe.db.get_default('company') or (mail_titles and mail_titles[0]) or ""
 
-	mail_titles = frappe.get_hooks().get("login_mail_title", [])
-	title = frappe.db.get_default('company') or (mail_titles and mail_titles[0]) or ""
+		full_name = get_user_fullname(frappe.session['user'])
+		if full_name == "Guest":
+			full_name = "Administrator"
 
-	full_name = get_user_fullname(frappe.session['user'])
-	if full_name == "Guest":
-		full_name = "Administrator"
+		args = {
+			'first_name': user_args["person_firstname"] or user_args["person_lastname"] or "user",
+			'user': user_args["email"],
+			'title': title,
+			'login_url': get_url(),
+			'user_fullname': full_name
+		}
 
-	args = {
-		'first_name': user_args["person_firstname"] or user_args["person_lastname"] or "user",
-		'user': user_args["email"],
-		'title': title,
-		'login_url': get_url(),
-		'user_fullname': full_name
-	}
+		args.update(add_args)
 
-	args.update(add_args)
+		sender = frappe.session.user not in STANDARD_USERS and frappe.session.user or None
 
-	sender = frappe.session.user not in STANDARD_USERS and frappe.session.user or None
-
-	frappe.sendmail(recipients=user_args["email"], sender=sender, subject=subject,
-		message=frappe.get_template(template).render(args))
-
+		frappe.sendmail(recipients=user_args["email"], sender=sender, subject=subject,
+			message=frappe.get_template(template).render(args))
+		return {
+			"returncode" : 101,
+			"message_summary":"Registration Details Emailed.",
+			"msg_display":"Registration Details Emailed."
+		}
+	except Exception, e:
+		frappe.db.rollback()
+		return {
+			"returncode" : 501,
+			"message_summary":"Outgoing Email Server is not configured, Please Contact Administrator.",
+			"msg_display":"Outgoing Email Server is not configured, Please Contact Administrator."
+		}
 
 def create_profile_in_solr(args):
 	request_type="POST"

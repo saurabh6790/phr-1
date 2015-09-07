@@ -24,6 +24,3 @@ def get_response(url,data,request_type):
 	# elif request_type=='GET':
 	#  	response = requests.get(url,headers=headers,'GET')
 	return response
-
-
-	

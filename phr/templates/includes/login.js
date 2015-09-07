@@ -57,8 +57,6 @@ login.bind_events = function() {
 				return false;
 			}
 
-			// console.log("phr signup")
-
 			login.call(args);
 		});
 
@@ -80,7 +78,6 @@ login.bind_events = function() {
 
 login.route = function() {
 	var route = window.location.hash.slice(1);
-	// console.log(route)
 	if(!route) route = "login";
 	login[route]();
 }
@@ -120,7 +117,7 @@ login.login_handlers = (function() {
 			if(xhr.responseJSON) {
 				data = xhr.responseJSON;
 			}
-			
+
 			var message = data._server_messages
 				? JSON.parse(data._server_messages).join("\n") : default_message;
 			frappe.msgprint(message);
@@ -129,7 +126,6 @@ login.login_handlers = (function() {
 
 	var login_handlers = {
 		200: function(data) {
-			// console.log(["Data", window.location.hash])
             if(data.message=="Logged In") {
 				window.location.href = get_url_arg("redirect-to") || "/desk";
 			} else if(data.message=="No App") {
@@ -141,19 +137,18 @@ login.login_handlers = (function() {
 					var last_visited =
 						localStorage.getItem("last_visited")
 							|| get_url_arg("redirect-to")
-							|| url 
+							|| url
 							|| data.access_link || "/index";
 					localStorage.removeItem("last_visited");
 					window.location.href = last_visited;
 					sessionStorage.setItem("pid",frappe.get_cookie("profile_id"));
-					sessionStorage.setItem("cid",frappe.get_cookie("profile_id"));					
+					sessionStorage.setItem("cid",frappe.get_cookie("profile_id"));
 				} else {
-					
+
 					go_to_url= url || data.access_link || "/index"
 					window.location.href = "/index";
 				}
 			} else if(["#signup", "#forgot"].indexOf(window.location.hash)!==-1) {
-				console.log(data)
 				if (data.message["returncode"]==101){
 					frappe.msgprint(data.message.msg_display);
 					setTimeout("window.location.href = '/login'", 5000);
@@ -162,7 +157,7 @@ login.login_handlers = (function() {
 					frappe.msgprint(data.message.msg_display);
 				}
 
-				
+
 			}
 		},
 		401: get_error_handler(__("Invalid Login")),
@@ -172,7 +167,7 @@ login.login_handlers = (function() {
 	return login_handlers;
 })();
 
-frappe.ready(function() {	 
+frappe.ready(function() {
 	if(!window.pageInitialized){
 		window.location.hash = "login";
 		login.bind_events();

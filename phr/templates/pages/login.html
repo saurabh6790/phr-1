@@ -3,7 +3,7 @@
 		<div class="logo margin-top-30">
 			<img src="assets/phr/images/logo.png" alt="Healthsnapp"/>
 		</div>
-		<div class="box-login"> 
+		<div class="box-login">
             <form class="form-login" role="form">
 				<fieldset>
 					<legend>Login</legend>
@@ -19,28 +19,28 @@
 							<i class="fa fa-lock"></i>
 						</span>
 					</div>
-					<div class="form-group clearfix"> 
+					<div class="form-group clearfix">
 						<button type="submit" class="btn btn-primary col-md-12">
 							Login <i class="fa fa-arrow-circle-right"></i>
 						</button>
                     </div>
-                    {%- if social_login -%}    
+                    {%- if social_login -%}
                     <div class="form-group margin-top-15 clearfix text-center">
                         <span>or Login via</span>
 					</div>
 					{%- if facebook_login is defined %}
-                    <div class="form-group clearfix"> 
+                    <div class="form-group clearfix">
 						<a href="{{ facebook_login }}" class="btn btn-primary col-md-12">
-							<i class="fa fa-facebook-square"></i> Facebook 
+							<i class="fa fa-facebook-square"></i> Facebook
 						</a>
                     </div>
                     {%- endif -%}
 					{%- if google_login is defined %}
-                    <div class="form-group clearfix"> 
+                    <div class="form-group clearfix">
                         <a href="{{ google_login }}" class="btn btn-primary col-md-12">
-							<i class="fa fa-google-plus-square"></i> Google 
+							<i class="fa fa-google-plus-square"></i> Google
 						</a>
-                    </div> 
+                    </div>
                     {%- endif -%}
                     {%- endif -%}
                     {%- if not disable_signup -%}
@@ -71,7 +71,7 @@
 					</div>
                     <div class="form-group">
 						<input type="text" class="form-control" name="last-name" placeholder="Last Name" id="signup_lastname" required>
-					</div>  
+					</div>
 					<div class="form-group">
 						<span class="input-icon">
 							<input type="email" class="form-control disable" name="email" placeholder="Email ID" id="signup_email" required>
@@ -91,8 +91,8 @@
 						<span class="input-icon">
 							<input type="text" class="form-control disable" name="confirm-contact" placeholder="Confirm Contact No" id="signup_contact_cnf">
 							<i class="fa fa-phone"></i> </span>
-					</div> 
-					<div class="form-actions"> 
+					</div>
+					<div class="form-actions">
 						<button type="submit" class="btn btn-primary col-md-12">
 							Sign up <i class="fa fa-arrow-circle-right"></i>
 						</button>
@@ -101,7 +101,7 @@
 						<p>
 							Already have an account?
 							<a href="#login">Log-in</a>
-						</p> 
+						</p>
 					</div>
 				</fieldset>
 			</form>
@@ -115,7 +115,7 @@
 							<input type="email" class="form-control" name="email" id="forgot_email" placeholder="Email" required autofocus>
 							<i class="fa fa-envelope-o"></i> </span>
 					</div>
-					<div class="form-actions"> 
+					<div class="form-actions">
 						<button type="submit" class="btn btn-primary col-md-12">
 							Send Password <i class="fa fa-arrow-circle-right"></i>
 						</button>
@@ -123,7 +123,7 @@
                     <div class="form-actions">
 						<a class="btn btn-primary col-md-12" href="#login">
 							<i class="fa fa-chevron-circle-left"></i> Log-In
-						</a> 
+						</a>
 					</div>
 				</fieldset>
 			</form>
@@ -149,7 +149,6 @@
                 return false;
             });
         });
-        console.log($('.menu-toggler'))
         $('.menu-toggler').attr("href").replace(/\//, '')
 	</script>
 	<script src="assets/phr/js/login.js"></script>
