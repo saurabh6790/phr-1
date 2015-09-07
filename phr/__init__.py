@@ -728,7 +728,7 @@ def createLinkedPHR(data):
 def forgotPassword(data):
 	try:
 		data = json.loads(data)
-		# check the data.user type's if not str then convert to string
+		# check the data type of user if type is not str then convert to string
 		user = data.get("user") if isinstance(data.get("user"), str) else str(data.get("user"))
 
 		if not user:
