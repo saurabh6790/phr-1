@@ -728,15 +728,18 @@ def createLinkedPHR(data):
 def forgotPassword(data):
 	try:
 		data = json.loads(data)
-		user = data.get("user")
+		# check the data.user type's if not str then convert to string
+		user = data.get("user") if isinstance(data.get("user"), str) else str(data.get("user"))
 
 		if not user:
-			return _("Invalid Email ID, Email ID can not be None")
+			msg="""Invalid Email ID, Email ID can not be None"""
+			return {"returncode":401,"msg_display":msg}
 		else:
 			from templates.pages.login import reset_password
 			return reset_password(user)
 	except ValueError, e:
-		return _("Invalid Parameters, Please mention the user's email id ..")
+		msg="""Invalid Parameters, Please mention the user's email id .."""
+		return {"returncode":401,"msg_display":msg}
 
 # """AES test method"""
 
