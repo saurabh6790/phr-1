@@ -534,10 +534,10 @@ def image_writter(data):
 
 """ Profile Image Calls """
 @frappe.whitelist(allow_guest=True)
-def setProfileImage():
+def setProfileImage(data):
 	import os
 	from frappe.utils import  get_files_path
-	data = json.loads(frappe.local.request.data)
+	data = json.loads(data)
 
 	if data.get('file_name'):
 		file_path = "%(files_path)s/%(profile_id)s/%(file_name)s"%{'files_path': get_files_path(), "profile_id": data.get('profile_id'),
@@ -548,16 +548,15 @@ def setProfileImage():
 		with open("%s/%s"%(path,data.get('file_name')), 'wb') as f:
 	 		f.write(base64.b64decode(data.get('bin_img')))
 
- 	res = update_profile_image(data.get('profile_id'), data.get('file_name'))
- 	return {"filestatus": res}
-
-def update_profile_image(profile_id, file_name=None):
-	user_id = frappe.db.get_value('User', {'profile_id': profile_id}, 'name')
-	if user_id:
-		user = frappe.get_doc('User', user_id)
-		user.user_image = "/files/%s/%s"%(profile_id, file_name) if file_name else ''
-		user.save(ignore_permissions=True)
-
+ 		res = update_image(data.get('profile_id'), data.get('file_name'))
+ 		return {"filestatus": res}
+ 	
+def update_image(profile_id, file_name=None):
+	from templates.pages.profile import update_user_image
+	file_path = "/files/%s/%s"%(profile_id, file_name)
+	res = update_user_image(file_path,profile_id)
+	return "Image Uploaded successfully"
+	
 @frappe.whitelist(allow_guest=True)
 def getProfileImage(data):
 	import os
