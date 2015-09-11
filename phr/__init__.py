@@ -534,10 +534,11 @@ def image_writter(data):
 
 """ Profile Image Calls """
 @frappe.whitelist(allow_guest=True)
-def setProfileImage(data):
+def setProfileImage():
 	import os
 	from frappe.utils import  get_files_path
-	data = json.loads(data)
+	#data = json.loads(data)
+	data = json.loads(frappe.local.request.data)
 
 	if data.get('file_name'):
 		file_path = "%(files_path)s/%(profile_id)s/%(file_name)s"%{'files_path': get_files_path(), "profile_id": data.get('profile_id'),
