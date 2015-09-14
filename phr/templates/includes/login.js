@@ -233,7 +233,12 @@ login.login_handlers = (function() {
 			} else if(["#patient-signup", "#provider-signup", "#forgot"].indexOf(window.location.hash)!==-1) {
 				if (data.message["returncode"]==101){
 					frappe.msgprint(data.message.msg_display);
-					setTimeout("window.location.href = '/login'", 5000);
+					if(window.location.hash == "#patient-signup")
+						setTimeout("window.location.href = '/login#patient'", 5000);
+					else if (window.location.hash == "#provider-signup")
+						setTimeout("window.location.href = '/login#provider'", 5000);
+					else
+						setTimeout("window.location.href = '/login'", 5000);
 				}
 				else{
 					frappe.msgprint(data.message.msg_display);
@@ -251,7 +256,8 @@ login.login_handlers = (function() {
 
 frappe.ready(function() {
 	if(!window.pageInitialized){
-		window.location.hash = "login";
+		// window.location.hash = "login";
+		window.location.hash = "patient";
 		login.bind_events();
 		window.pageInitialized = true;
 		login.login();
