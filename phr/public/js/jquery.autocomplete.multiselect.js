@@ -1,5 +1,4 @@
 // http://jsfiddle.net/mekwall/sgxKJ/
-
 $.widget("ui.autocomplete", $.ui.autocomplete, {
     options : $.extend({}, this.options, {
         multiselect: false
@@ -13,7 +12,7 @@ $.widget("ui.autocomplete", $.ui.autocomplete, {
         if (o.multiselect) {
             console.log('multiselect true');
 
-            self.selectedItems = {};           
+            self.selectedItems = {};
             self.multiselect = $("<div></div>")
                 .addClass("ui-autocomplete-multiselect ui-state-default ui-widget")
                 .css("width", self.element.width())
@@ -22,7 +21,7 @@ $.widget("ui.autocomplete", $.ui.autocomplete, {
                 .bind("click.autocomplete", function(){
                     self.element.focus();
                 });
-            
+
             var fontSize = parseInt(self.element.css("fontSize"), 10);
             function autoSize(e){
                 // Hackish autosizing
@@ -61,7 +60,7 @@ $.widget("ui.autocomplete", $.ui.autocomplete, {
                             })
                     )
                     .insertBefore(self.element);
-                
+
                 self.selectedItems[ui.item.label] = ui.item;
                 self._value("");
                 return false;

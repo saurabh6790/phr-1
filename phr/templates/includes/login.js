@@ -1,3 +1,6 @@
+frappe.require("assets/frappe/js/lib/jquery/jquery.ui.min.js");
+frappe.require("/assets/phr/js/jquery.autocomplete.multiselect.js");
+
 window.disable_signup = {{ disable_signup and "true" or "false" }};
 
 window.login = {};
@@ -13,8 +16,16 @@ login.bind_events = function() {
 			$('.btn-primary').prop("disabled", true);
 			var args = {};
 			args.cmd = "login";
-			args.usr = ($("#login_email").val() || "").trim();
-			args.pwd = $("#login_password").val();
+			if(window.location.hash == "#patient"){
+				args.usr = ($("#patient_login_email").val() || "").trim();
+				args.pwd = $("#patient_login_password").val();
+				args.login_as = "Patient";
+			}
+			else{
+				args.usr = ($("#provider_login_email").val() || "").trim();
+				args.pwd = $("#provider_login_password").val();
+				args.login_as = "Provider";
+			}
 			if(!args.usr || !args.pwd) {
 				frappe.msgprint(__("Both login and password required"));
 				return false;
@@ -33,8 +44,18 @@ login.bind_events = function() {
 			cnf_email_id = ($("#signup_email_cnf").val() || "").trim();
 			args.contact = ($("#signup_contact").val() || "").trim();
 			cnf_contact = ($("#signup_contact_cnf").val() || "").trim();
-			args.cmd = "phr.templates.pages.login.create_profile";
 			args.created_via="Desktop";
+
+			// check if user is provider or patient
+			var route = window.location.hash.slice(1);
+			if (route == "provider-signup"){
+				args.is_provider = true;
+				args.gender = ($("#gender option:selected").val() || "").trim();
+				args.registration_number = ($("#medical_reg_number").val() || "").trim();
+				args.specialization= ($("#provider_specialization").val() || "").trim();
+			}
+
+			args.cmd = "phr.templates.pages.login.create_profile";
 
 			if (!/^[0-9]+$/.test(args.contact) || !/^[0-9]+$/.test(cnf_contact)){
 				frappe.msgprint(__("Valid contact number required"));
@@ -56,7 +77,7 @@ login.bind_events = function() {
 				$('.btn-primary').prop("disabled", false);
 				return false;
 			}
-
+			// TODO medical registion number validations
 			login.call(args);
 		});
 
@@ -79,6 +100,8 @@ login.bind_events = function() {
 login.route = function() {
 	var route = window.location.hash.slice(1);
 	if(!route) route = "login";
+	else if(route == "patient-signup") route = "signup";
+	else if(route == "provider-signup") route = "provider_signup";
 	login[route]();
 }
 
@@ -94,7 +117,66 @@ login.forgot = function() {
 
 login.signup = function() {
 	$("form").toggle(false);
+	// patient sigup, hiding the provider fields
+	$("#gender").addClass("hide");
+	$("#provider_registration_number").addClass("hide");
+	$("#specialization").addClass("hide");
+	// set fields to required false
+	$("#medical_reg_number").prop("required", false);
+	$("#provider_specialization").prop("required", false);
+	// removing all the child element from redirect-url and appending new redirect
+	// URL for patient >> #patient
+	$("#redirect-url").empty();
+	$("<p>Already have an account?<a href='#patient' id='redirect-login'>Log-in\
+	</a></p>").appendTo($("#redirect-url"))
+
 	$(".form-signup").toggle(true);
+	$(".form-signup").trigger("reset");
+}
+
+login.provider_signup = function(){
+	$("form").toggle(false);
+	// provider sigup, unhiding the provider fields
+	$("#gender").removeClass("hide");
+	$("#provider_registration_number").removeClass("hide");
+	$("#specialization").removeClass("hide");
+	// set fields to required
+	$("#medical_reg_number").prop("required", true);
+	$("#provider_specialization").prop("required", true);
+	// removing all the child element from redirect-url and appending new redirect
+	// URL for patient >> #provider
+	$("#redirect-url").empty();
+	$("<p>Already have an account?<a href='#provider' id='redirect-login'>Log-in\
+	</a></p>").appendTo($("#redirect-url"))
+
+	$(".form-signup").toggle(true);
+	$(".form-signup").trigger("reset");
+}
+
+login.patient = function() {
+	$("form").toggle(false);
+	$(".patient-login").toggle(true);
+	// resetting provider & patient login form
+	$(".provider-login").trigger("reset");
+	$(".patient-login").trigger("reset");
+
+	$("#provider").removeClass("active");
+	$("#li-provider").removeClass("active");
+	$("#patient").addClass("active");
+	$("#li-patient").addClass("active");
+}
+
+login.provider = function() {
+	$("form").toggle(false);
+	$(".provider-login").toggle(true);
+	// resetting provider & patient login form
+	$(".patient-login").trigger("reset");
+	$(".provider-login").trigger("reset");
+
+	$("#patient").removeClass("active");
+	$("#li-patient").removeClass("active");
+	$("#provider").addClass("active");
+	$("#li-provider").addClass("active");
 }
 
 // Login
@@ -148,7 +230,7 @@ login.login_handlers = (function() {
 					go_to_url= url || data.access_link || "/index"
 					window.location.href = "/index";
 				}
-			} else if(["#signup", "#forgot"].indexOf(window.location.hash)!==-1) {
+			} else if(["#patient-signup", "#provider-signup", "#forgot"].indexOf(window.location.hash)!==-1) {
 				if (data.message["returncode"]==101){
 					frappe.msgprint(data.message.msg_display);
 					setTimeout("window.location.href = '/login'", 5000);

@@ -52,6 +52,13 @@
    "precision": ""
   }, 
   {
+   "fieldname": "is_verified", 
+   "fieldtype": "Check", 
+   "label": "Verified", 
+   "permlevel": 0, 
+   "precision": ""
+  }, 
+  {
    "fieldname": "column_break_4", 
    "fieldtype": "Column Break", 
    "permlevel": 0, 
@@ -410,7 +417,7 @@
  "is_submittable": 0, 
  "issingle": 0, 
  "istable": 0, 
- "modified": "2015-05-06 13:18:02.883219", 
+ "modified": "2015-09-11 11:44:42.591259", 
  "modified_by": "Administrator", 
  "module": "phr", 
  "name": "Provider", 

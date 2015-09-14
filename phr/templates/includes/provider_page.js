@@ -21,11 +21,13 @@ frappe.provide("frappe");
 {% include "templates/includes/todo.js" %}
 {% include "templates/includes/mobile_verifier.js" %}
 {% include "templates/includes/app_info.js" %}
+frappe.require("/assets/phr/js/jquery.blockUI.js");
 /*
   Format for method Classes
   ClassName.prototype.init(wrapper,name_of_json_file,entityid,operation_entity)
 */
 $(document).ready(function () {
+	// blocl UI if provider is not verified
 	user_info_setter()
 	if (frappe.get_cookie("user_type") && (/provider/.test(self.location.href)) && frappe.get_cookie("user_type") != 'provider'){
 		frappe.msgprint("Not Allowed")
@@ -39,6 +41,21 @@ $(document).ready(function () {
 		window.location.href = "login";
 	}
 	else{
+		frappe.call({
+			method:"phr.templates.pages.provider.is_verified_provider",
+			args:{
+				"profile_id":sessionStorage.getItem("pid"),
+			},
+			freeze:true,
+			async:false,
+			callback: function(r){
+				block_provider();
+				$("#logout").unbind("click").click(function(){
+					logout_provider();
+				});
+			}
+		});
+
 		var db = new render_dashboard();
 		// db.render_emer_details(sessionStorage.getItem("pid"))
 		db.render_providers(sessionStorage.getItem("pid"))
@@ -68,13 +85,13 @@ $(document).ready(function () {
 			db.render_advertisements(profile_id)
 			NProgress.done();
 		})
-	
+
 		render_middle(sessionStorage.getItem("pid"))
 
 		$('.create_linkphr').unbind("click").click(function(){
 			$("#main-con").empty()
 			LinkedPHR.prototype.init('',{"file_name" : "linked_patient"},"","create_linkphr", {"source": "provider"})
-		})	
+		})
 	}
 	$(".create_provider").unbind("click").click(function(){
 		$('.breadcrumb').empty()
@@ -87,7 +104,7 @@ $(document).ready(function () {
 		$('#cphrname').empty()
 		NProgress.start();
 		PatientDashboard.prototype.init($(document).find("#main-con"),
-				{"file_name" : "profile", "method": "profile"},sessionStorage.getItem('pid'))	
+				{"file_name" : "profile", "method": "profile"},sessionStorage.getItem('pid'))
 		NProgress.done();
 	})
 	$(".cdb").on("click",function(){
@@ -95,14 +112,14 @@ $(document).ready(function () {
 		$('.field-area').empty()
 		$('#main-con').empty()
 		db.render_middle_section(sessionStorage.getItem('cid'))
-	})	
+	})
 
 	$("#profile").unbind("click").click(function(){
 		profile_id=sessionStorage.getItem("cid")
 		$('.breadcrumb').empty()
 		NProgress.start();
 		PatientDashboard.prototype.init($(document).find("#main-con"),
-				{"file_name" : "profile", "method": "profile"},profile_id)	
+				{"file_name" : "profile", "method": "profile"},profile_id)
 		NProgress.done();
 	})
 	$(".patients").unbind("click").click(function(){
@@ -114,20 +131,20 @@ $(document).ready(function () {
 		ListView.prototype.init($(document).find(".field-area"), {"file_name" : "patients",
 		'cmd':"provider.get_patient_data",
 		'profile_id':profile_id})
-	
+
 		$(".cprofile").unbind("click").click(function(){
 			NProgress.start();
 			$('#main-con').empty()
 			PatientDashboard.prototype.init($(document).find("#main-con"),
-			{"file_name" : "profile", "method": "profile"},sessionStorage.getItem('cid'))	
+			{"file_name" : "profile", "method": "profile"},sessionStorage.getItem('cid'))
 			NProgress.done();
-		})	
+		})
 		$(".csettings").unbind("click").click(function(){
 			NProgress.start();
 			profile_id=sessionStorage.getItem('cid')
 			sessionStorage.setItem("cid",profile_id)
 			ProfileSettings.prototype.init($(document).find("#main-con"),
-					{"file_name" : "profile_settings", "method": "profile"},profile_id)	
+					{"file_name" : "profile_settings", "method": "profile"},profile_id)
 			NProgress.done();
 		})
 		$("#share").remove()
@@ -136,7 +153,7 @@ $(document).ready(function () {
 
 		NProgress.done();
 	})
-	
+
 	$(".psettings").unbind("click").click(function(){
 		$('.cdd').addClass('hide')
 		$('#cphrname').empty()
@@ -144,7 +161,7 @@ $(document).ready(function () {
 		profile_id=sessionStorage.getItem('pid')
 		sessionStorage.setItem("cid",profile_id)
 		ProfileSettings.prototype.init($(document).find("#main-con"),
-				{"file_name" : "provider_profile_settings", "method": "profile"},profile_id)	
+				{"file_name" : "provider_profile_settings", "method": "profile"},profile_id)
 		NProgress.done();
 	})
 
@@ -230,7 +247,7 @@ $(document).ready(function () {
 		NProgress.start();
 		ToDo.prototype.init($(document).find("#main-con"),
 			{"cmd":"make_todo"},sessionStorage.getItem("pid"),"")
-		NProgress.done();	
+		NProgress.done();
 	})
 
 })
@@ -302,7 +319,7 @@ reject_request = function(request_id, provider_id){
 			update_rejected_request(request_id, d, res, provider_id)
 
 		})
-		
+
 }
 
 update_rejected_request = function(request_id, d, res, provider_id){
@@ -349,7 +366,7 @@ render_notifications = function(requests){
 			.find("a")
 			.attr("data-module", "module")
 			.css({"min-width":"200px", "word-wrap": "break-word"})
-		
+
 		$input.find('.btn-success').on("click", function() {
 			update_flag($(this).attr('id'))
 		});
@@ -373,4 +390,47 @@ render_shared_data = function(patient_profile_id){
 		"patient_profile_id": patient_profile_id,
 		'profile_id': frappe.get_cookie("profile_id")
 	})
+}
+
+block_provider = function(){
+	var blockProvider = $("<div id='not_verified' style='display:none; \
+						cursor: default'><h5>Your profile under verification, \
+						you will get a call from our support team shortly</h5>\
+						<input type='button' class='btn btn-success btn-sm' \
+						id='logout' value='Logout' /></div>")
+
+	$.blockUI({
+		message:blockProvider,
+		css: {
+			border: 'none',
+			padding: '15px',
+			backgroundColor: '#FFF',
+			'-webkit-border-radius': '10px',
+			'-moz-border-radius': '10px',
+			opacity: 1,
+			color: '#fff'
+		}
+	});
+	// $(".navbar-default").block({message:null});
+	$(".navbar-collapse").block({message:null});
+	$(".navbar-header").block({message:null});
+	$(".app-aside").block({message:null});
+	$(".page-footer").block({message:null});
+
+	$(".navbar-collapse").css({"border-bottom":"none"});
+	$(".navbar-header").css({"border-bottom":"none"});
+	$(".navbar-header").css({"border-right":"none"});
+	$(".page-footer").css({"border-top":"none"});
+}
+
+logout_provider = function(){
+	return frappe.call({
+		method:'logout',
+		callback: function(r) {
+			if(r.exc) {
+				return;
+			}
+			window.location.href = '/';
+		}
+	});
 }

@@ -10,7 +10,7 @@ import os
 
 @frappe.whitelist(allow_guest=True)
 def get_profile_list(data):
-	
+
 	request_type="POST"
 	url="%s/sharephr/getprofilelistSharedFrom"%get_base_url()
 	from phr.phr.phr_api import get_response
@@ -19,7 +19,7 @@ def get_profile_list(data):
 
 	for filed_dict in fields:
 		pos =+ 1
-		if 'rows' in filed_dict.keys(): 
+		if 'rows' in filed_dict.keys():
 			rows = filed_dict.get('rows')
 			break
 
@@ -46,10 +46,10 @@ def get_profile_list(data):
 	}
 
 def get_dm_profiles(rows, to_profile):
-	for dm_data in frappe.db.sql("""select distinct dm.from_profile as entityid , u.first_name as person_firstname, 
-							ifnull(u.last_name,'') as person_lastname 
-						from `tabDisease Sharing Log` dm, `tabUser` u 
-						where dm.to_profile = '%s' 
+	for dm_data in frappe.db.sql("""select distinct dm.from_profile as entityid , u.first_name as person_firstname,
+							ifnull(u.last_name,'') as person_lastname
+						from `tabDisease Sharing Log` dm, `tabUser` u
+						where dm.to_profile = '%s'
 							and dm.from_profile = u.profile_id """%to_profile, as_dict=1):
 		data = ['<a nohref id="%s"> %s %s </a>'%(dm_data.get("entityid"), dm_data.get("person_firstname"), dm_data.get("person_lastname"))]
 		rows.extend([data])
@@ -62,10 +62,10 @@ def get_patient_data(data):
 	filelist = frappe.db.sql("select files_list from `tabShared Requests` where name = '%s'"%data.get('other_param').get('req_id'), as_list=1)[0][0]
 	filelist = json.loads(filelist)
 
-	data_dict ={"to_profile_id":data.get('profile_id'), 
-		"received_from": "desktop", "from_profile_id": data.get('other_param').get('patient_profile_id'), 
+	data_dict ={"to_profile_id":data.get('profile_id'),
+		"received_from": "desktop", "from_profile_id": data.get('other_param').get('patient_profile_id'),
 		"event_tag_id": data.get('other_param').get('event_id')}
-	
+
 	for fl in filelist:
 		fl = fl.split('files/')[1].split('/')
 		file_dict = {"entityid": fl[4],
@@ -77,7 +77,7 @@ def get_patient_data(data):
 
 		file_dict['file_location'] = [os.path.join(os.getcwd(), get_site_path().replace('.',"")
 									.replace('/', ""), 'public', 'files',
-									data_dict.get('to_profile_id'), 
+									data_dict.get('to_profile_id'),
 									data.get('other_param').get('req_id'), fl[1], fl[2], fl[3], fl[4])]
 
 		frappe.create_folder(file_dict['file_location'][0])
@@ -97,33 +97,33 @@ def get_patient_data(data):
 
 
 def get_dm_data(rows, data_dict):
-	for dm_data in frappe.db.sql("""select distinct dm.from_profile as entityid , u.first_name as person_firstname, 
+	for dm_data in frappe.db.sql("""select distinct dm.from_profile as entityid , u.first_name as person_firstname,
 							ifnull(u.last_name,'') as person_lastname, dm.disease_name as disease_name, dm.pdf_path as pdf_path
-						from `tabDisease Sharing Log` dm, `tabUser` u 
-						where dm.to_profile = '%s' 
+						from `tabDisease Sharing Log` dm, `tabUser` u
+						where dm.to_profile = '%s'
 							and dm.from_profile = u.profile_id """%data_dict.get('to_profile_id'), as_dict=1):
 		file_path = '/'.join(dm_data.get('pdf_path').split('/')[3:])
-		data = ['<a target="_blank" href="/%s"> %s </a>'%( file_path, dm_data['disease_name']), 
-					'', 
+		data = ['<a target="_blank" href="/%s"> %s </a>'%( file_path, dm_data['disease_name']),
+					'',
 					'']
 		rows.extend([data])
 	return rows
 
 
 def get_accepted_event_list(provider_id):
-	return frappe.db.sql("""select event_id	from `tabShared Requests` 
+	return frappe.db.sql("""select event_id	from `tabShared Requests`
 		where provider_id = '%s' """%(provider_id),as_list=1)[0][0]
 
 @frappe.whitelist()
 def get_shared_request(profile_id):
-	return frappe.db.sql("""select name,event_title from `tabShared Requests` 
-				where ifnull(approval_status,'') not in ('Accepted', 'Rejected') 
+	return frappe.db.sql("""select name,event_title from `tabShared Requests`
+				where ifnull(approval_status,'') not in ('Accepted', 'Rejected')
 					and provider_id="%s" """%(profile_id), as_list=1)
 
 @frappe.whitelist()
 def update_flag(req_id, provider_id, profile_id, event_id, doc_name):
 	if doc_name == 'Event' or doc_name == 'Visit':
-		d = get_patient_data({'profile_id': provider_id, 
+		d = get_patient_data({'profile_id': provider_id,
 			'other_param':{'patient_profile_id': profile_id, 'event_id': event_id, 'req_id': req_id}
 			})
 	frappe.db.sql("update `tabShared Requests` set approval_status = 'Accept' where name = '%s'"%(req_id))
@@ -137,26 +137,26 @@ def get_request(target, provider_id):
 def get_myrequests(target, provider_id):
 	data = frappe.db.sql("""select name, provider_id, patient, event_id, doc_name, DATE_FORMAT(date, '%s'), patient_name, event_title, reason, valid_upto, payment
 				 from `tabShared Requests`
-				 where ifnull(approval_status,'') not in ('Accept', 'Reject') 
-					and provider_id="%s" and doc_name in ('Event', 'Disease Monitoring') and 
+				 where ifnull(approval_status,'') not in ('Accept', 'Reject')
+					and provider_id="%s" and doc_name in ('Event', 'Disease Monitoring') and
 					DATE_FORMAT(STR_TO_DATE(valid_upto,'%s'), '%s') >= DATE_FORMAT(NOW(), '%s')
-				 order by date desc, valid_upto asc """%('%d/%m/%Y',provider_id, '%d/%m/%Y', '%Y-%m-%d', '%Y-%m-%d'), as_list=1, debug=1)
+				 order by date desc, valid_upto asc """%('%d/%m/%Y',provider_id, '%d/%m/%Y', '%Y-%m-%d', '%Y-%m-%d'), as_list=1)
 
 	for d in data:
-		d.append("""<button class="btn btn-success  btn-sm" 
+		d.append("""<button class="btn btn-success  btn-sm"
 						onclick="accept_request('%(req_id)s', '%(provider_id)s', '%(patient)s', '%(event_id)s', '%(doc_name)s')">
-							<i class='icon-ok' data-toggle='tooltip' data-placement='top' 
+							<i class='icon-ok' data-toggle='tooltip' data-placement='top'
 							title='Accept'></i>
 					</button>
-					<button class="btn btn-warning  btn-sm" 
+					<button class="btn btn-warning  btn-sm"
 						onclick="reject_request('%(req_id)s','%(provider_id)s')">
-							<i class='icon-remove' data-toggle='tooltip' data-placement='top' 
+							<i class='icon-remove' data-toggle='tooltip' data-placement='top'
 							title='Reject'></i>
 					</button>"""%{'req_id':d[0], 'provider_id': d[1], 'patient': d[2], 'event_id': d[3], 'doc_name': d[4]})
 
 	rows=[
-		[{"title":"Date (Shared date)", "width":"120px !important;"}, {"title":"Patient Name","width":"100px;"}, 
-				{"title":"Event Name","width":"100px;"}, {"title":"Reason for Sharing", "width":"150px;"}, 
+		[{"title":"Date (Shared date)", "width":"120px !important;"}, {"title":"Patient Name","width":"100px;"},
+				{"title":"Event Name","width":"100px;"}, {"title":"Reason for Sharing", "width":"150px;"},
 				{"title":"Period of Sharing", "width":"120px !important;"}, {"title":"Payment Status", "width":"100px;"},
 				{"title":"Accept-Reject", "width":"100px;"}]
 	]
@@ -183,26 +183,26 @@ def get_acc_req(target, provider_id):
 	data = frappe.db.sql("""select name, provider_id, patient, event_id, doc_name, DATE_FORMAT(date, '%s'), patient_name, event_title, reason, valid_upto, payment, ifnull(visit_id, '')
 				 from `tabShared Requests`
 				 where ifnull(approval_status,'') = 'Accept'
-					and provider_id="%s" and 
-					DATE_FORMAT(STR_TO_DATE(valid_upto,'%s'), '%s') >= DATE_FORMAT(NOW(), '%s') 
+					and provider_id="%s" and
+					DATE_FORMAT(STR_TO_DATE(valid_upto,'%s'), '%s') >= DATE_FORMAT(NOW(), '%s')
 					order by date desc, valid_upto asc"""%('%d/%m/%Y', provider_id, '%d/%m/%Y', '%Y-%m-%d', "%Y-%m-%d"), as_list=1)
 
 	for d in data:
 		if d[4] == 'Event':
-			d[7] = """<a nohref id="%(entityid)s" 
-							onclick="Events.prototype.open_form('%(entityid)s', '%(event_title)s', '%(profile_id)s', '', '%(req_id)s', '%(visit_id)s')"> 
+			d[7] = """<a nohref id="%(entityid)s"
+							onclick="Events.prototype.open_form('%(entityid)s', '%(event_title)s', '%(profile_id)s', '', '%(req_id)s', '%(visit_id)s')">
 						%(event_title)s </a>"""%{'entityid':d[3], 'event_title': d[7], 'profile_id': d[2], 'req_id': d[0], 'visit_id': d[11]}
 		else:
-			dm_info = frappe.db.sql("""select dsl.disease_name, dsl.pdf_path 
+			dm_info = frappe.db.sql("""select dsl.disease_name, dsl.pdf_path
 				from `tabDisease Sharing Log` dsl
 				where dsl.name = '%s' """%d[3], as_dict=1)[0]
 
 			file_path = '/'.join(dm_info.get('pdf_path').split('/')[3:])  + '?id=' + str(int(round(time.time() * 1000)))
 			d[7] = '<a target="_blank" href="/%s"> %s </a>' % ( file_path, dm_info['disease_name'])
-					
+
 	rows=[
-		[{"title":"Date (Shared date)", "width":"120px !important;"}, {"title":"Patient Name", "width":"100px;"}, 
-				{"title":"Event Name","width":"100px;"},{"title":"Reason for Sharing", "width":"100px;"},  {"title":"Period of Sharing", "width":"100px;"}, 
+		[{"title":"Date (Shared date)", "width":"120px !important;"}, {"title":"Patient Name", "width":"100px;"},
+				{"title":"Event Name","width":"100px;"},{"title":"Reason for Sharing", "width":"100px;"},  {"title":"Period of Sharing", "width":"100px;"},
 				{"title":"Payment Status", "width":"100px;"}]
 	]
 
@@ -218,15 +218,15 @@ def get_acc_req(target, provider_id):
 
 
 def get_rej_req(target, provider_id):
-	data = frappe.db.sql("""select name, provider_id, patient, event_id, DATE_FORMAT(date, '%s'), patient_name, 
+	data = frappe.db.sql("""select name, provider_id, patient, event_id, DATE_FORMAT(date, '%s'), patient_name,
 				event_title, reason, valid_upto, payment, rej_reason
 				 from `tabShared Requests`
 				 where ifnull(approval_status,'') = 'Reject'
 					and provider_id="%s" """%('%d/%m/%Y',provider_id), as_list=1)
 
 	rows=[
-		[{"title":"Date (Shared date)","width":"120px !important;"}, {"title":"Patient Name", "width":"100px;"}, 
-				{"title":"Event Name","width":"100px;"},{"title":"Reason for Sharing", "width":"100px;"}, {"title":"Period of Sharing", "width":"100px;"}, 
+		[{"title":"Date (Shared date)","width":"120px !important;"}, {"title":"Patient Name", "width":"100px;"},
+				{"title":"Event Name","width":"100px;"},{"title":"Reason for Sharing", "width":"100px;"}, {"title":"Period of Sharing", "width":"100px;"},
 				{"title":"Payment Status", "width":"100px;"}, {"title":"Reason For Rejection", "width":"100px;"}]
 	]
 
