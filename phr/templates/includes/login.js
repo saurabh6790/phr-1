@@ -130,6 +130,7 @@ login.signup = function() {
 	$("<p>Already have an account?<a href='#patient' id='redirect-login'>Log-in\
 	</a></p>").appendTo($("#redirect-url"))
 
+	// $(".form-signup").css({"background-color":"white"});
 	$(".form-signup").toggle(true);
 	$(".form-signup").trigger("reset");
 }
@@ -149,6 +150,7 @@ login.provider_signup = function(){
 	$("<p>Already have an account?<a href='#provider' id='redirect-login'>Log-in\
 	</a></p>").appendTo($("#redirect-url"))
 
+	// $(".form-signup").css({"background-color":"white"});
 	$(".form-signup").toggle(true);
 	$(".form-signup").trigger("reset");
 }
@@ -196,6 +198,7 @@ login.call = function(args) {
 login.login_handlers = (function() {
 	var get_error_handler = function(default_message) {
 		return function(xhr, data) {
+			console.log(data);
 			if(xhr.responseJSON) {
 				data = xhr.responseJSON;
 			}

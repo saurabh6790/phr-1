@@ -43,7 +43,7 @@
     font-style: normal;
 }
 
-body { padding-top: 65px !important; }
+/*body { padding-top: 65px !important; }*/
 .green, .active, .contact-left a:hover, .login-wrapper h5 { color: #87c33f; }
 .navbar-default .navbar-nav > .last > a { color: #0a79bc; }
 header { position: fixed; top: 0; left: 0; width: 100%; background: #fff; z-index: 9999; }
