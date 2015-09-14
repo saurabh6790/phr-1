@@ -49,10 +49,13 @@ $(document).ready(function () {
 			freeze:true,
 			async:false,
 			callback: function(r){
-				block_provider();
-				$("#logout").unbind("click").click(function(){
-					logout_provider();
-				});
+				console.log(r.message)
+				if(!r.message){
+					block_provider();
+					$("#logout").unbind("click").click(function(){
+						logout_provider();
+					});
+				}
 			}
 		});
 
