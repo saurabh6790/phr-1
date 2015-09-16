@@ -140,6 +140,7 @@ def get_patient_data(data):
 
 	pateints = get_linked_phrs(data["profile_id"])
 	print pateints
+
 	if pateints:
 		for patient in pateints['list']:
 			pi = frappe.db.get_value("LinkedPHR Images",{"profile_id":patient['entityid']},"profile_image")

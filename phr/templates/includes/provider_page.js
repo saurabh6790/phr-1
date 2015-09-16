@@ -49,6 +49,7 @@ $(document).ready(function () {
 			freeze:true,
 			async:false,
 			callback: function(r){
+				console.log(r.message)
 				if(!r.message){
 					block_provider();
 					$("#logout").unbind("click").click(function(){
@@ -155,6 +156,7 @@ $(document).ready(function () {
 
 		NProgress.done();
 	})
+
 	$(".psettings").unbind("click").click(function(){
 		$('.cdd').addClass('hide')
 		$('#cphrname').empty()
@@ -366,6 +368,7 @@ render_notifications = function(requests){
 			.find("a")
 			.attr("data-module", "module")
 			.css({"min-width":"200px", "word-wrap": "break-word"})
+
 		$input.find('.btn-success').on("click", function() {
 			update_flag($(this).attr('id'))
 		});

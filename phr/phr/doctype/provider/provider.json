@@ -65,6 +65,12 @@
    "precision": ""
   },
   {
+   "fieldname": "column_break_4",
+   "fieldtype": "Column Break",
+   "permlevel": 0,
+   "precision": ""
+  },
+  {
    "fieldname": "provider_image",
    "fieldtype": "Attach",
    "label": "Provider Image",

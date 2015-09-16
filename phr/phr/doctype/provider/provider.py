@@ -48,6 +48,10 @@ class Provider(Document):
 	def create_solr_profile(self):
 		request_type="POST"
 		url=get_base_url()+'createProvider'
+<<<<<<< HEAD
+=======
+
+>>>>>>> b5ae153a7c131edd6b5518516004b462ee2be7e4
 		data = {
 					"provider_type": self.provider_type,
 					"name": self.provider_name,
