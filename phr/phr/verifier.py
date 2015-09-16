@@ -10,11 +10,14 @@ from frappe import _
 
 @frappe.whitelist(allow_guest=True)
 def verify_email(id,key):
-	hash = frappe.db.get_value('Verification Details',{"name":id},"hash")
-	if hash != key:
+	vd = frappe.db.get_value('Verification Details',{"name":id},["hash","verification_for"], as_dict=True)
+	if vd.hash != key:
 		frappe.msgprint("Email Verifcation not done")
 	else:
-		return "Email Verified"		
+		return {
+			"is_provider": "Yes" if vd.verification_for == "Provider" else "No",
+			"display_msg": "Email Verified"
+		}
 
 @frappe.whitelist(allow_guest=True)
 def verify_mobile(id,code):

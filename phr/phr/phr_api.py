@@ -13,17 +13,18 @@ def get_response(url,data,request_type):
 	url = url
 	#jsonobj=json.dumps(args)
 	jsonobj=data
-	print jsonobj
 	headers = {"content-type": "application/x-www-form-urlencoded"}
 	if request_type=='POST':
 		try:
-			print url,jsonobj, headers
+			print "URL : ",url,"JSONOBJ : ",jsonobj,"HEADERS", headers
 			response = requests.post(url, data=jsonobj, headers=headers)
 		except Exception, e:
 			return "No Connection"
+			# return {
+			# 	"returncode" : 501,
+			# 	"message_summary":"Can not reach to Solr Server, Please Contact Administrator.",
+			# 	"msg_display":"Can not connect to server, Please Contact Administrator"
+			# }
 	# elif request_type=='GET':
 	#  	response = requests.get(url,headers=headers,'GET')
 	return response
-
-
-	

@@ -15,8 +15,8 @@ def get_base_url():
 
 @frappe.whitelist(allow_guest=True)
 def get_master_details(doctype):
-	import itertools 
-	ret = frappe.db.sql("""select name from `tab%s` 
+	import itertools
+	ret = frappe.db.sql("""select name from `tab%s`
 		order by creation desc """%doctype,as_list=1)
 	return list(itertools.chain(*ret))
 
@@ -87,11 +87,17 @@ def remove_event_files():
 					shutil.rmtree(os.path.join(path, root, dictn))
 
 def get_active_sessions():
-	sessions = frappe.db.sql("""select distinct u.profile_id, s.user from tabSessions as s, tabUser as u 
+	sessions = frappe.db.sql("""select distinct u.profile_id, s.user from tabSessions as s, tabUser as u
 		where s.status = "Active" and s.user = u.name""", as_list=1)
 	return [user[0] for user in sessions]
 
 @frappe.whitelist(allow_guest=True)
 def set_user_info():
-	print "###################################################@@@@@@@@@@@@@"
+	# print "###################################################@@@@@@@@@@@@@"
 	frappe.local.login_manager.set_user_info()
+
+@frappe.whitelist(allow_guest=True)
+def get_specialization_list():
+	# return the list of provider specialization
+	result = frappe.db.sql("""SELECT name FROM `tabSpecialization`""", as_list=True)
+	return [res[0] for res in result]
