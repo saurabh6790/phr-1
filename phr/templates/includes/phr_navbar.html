@@ -28,9 +28,9 @@
 				<ul class="dropdown-menu dropdown-dark">
 					<li class="db">
 						<a nohref onclick="switch_to_db()">
-							Switch to Dashboard							
+							Switch to Dashboard
 						</a>
-					</li> 
+					</li>
 					{%- for child in post_login -%}
 						<li {% if child.label %}data-label="{{ child.label }}" {% endif %}
 							{% if child.class %} class="{{ child.class }}" {% endif %}>
@@ -48,7 +48,7 @@
 				</ul>
 
 			</li>
-			<li class="btn-login-area"><a href="/login">
+			<li class="btn-login-area"><a href="/login#patient">
 				{%- if not disable_signup %}Sign Up / {% endif -%} Login</a></li>
 			<!-- end: USER OPTIONS DROPDOWN -->
 		</ul>
@@ -58,7 +58,7 @@
 			<div class="arrow-right"></div>
 		</div>
 		<!-- end: MENU TOGGLER FOR MOBILE DEVICES -->
-	</div> 
+	</div>
 </header>
 <script>
 $(function() { $('.dropdown-toggle').dropdown(); });

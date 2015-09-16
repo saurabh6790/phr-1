@@ -47,7 +47,7 @@ def link_provider(res, data, profile_id):
 	pl = frappe.get_doc({
 		"doctype": "Providers Linked",
 		"patient": profile_id,
-		"provider_type": data.get('provider_type'), 
+		"provider_type": data.get('provider_type'),
 		"email": data.get('email'),
 		"mobile": data.get('mobile'),
 		"name1": data.get('name'),
@@ -83,17 +83,17 @@ def create_provider_master_entry(res, data):
 
 @frappe.whitelist(allow_guest=True)
 def get_provider_List(profile_id):
-	return frappe.db.sql("""select name1,provider,provider_type from `tabProviders Linked` 
+	return frappe.db.sql("""select name1,provider,provider_type from `tabProviders Linked`
 		where patient='%s' order by creation desc"""%(profile_id),as_dict=1)
 
 @frappe.whitelist()
 def get_self_details(profile_id):
 	profile_info = frappe.db.sql(""" select p.provider_id, p.mobile_number,
 			 p.email, p.provider_name, p.provider_type
-			from tabProvider p, tabUser u 
-			where p.provider_id=u.profile_id 
-				and u.profile_id="%s" 
-				and u.access_type="Provider" 
+			from tabProvider p, tabUser u
+			where p.provider_id=u.profile_id
+				and u.profile_id="%s"
+				and u.access_type="Provider"
 		"""%(profile_id),as_dict=1)
 
 	if len(profile_info) > 0:
@@ -119,29 +119,27 @@ def create_addr(res, provider_id):
 
 @frappe.whitelist(allow_guest=True)
 def get_address(provider_id):
-	return frappe.db.sql("""select addr_line1, addr_line2, city, state, country, pincode, visiting_hours 
-					from tabPHRAddress 
+	return frappe.db.sql("""select addr_line1, addr_line2, city, state, country, pincode, visiting_hours
+					from tabPHRAddress
 					where provider_id = '%s' order by creation desc"""%(provider_id), as_dict=1)
 
 
 @frappe.whitelist(allow_guest=True)
 def get_patient_data(data):
-	
 	fields, values, tab = get_data_to_render(data)
 
 	pos = 0
 	for filed_dict in fields:
 		pos =+ 1
-		if 'rows' in filed_dict.keys(): 
+		if 'rows' in filed_dict.keys():
 			rows = filed_dict.get('rows')
 			break
-	
+
 	if isinstance(data, unicode):
 		data=json.loads(data)
 
 	pateints = get_linked_phrs(data["profile_id"])
 	print pateints
-	
 	if pateints:
 		for patient in pateints['list']:
 			pi = frappe.db.get_value("LinkedPHR Images",{"profile_id":patient['entityid']},"profile_image")
@@ -157,9 +155,16 @@ def get_patient_data(data):
 
 @frappe.whitelist(allow_guest=True)
 def check_existing_provider(provider_id,profile_id):
-	provider=frappe.db.sql("""select provider from `tabProviders Linked` 
+	provider=frappe.db.sql("""select provider from `tabProviders Linked`
 		where patient='%s' and provider='%s'"""%(profile_id,provider_id),as_dict=1)
 	if provider:
 		return True
 	else:
 		return False
+
+@frappe.whitelist(allow_guest=True)
+def is_verified_provider(profile_id):
+	is_verified = False
+	if profile_id:
+		is_verified = True if frappe.db.get_value("Provider",{"provider_id":profile_id},"is_verified") else False
+	return is_verified

@@ -13,25 +13,28 @@ import re
 
 class Provider(Document):
 	def validate(self):
-		if self.email and not re.match(r"[^@]+@[^@]+\.[^@]+", self.email):
-			frappe.msgprint("Invalid Email Id",raise_exception=1)
+		try:
+			if self.email and not re.match(r"[^@]+@[^@]+\.[^@]+", self.email):
+				frappe.msgprint("Invalid Email Id",raise_exception=1)
 
-		if self.mobile_number and not (self.mobile_number).isdigit():
-			frappe.msgprint("Invalid Mobile Number",raise_exception=1)
-			
-		if self.provider_category == "TieUp":
-			if not self.mobile_number or not self.email:
-				frappe.msgprint("Mobile Number And Email id are mandetory",raise_exception=1)
+			if self.mobile_number and not (self.mobile_number).isdigit():
+				frappe.msgprint("Invalid Mobile Number",raise_exception=1)
 
-		if not self.provider_id:
-			self.create_solr_profile()
+			if self.provider_category == "TieUp":
+				if not self.mobile_number or not self.email:
+					frappe.msgprint("Mobile Number And Email id are mandetory",raise_exception=1)
 
-		if self.provider_category == "TieUp":
-			self.create_user()
-			frappe.db.commit()
-		else:
-			if self.exisitng_user():
-				self.update_user()
+			if not self.provider_id:
+				self.create_solr_profile()
+
+			if self.provider_category == "TieUp":
+				self.create_user()
+				frappe.db.commit()
+			else:
+				if self.exisitng_user():
+					self.update_user()
+		except Exception, e:
+			raise Exception(e)
 
 	def on_update(self):
 		pass
@@ -45,15 +48,29 @@ class Provider(Document):
 	def create_solr_profile(self):
 		request_type="POST"
 		url=get_base_url()+'createProvider'
-		
-		data = {"provider_type": self.provider_type, "name": self.provider_name, "specialization": self.specialization, "mobile": self.mobile_number, 
-		"email": self.email, "comments": '', "address1": self.address, "country": self.country, "city": self.city, "visiting_hours": '', 
-		"address2": self.address_2, "state": self.state, "pincode": self.pincode, 'received_from': 'Desktop', "provider": True}
+		data = {
+					"provider_type": self.provider_type,
+					"name": self.provider_name,
+					"specialization": self.specialization,
+					"mobile": self.mobile_number,
+					"email": self.email,
+					"comments": '',
+					"address1": self.address,
+					"country": self.country,
+					"city": self.city,
+					"visiting_hours": '',
+					"address2": self.address_2,
+					"state": self.state,
+					"pincode": self.pincode,
+					'received_from': 'Desktop',
+					"provider": True
+				}
 
 		from phr.phr.phr_api import get_response
 		response=get_response(url, json.dumps(data),request_type)
+		print "response",response
 		res=json.loads(response.text)
-		
+
 		if res['returncode']==129:
 			self.provider_id = res['entityid']
 
@@ -81,13 +98,13 @@ class Provider(Document):
 				'person_lastname':'','email':self.email,
 				'mobile': self.mobile_number, "barcode":str(get_barcode())}
 
-		notify = notify_user({}, args, self.provider_id)
+		notify = notify_user({}, args, self.provider_id, send_sms=False, is_provider=True)
+		if notify.get("returncode") == 501:
+			raise Exception(notify.get('msg_display'))
 
 	def exisitng_user(self):
-		if cint(frappe.db.sql("""select count(*) 
-				from tabUser where name = '%s' 
-					and access_type = "Provider"
-			"""%self.email,as_list=1)[0][0]) > 0:
+		if cint(frappe.db.sql("""select count(*) from tabUser where name = '%s'
+					and access_type = "Provider" """%self.email,as_list=1)[0][0]) > 0:
 			return True
 
 		return False

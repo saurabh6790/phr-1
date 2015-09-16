@@ -32,11 +32,10 @@
 <script>
 
 $(document).ready(function() {
-	
 	$("#code").on("keypress", function(e) {
 		if(e.which===13) $("#update").click();
 	})
-	
+
 	$("#update").click(function() {
 		var id=get_url_arg("id") || "";
 		var args = {
@@ -50,9 +49,13 @@ $(document).ready(function() {
 			args: args,
 			callback: function(r) {
 				if(r.message) {
-					var dialog = frappe.msgprint(r.message);
+					var dialog = frappe.msgprint(r.message.display_msg);
+					console.log(r.message);
 					dialog.on("hide.bs.modal", function() {
-						window.location.href = "verify_mobile?id="+id;
+						if(r.message.is_provider == "No")
+							window.location.href = "verify_mobile?id="+id;
+						else
+							window.location.href = "update_password?id="+id;
 					});
 				}
 			}

@@ -1,83 +1,120 @@
 {% block content %}
-	<div class="main-login col-xs-10 col-sm-8 col-md-3">
-		<div class="logo margin-top-30">
-			<img src="assets/phr/images/logo.png" alt="Healthsnapp"/>
-		</div>
-		<div class="box-login"> 
-            <form class="form-login" role="form">
-				<fieldset>
-					<legend>Login</legend>
-					<br>
-					<div class="form-group">
-						<span class="input-icon">
-							<input type="text" id="login_email" class="form-control" name="email" placeholder="Email" required autofocus>
-							<i class="fa fa-envelope"></i> </span>
-					</div>
-					<div class="form-group">
-						<span class="input-icon">
-							<input type="password" id="login_password" class="form-control" name="password" placeholder="Password" required>
-							<i class="fa fa-lock"></i>
-						</span>
-					</div>
-					<div class="form-group clearfix"> 
-						<button type="submit" class="btn btn-primary col-md-12">
-							Login <i class="fa fa-arrow-circle-right"></i>
-						</button>
-                    </div>
-                    {%- if social_login -%}    
-                    <div class="form-group margin-top-15 clearfix text-center">
-                        <span>or Login via</span>
-					</div>
-					{%- if facebook_login is defined %}
-                    <div class="form-group clearfix"> 
-						<a href="{{ facebook_login }}" class="btn btn-primary col-md-12">
-							<i class="fa fa-facebook-square"></i> Facebook 
-						</a>
-                    </div>
-                    {%- endif -%}
-					{%- if google_login is defined %}
-                    <div class="form-group clearfix"> 
-                        <a href="{{ google_login }}" class="btn btn-primary col-md-12">
-							<i class="fa fa-google-plus-square"></i> Google 
-						</a>
-                    </div> 
-                    {%- endif -%}
-                    {%- endif -%}
-                    {%- if not disable_signup -%}
-					<div class="new-account text-center">
-						Not a user yet?
-						<a href="#signup">
-							Sign up
-						</a>
-					</div>
-					{%- endif -%}
-                    <div class="margin-top-10 text-center">
-                    	<a href="#forgot">
-                            Forgot Password?
-                        </a>
-                    </div>
-                    <div class="clearfix"></div>
-				</fieldset>
-			</form>
+<div class="main-login col-xs-10 col-sm-8 col-md-3">
+	<div class="logo margin-top-30">
+		<img src="assets/phr/images/logo.png" alt="Healthsnapp" />
+	</div>
+	<br>
+	<div class="container login-container" style="max-width:300px">
+		<div class="login-wrapper">
+			<!-- Nav tabs -->
+			<ul id="loginTabs" class="nav nav-tabs" role="tablist">
+				<!-- <li role="presentation" class="active"><a href="#patient" aria-controls="patient" role="tab" data-toggle="tab">Patient Login</a></li>
+				<li role="presentation"><a href="#provider" aria-controls="provider" role="tab" data-toggle="tab">Provider Login</a></li> -->
+				<li role="presentation" class="active" id="li-patient"><a href="#patient" aria-controls="patient" role="tab">Patient Login</a></li>
+				<li role="presentation" id="li-provider"><a href="#provider" aria-controls="provider" role="tab">Provider Login</a></li>
+			</ul>
+
+			<!-- Tab panes -->
+			<div class="tab-content">
+				<div role="tabpanel" class="tab-pane active" id="patient">
+					<form name="patient-login-form" class="form-login patient-login" method="post">
+						<div class="form-group">
+							<span class="input-icon">
+								<input type="text" id="patient_login_email" class="form-control" name="email" placeholder="Email" required autofocus>
+								<i class="fa fa-envelope"></i> </span>
+						</div>
+						<div class="form-group">
+							<span class="input-icon">
+								<input type="password" id="patient_login_password" class="form-control" name="password" placeholder="Password" required>
+								<i class="fa fa-lock"></i>
+							</span>
+						</div>
+						<div class="form-group clearfix">
+							<button type="submit" class="btn btn-primary col-md-12">
+								Login <i class="fa fa-arrow-circle-right"></i>
+							</button>
+	                    </div>
+	                    {%- if social_login -%}
+	                    <div class="form-group margin-top-15 clearfix text-center">
+	                        <span>or Login via</span>
+						</div>
+						{%- if facebook_login is defined %}
+	                    <div class="form-group clearfix">
+							<a href="{{ facebook_login }}" class="btn btn-primary col-md-12">
+								<i class="fa fa-facebook-square"></i> Facebook
+							</a>
+	                    </div>
+	                    {%- endif -%}
+						{%- if google_login is defined %}
+	                    <div class="form-group clearfix">
+	                        <a href="{{ google_login }}" class="btn btn-primary col-md-12">
+								<i class="fa fa-google-plus-square"></i> Google
+							</a>
+	                    </div>
+	                    {%- endif -%}
+	                    {%- endif -%}
+	                    {%- if not disable_signup -%}
+						<div class="new-account text-center">
+							Not a user yet?
+							<a href="#patient-signup">Sign up</a>
+						</div>
+						{%- endif -%}
+	                    <div class="margin-top-10 text-center">
+	                    	<a href="#forgot">Forgot Password?</a>
+	                    </div>
+	                    <div class="clearfix"></div>
+					</form>
+				</div>
+				<div role="tabpanel" class="tab-pane" id="provider">
+					<form name="provider-login-form" class="form-login provider-login" method="post">
+						<div class="form-group">
+							<span class="input-icon">
+								<input type="text" id="provider_login_email" class="form-control" name="email" placeholder="Email" required autofocus>
+								<i class="fa fa-envelope"></i> </span>
+						</div>
+						<div class="form-group">
+							<span class="input-icon">
+								<input type="password" id="provider_login_password" class="form-control" name="password" placeholder="Password" required>
+								<i class="fa fa-lock"></i>
+							</span>
+						</div>
+						<div class="form-group clearfix">
+							<button type="submit" class="btn btn-primary col-md-12">
+								Login <i class="fa fa-arrow-circle-right"></i>
+							</button>
+	                    </div>
+	                    {%- if not disable_signup -%}
+						<div class="new-account text-center">
+							Not a user yet?
+							<a href="#provider-signup">Sign up</a>
+						</div>
+						{%- endif -%}
+	                    <div class="margin-top-10 text-center">
+	                    	<a href="#forgot">Forgot Password?</a>
+	                    </div>
+	                    <div class="clearfix"></div>
+					</form>
+				</div>
+			</div>
 			<form class="form-register form-signup hide" role="form" autocomplete="off">
-				<fieldset>
+				<fieldset class="tab-content">
 					<legend>Sign Up</legend>
 					<br>
 					<div class="form-group">
 						<input type="text" class="form-control" name="first-name" id="signup_firstname" placeholder="First Name" required>
 					</div>
-                    <div class="form-group">
+					<div class="form-group">
 						<input type="text" class="form-control" name="middle-name" placeholder="Middle Name" id="signup_middlename" required>
 					</div>
-                    <div class="form-group">
+					<div class="form-group">
 						<input type="text" class="form-control" name="last-name" placeholder="Last Name" id="signup_lastname" required>
-					</div>  
+					</div>
 					<div class="form-group">
 						<span class="input-icon">
 							<input type="email" class="form-control disable" name="email" placeholder="Email ID" id="signup_email" required>
 							<i class="fa fa-envelope"></i> </span>
 					</div>
-                    <div class="form-group">
+					<div class="form-group">
 						<span class="input-icon">
 							<input type="email" class="form-control disable" name="confirm-email" placeholder="Confirm Email ID" id="signup_email_cnf" required>
 							<i class="fa fa-envelope"></i> </span>
@@ -91,22 +128,40 @@
 						<span class="input-icon">
 							<input type="text" class="form-control disable" name="confirm-contact" placeholder="Confirm Contact No" id="signup_contact_cnf">
 							<i class="fa fa-phone"></i> </span>
-					</div> 
-					<div class="form-actions"> 
+					</div>
+					<!-- Extra Fields for Provider -->
+					<div class="form-group hide" id="gender">
+						<select class="form-control fa-select" name="gender" id="gender">
+							<option value="Male">&#xf183; Male</option>
+							<option value="Female">&#xf182; Female</option>
+						</select>
+					</div>
+					<div class="form-group hide" name = "provider_registration_number" id="provider_registration_number">
+						<span class="input-icon">
+							<input type="text" class="form-control disable" name="registration-number" placeholder="Medical Register Number" id="medical_reg_number">
+							<i class="fa fa-registered"></i> </span>
+					</div>
+					<div class="form-group hide" name = "specialization" id="specialization">
+						<span class="input-icon">
+							<input type="text" class="form-control autocomplete" name="provider-specialization" placeholder="Provider Specialization" id="provider_specialization">
+							<i class="fa fa-medkit"></i>
+						</span>
+						<p class="help-box small text-muted">Eg: Pediatrician, General Physician (Auto Selection of text)</p>
+					</div>
+					<div class="form-actions">
 						<button type="submit" class="btn btn-primary col-md-12">
 							Sign up <i class="fa fa-arrow-circle-right"></i>
 						</button>
 					</div>
-                    <div class="form-actions">
-						<p>
-							Already have an account?
-							<a href="#login">Log-in</a>
-						</p> 
+					<div class="form-actions" id="redirect-url">
+						<!-- <p>Already have an account?
+							<a href="#login" id="redirect-login">Log-in</a>
+						</p> -->
 					</div>
 				</fieldset>
 			</form>
 			<form class="form-forgot hide" role="form">
-				<fieldset>
+				<fieldset class="tab-content">
 					<legend>Forget Password?</legend>
 					<br>
 					<p>Enter e-mail address to reset your password.</p>
@@ -115,49 +170,76 @@
 							<input type="email" class="form-control" name="email" id="forgot_email" placeholder="Email" required autofocus>
 							<i class="fa fa-envelope-o"></i> </span>
 					</div>
-					<div class="form-actions"> 
+					<div class="form-actions">
 						<button type="submit" class="btn btn-primary col-md-12">
 							Send Password <i class="fa fa-arrow-circle-right"></i>
 						</button>
 					</div>
-                    <div class="form-actions">
+					<div class="form-actions">
 						<a class="btn btn-primary col-md-12" href="#login">
 							<i class="fa fa-chevron-circle-left"></i> Log-In
-						</a> 
+						</a>
 					</div>
 				</fieldset>
 			</form>
 		</div>
 	</div>
-	<script type="text/javascript">
+</div>
+<script type="text/javascript">
+	window.history.forward();
+
+	function noBack() {
 		window.history.forward();
-		function noBack(){
-			window.history.forward();
-		}
-        $(function () {
-            var controls = $(".disable");
-            controls.bind("paste", function () {
-                return false;
-            });
-            controls.bind("drop", function () {
-                return false;
-            });
-            controls.bind("cut", function () {
-                return false;
-            });
-            controls.bind("copy", function () {
-                return false;
-            });
-        });
-        console.log($('.menu-toggler'))
-        $('.menu-toggler').attr("href").replace(/\//, '')
-	</script>
-	<script src="assets/phr/js/login.js"></script>
-	<script>
-		jQuery(document).ready(function() {
-			Login.init();
+	}
+	$(function() {
+		var controls = $(".disable");
+		controls.bind("paste", function() {
+			return false;
 		});
-	</script>
-{% endblock %}
-{% block script_lib %}{% include "templates/includes/login.js" %}{% endblock %}
-{% block sidebar %}{% endblock %}
+		controls.bind("drop", function() {
+			return false;
+		});
+		controls.bind("cut", function() {
+			return false;
+		});
+		controls.bind("copy", function() {
+			return false;
+		});
+	});
+	$('.menu-toggler').attr("href").replace(/\//, '')
+</script>
+<script src="assets/phr/js/login.js"></script>
+<script>
+	jQuery(document).ready(function() {
+		Login.init();
+	});
+</script>
+<script type="text/javascript">
+	// frappe.require("/assets/phr/js/jquery.autocomplete.multiselect.js");
+	frappe.call({
+		method:'phr.templates.pages.utils.get_specialization_list',
+		callback: function(r){
+			$(document).find("#provider_specialization").autocomplete({
+				open: function(){
+					setTimeout(function () {
+						// setting up the css for the "ui-autocomplete" autocomplete result
+						$(".ui-autocomplete").css({
+							"overflow-y":"scroll",
+							"width":"218px",
+							"height":"100px",
+							"background-color":"inherit",
+							"list-style":"none",
+							"padding-left":"10px",
+							'z-index':99999999999999
+						});
+					}, 0);
+				},
+				source: r.message,
+				multiselect: false
+			});
+			// hiding the span "ui-helper-hidden-accessible"
+			$(".ui-helper-hidden-accessible").css({"display":"None"})
+		}
+	});
+</script>
+{% endblock %} {% block script_lib %}{% include "templates/includes/login.js" %}{% endblock %} {% block sidebar %}{% endblock %}
