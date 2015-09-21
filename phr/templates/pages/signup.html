@@ -1,0 +1,111 @@
+{% block content %}
+<link rel="stylesheet" href="/assets/phr/css/bootstrap.css">
+<link rel="stylesheet" href="/assets/phr/css/phr_login.css">
+	<div class="row" style="margin-top:65px">
+			<div class="main-login col-xs-10 col-sm-8 col-md-3">
+			<div class="box-register">
+				<form class="form-register form-signup" role="form" autocomplete="off" style="background-color:white">
+
+			<fieldset>
+					<legend>Sign Up</legend>
+					<br>
+					<div class="form-group">
+						<input type="text" class="form-control" name="first-name" id="signup_firstname" placeholder="First Name" required>
+					</div>
+					<div class="form-group">
+						<input type="text" class="form-control" name="middle-name" placeholder="Middle Name" id="signup_middlename" required>
+					</div>
+					<div class="form-group">
+						<input type="text" class="form-control" name="last-name" placeholder="Last Name" id="signup_lastname" required>
+					</div>
+					<div class="form-group">
+						<span class="input-icon">
+							<input type="email" class="form-control disable" name="email" placeholder="Email ID" id="signup_email" required>
+							<i class="fa fa-envelope"></i> </span>
+					</div>
+					<div class="form-group">
+						<span class="input-icon">
+							<input type="email" class="form-control disable" name="confirm-email" placeholder="Confirm Email ID" id="signup_email_cnf" required>
+							<i class="fa fa-envelope"></i> </span>
+					</div>
+					<div class="form-group">
+						<span class="input-icon">
+							<input type="text" class="form-control disable" name="contact" placeholder="Contact No" id="signup_contact" required>
+							<i class="fa fa-phone"></i> </span>
+					</div>
+					<div class="form-group">
+						<span class="input-icon">
+							<input type="text" class="form-control disable" name="confirm-contact" placeholder="Confirm Contact No" id="signup_contact_cnf">
+							<i class="fa fa-phone"></i> </span>
+					</div>
+					<!-- Extra Fields for Provider -->
+					<div class="form-group hide" id="gender">
+						<select class="form-control fa-select" name="gender" id="gender">
+							<option value="Male">&#xf183; Male</option>
+							<option value="Female">&#xf182; Female</option>
+						</select>
+					</div>
+					<div class="form-group hide" name="provider_registration_number" id="provider_registration_number">
+						<span class="input-icon">
+							<input type="text" class="form-control disable" name="registration-number" placeholder="Medical Register Number" id="medical_reg_number">
+							<i class="fa fa-registered"></i> </span>
+					</div>
+					<div class="form-group hide" name="specialization" id="specialization">
+						<span class="input-icon">
+							<input type="text" class="form-control autocomplete" name="provider-specialization" placeholder="Provider Specialization" id="provider_specialization">
+							<i class="fa fa-medkit"></i>
+						</span>
+						<p class="help-box small text-muted">Eg: Pediatrician, General Physician (Auto Selection of text)</p>
+					</div>
+					<div class="form-actions">
+						<button type="submit" class="btn btn-primary col-md-12">
+							Sign up <i class="fa fa-arrow-circle-right"></i>
+						</button>
+					</div>
+					<div class="form-actions" id="redirect-url">
+						<p>Already have an account?
+							<a href="#login" id="redirect-login">Login</a>
+						</p>
+					</div>
+				</fieldset>
+				</form>
+			</div>
+		<div>
+	</div>
+
+
+<script type="text/javascript">
+	// frappe.require("/assets/phr/js/jquery.autocomplete.multiselect.js");
+	frappe.call({
+		method: 'phr.templates.pages.utils.get_specialization_list',
+		callback: function(r) {
+			$(document).find("#provider_specialization").autocomplete({
+				open: function() {
+					setTimeout(function() {
+						// setting up the css for the "ui-autocomplete" autocomplete result
+						$(".ui-autocomplete").css({
+							"overflow-y": "scroll",
+							"height": "100px",
+							"background-color": "inherit",
+							"list-style": "none",
+							"padding-left": "10px",
+							'z-index': 99999999999999
+						});
+					}, 0);
+				},
+				source: r.message,
+				multiselect: false
+			});
+			// hiding the span "ui-helper-hidden-accessible"
+			$(".ui-helper-hidden-accessible").css({
+				"display": "none"
+			})
+		}
+	});
+
+	$(".navbar-default").css({
+		"padding":"0px",
+	});
+</script>
+{% endblock %}
+{% block script_lib %}{% include "templates/includes/signup.js" %}{% endblock %}
