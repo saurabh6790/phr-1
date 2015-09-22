@@ -151,7 +151,9 @@ header { position: fixed; top: 0; left: 0; width: 100%; background: #fff; z-inde
   margin: 2px;
   text-indent: -999px;
   cursor: pointer;
-  background-color: #ddd; 
+  background-color: #ddd;
+  border: none !important;
+  border-radius:0px !important; 
 }
 .carousel-indicators .active {  
   background-color: #88c340;
@@ -166,6 +168,7 @@ header { position: fixed; top: 0; left: 0; width: 100%; background: #fff; z-inde
   color: #262626; 
   font-size: 22px;
   width: 35%;
+  text-align: left!important;
 }
 .carousel-caption .btn {
   text-shadow: none;

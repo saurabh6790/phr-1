@@ -1,4 +1,3 @@
-frappe.require("assets/frappe/js/lib/jquery/jquery.ui.min.js");
 frappe.require("/assets/phr/js/jquery.autocomplete.multiselect.js");
 window.disable_signup = {{ disable_signup and "true" or "false" }};
 
@@ -46,12 +45,13 @@ login.bind_events = function() {
 		});
 
 		$("#feedback-form").on("submit", function(event) {
+			event.preventDefault();
 			var args = {};
 			args.cmd = "phr.templates.pages.login.add_feedback";
 			args.name = ($("#fbk-name").val() || "").trim();
-			args.email = ($("#fbk-name").val() || "").trim();
-			args.mobile = ($("#fbk-name").val() || "").trim();
-			args.comment = ($("#fbk-name").val() || "").trim();
+			args.email = ($("#fbk-email").val() || "").trim();
+			args.mobile = ($("#fbk-mob").val() || "").trim();
+			args.comment = ($("#fbk-com").val() || "").trim();
 
 			if(!args.name || !args.email || !args.comment) {
 				frappe.msgprint(__("Fill data into all fields"));
@@ -101,7 +101,7 @@ login.patient = function() {
 	$("#li-provider").removeClass("active");
 	$("#patient").addClass("active");
 	$("#li-patient").addClass("active");
-	//$("#feedback-form").toggle(true);
+	$("#feedback-form").toggle(true);
 }
 
 login.provider = function() {
@@ -115,7 +115,7 @@ login.provider = function() {
 	$("#li-patient").removeClass("active");
 	$("#provider").addClass("active");
 	$("#li-provider").addClass("active");
-	//$("#feedback-form").toggle(true);
+	$("#feedback-form").toggle(true);
 }
 
 // Login
@@ -149,9 +149,12 @@ login.login_handlers = (function() {
 
 	var login_handlers = {
 		200: function(data) {
+			console.log(data)
             if(data.message=="Logged In") {
 				window.location.href = get_url_arg("redirect-to") || "/desk";
-			} else if(data.message=="No App") {
+			}
+			else if(data.message=="No App") {
+
 				var url='';
 				if (data.mob_v_req && data.mob_v_req=='Yes'){
 					url='/verify_mobile?id='+frappe.get_cookie("profile_id")
@@ -171,7 +174,11 @@ login.login_handlers = (function() {
 					go_to_url= url || data.access_link || "/index"
 					window.location.href = "/index";
 				}
-			} else if(["#forgot"].indexOf(window.location.hash)!==-1) {
+			} 
+			else if(["#forgot"].indexOf(window.location.hash)!==-1) {
+				frappe.msgprint(data.message.msg_display);
+			}
+			else if(data.message.message=="fbk"){
 				frappe.msgprint(data.message.msg_display);
 			}
 
