@@ -1,4 +1,4 @@
-/* ---------------------------------------------------------------------- 
+/* ----------------------------------------------------------------------
 >>> TABLE OF CONTENT
 -------------------------------------------------------------------------
 1 - Basic Elements & Classes
@@ -173,7 +173,7 @@ a {
 }
 a:hover, a:focus, a:active {
   color: #004999;
-} 
+}
 
 h1, h2, h3, h4, h5 {
   font-weight: 300;
@@ -184,7 +184,7 @@ h1, h2, h3, h4, h5 {
   font-weight: 600;
 }
 
-h5.over-title { 
+h5.over-title {
   font-size: 16px;
 }
 
@@ -289,7 +289,7 @@ h5.over-title {
     background: #e0e0e0 !important;
     color: #89c148 !important;
 }
-.tree .selected-chld span .badge, .tree li span:hover > .badge { background: #89c148 !important;color: #fff !important  } 
+.tree .selected-chld span .badge, .tree li span:hover > .badge { background: #89c148 !important;color: #fff !important  }
 
 @media (max-width: 991px) {
   #app {
@@ -348,16 +348,16 @@ h5.over-title {
     border: 0 none !important;
     color: #808080 !important;
 }
-#app input:disabled::-webkit-input-placeholder, #app textarea:disabled::-webkit-input-placeholder, #app select:disabled::-webkit-input-placeholder {  
+#app input:disabled::-webkit-input-placeholder, #app textarea:disabled::-webkit-input-placeholder, #app select:disabled::-webkit-input-placeholder {
     color:    #fff;
 }
-#app input:disabled:-moz-placeholder, #app textarea:disabled:-moz-placeholder, #app select:disabled:-moz-placeholder {  
+#app input:disabled:-moz-placeholder, #app textarea:disabled:-moz-placeholder, #app select:disabled:-moz-placeholder {
     color:    #fff;
 }
-#app input:disabled::-moz-placeholder, #app textarea:disabled::-moz-placeholder, #app select:disabled::-moz-placeholder {  
+#app input:disabled::-moz-placeholder, #app textarea:disabled::-moz-placeholder, #app select:disabled::-moz-placeholder {
     color:    #fff;
 }
-#app input:disabled:-ms-input-placeholder, #app textarea:disabled:-ms-input-placeholder, #app select:disabled:-ms-input-placeholder {  
+#app input:disabled:-ms-input-placeholder, #app textarea:disabled:-ms-input-placeholder, #app select:disabled:-ms-input-placeholder {
     color:    #fff;
 }
 #app textarea {
@@ -365,7 +365,7 @@ h5.over-title {
 }
 
 .control-input .ui-autocomplete-multiselect .ui-autocomplete-input { width: 100% !important; overflow: hidden;  }
-.ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default { border: 0 !important; } 
+.ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default { border: 0 !important; }
 .ui-autocomplete-multiselect-item .ui-state-default .ui-icon { display: inline !important; }
 
 .top-btns-bar {
@@ -654,11 +654,11 @@ h5.over-title {
   margin-left: 13px;
 }
 .navbar .navbar-right .dot-badge {
-  border-radius: 100%;   
+  border-radius: 100%;
   border0: 0;
   height: 10px;
   margin: 2px;
-  position: absolute !important; 
+  position: absolute !important;
   top: 6px;
   width: 10px;
   left: 50%;
@@ -744,7 +744,7 @@ h5.over-title {
   -webkit-border-radius: 3px;
   border-radius: 3px;
   color: #666;
-  font-size: 12px; 
+  font-size: 12px;
   letter-spacing: 0;
   line-height: 28px;
   text-transform: uppercase;
@@ -1046,15 +1046,15 @@ h5.over-title {
   height: 40px;
   display: inline-block;
   padding: 0;
-} 
+}
 ul.sub-menu li a .item-content .item-media {
   height: 25px !important;
 }
 #sidebar .item-content .dashboard {
-  background: url("../images/dashboard.png") no-repeat scroll 18px center; 
+  background: url("../images/dashboard.png") no-repeat scroll 18px center;
 }
 #sidebar .active .item-content .dashboard {
-  background: url("../images/white-dashboard.png") no-repeat scroll 18px center; 
+  background: url("../images/white-dashboard.png") no-repeat scroll 18px center;
 }
 #sidebar .item-content .linked_phr {
   background: url("../images/linked-phr.png") no-repeat scroll 6px center;
@@ -1097,18 +1097,18 @@ ul.sub-menu li a .item-content .item-media {
 }
 #sidebar .item-content .phr-female {
   background: url("../images/phr-female.png") no-repeat scroll 18px center;
-} 
+}
 #sidebar .item-content .doctor {
   background: url("../images/doctor.png") no-repeat scroll 18px center;
 }
 #sidebar .item-content .hospital {
   background: url("../images/hospital.png") no-repeat scroll 18px center;
-} 
+}
 #sidebar .item-content .pathology {
   background: url("../images/pathology.png") no-repeat scroll 18px center;
 }
-#sidebar .item-content .item-inner { 
-  padding: 0 10px 0 0;  
+#sidebar .item-content .item-inner {
+  padding: 0 10px 0 0;
   vertical-align: middle;
 }
 .item-content .item-inner, ul.sub-menu li a .item-content .item-inner {
@@ -1117,7 +1117,7 @@ ul.sub-menu li a .item-content .item-media {
   display: table-cell;
   padding: 15px 15px 15px 0;
   width: 100%;
-} 
+}
 #sidebar ul.sub-menu li:last-child a .item-content .item-inner {
   border-bottom: 0 !important;
 }
@@ -1266,7 +1266,7 @@ ul.sub-menu li a {
   font-weight: 300;
   border: none;
   margin: 0;
-  padding: 0; 
+  padding: 0;
   text-decoration: none;
 }
 ul.sub-menu li a .icon-arrow {
@@ -1424,7 +1424,7 @@ ul.sub-menu li ul.sub-menu li ul.sub-menu li a {
     font-size: 14px;
   }
 }
-@media (min-width: 992px) and (min-width: 992px) { 
+@media (min-width: 992px) and (min-width: 992px) {
   .no-touch .app-sidebar-closed #sidebar > div nav > ul li {
     -moz-transition: background-color 0ms linear;
     -o-transition: background-color 0ms linear;
@@ -3251,17 +3251,17 @@ a.text-light:hover {
 /* Dropdown Menu
 /* ---------------------------------------------------------------------- */
 .dropdown-menu.dropdown-dark {
-  background-color: #eaeaea; 
+  background-color: #eaeaea;
   border: 1px solid #eaeaea;
   border-radius: 0;
-  box-shadow: none; 
+  box-shadow: none;
   list-style: none outside none;
   max-width: 300px;
   min-width: 166px;
   padding: 0;
   position: absolute;
   text-shadow: none;
-  z-index: 1000;  
+  z-index: 1000;
 }
 .dropdown-menu.dropdown-dark:after {
   border-color: transparent;
@@ -3291,16 +3291,16 @@ a.text-light:hover {
   background: none;
 }
 .dropdown-menu.dropdown-dark li p, .dropdown-menu.dropdown-dark li a, .dropdown-menu.dropdown-dark .drop-down-wrapper li p, .dropdown-menu.dropdown-dark .drop-down-wrapper li a {
-  color: #676767; 
+  color: #676767;
   font-size: 12px;
   font-weight: 300;
   margin: 0;
-  padding: 10px 15px 10px; 
+  padding: 10px 15px 10px;
   white-space: normal !important;
   display: block;
 }
 .dropdown-menu.dropdown-dark li:last-child a {
-  border-bottom: none !important; 
+  border-bottom: none !important;
 }
 .dropdown-menu.dropdown-dark > li > a:hover, .dropdown-menu.dropdown-dark > li > a:focus, .dropdown-menu.dropdown-dark .dropdown-submenu:hover > a, .dropdown-menu.dropdown-dark .dropdown-submenu:focus > a, .dropdown-menu.dropdown-dark .drop-down-wrapper li a:hover, .dropdown-menu.dropdown-dark .drop-down-wrapper li a:focus {
   background-color: #e5e3e3;
@@ -3476,13 +3476,13 @@ a.text-light:hover {
   background-color: #eee;
   position: relative;
 }
-.nav-tabs > li.active > a, .nav-tabs > li.active > a:hover, .nav-tabs > li.active > a:focus { background: #eee !important; }
+
 
 
 
 .tab-content > .tab-pane, .pill-content > .pill-pane {
   display: none;
-  padding: 15px;
+  /*padding: 15px;*/
 }
 
 .tab-content > .active, .pill-content > .active {
@@ -4801,10 +4801,10 @@ textarea.underline:focus, select.underline:focus, input[type="text"].underline:f
 }
 
 textarea[disabled], input[disabled], select[disabled] {
-  background: #f7f7f8 !important; 
+  background: #f7f7f8 !important;
 }
 textarea[disabled]:hover, textarea[disabled]:focus, input[disabled]:hover, input[disabled]:focus, select[disabled]:hover, select[disabled]:focus {
-  background: #f7f7f8 !important; 
+  background: #f7f7f8 !important;
 }
 
 legend {
@@ -10062,7 +10062,7 @@ div.timeline .column_center .timeline_element:before, div.timeline .column_cente
 }
 
 .table > tbody > tr.active:hover > td, .table > tbody > tr.active:hover > th {
-  background-color: #dddcdf !important; 
+  background-color: #dddcdf !important;
 }
 
 td.center .dropdown-menu {
@@ -11410,9 +11410,9 @@ td.small-width {
   .weight_mngnt { width: 70%; }
   #container .disease_monitorg .table-bordered { border: 0 !important; }
 }
-@media (max-width: 980px) { 
+@media (max-width: 980px) {
   .profile_dtls .profile_dtls_left, .profile_dtls .profile_dtls_right { padding: 0 5% !important; }
-  .breadcrumb-bar { padding: 5px 30px !important; } 
+  .breadcrumb-bar { padding: 5px 30px !important; }
   .top-btns-bar { padding: 10px 30px !important; }
   .main-content { padding-top: 165px !important; }
 
@@ -11546,19 +11546,19 @@ td.small-width {
   color: #ffffff !important;
 }
 
-.ui-datepicker { 
-  background: #f1f1f1 !important; 
+.ui-datepicker {
+  background: #f1f1f1 !important;
   z-index: 99999999 !important;
 }
-.ui-datepicker td .ui-state-default:hover { background: #89c148 !important; } 
+.ui-datepicker td .ui-state-default:hover { background: #89c148 !important; }
 /* ---------------------------------------------------------------------- */
 /*  Custom CSS
-/* ---------------------------------------------------------------------- */ 
+/* ---------------------------------------------------------------------- */
 .green { color: #89c148; }
-.light { font-family: 'pluto_sanslight'; } 
+.light { font-family: 'pluto_sanslight'; }
 .medium { font-family: 'pluto_sansmedium'; }
 .border0 { border: 0 !important; }
-.border-bot0 { border-bottom: 0 !important; } 
+.border-bot0 { border-bottom: 0 !important; }
 .padding0 { padding: 0 !important; }
 .panel-title img { margin: -4px 8px 0 0; }
 .to_do_lists .panel-scroll { padding: 0 10px 0 5px !important; }
@@ -11581,17 +11581,17 @@ td.small-width {
 .manage_dashboard_right a img, .edit_profile a img { margin-right: 5px; }
 .disease_monitorg_right { margin: -5px 0; }
 .weight_mngnt{position:relative;border-radius:5px;margin-bottom:0 !important;}
-.weight_mngnt:before{ content:''; right:20px; top:0px; width:35px; height:100%; background: url(../images/selectbg.jpg) no-repeat center center; position:absolute; pointer-events:none; display:block; } 
+.weight_mngnt:before{ content:''; right:20px; top:0px; width:35px; height:100%; background: url(../images/selectbg.jpg) no-repeat center center; position:absolute; pointer-events:none; display:block; }
 #weight_mngnt_dp { font-size: 12px; width: 100%; background: #fafafa; border: 1px solid rgba(0, 0, 0, 0.07); }
 .msg_count { font-family: 'pluto_sansmedium'; font-size: 12px; color: #ed6231; display: inline; margin: 2px 10px 0 0; }
 .navbar .navbar-right > li > a .ti-comment { margin-top: 4px; }
-.user_dp a { font-size: 14px; color: #3b3b3b; }  
+.user_dp a { font-size: 14px; color: #3b3b3b; }
 .user_dp .dropdown-menu.dropdown-dark::after { left: 45%; }
 .profile_panel { padding: 20px 10px; }
 .profile_photo { width: 123px; display:block; position:relative; margin: 20px auto 10px; }
 .profile_photo .profile_overlay { position: absolute; top: 0; right: 0; display: none; background-color:rgba(0, 0, 0, 0.3); width: 100%; height: 100%; }
 .profile_photo:hover .profile_overlay { display: block; }
-.profile_photo a { background: #fff; padding: 3px 5px; color: #509bcb; display: inline-block; margin: 1px 1px 0 0; } 
+.profile_photo a { background: #fff; padding: 3px 5px; color: #509bcb; display: inline-block; margin: 1px 1px 0 0; }
 .profile_name { font-size: 18px; color: #58585a; }
 .profile_dtls { margin: 30px 0 50px; }
 .profile_dtls_left, .profile_dtls_right { margin-bottom: 25px; }
@@ -11607,29 +11607,29 @@ td.small-width {
 
 /* Events Page CSS */
 .dp_lbl { position:relative;border-radius:5px;margin-bottom:0 !important; }
-.dp_lbl:before { content:''; right:20px; top:0px; width:20px; height:100%; background: url(../images/selectbg.jpg) no-repeat center center; position:absolute; pointer-events:none; display:block; } 
+.dp_lbl:before { content:''; right:20px; top:0px; width:20px; height:100%; background: url(../images/selectbg.jpg) no-repeat center center; position:absolute; pointer-events:none; display:block; }
 .table .fa { font-size: 14px; }
 .events_tbl input[type="checkbox"] { margin-left: -4px; }
-.events_tbl a { color: #5b5b60; } 
-.events_tbl a:hover { color: #89c148; } 
+.events_tbl a { color: #5b5b60; }
+.events_tbl a:hover { color: #89c148; }
 
 /* Save, New, Download PHR Buttons CSS */
-.breadcrumb-bar { 
-    background: #fff; 
-  border-bottom: 1px solid rgba(0, 0, 0, 0.07) !important; 
-  padding: 5px 30px 5px 290px; 
+.breadcrumb-bar {
+    background: #fff;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.07) !important;
+  padding: 5px 30px 5px 290px;
   position: fixed;
     right: 0;
     top: 65px;
     width: 100%;
-    z-index: 999;  
+    z-index: 999;
 }
 
 .breadcrumb { background: none !important;  border-radius: 4px; margin: 0 !important; padding: 8px 10px 8px 0px !important; }
 
 .font20 { font-size: 20px !important; }
 
-#sidebar > div nav > ul li a.active .icon-arrow { color: #fff !important; } 
+#sidebar > div nav > ul li a.active .icon-arrow { color: #fff !important; }
 
 /* Healthsnapp Card CSS */
 @font-face {
@@ -11664,11 +11664,11 @@ td.small-width {
          url('../fonts/futuram-webfont.ttf') format('truetype'),
          url('../fonts/futuram-webfont.svg#futura_md_btmedium') format('svg');
     font-weight: normal;
-    font-style: normal; 
+    font-style: normal;
 }
 .card-container { width: 430px; height: 265px; margin: 100px auto 0; background: #1e1e1e; padding: 80px; }
 .card-main { width: 430px; height: 260px; }
-.card-top { 
+.card-top {
     background: -webkit-linear-gradient(#1b7ab2, #85c23f); /* For Safari 5.1 to 6.0 */
   background: -o-linear-gradient(#1b7ab2, #85c23f); /* For Opera 11.1 to 12.0 */
   background: -moz-linear-gradient(#1b7ab2, #85c23f); /* For Firefox 3.6 to 15 */
@@ -11677,12 +11677,12 @@ td.small-width {
   width: 100%;
   height: 160px;
   border-top-left-radius: 15px;
-  border-top-right-radius: 15px; 
+  border-top-right-radius: 15px;
 }
 .card-top-left { width: 260px; padding: 15px 25px 15px; background: none; float: left; }
 .patient-name { font-family: 'futura_md_btmedium'; font-size: 18px; margin: 0 0 10px; }
 .patient-number { font-family: 'futura_md_btmedium'; font-size: 20px; margin: 0 0 25px; letter-spacing: 2px; }
-.patient-number span { display: inline-block; margin-right: 5px; }  
+.patient-number span { display: inline-block; margin-right: 5px; }
 .patient-blood-grp, .patient-contact, .patient-emergncy-contact { font-family: 'futura_lt_btlight'; font-size: 14px; margin: 0 0 2px; }
 .card-top-right { width: 92px; padding: 35px 28px 45px 0; background: none; float: left; }
 .card-photo {  border-radius: 10px; height: 101px; }
@@ -11693,20 +11693,20 @@ td.small-width {
 .card-barcode { float: right; }
 
 /* Healthsnapp PDF Header and Footer CSS */
-.pdf-container { 
-    margin: 50px; 
-  font-size: 14px; 
-  font-family: 'pluto_sanslight'; 
-  color: #070707; 
-  position: relative; 
-  height: 100%;  
+.pdf-container {
+    margin: 50px;
+  font-size: 14px;
+  font-family: 'pluto_sanslight';
+  color: #070707;
+  position: relative;
+  height: 100%;
 }
 .pdf-header { padding: 0 25px 25px; border-bottom: 1px solid #0b7abd; height: 140px; }
 .pdf-creation p, .top-dtls p, .bottom-dtls p { margin-bottom: 2px; }
 .pdf-creation p span { color: #117cb5; }
 .pdf-body { padding: 35px 25px; }
 .top-dtls, .bottom-dtls { display: inline-block; max-width: 40%; padding: 10px 0; }
-.top-dtls { border-bottom: 1px dashed #070707; } 
+.top-dtls { border-bottom: 1px dashed #070707; }
 .top-dtls p span, .bottom-dtls p span { font-weight: bold; }
 .pdf-content { padding: 20px 0; }
 .pdf-footer { padding: 0 75px 20px; position: fixed; bottom: 0; left: 0; width: 100%; }

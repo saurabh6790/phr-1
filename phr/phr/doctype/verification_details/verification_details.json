@@ -148,6 +148,14 @@
    "options": "Patient\nProvider",
    "permlevel": 0,
    "precision": ""
+  },
+  {
+   "fieldname": "verification_for",
+   "fieldtype": "Select",
+   "label": "Verification For",
+   "options": "Patient\nProvider",
+   "permlevel": 0,
+   "precision": ""
   }
  ],
  "hide_heading": 0,

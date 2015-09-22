@@ -416,3 +416,16 @@ def has_permission(doc, user):
 
 	else:
 		return True
+
+@frappe.whitelist(allow_guest=True)
+def add_feedback(name,email,mobile,comment):
+	feedback_doc = frappe.get_doc({
+		"doctype":"Feedback",
+		"name1":name,
+		"email":email,
+		"mobile":mobile,
+		"comments":comment
+	})
+	feedback_doc.insert(ignore_permissions=True)
+	return {"msg_display":"Feedback Submitted Successfully","message":"fbk"}
+

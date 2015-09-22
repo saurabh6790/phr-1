@@ -43,12 +43,84 @@
     font-style: normal;
 }
 
+
+
+.main-login {
+  margin: 0 auto;
+  position: relative;
+  float: none !important;
+}
+@media (max-width: 991px) {
+  .main-login {
+    margin-top: 65px;
+  }
+}
+.main-login .logo {
+  padding: 0 10px;
+}
+.main-login .box-login, .main-login .box-forgot, .main-login .box-register {
+  background: #FFFFFF;
+  border-radius: 5px;
+  overflow: hidden;
+  padding: 15px;
+  margin: 15px 0 65px 0;
+}
+.main-login .form fieldset {
+  border: 1px;
+  margin: 0;
+  padding: 10px 0 0;
+}
+.main-login a.forgot {
+  color: #909090;
+  font-size: 12px;
+  position: absolute;
+  right: 10px;
+  text-shadow: 1px 1px 1px #FFFFFF;
+  top: 9px;
+}
+.main-login input.password {
+  padding-right: 130px;
+}
+.main-login label {
+  color: #7F7F7F;
+  font-size: 14px;
+  margin-top: 5px;
+}
+.main-login .copyright {
+  font-size: 11px;
+  margin: 0 auto;
+  padding: 10px 10px 0;
+  text-align: center;
+}
+.main-login .form-actions:before, .main-login .form-actions:after {
+  content: "";
+  display: table;
+  line-height: 0;
+}
+.main-login .form-actions:after {
+  clear: both;
+}
+.main-login .form-actions {
+  margin-top: 15px;
+  padding-top: 10px;
+  display: block;
+}
+.main-login .new-account {
+  border-top: 1px dotted #EEEEEE;
+  margin-top: 15px;
+  padding-top: 10px;
+  display: block;
+}
+
+
 /*body { padding-top: 65px !important; }*/
 .green, .active, .contact-left a:hover, .login-wrapper h5 { color: #87c33f; }
 .navbar-default .navbar-nav > .last > a { color: #0a79bc; }
 header { position: fixed; top: 0; left: 0; width: 100%; background: #fff; z-index: 9999; }
-.login-container { position: relative; }
+#banner-slider{ margin-top: 65px; }
+.login-container { position: relative;}
 .login-wrapper { position: absolute; top: 20px; right: 0; z-index: 999; width: 320px; background: #fff; padding: 25px; border-radius: 10px; }
+.signup-wrapper { position: absolute; top: 20px; z-index: 999; background: #fff; padding: 25px; border-radius: 10px; text-align: center;}
 .login-wrapper .nav > li > a { padding: 10px; }
 .carousel-caption .expore-link {
 	color: #0a79bc;
@@ -59,6 +131,47 @@ header { position: fixed; top: 0; left: 0; width: 100%; background: #fff; z-inde
 	margin-top: 10px;
 	display: inline-block;
 	background: #fff;
+}
+
+.carousel-indicators {
+  position: absolute;
+  bottom: 10px;
+  left: 50%;
+  z-index: 15;
+  width: 60%;
+  padding-left: 0;
+  margin-left: -30%;
+  text-align: left; 
+  list-style: square!important;
+}
+.carousel-indicators li {
+  display: inline-block;
+  width: 11px;
+  height: 11px;
+  margin: 2px;
+  text-indent: -999px;
+  cursor: pointer;
+  background-color: #ddd;
+  border: none !important;
+  border-radius:0px !important; 
+}
+.carousel-indicators .active {  
+  background-color: #88c340;
+}
+.carousel-caption {
+  position: absolute; 
+  top: 25%;
+  left: 15%;
+  z-index: 10;
+  padding-top: 20px;
+  padding-bottom: 20px;
+  color: #262626; 
+  font-size: 22px;
+  width: 35%;
+  text-align: left!important;
+}
+.carousel-caption .btn {
+  text-shadow: none;
 }
 .carousel-caption .expore-link:hover, .carousel-caption .expore-link:focus { color: #fff; background: #0a79bc; }
 
@@ -124,7 +237,7 @@ footer address { margin: 0 0 20px; }
 .feedback-left { padding: 0 5px 0 0 !important; }
 .feedback-right { padding: 0 0 0 5px !important; }
 .feedback-right textarea.form-control { height: 145px; }
-.feedback-right .feedback-btn { color: #fff !important; background: #87c33f; font-size: 18px; margin: 10px 0; border: 1px solid #87c33f !important; border-radius: 20px; padding: 6px 35px 5px; }
+.feedback-right .feedback-btn { color: #fff !important; background: #87c33f!important; font-size: 18px; margin: 10px 0; border: 1px solid #87c33f !important; border-radius: 20px; padding: 6px 35px 5px; }
 .feedback-right .feedback-btn:hover, .feedback-right .feedback-btn:focus { background: #76b827; }
 .powered-copyright { padding: 20px 0; }
 .powered span { display: inline-block; margin-right: 5px; }

@@ -1,64 +1,59 @@
-<header class="navbar navbar-default navbar-static-top">
-	<!-- start: NAVBAR HEADER -->
-	<div class="navbar-header">
-		<a href="#" class="sidebar-mobile-toggler pull-left hidden-md hidden-lg" class="btn btn-navbar sidebar-toggle" data-toggle-class="app-slide-off" data-toggle-target="#app" data-toggle-click-outside="#sidebar">
-			<i class="ti-align-justify"></i>
-		</a>
-		<a class="navbar-brand" href="#">
-			<img src="assets/phr/images/logo.png" alt="Healthsnapp"  title="Healthsnapp" />
-		</a>
-		<a href="#" class="sidebar-toggler pull-right visible-md visible-lg" data-toggle-class="app-sidebar-closed" data-toggle-target="#app">
-			<i class="ti-align-justify"></i>
-		</a>
-		<a class="pull-right menu-toggler visible-xs-block" id="menu-toggler" data-toggle="collapse" href="#navbar-collapse">
-			<span class="sr-only">Toggle navigation</span>
-			<i class="ti-view-grid"></i>
-		</a>
-	</div>
-	<!-- end: NAVBAR HEADER -->
-	<!-- start: NAVBAR COLLAPSE -->
-	<div class="navbar-collapse collapse" id="navbar-collapse">
-		<ul class="nav navbar-right">
-			<li class="dropdown current-user logged-in" id="website-post-login" data-label="website-post-login">
-				<a nohref class="dropdown-toggle" data-toggle="dropdown">
-					<img class="user-picture"/>
-						<b class="full-name"></b><b class="caret"></b>
-				</a>
-				</a>
-				<ul class="dropdown-menu dropdown-dark">
-					<li class="db">
-						<a nohref onclick="switch_to_db()">
-							Switch to Dashboard
+<header>
+	<nav class="navbar navbar-default" style="background-color:#ffffff;">
+		<div class="container">
+          	<div class="row">
+	            <!-- Brand and toggle get grouped for better mobile display -->
+	            <div class="navbar-header" style="border-bottom:0px;border-right:0px">
+	              <a class="navbar-brand" href="index.html"><img src="assets/phr/images/logo.png" alt="Healthsnapp" title="Healthsnapp"></a>
+	              <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+	                <span class="sr-only">Toggle navigation</span>
+	                <span class="icon-bar"></span>
+	                <span class="icon-bar"></span>
+	                <span class="icon-bar"></span>
+	              </button> 
+	            </div>
+	        
+	            <!-- Collect the nav links, forms, and other content for toggling -->
+	            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1" style="border-bottom:0px;border-right:0px"> 
+	              <ul class="nav navbar-nav navbar-right"> 
+	                <li><a href="#benefits">BENEFITS</a></li>
+	                <li><a href="#contact">CONTACT US</a></li>  
+	                <li class="dropdown current-user logged-in" id="website-post-login" data-label="website-post-login">
+						<a nohref class="dropdown-toggle" data-toggle="dropdown">
+							<img class="user-picture"/>
+								<b class="full-name"></b><b class="caret"></b>
 						</a>
+				
+						<ul class="dropdown-menu dropdown-dark">
+							<li class="db">
+								<a nohref onclick="switch_to_db()">
+									Switch to Dashboard
+								</a>
+							</li>
+							{%- for child in post_login -%}
+							<li {% if child.label %}data-label="{{ child.label }}" {% endif %}
+									{% if child.class %} class="{{ child.class }}" {% endif %}>
+								{%- if child.url -%}
+								<a href="{{ child.url }}" {{ child.target or '' }}
+										rel="nofollow">
+									{%- if child.icon -%}
+										<i class="icon-fixed-width {{ child.icon }}"></i>
+									{%- endif -%}
+									{{ child.label }}
+								</a>
+								{%- endif -%}
+							</li>
+								{%- endfor -%}
+						</ul>
 					</li>
-					{%- for child in post_login -%}
-						<li {% if child.label %}data-label="{{ child.label }}" {% endif %}
-							{% if child.class %} class="{{ child.class }}" {% endif %}>
-						{%- if child.url -%}
-						<a href="{{ child.url }}" {{ child.target or '' }}
-							rel="nofollow">
-						{%- if child.icon -%}
-							<i class="icon-fixed-width {{ child.icon }}"></i>
-						{%- endif -%}
-						{{ child.label }}
-						</a>
-						{%- endif -%}
-						</li>
-					{%- endfor -%}
-				</ul>
-
-			</li>
-			<li class="btn-login-area"><a href="/login#patient">
-				{%- if not disable_signup %}Sign Up / {% endif -%} Login</a></li>
-			<!-- end: USER OPTIONS DROPDOWN -->
-		</ul>
-		<!-- start: MENU TOGGLER FOR MOBILE DEVICES -->
-		<div class="close-handle visible-xs-block menu-toggler" data-toggle="collapse" href="#navbar-collapse">
-			<div class="arrow-left"></div>
-			<div class="arrow-right"></div>
-		</div>
-		<!-- end: MENU TOGGLER FOR MOBILE DEVICES -->
-	</div>
+					<li class="btn-login-area last pull-right"><a href="/login#patient">
+						{%- if not disable_signup %}Sign Up / {% endif -%} Login</a>
+					</li>
+	              </ul>
+	            </div><!-- /.navbar-collapse -->
+	          </div>
+        </div><!-- /.container-fluid -->
+	<nav>
 </header>
 <script>
 $(function() { $('.dropdown-toggle').dropdown(); });
