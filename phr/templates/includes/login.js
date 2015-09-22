@@ -46,9 +46,6 @@ login.bind_events = function() {
 		});
 
 		$("#feedback-form").on("submit", function(event) {
-			event.preventDefault();
-			$('.btn-primary').prop("disabled", true);
-			alert("hiiii")
 			var args = {};
 			args.cmd = "phr.templates.pages.login.add_feedback";
 			args.name = ($("#fbk-name").val() || "").trim();
@@ -104,7 +101,7 @@ login.patient = function() {
 	$("#li-provider").removeClass("active");
 	$("#patient").addClass("active");
 	$("#li-patient").addClass("active");
-	$("#feedback-form").toggle(true);
+	//$("#feedback-form").toggle(true);
 }
 
 login.provider = function() {
@@ -118,7 +115,7 @@ login.provider = function() {
 	$("#li-patient").removeClass("active");
 	$("#provider").addClass("active");
 	$("#li-provider").addClass("active");
-	$("#feedback-form").toggle(true);
+	//$("#feedback-form").toggle(true);
 }
 
 // Login
