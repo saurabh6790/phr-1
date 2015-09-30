@@ -88,7 +88,10 @@ def create_profile(first_name,middle_name,last_name,email_id,contact,created_via
 							"email": email_id,
 							"received_from": created_via,
 							"gender":gender,
-							"reg_no": registration_number
+							"reg_no": registration_number,
+							"first_name":first_name,
+							"middle_name":middle_name,
+							"last_name":last_name
 						})
 					doc.ignore_permissions = True
 					doc.save()
