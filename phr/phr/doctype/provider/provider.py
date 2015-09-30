@@ -63,7 +63,10 @@ class Provider(Document):
 					"state": self.state,
 					"pincode": self.pincode,
 					'received_from': 'Desktop',
-					"provider": True
+					"provider": True,
+					"person_firstname":self.first_name,
+					"person_middlename":self.middle_name,
+					"person_lastname":self.last_name
 				}
 
 		from phr.phr.phr_api import get_response
@@ -81,7 +84,9 @@ class Provider(Document):
 			"doctype":"User",
 			"email": self.email,
 			"profile_id": self.provider_id,
-			"first_name": self.provider_name,
+			"first_name": self.first_name,
+			"last_name":self.last_name,
+			"middle_name":self.middle_name,
 			"enabled": 1,
 			"contact":self.mobile_number,
 			"new_password": password,
@@ -94,8 +99,8 @@ class Provider(Document):
 		user.no_welcome_mail = True
 		user.insert()
 
-		args = {'person_firstname':self.provider_name,'person_middlename': '',
-				'person_lastname':'','email':self.email,
+		args = {'person_firstname':self.first_name,'person_middlename':self.middle_name,
+				'person_lastname':self.last_name,'email':self.email,
 				'mobile': self.mobile_number, "barcode":str(get_barcode())}
 
 		notify = notify_user({}, args, self.provider_id, send_sms=False, is_provider=True)
