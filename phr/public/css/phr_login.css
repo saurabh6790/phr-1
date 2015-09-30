@@ -271,3 +271,13 @@ span.input-icon, span.input-help {
     top: -1px;
     z-index: 2;
 }
+
+.gender_choice {
+    background-repeat: no-repeat;
+    background-image: url("/assets/phr/images/gender.png");
+    background-position: left center;
+    background-position-x:1%;
+    background-position-y:50%;
+    padding-left: 30px;
+    background-size: 20px;
+}
