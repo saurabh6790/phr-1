@@ -28,7 +28,8 @@ login.bind_events = function() {
 				frappe.msgprint(__("Both login and password required"));
 				return false;
 			}
-			login.call(args);
+			validate_user_and_login(args)
+			// login.call(args);
 		});
 
 		$(".form-forgot").on("submit", function(event) {
@@ -116,6 +117,24 @@ login.provider = function() {
 	$("#provider").addClass("active");
 	$("#li-provider").addClass("active");
 	$("#feedback-form").toggle(true);
+}
+
+validate_user_and_login = function(args){
+	frappe.call({
+		method: "phr.templates.pages.login.is_valid_user",
+		args: {
+			"user": args.usr,
+			"login_as": args.login_as
+		},
+		callback: function(r){
+			if(!r.message){
+				frappe.msgprint("<center><b>"+ args.usr +"</b> can not login as <b>"+ args.login_as +"</b></center>");
+				$('.btn-primary').prop("disabled", false);
+			}
+			else
+				login.call(args);
+		}
+	});
 }
 
 // Login

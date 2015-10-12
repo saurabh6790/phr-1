@@ -432,3 +432,11 @@ def add_feedback(name,email,mobile,comment):
 	feedback_doc.insert(ignore_permissions=True)
 	return {"msg_display":"Feedback Submitted Successfully","message":"fbk"}
 
+@frappe.whitelist(allow_guest=True)
+def is_valid_user(user, login_as):
+	info = frappe.db.get_value("User", user, ["user_type","access_type"], as_dict=True)
+
+	if info.user_type == "Website User" and info.access_type != login_as:
+		return False
+	else:
+		return True
