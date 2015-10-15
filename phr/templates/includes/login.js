@@ -2,6 +2,7 @@ frappe.require("/assets/phr/js/jquery.autocomplete.multiselect.js");
 window.disable_signup = {{ disable_signup and "true" or "false" }};
 
 window.login = {};
+window.login_as = ""
 
 login.bind_events = function() {
 	if(!window.pageInitialized){
@@ -14,7 +15,7 @@ login.bind_events = function() {
 			$('.btn-primary').prop("disabled", true);
 			var args = {};
 			args.cmd = "login";
-			if(window.location.hash == "#patient"){
+			if(login_as == "patient"){
 				args.usr = ($("#patient_login_email").val() || "").trim();
 				args.pwd = $("#patient_login_password").val();
 				args.login_as = "Patient";
@@ -28,7 +29,18 @@ login.bind_events = function() {
 				frappe.msgprint(__("Both login and password required"));
 				return false;
 			}
-			login.call(args);
+			validate_user_and_login(args)
+			// login.call(args);
+		});
+		$('a[role="tab"]').on('click', function (e) {
+			attr=$(e.target).attr('href')
+			if (attr=='#patient'){
+				login_as = 'patient'
+			}
+			else if (attr=='#provider'){
+				login_as = 'provider'
+			}
+			// login.call(args);
 		});
 
 		$(".form-forgot").on("submit", function(event) {
@@ -118,6 +130,24 @@ login.provider = function() {
 	$("#feedback-form").toggle(true);
 }
 
+validate_user_and_login = function(args){
+	frappe.call({
+		method: "phr.templates.pages.login.is_valid_user",
+		args: {
+			"user": args.usr,
+			"login_as": args.login_as
+		},
+		callback: function(r){
+			if(!r.message){
+				frappe.msgprint("<center><b>"+ args.usr +"</b> can not login as <b>"+ args.login_as +"</b></center>");
+				$('.btn-primary').prop("disabled", false);
+			}
+			else
+				login.call(args);
+		}
+	});
+}
+
 // Login
 login.call = function(args) {
 	$('.btn-primary').prop("disabled", true);
@@ -149,8 +179,7 @@ login.login_handlers = (function() {
 
 	var login_handlers = {
 		200: function(data) {
-			console.log(data)
-            if(data.message=="Logged In") {
+			if(data.message=="Logged In") {
 				window.location.href = get_url_arg("redirect-to") || "/desk";
 			}
 			else if(data.message=="No App") {
@@ -192,7 +221,8 @@ login.login_handlers = (function() {
 
 frappe.ready(function() {
 	if(!window.pageInitialized){
-		window.location.href = "/login#patient";
+		//window.location.href = "/login#patient";
+		login_as = 'patient'
 		login.bind_events();
 		window.pageInitialized = true;
 		login.login();
