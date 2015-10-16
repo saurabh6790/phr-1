@@ -9,6 +9,14 @@
  "document_type": "Master", 
  "fields": [
   {
+   "fieldname": "stockist_id", 
+   "fieldtype": "Read Only", 
+   "label": "Stockist Id", 
+   "permlevel": 0, 
+   "precision": "", 
+   "read_only": 1
+  }, 
+  {
    "allow_on_submit": 0, 
    "fieldname": "first_name", 
    "fieldtype": "Data", 
@@ -158,7 +166,7 @@
  "is_submittable": 0, 
  "issingle": 0, 
  "istable": 0, 
- "modified": "2015-10-15 17:10:43.664854", 
+ "modified": "2015-10-16 12:25:52.438681", 
  "modified_by": "Administrator", 
  "module": "phr", 
  "name": "Stockist", 

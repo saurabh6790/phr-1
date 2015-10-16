@@ -207,7 +207,7 @@ def update_oauth_user(user, data, provider):
 """ Event Calls """
 @frappe.whitelist(allow_guest=True)
 def get_event_name():
-	return frappe.db.sql(""" select event_id,name from tabEvents """, as_dict=1)
+	return frappe.db.sql(""" select name from tabEvents """, as_dict=1)
 
 @frappe.whitelist(allow_guest=True)
 def getProfileVisitData(data):

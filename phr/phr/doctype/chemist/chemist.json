@@ -2,12 +2,21 @@
  "allow_copy": 0, 
  "allow_import": 0, 
  "allow_rename": 0, 
+ "autoname": "CHE./##########", 
  "creation": "2015-10-14 11:48:11.747072", 
  "custom": 0, 
  "docstatus": 0, 
  "doctype": "DocType", 
  "document_type": "Master", 
  "fields": [
+  {
+   "fieldname": "profile_id", 
+   "fieldtype": "Read Only", 
+   "label": "Chemist Id", 
+   "permlevel": 0, 
+   "precision": "", 
+   "read_only": 1
+  }, 
   {
    "allow_on_submit": 0, 
    "fieldname": "first_name", 
@@ -158,7 +167,7 @@
  "is_submittable": 0, 
  "issingle": 0, 
  "istable": 0, 
- "modified": "2015-10-15 16:31:13.047947", 
+ "modified": "2015-10-16 14:43:56.328274", 
  "modified_by": "Administrator", 
  "module": "phr", 
  "name": "Chemist", 
