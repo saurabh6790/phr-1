@@ -754,6 +754,15 @@ def forgotPassword(data):
 		msg="""Invalid Parameters, Please mention the user's email id .."""
 		return {"returncode":401,"msg_display":msg}
 
+
+# @frappe.whitelist(allow_guest=True)
+# def createChemist(data):
+# 	from phr.phr.doctype.chemist.chemist import create_chemist
+# 	data = json.loads(data)
+# 	res = 
+# 	del res['actualdata']
+# 	return res
+
 # """AES test method"""
 
 # BLOCK_SIZE = 64

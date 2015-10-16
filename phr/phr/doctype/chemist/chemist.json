@@ -2,7 +2,7 @@
  "allow_copy": 0, 
  "allow_import": 0, 
  "allow_rename": 0, 
- "autoname": "CHE./##########", 
+ "autoname": "CHE/.##########", 
  "creation": "2015-10-14 11:48:11.747072", 
  "custom": 0, 
  "docstatus": 0, 
@@ -20,7 +20,7 @@
   {
    "allow_on_submit": 0, 
    "fieldname": "first_name", 
-   "fieldtype": "Text", 
+   "fieldtype": "Data", 
    "hidden": 0, 
    "ignore_user_permissions": 0, 
    "in_filter": 0, 
@@ -39,7 +39,7 @@
   {
    "allow_on_submit": 0, 
    "fieldname": "middle_name", 
-   "fieldtype": "Text", 
+   "fieldtype": "Data", 
    "hidden": 0, 
    "ignore_user_permissions": 0, 
    "in_filter": 0, 
@@ -56,9 +56,15 @@
    "set_only_once": 0
   }, 
   {
+   "fieldname": "column_break_4", 
+   "fieldtype": "Column Break", 
+   "permlevel": 0, 
+   "precision": ""
+  }, 
+  {
    "allow_on_submit": 0, 
    "fieldname": "last_name", 
-   "fieldtype": "Text", 
+   "fieldtype": "Data", 
    "hidden": 0, 
    "ignore_user_permissions": 0, 
    "in_filter": 0, 
@@ -113,6 +119,12 @@
    "set_only_once": 0
   }, 
   {
+   "fieldname": "section_break_8", 
+   "fieldtype": "Section Break", 
+   "permlevel": 0, 
+   "precision": ""
+  }, 
+  {
    "allow_on_submit": 0, 
    "fieldname": "licence_number", 
    "fieldtype": "Long Text", 
@@ -130,6 +142,12 @@
    "reqd": 1, 
    "search_index": 0, 
    "set_only_once": 0
+  }, 
+  {
+   "fieldname": "column_break_10", 
+   "fieldtype": "Column Break", 
+   "permlevel": 0, 
+   "precision": ""
   }, 
   {
    "allow_on_submit": 0, 
@@ -151,12 +169,29 @@
    "set_only_once": 0
   }, 
   {
+   "fieldname": "section_break_11", 
+   "fieldtype": "Section Break", 
+   "label": "Delivery Teams", 
+   "permlevel": 0, 
+   "precision": ""
+  }, 
+  {
    "fieldname": "chemist_delivery_team", 
    "fieldtype": "Table", 
    "label": "Chemist Delivery Team", 
    "options": "Chemist Delivery Team", 
    "permlevel": 0, 
    "precision": ""
+  }, 
+  {
+   "default": "Desktop", 
+   "fieldname": "received_from", 
+   "fieldtype": "Select", 
+   "label": "Received_from ", 
+   "options": "\nDesktop\nMobile", 
+   "permlevel": 0, 
+   "precision": "", 
+   "read_only": 1
   }
  ], 
  "hide_heading": 0, 
@@ -167,7 +202,7 @@
  "is_submittable": 0, 
  "issingle": 0, 
  "istable": 0, 
- "modified": "2015-10-16 14:43:56.328274", 
+ "modified": "2015-10-16 16:26:53.868401", 
  "modified_by": "Administrator", 
  "module": "phr", 
  "name": "Chemist", 
