@@ -210,6 +210,26 @@ def get_event_name():
 	return frappe.db.sql(""" select name from tabEvents """, as_dict=1)
 
 @frappe.whitelist(allow_guest=True)
+def getPrescriptionsData(data):
+	data = json.loads(data)
+	chemist_id = data.get('chemist_id')
+	status = data.get('status')
+	return frappe.db.sql(""" select user.contact as mobile_number,user.first_name,user.last_name from `tabPatient Prescriptions` presc INNER JOIN `tabPrescription Assignment Log` prescLog ON prescLog.parent=presc.name INNER JOIN tabUser user on presc.patient_id=user.profile_id where delivery_status='%s' AND prescription_assigned_to_chemist='%s' """%(status,chemist_id) , as_dict=1)
+
+@frappe.whitelist(allow_guest=True)
+def getStockistOrders(data):
+	data = json.loads(data)
+	stockist_id = data.get('stockist_id')
+	status = data.get('status')
+	return frappe.db.sql(""" select ord.name,chem.first_name,chem.last_name,chem.mobile_number from `tabChemist Order` ord INNER JOIN `tabChemist` chem ON ord.chemist_id=chem.name AND order_status='%s' AND ord.stockist_id='%s'  """%(status,stockist_id) , as_dict=1)
+
+@frappe.whitelist(allow_guest=True)
+def getStockistOrderDetails(data):
+	data = json.loads(data)
+	order_id = data.get('order_id')
+	return frappe.db.sql(""" select ord.name,chem.first_name,chem.last_name,chem.mobile_number,chem.email_address from `tabChemist Order` ord INNER JOIN `tabChemist` chem ON ord.chemist_id=chem.name AND ord.name='%s' """%(order_id) , as_dict=1)	
+
+@frappe.whitelist(allow_guest=True)
 def getProfileVisitData(data):
 	data = json.loads(data)
 
@@ -754,6 +774,43 @@ def forgotPassword(data):
 		msg="""Invalid Parameters, Please mention the user's email id .."""
 		return {"returncode":401,"msg_display":msg}
 
+@frappe.whitelist(allow_guest=True)
+def create_chemist_order(data):
+	"""
+		1.Read data
+		2.Read Binary file content and Write to public files
+		3.Insert Order
+		Input:
+		{
+			"chemist_id":"value"
+			"stockist_id":"value"
+			"expected_delivery_date":"value"
+			"order_description":"value"
+			"image_data":"binary"
+		}
+	"""
+	pass
+	# data = json.loads(data)
+	# chemist_order = frappe.new_doc("Chemist Order")
+	# chemist_order.update ( {
+	# 	"chemist_id" : data.get("chemist_id"),
+	# 	"stockist_id" : data.get("stockist_id"),
+	# 	"expected_delivery_date" : data.get("expected_delivery_date"),
+	# 	"order_description" : data.get("order_description"),
+	# })
+	# chemist_order.insert(ignore_permissions=True)
+	# chemist_order_id=chemist_order.name
+	# import os
+	# from frappe.utils import  get_files_path
+
+	# file_path = "%(files_path)s/orders/%(chemist_order_id)s"%{'files_path':get_files_path(),"chemist_order_id":chemist_order_id}
+	# if not os.path.exists(os.path.join(get_files_path(),"orders")):
+	# 	path = os.path.join(os.getcwd(), get_files_path()[2:], "orders")
+	# 	frappe.create_folder(path)
+	# with open("%s/%s"%(path,chemist_order_id), 'wb') as f:
+	# 	f.write(base64.b64decode(data.get('image_data')))
+	# chemist_order.order_image_url=file_path
+	# chemist_order.save(ignore_permissions=True)
 
 # @frappe.whitelist(allow_guest=True)
 # def createChemist(data):
@@ -792,3 +849,4 @@ def forgotPassword(data):
 # 	encoded = EncodeAES(cipher, str(decoded))
 
 # 	return encoded
+
