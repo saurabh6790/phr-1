@@ -2,6 +2,7 @@
  "allow_copy": 0, 
  "allow_import": 0, 
  "allow_rename": 0, 
+ "autoname": "STCK/.##########", 
  "creation": "2015-10-14 14:43:33.124565", 
  "custom": 0, 
  "docstatus": 0, 
@@ -166,7 +167,7 @@
  "is_submittable": 0, 
  "issingle": 0, 
  "istable": 0, 
- "modified": "2015-10-16 12:25:52.438681", 
+ "modified": "2015-10-19 19:27:20.822937", 
  "modified_by": "Administrator", 
  "module": "phr", 
  "name": "Stockist", 
@@ -201,6 +202,7 @@
  ], 
  "read_only": 0, 
  "read_only_onload": 0, 
+ "search_fields": "first_name,last_name", 
  "sort_field": "modified", 
  "sort_order": "DESC"
 }
