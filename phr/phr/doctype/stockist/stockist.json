@@ -75,6 +75,13 @@
    "set_only_once": 0
   }, 
   {
+   "fieldname": "address", 
+   "fieldtype": "Data", 
+   "label": "Address", 
+   "permlevel": 0, 
+   "precision": ""
+  }, 
+  {
    "allow_on_submit": 0, 
    "fieldname": "mobile_number", 
    "fieldtype": "Data", 
@@ -167,7 +174,7 @@
  "is_submittable": 0, 
  "issingle": 0, 
  "istable": 0, 
- "modified": "2015-10-19 19:27:20.822937", 
+ "modified": "2015-10-20 13:14:28.776334", 
  "modified_by": "Administrator", 
  "module": "phr", 
  "name": "Stockist", 

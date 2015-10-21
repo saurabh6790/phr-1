@@ -2,6 +2,7 @@
  "allow_copy": 0, 
  "allow_import": 0, 
  "allow_rename": 0, 
+ "autoname": "ORDLOG-.##########", 
  "creation": "2015-10-14 15:29:12.061813", 
  "custom": 0, 
  "docstatus": 0, 
@@ -101,7 +102,7 @@
    "print_hide": 0, 
    "read_only": 0, 
    "report_hide": 0, 
-   "reqd": 1, 
+   "reqd": 0, 
    "search_index": 0, 
    "set_only_once": 0
   }, 
@@ -179,7 +180,7 @@
    "print_hide": 0, 
    "read_only": 0, 
    "report_hide": 0, 
-   "reqd": 1, 
+   "reqd": 0, 
    "search_index": 0, 
    "set_only_once": 0
   }
@@ -192,7 +193,7 @@
  "is_submittable": 0, 
  "issingle": 0, 
  "istable": 0, 
- "modified": "2015-10-14 15:29:12.061813", 
+ "modified": "2015-10-20 18:36:01.504211", 
  "modified_by": "Administrator", 
  "module": "phr", 
  "name": "Chemist Order Delivery Log", 
