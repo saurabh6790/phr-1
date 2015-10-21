@@ -834,7 +834,7 @@ def create_chemist_order(data):
 		frappe.create_folder(path)
 	with open("%s/%s"%(path,chemist_order_id), 'wb') as f:
 		f.write(base64.b64decode(data.get('image_data')))
-	file_url= get_files_path()[21:] + "/orders/" + chemist_order_id + ""	 
+	file_url= get_files_path()[26:] + "/orders/" + chemist_order_id + ""	 
 	print file_url
 	chemist_order.order_image_url=file_url
 	chemist_order.save(ignore_permissions=True)
@@ -923,7 +923,7 @@ def create_order_delivery_log(data):
 		frappe.create_folder(path)
 	with open("%s/%s"%(path,order_log_id), 'wb') as f:
 		f.write(base64.b64decode(data.get('image_data')))
-	file_url= get_files_path()[21:] + "/orderslog/" + order_log_id + ""	 
+	file_url= get_files_path()[26:] + "/orderslog/" + order_log_id + ""	 
 	print file_url
 	order_log.stockist_bill_image=file_url
 	order_log.save(ignore_permissions=True)
@@ -989,7 +989,7 @@ def update_prescription_delivery_log(data):
 		frappe.create_folder(path)
 	with open("%s/%s"%(path,prescription_log_id), 'wb') as f:
 		f.write(base64.b64decode(data.get('image_data')))
-	file_url= get_files_path()[21:] + "/uploadBillLog/" + prescription_log_id + ""	 
+	file_url= get_files_path()[26:] + "/uploadBillLog/" + prescription_log_id + ""	 
 	print data.get("prescription_id")	
 	# prescription = get_doc("Patient Prescriptions",data.get("prescription_id"))
 	# prescription.prescription_assignment_status = "Waiting For Patients Confirmation"
@@ -997,7 +997,7 @@ def update_prescription_delivery_log(data):
 	frappe.db.sql(""" update `tabPrescription Assignment Log` 
 		set bill_image_url = '%s',delivery_status='Waiting For Patients Confirmation',
 		delivery_team_member_id = '%s'	
-		where name ='%s'"""%(file_url,delivery_team_member_id,prescription_log_id))
+```		where name ='%s'"""%(file_url,delivery_team_member_id,prescription_log_id))
 	frappe.db.commit()
 
 
