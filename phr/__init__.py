@@ -238,20 +238,47 @@ def getStockistOrders(data):
 	data = json.loads(data)
 	stockist_id = data.get('stockist_id')
 	status = data.get('status')
-	return frappe.db.sql(""" select ord.name,chem.first_name,chem.last_name,chem.mobile_number from `tabChemist Order` ord INNER JOIN `tabChemist` chem ON ord.chemist_id=chem.name AND order_status='%s' AND ord.stockist_id='%s'  """%(status,stockist_id) , as_dict=1)
+	return frappe.db.sql(""" select ord.name,chem.first_name,chem.last_name,chem.mobile_number from `tabChemist Order` ord INNER JOIN `tabChemist` chem ON ord.chemist_id=chem.profile_id AND order_status='%s' AND ord.stockist_id='%s'  """%(status,stockist_id) , as_dict=1)
 
 @frappe.whitelist(allow_guest=True)
 def getDoctorsAppointments(data):
 	data = json.loads(data)
 	provider_id = data.get('provider_id')
 	status = data.get('status')
-	return frappe.db.sql(""" select appt.profile_id as patient_id,appt.name,user.contact as mobile_number,user.first_name,user.last_name,DATE_FORMAT(from_date_time,'%%d-%%b-%%Y') as appointment_date,DATE_FORMAT(from_date_time,'%%h:%%i:%%s') as appointment_time from `tabAppointments` appt INNER JOIN tabUser user on appt.profile_id=user.profile_id where appt.provider_id='%s'  AND appt.status='%s' """%(provider_id,status) , as_dict=1)
+	return frappe.db.sql(""" select appt.profile_id as patient_id,appt.name,user.contact as mobile_number,user.first_name,user.last_name,DATE_FORMAT(from_date_time,'%%d-%%b-%%Y') as appointment_date,DATE_FORMAT(from_date_time,'%%r') as appointment_time from `tabAppointments` appt INNER JOIN tabUser user on appt.profile_id=user.profile_id where appt.provider_id='%s'  AND appt.status='%s' """%(provider_id,status) , as_dict=1)
 
 @frappe.whitelist(allow_guest=True)
 def getStockistOrderDetails(data):
 	data = json.loads(data)
 	order_id = data.get('order_id')
-	return frappe.db.sql(""" select ord.name,ord.order_image_url,chem.first_name,chem.last_name,chem.mobile_number,chem.email_address,chem.address from `tabChemist Order` ord INNER JOIN `tabChemist` chem ON ord.chemist_id=chem.name AND ord.name='%s' """%(order_id) , as_dict=1)	
+	return frappe.db.sql(""" select ord.name,ord.order_image_url,chem.first_name,chem.last_name,chem.mobile_number,chem.email_address,chem.address from `tabChemist Order` ord INNER JOIN `tabChemist` chem ON ord.chemist_id=chem.profile_id AND ord.name='%s' """%(order_id) , as_dict=1)	
+
+@frappe.whitelist(allow_guest=True)
+def getListOfOrdersPlacedByChemist(data):
+	data = json.loads(data)
+	chemist_id = data.get('chemist_id')
+	order_status = data.get('order_status')
+	return frappe.db.sql(""" select ord.name,ord.order_image_url,stck.first_name,stck.last_name,ord.order_description,ord.expected_delivery_date,ord.order_status from `tabChemist Order` ord INNER JOIN `tabStockist` stck ON ord.stockist_id=stck.stockist_id AND ord.chemist_id='%s' AND ord.order_status in %s """%(chemist_id,order_status) , as_dict=1)		
+
+@frappe.whitelist(allow_guest=True)
+def getDetailsOfOrdersPlacedByChemist(data):
+	data = json.loads(data)
+	order_id = data.get('order_id')
+	return frappe.db.sql(""" select ord.name,ord.order_image_url,stck.first_name,stck.last_name,ord.order_description,ord.expected_delivery_date,ord.order_status from `tabChemist Order` ord INNER JOIN `tabStockist` stck ON ord.stockist_id=stck.stockist_id AND ord.name='%s' """%(order_id) , as_dict=1)			
+
+@frappe.whitelist(allow_guest=True)
+def setAcceptOrderByChemist(data):
+	pass
+	# data = json.loads(data)
+	# order_id = data.get('order_id')
+	# return frappe.db.sql(""" select ord.name,ord.order_image_url,stck.first_name,stck.last_name,ord.order_description,ord.expected_delivery_date,ord.order_status from `tabChemist Order` ord INNER JOIN `tabStockist` stck ON ord.stockist_id=stck.stockist_id AND ord.name='%s' """%(order_id) , as_dict=1)			
+
+
+@frappe.whitelist(allow_guest=True)
+def getChemistDeliveryBoys(data):
+	data = json.loads(data)
+	chemist_id = data.get('chemist_id')
+	return frappe.db.sql(""" select team.name,team.first_name,team.last_name from `tabChemist Delivery Team` team INNER JOIN `tabChemist` chem ON chem.name=team.parent AND chem.profile_id='%s' """%(chemist_id) , as_dict=1)			
 
 @frappe.whitelist(allow_guest=True)
 def getProfileVisitData(data):
@@ -815,6 +842,7 @@ def create_chemist_order(data):
 	"""
 
 	data = json.loads(data)
+	print data.get("expected_delivery_date"),data.get("order_description")
 	chemist_order = frappe.new_doc("Chemist Order")
 	chemist_order.update ( {
 		"chemist_id" : data.get("chemist_id"),
@@ -834,7 +862,7 @@ def create_chemist_order(data):
 		frappe.create_folder(path)
 	with open("%s/%s"%(path,chemist_order_id), 'wb') as f:
 		f.write(base64.b64decode(data.get('image_data')))
-	file_url= get_files_path()[26:] + "/orders/" + chemist_order_id + ""	 
+	file_url= "files/orders/" + chemist_order_id + ""	 
 	print file_url
 	chemist_order.order_image_url=file_url
 	chemist_order.save(ignore_permissions=True)
@@ -876,7 +904,7 @@ def create_patient_prescription(data):
 		frappe.create_folder(path)
 	with open("%s/%s"%(path,patient_prescription_id), 'wb') as f:
 		f.write(base64.b64decode(data.get('image_data')))
-	file_url= get_files_path()[21:] + "/p-prescriptions/" + patient_prescription_id + ""	 
+	file_url= "files/p-prescriptions/" + patient_prescription_id + ""	 
 	print file_url
 	patient_prescription.prescription_image_url=file_url
 	patient_prescription.save(ignore_permissions=True)
@@ -923,7 +951,7 @@ def create_order_delivery_log(data):
 		frappe.create_folder(path)
 	with open("%s/%s"%(path,order_log_id), 'wb') as f:
 		f.write(base64.b64decode(data.get('image_data')))
-	file_url= get_files_path()[26:] + "/orderslog/" + order_log_id + ""	 
+	file_url= "files/orderslog/" + order_log_id + ""	 
 	print file_url
 	order_log.stockist_bill_image=file_url
 	order_log.save(ignore_permissions=True)
@@ -989,7 +1017,7 @@ def update_prescription_delivery_log(data):
 		frappe.create_folder(path)
 	with open("%s/%s"%(path,prescription_log_id), 'wb') as f:
 		f.write(base64.b64decode(data.get('image_data')))
-	file_url= get_files_path()[26:] + "/uploadBillLog/" + prescription_log_id + ""	 
+	file_url= "files/uploadBillLog/" + prescription_log_id + ""	 
 	print data.get("prescription_id")	
 	# prescription = get_doc("Patient Prescriptions",data.get("prescription_id"))
 	# prescription.prescription_assignment_status = "Waiting For Patients Confirmation"
@@ -997,7 +1025,7 @@ def update_prescription_delivery_log(data):
 	frappe.db.sql(""" update `tabPrescription Assignment Log` 
 		set bill_image_url = '%s',delivery_status='Waiting For Patients Confirmation',
 		delivery_team_member_id = '%s'	
-```		where name ='%s'"""%(file_url,delivery_team_member_id,prescription_log_id))
+		where name ='%s'"""%(file_url,delivery_team_member_id,prescription_log_id))
 	frappe.db.commit()
 
 

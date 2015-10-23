@@ -89,7 +89,7 @@ class Chemist(Document):
 			"contact":self.mobile_number,
 			"new_password": password,
 			"user_type": "Website User",
-			"access_type":"Provider",#change to Chemist
+			"access_type":"Chemist",#change to Chemist
 			"created_via": "Desktop",
 			"password_str":password
 		})
@@ -112,7 +112,7 @@ class Chemist(Document):
 		"""
 		#change access type to chemist
 		if cint(frappe.db.sql("""select count(*) from tabUser where name = '%s'
-					and access_type = "Provider" """%self.email_address,as_list=1)[0][0]) > 0:
+					 """%self.email_address,as_list=1)[0][0]) > 0:
 			return True
 		return False
 

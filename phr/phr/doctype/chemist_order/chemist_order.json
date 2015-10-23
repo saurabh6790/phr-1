@@ -12,7 +12,7 @@
   {
    "allow_on_submit": 0, 
    "fieldname": "chemist_id", 
-   "fieldtype": "Link", 
+   "fieldtype": "Data", 
    "hidden": 0, 
    "ignore_user_permissions": 0, 
    "in_filter": 0, 
@@ -32,7 +32,7 @@
   {
    "allow_on_submit": 0, 
    "fieldname": "stockist_id", 
-   "fieldtype": "Link", 
+   "fieldtype": "Data", 
    "hidden": 0, 
    "ignore_user_permissions": 0, 
    "in_filter": 0, 
@@ -144,7 +144,7 @@
  "is_submittable": 0, 
  "issingle": 0, 
  "istable": 0, 
- "modified": "2015-10-21 16:26:46.268848", 
+ "modified": "2015-10-23 16:56:14.377323", 
  "modified_by": "Administrator", 
  "module": "phr", 
  "name": "Chemist Order", 
