@@ -183,6 +183,13 @@
    "reqd": 0, 
    "search_index": 0, 
    "set_only_once": 0
+  }, 
+  {
+   "fieldname": "net_amount_due", 
+   "fieldtype": "Data", 
+   "label": "Net Amount Due", 
+   "permlevel": 0, 
+   "precision": ""
   }
  ], 
  "hide_heading": 0, 
@@ -193,7 +200,7 @@
  "is_submittable": 0, 
  "issingle": 0, 
  "istable": 0, 
- "modified": "2015-10-20 18:36:01.504211", 
+ "modified": "2015-10-26 18:09:35.085233", 
  "modified_by": "Administrator", 
  "module": "phr", 
  "name": "Chemist Order Delivery Log", 

@@ -267,10 +267,16 @@ def getDetailsOfOrdersPlacedByChemist(data):
 	return frappe.db.sql(""" select ord.name,ord.order_image_url,stck.first_name,stck.last_name,ord.order_description,ord.expected_delivery_date,ord.order_status from `tabChemist Order` ord INNER JOIN `tabStockist` stck ON ord.stockist_id=stck.stockist_id AND ord.name='%s' """%(order_id) , as_dict=1)			
 
 @frappe.whitelist(allow_guest=True)
-def setAcceptOrderByChemist(data):
-	pass
-	# data = json.loads(data)
-	# order_id = data.get('order_id')
+def setAcceptOrderByChemist(data):	
+	data = json.loads(data)
+	order_id = data.get("order_id")
+	order_status = data.get("order_status")
+	rejection_reason = data.get("reason")
+	order_log = frappe.get_doc("Chemist Order",order_id)
+	order_log.order_status= order_status
+	order_log.comments= rejection_reason
+	order_log.save(ignore_permissions=True)
+	return ""
 	# return frappe.db.sql(""" select ord.name,ord.order_image_url,stck.first_name,stck.last_name,ord.order_description,ord.expected_delivery_date,ord.order_status from `tabChemist Order` ord INNER JOIN `tabStockist` stck ON ord.stockist_id=stck.stockist_id AND ord.name='%s' """%(order_id) , as_dict=1)			
 
 
@@ -278,7 +284,7 @@ def setAcceptOrderByChemist(data):
 def getChemistDeliveryBoys(data):
 	data = json.loads(data)
 	chemist_id = data.get('chemist_id')
-	return frappe.db.sql(""" select team.name,team.first_name,team.last_name from `tabChemist Delivery Team` team INNER JOIN `tabChemist` chem ON chem.name=team.parent AND chem.profile_id='%s' """%(chemist_id) , as_dict=1)			
+	return frappe.db.sql(""" select team.name,team.first_name,team.last_name,team.last_name from `tabChemist Delivery Team` team INNER JOIN `tabChemist` chem ON chem.name=team.parent AND chem.profile_id='%s' """%(chemist_id) , as_dict=1)			
 
 @frappe.whitelist(allow_guest=True)
 def getProfileVisitData(data):
@@ -836,6 +842,7 @@ def create_chemist_order(data):
 			"chemist_id":"value"
 			"stockist_id":"value"
 			"expected_delivery_date":"value"
+			"mode_of_payment":"value"	
 			"order_description":"value"
 			"image_data":"binary"
 		}
@@ -849,6 +856,7 @@ def create_chemist_order(data):
 		"stockist_id" : data.get("stockist_id"),
 		"expected_delivery_date" : data.get("expected_delivery_date"),
 		"order_description" : data.get("order_description"),
+		"mode_of_payment" : data.get("mode_of_payment"),
 	})
 	chemist_order.insert(ignore_permissions=True)
 	chemist_order_id=chemist_order.name
@@ -927,6 +935,7 @@ def create_order_delivery_log(data):
 			"bill_number":"value"
 			"image_data":"binary"
 			"bill_amount":"value"
+			"net_amount_due" : "value"
 			"order_id":"value"
 		}
 	"""
@@ -938,6 +947,8 @@ def create_order_delivery_log(data):
 		"bill_number" : data.get("bill_number"),
 		"bill_amount" : data.get("bill_amount"),
 		"order_id" : data.get("order_id"),
+		"net_amount_due" : data.get("net_amount_due"),
+		
 	})
 	order_log.insert(ignore_permissions=True)
 	order_log_id=order_log.name
@@ -1028,6 +1039,30 @@ def update_prescription_delivery_log(data):
 		where name ='%s'"""%(file_url,delivery_team_member_id,prescription_log_id))
 	frappe.db.commit()
 
+
+@frappe.whitelist(allow_guest=True)
+def get_login_details(data):
+	"""
+		1.Read data
+		2.Accoring To Role Returns ID of DocType
+		Input:
+		{
+			"profile_id":"value"
+			"role":"value"
+		}
+	"""
+	data = json.loads(data)
+	role=data.get("role")
+	profile_id=data.get("profile_id")
+	if role=="Chemist":
+		return frappe.db.sql(""" select name from tabChemist 
+			where profile_id='%s' """%(profile_id), as_dict=1)
+	elif role=="Stockist":
+		return frappe.db.sql(""" select name from tabStockist 
+			where stockist_id='%s' """%(profile_id), as_dict=1)
+	elif role=="Provider":
+		return frappe.db.sql(""" select name from tabProvider 
+			where provider_id='%s' """%(profile_id), as_dict=1)
 
 # @frappe.whitelist(allow_guest=True)
 # def createChemist(data):
