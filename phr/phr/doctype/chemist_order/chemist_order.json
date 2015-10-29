@@ -148,6 +148,14 @@
    "label": "Comments", 
    "permlevel": 0, 
    "precision": ""
+  }, 
+  {
+   "fieldname": "chemist_order_manual", 
+   "fieldtype": "Table", 
+   "label": "Chemist Order Manual", 
+   "options": "Chemist Order Manual", 
+   "permlevel": 0, 
+   "precision": ""
   }
  ], 
  "hide_heading": 0, 
@@ -158,7 +166,7 @@
  "is_submittable": 0, 
  "issingle": 0, 
  "istable": 0, 
- "modified": "2015-10-26 18:17:59.988443", 
+ "modified": "2015-10-28 15:24:08.389080", 
  "modified_by": "Administrator", 
  "module": "phr", 
  "name": "Chemist Order", 
