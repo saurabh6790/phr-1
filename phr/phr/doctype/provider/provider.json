@@ -431,6 +431,17 @@
    "label": "Middle Name", 
    "permlevel": 0, 
    "precision": ""
+<<<<<<< HEAD
+=======
+  }, 
+  {
+   "default": "0", 
+   "fieldname": "available_24_x_7", 
+   "fieldtype": "Data", 
+   "label": "Emergency", 
+   "permlevel": 0, 
+   "precision": ""
+>>>>>>> 5b3834b70da9ea90d24b59d26513d3cff9167024
   }
  ], 
  "hide_heading": 0, 
@@ -441,7 +452,11 @@
  "is_submittable": 0, 
  "issingle": 0, 
  "istable": 0, 
+<<<<<<< HEAD
  "modified": "2015-09-30 16:01:53.304262", 
+=======
+ "modified": "2015-10-19 18:52:39.981373", 
+>>>>>>> 5b3834b70da9ea90d24b59d26513d3cff9167024
  "modified_by": "Administrator", 
  "module": "phr", 
  "name": "Provider", 
@@ -465,6 +480,16 @@
    "set_user_permissions": 0, 
    "submit": 0, 
    "write": 1
+<<<<<<< HEAD
+=======
+  }, 
+  {
+   "create": 1, 
+   "permlevel": 0, 
+   "read": 1, 
+   "role": "Guest", 
+   "write": 1
+>>>>>>> 5b3834b70da9ea90d24b59d26513d3cff9167024
   }
  ], 
  "read_only": 0, 
