@@ -210,8 +210,6 @@ def get_event_name():
 	return frappe.db.sql(""" select name from tabEvents """, as_dict=1)
 
 @frappe.whitelist(allow_guest=True)
-<<<<<<< HEAD
-=======
 def getPrescriptionsData(data):
 	data = json.loads(data)
 	chemist_id = data.get('chemist_id')
@@ -289,7 +287,6 @@ def getChemistDeliveryBoys(data):
 	return frappe.db.sql(""" select team.name,team.first_name,team.last_name,team.last_name from `tabChemist Delivery Team` team INNER JOIN `tabChemist` chem ON chem.name=team.parent AND chem.profile_id='%s' """%(chemist_id) , as_dict=1)			
 
 @frappe.whitelist(allow_guest=True)
->>>>>>> 5b3834b70da9ea90d24b59d26513d3cff9167024
 def getProfileVisitData(data):
 	data = json.loads(data)
 
