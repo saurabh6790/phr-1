@@ -421,6 +421,7 @@ def getProfileDM(data):
 	res = get_existing_records_from_solr(data.get('profile_id'), data.get('event_master_id'))
 	return res
 
+
 """Appointment services"""
 @frappe.whitelist(allow_guest=True)
 def createAppointment(data):
@@ -858,8 +859,32 @@ def create_chemist_order(data):
 		"order_description" : data.get("order_description"),
 		"mode_of_payment" : data.get("mode_of_payment"),
 	})
+	items_manual = data.get("items")
+	for item in items_manual:
+		chemist_order.append("chemist_order_manual",{
+				"item" : item.get("item"),
+				"quantity" : item.get("quantity"),
+				"__islocal":1
+			})
+
 	chemist_order.insert(ignore_permissions=True)
 	chemist_order_id=chemist_order.name
+	# """ NonStop Code Start """
+	# chemist_order_manual = chemist_order.get("chemist_order_manual")
+	# items_manual = data.get("items")
+	# for item in items_manual:
+	# 	chemist_order_manual.append({
+	# 			"item" : item.get("item"),
+	# 			"quantity" : item.get("quantity"),
+	# 			"parent":chemist_order_id,
+	# 			"parenttype":"Chemist Order",
+	# 			"docstatus":0
+	# 		})
+	# chemist_order.save(ignore_permissions=True)
+	#chemist_order.update_if_missing = True
+	""" NonStop Code End """
+
+
 	import os
 	from frappe.utils import  get_files_path
 
@@ -875,6 +900,25 @@ def create_chemist_order(data):
 	chemist_order.order_image_url=file_url
 	chemist_order.save(ignore_permissions=True)
 
+@frappe.whitelist(allow_guest=True)
+def saveDiseaseMonitoringDataManual(data,arg):
+	import time
+	from templates.pages.disease_monitoring import save_data_to_solr
+	str_data=[]
+	for key,value in json.loads(data).items():
+		datastr=key+'='+value
+		str_data.append(datastr)
+	args=json.loads(arg)
+	args["data"]=str_data
+	args["str_event_date"]=time.strftime('%d/%m/%Y')
+
+	if args.has_key("date"):
+		args["str_diseaseMonitoring_date"]=args['date']
+	else:
+		args["str_diseaseMonitoring_date"]=	time.strftime('%d/%m/%Y')
+	
+	res=save_data_to_solr(json.dumps(args))	
+	return "Record Updated Successfully"
  
 @frappe.whitelist(allow_guest=True)
 def create_patient_prescription(data):
@@ -917,10 +961,11 @@ def create_patient_prescription(data):
 	patient_prescription.prescription_image_url=file_url
 	patient_prescription.save(ignore_permissions=True)
 
-	appointment_id=data.get("appointment_id")
-	appointments = frappe.get_doc("Appointments",appointment_id)
-	appointments.status = "Completed"
-	appointments.save(ignore_permissions=True)
+	if not data.has_key("appointment_id"):
+		appointment_id=data.get("appointment_id")
+		appointments = frappe.get_doc("Appointments",appointment_id)
+		appointments.status = "Completed"
+		appointments.save(ignore_permissions=True)
 	return patient_prescription_id
 
 @frappe.whitelist(allow_guest=True)
@@ -952,20 +997,22 @@ def create_order_delivery_log(data):
 	})
 	order_log.insert(ignore_permissions=True)
 	order_log_id=order_log.name
-	import os
-	from frappe.utils import  get_files_path
+	image_data=data.get("image_data")
+	if not image_data:
+		import os
+		from frappe.utils import  get_files_path
 
-	file_path = "%(files_path)s/orderslog/%(order_log_id)s"%{'files_path':get_files_path(),"order_log_id":order_log_id}
-	path = os.path.join(os.getcwd(), get_files_path()[2:], "orderslog")
-	if not os.path.exists(os.path.join(get_files_path(),"orderslog")):
+		file_path = "%(files_path)s/orderslog/%(order_log_id)s"%{'files_path':get_files_path(),"order_log_id":order_log_id}
 		path = os.path.join(os.getcwd(), get_files_path()[2:], "orderslog")
-		frappe.create_folder(path)
-	with open("%s/%s"%(path,order_log_id), 'wb') as f:
-		f.write(base64.b64decode(data.get('image_data')))
-	file_url= "files/orderslog/" + order_log_id + ""	 
-	print file_url
-	order_log.stockist_bill_image=file_url
-	order_log.save(ignore_permissions=True)
+		if not os.path.exists(os.path.join(get_files_path(),"orderslog")):
+			path = os.path.join(os.getcwd(), get_files_path()[2:], "orderslog")
+			frappe.create_folder(path)
+		with open("%s/%s"%(path,order_log_id), 'wb') as f:
+			f.write(base64.b64decode(data.get('image_data')))
+		file_url= "files/orderslog/" + order_log_id + ""	 
+		print file_url
+		order_log.stockist_bill_image=file_url
+		order_log.save(ignore_permissions=True)
 
 	chemist_order = frappe.get_doc("Chemist Order", order_id)
 	chemist_order.order_status="Waiting"
@@ -1063,6 +1110,107 @@ def get_login_details(data):
 	elif role=="Provider":
 		return frappe.db.sql(""" select name from tabProvider 
 			where provider_id='%s' """%(profile_id), as_dict=1)
+
+@frappe.whitelist(allow_guest=True)
+def get_chemist_order_bill(data):
+	"""
+		1.Read data
+		2.finds last uploaded bill
+		Input:
+		{
+			"order_id":"value"
+		}
+	"""
+	data = json.loads(data)
+	order_id=data.get("order_id")
+	pass
+	return frappe.db.sql(""" select stockist_bill_image from `tabChemist Order Delivery Log`
+		where order_id='%s' and bill_number<>''  order by name desc limit 0,1
+		"""%(order_id), as_dict=1)
+
+
+@frappe.whitelist(allow_guest=True)
+def send_emergency_message(data):
+	"""
+		1.Accepts List Mobile Numbers and Message Bosy 
+		2.Sends Direct SMS
+		Input:
+		{
+			"mobile_number":"value",
+			"body":"value",
+		}
+	"""
+	data = json.loads(data)
+	mobile_number = data.get("mobile_number")
+	body = data.get("body")
+	from erpnext.setup.doctype.sms_settings.sms_settings import send_sms
+	send_sms(mobile_number,body)
+	return "Sms Send Success"
+
+@frappe.whitelist(allow_guest=True)
+def getDiseaseMonitoringDiseaseList():
+	return frappe.db.sql(""" select name,disease_name from `tabDisease Monitoring` """,as_dict=1)
+
+@frappe.whitelist(allow_guest=True)
+def getDiseaseMonitoringDiseaseFieldList(data):
+	"""
+		1.Accepts List Mobile Numbers and Message Bosy 
+		2.Sends Direct SMS
+		Input:
+		{
+			"disease_id":"value",
+		}
+	"""
+	data = json.loads(data)
+	disease_id=data.get("disease_id")
+	return frappe.db.sql(""" select fieldname,fieldtype,label from `tabDisease Monitoring` as dm,`tabEvent Parameters` as tp where tp.parent=dm.name and dm.name='%s' """%(disease_id),as_dict=1)
+
+@frappe.whitelist(allow_guest=True)
+def getNotDeliveredMyPrescriptionList(data):
+	"""
+		1.Accepts Patient ID
+		2.Sends All Prescriotion List Which is not completely deliverd
+		Input:
+		{
+			"patient_id":"value",
+		}
+	"""
+	data = json.loads(data)
+	patient_id=data.get("patient_id")
+	return frappe.db.sql(""" select presc.name as prescription_id,user.contact as mobile_number,user.first_name,user.last_name,presc.prescription_image_url,presc.appointment_id from `tabPatient Prescriptions` presc INNER JOIN tabUser user on presc.provider_id=user.profile_id where patient_id='%s' and prescription_assignment_status!='Completed' and provider_id<>'' """%(patient_id) , as_dict=1)
+
+
+@frappe.whitelist(allow_guest=True)
+def create_order_to_chemist_from_patient(data):
+	"""
+		1.Read data
+		2.Read Binary file content and Write to public files
+		3.Insert Prescription
+		Input:
+		{
+			"prescription_assigned_to_chemist":"value"				
+			"appointment_id":"value"
+			"patient_id":"value"
+			"provider_id":"value"
+			"image_data":"binary"
+			"prescription_note":"value"
+			"prescription_assignment_status":"value"
+		}
+	"""
+	patient_prescription_id = create_patient_prescription(data)
+	data = json.loads(data)
+	logdata={
+			"prescription_id":patient_prescription_id,
+			"parent":patient_prescription_id,
+			"prescription_assigned_to_chemist":data.get("prescription_assigned_to_chemist"),
+			"chemist_accepted_flag":"0",
+			"delivery_status":"Assigned"
+		}
+	assign_prescription_to_chemist(json.dumps(logdata))
+	return patient_prescription_id
+	
+ 
+
 
 # @frappe.whitelist(allow_guest=True)
 # def createChemist(data):

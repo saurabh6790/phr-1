@@ -67,13 +67,17 @@ def save_data(data):
 	obj = json.loads(data)
 	from_date = get_formatted_date(obj.get('from_date_time'))
 	user = frappe.get_doc("User",frappe.user.name)
+	provider_id = ''
+	if obj.get('provider_id'):
+		provider_id = obj.get('provider_id')
 	ap = frappe.get_doc({
 		"doctype":"Appointments",
 		"profile_id":obj.get('profile_id'),
 		"from_date_time":from_date,
 		"provider_name":obj.get('provider'),
 		"reason":obj.get('reason'),
-		"created_via": "Desktop"
+		"created_via": "Desktop",
+		"provider_id": provider_id		
 	})
 	ap.ignore_permissions = True
 	ap.insert()
