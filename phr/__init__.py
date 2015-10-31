@@ -519,7 +519,6 @@ def getSecondaryAddrForProvider(data):
 @frappe.whitelist(allow_guest=True)
 def sharingViaProvider(data):
 	from templates.pages.event import share_via_providers_account
-	from phr.templates.pages.dashboard import get_user_details
 	data = json.loads(data)
 	if data.get("event_id") and data.get("visit_id"):
 		data['entityid'] = data.get("visit_id")
@@ -533,7 +532,7 @@ def sharingViaProvider(data):
 	return res
 
 def notify_provider(data):
-	from phr.templates.pages.dashboard import get_user_details
+	from templates.pages.dashboard import get_user_details
 	from templates.pages.event import notify_provider
 	user = get_user_details(data.get("profile_id"))
 	args = {"patient":user["name"],"duration":data.get('sharing_duration')}
