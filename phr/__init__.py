@@ -1177,7 +1177,7 @@ def getNotDeliveredMyPrescriptionList(data):
 	"""
 	data = json.loads(data)
 	patient_id=data.get("patient_id")
-	return frappe.db.sql(""" select presc.name as prescription_id,user.contact as mobile_number,user.first_name,user.last_name,presc.prescription_image_url,presc.appointment_id from `tabPatient Prescriptions` presc INNER JOIN tabUser user on presc.provider_id=user.profile_id where patient_id='%s' and prescription_assignment_status!='Completed' and provider_id<>'' """%(patient_id) , as_dict=1)
+	return frappe.db.sql(""" select presc.name as prescription_id,user.contact as mobile_number,user.first_name,user.last_name,presc.prescription_image_url from `tabPatient Prescriptions` presc INNER JOIN tabUser user on presc.provider_id=user.profile_id where patient_id='%s' and prescription_assignment_status!='Completed' and provider_id<>'' """%(patient_id) , as_dict=1)
 
 
 @frappe.whitelist(allow_guest=True)
@@ -1195,14 +1195,28 @@ def create_order_to_chemist_from_patient(data):
 			"image_data":"binary"
 			"prescription_note":"value"
 			"prescription_assignment_status":"value"
+			"prescription_flag="value"
 		}
 	"""
-	patient_prescription_id = create_patient_prescription(data)
 	data = json.loads(data)
+	
+	chemist=frappe.get_doc("Chemist",data.get("prescription_assigned_to_chemist"))
+	print chemist.profile_id
+	dataChemist={
+			"prescription_assigned_to_chemist":	chemist.profile_id,			
+			"appointment_id":data.get("appointment_id"),
+			"patient_id":data.get("patient_id"),
+			"provider_id":data.get("provider_id"),
+			"image_data":data.get("image_data"),
+			"prescription_note":data.get("prescription_note"),
+			"prescription_assignment_status":data.get("prescription_assignment_status"),
+		}
+	patient_prescription_id = create_patient_prescription(json.dumps(dataChemist))
+	
 	logdata={
 			"prescription_id":patient_prescription_id,
 			"parent":patient_prescription_id,
-			"prescription_assigned_to_chemist":data.get("prescription_assigned_to_chemist"),
+			"prescription_assigned_to_chemist":chemist.profile_id,
 			"chemist_accepted_flag":"0",
 			"delivery_status":"Assigned"
 		}
