@@ -46,8 +46,8 @@ class Provider(Document):
 			self.create_user_login()
 
 	def create_solr_profile(self):
-		request_type="POST"
-		url=get_base_url()+'createProvider'
+		request_type = "POST"
+		url = get_base_url()+'createProvider'
 		data = {
 					"provider_type": self.provider_type,
 					"name": self.provider_name,
@@ -70,16 +70,16 @@ class Provider(Document):
 				}
 
 		from phr.phr.phr_api import get_response
-		response=get_response(url, json.dumps(data),request_type)
+		response = get_response(url, json.dumps(data),request_type)
 		print "response",response
-		res=json.loads(response.text)
+		res = json.loads(response.text)
 
 		if res['returncode']==129:
 			self.provider_id = res['entityid']
 
 	def create_user_login(self):
 		from frappe.utils import random_string
-		password=random_string(10)
+		password = random_string(10)
 		user = frappe.get_doc({
 			"doctype":"User",
 			"email": self.email,
@@ -111,7 +111,6 @@ class Provider(Document):
 		if cint(frappe.db.sql("""select count(*) from tabUser where name = '%s'
 					and access_type = "Provider" """%self.email,as_list=1)[0][0]) > 0:
 			return True
-
 		return False
 
 	def update_user(self, enabled=1):

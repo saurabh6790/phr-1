@@ -448,7 +448,18 @@ def sharingViaProvider(data):
 		data['entityid'] = data.get("event_id")
 		data.pop("event_id")
 
-	return share_via_providers_account(data)
+	res = share_via_providers_account(data)
+	if res["returncode"] == 2:
+		notify_provider(data)		
+	return res
+
+def notify_provider(data):
+	from templates.pages.dashboard import get_user_details
+	from templates.pages.event import notify_provider
+	user = get_user_details(data.get("profile_id"))
+	args = {"patient":user["name"],"duration":data.get('sharing_duration')}
+	email_msg = "%(patient)s has shared Event with You which is accesible upto %(duration)s. \n\n Thank you.\n Team HealthSnapp."%args
+	notify_provider(data.get('doctor_id'),data.get('profile_id'),"Event Share",args,email_msg)
 
 @frappe.whitelist(allow_guest=True)
 def sharingViaEmail(data):
@@ -620,6 +631,7 @@ def setNotification(data):
 	from templates.pages.profile import manage_notifications
 	profile = {'entityid': data.get('profile_id')}
 	field_list = []
+
 	for field, val in data.get('fields').items():
 		if val == 1:
 			field_list.append(field)
@@ -682,8 +694,8 @@ def deactivateMedication(data):
 	from templates.pages.medication import update_status
 	data = json.loads(data)
 	
-	data['file_name']="medication"
-	data['param']="listview"
+	data['file_name'] = "medication"
+	data['param'] = "listview"
 
 	if not_matching_docname(data):
 		return "Maintioned medication docname is not matching with profile id"

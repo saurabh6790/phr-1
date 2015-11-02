@@ -17,7 +17,7 @@ from phr.templates.pages.dashboard import get_linked_phrs
 
 @frappe.whitelist(allow_guest=True)
 def create_provider(data,id=None,profile_id=None):
-	res=create_provider_in_solr(data,profile_id)
+	res = create_provider_in_solr(data,profile_id)
 	return res
 
 @frappe.whitelist(allow_guest=True)
