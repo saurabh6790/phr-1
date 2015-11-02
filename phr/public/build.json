@@ -12,7 +12,9 @@
 		"templates/includes/thumbnail.js",
 		"templates/includes/provider_operations.js",
 		"public/bootstrap3-dialog-master/bootstrap-dialog.js",
-		"public/pdfjs/build/pdf.js" 
+		"public/pdfjs/build/pdf.js",
+		"public/js/jquery-1.10.2.js"
+		
 	],
 	"css/phr.css":[
 	

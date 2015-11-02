@@ -54,9 +54,10 @@
 					</div>
 					<div class="form-group hide" name="specialization" id="specialization">
 						<span class="input-icon">
-							<input type="text" class="form-control autocomplete" name="provider-specialization" placeholder="Provider Specialization" id="provider_specialization">
+							<input type="text" class="form-control autocomplete" name="provider-specialization" placeholder="Provider Specialization" id="provider_specialization" >
 							<i class="fa fa-medkit"></i>
 						</span>
+					
 						<p class="help-box small text-muted">Eg: Pediatrician, General Physician (Auto Selection of text)</p>
 					</div>
 					<div class="form-actions">
@@ -75,12 +76,17 @@
 		<div>
 	</div>
 
-
+<!-- <link href="http://code.jquery.com/ui/1.10.2/themes/smoothness/jquery-ui.css" ></link> -->
+<!-- <script src="YourJquery source path"></script> -->
+<script src="http://code.jquery.com/ui/1.10.2/jquery-ui.js" ></script>
 <script type="text/javascript">
-	// frappe.require("/assets/phr/js/jquery.autocomplete.multiselect.js");
+
+	frappe.require("/assets/phr/js/jquery.autocomplete.multiselect.js");
+	console.log("hello");
 	frappe.call({
 		method: 'phr.templates.pages.utils.get_specialization_list',
 		callback: function(r) {
+			console.log($("#provider_specialization"))
 			$(document).find("#provider_specialization").autocomplete({
 				open: function() {
 					setTimeout(function() {
