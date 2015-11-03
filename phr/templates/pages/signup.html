@@ -84,7 +84,6 @@
 	frappe.call({
 		method: 'phr.templates.pages.utils.get_specialization_list',
 		callback: function(r) {
-			console.log($("#provider_specialization"))
 			$(document).find("#provider_specialization").autocomplete({
 				open: function() {
 					setTimeout(function() {
@@ -92,6 +91,7 @@
 						$(".ui-autocomplete").css({
 							"overflow-y": "scroll",
 							"height": "100px",
+							"width": $("#specialization").width()+"px",
 							"background-color": "inherit",
 							"list-style": "none",
 							"padding-left": "10px",
