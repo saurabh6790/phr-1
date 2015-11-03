@@ -76,13 +76,11 @@
 		<div>
 	</div>
 
-<!-- <link href="http://code.jquery.com/ui/1.10.2/themes/smoothness/jquery-ui.css" ></link> -->
-<!-- <script src="YourJquery source path"></script> -->
-<script src="http://code.jquery.com/ui/1.10.2/jquery-ui.js" ></script>
+
 <script type="text/javascript">
 
 	frappe.require("/assets/phr/js/jquery.autocomplete.multiselect.js");
-	console.log("hello");
+	frappe.require("/assets/phr/jquery-ui.js");
 	frappe.call({
 		method: 'phr.templates.pages.utils.get_specialization_list',
 		callback: function(r) {
@@ -121,6 +119,21 @@
 <script>
 	jQuery(document).ready(function() {
 		$('body').css('background', '#F5F5F5');
+	});
+	$(function() {
+		var controls = $(".disable");
+		controls.bind("paste", function() {
+			return false;
+		});
+		controls.bind("drop", function() {
+			return false;
+		});
+		controls.bind("cut", function() {
+			return false;
+		});
+		controls.bind("copy", function() {
+			return false;
+		});
 	});
 </script>
 {% endblock %}
