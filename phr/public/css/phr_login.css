@@ -281,3 +281,8 @@ span.input-icon, span.input-help {
     padding-left: 30px;
     background-size: 20px;
 }
+
+.ui-menu li:hover{
+  color: #000000;
+  background: #89C148;
+}
