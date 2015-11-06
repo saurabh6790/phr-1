@@ -54,9 +54,10 @@
 					</div>
 					<div class="form-group hide" name="specialization" id="specialization">
 						<span class="input-icon">
-							<input type="text" class="form-control autocomplete" name="provider-specialization" placeholder="Provider Specialization" id="provider_specialization">
+							<input type="text" class="form-control autocomplete" name="provider-specialization" placeholder="Provider Specialization" id="provider_specialization" >
 							<i class="fa fa-medkit"></i>
 						</span>
+					
 						<p class="help-box small text-muted">Eg: Pediatrician, General Physician (Auto Selection of text)</p>
 					</div>
 					<div class="form-actions">
@@ -77,7 +78,9 @@
 
 
 <script type="text/javascript">
-	// frappe.require("/assets/phr/js/jquery.autocomplete.multiselect.js");
+
+	frappe.require("/assets/phr/js/jquery.autocomplete.multiselect.js");
+	frappe.require("/assets/phr/jquery-ui.js");
 	frappe.call({
 		method: 'phr.templates.pages.utils.get_specialization_list',
 		callback: function(r) {
@@ -88,6 +91,7 @@
 						$(".ui-autocomplete").css({
 							"overflow-y": "scroll",
 							"height": "100px",
+							"width": $("#specialization").width()+"px",
 							"background-color": "inherit",
 							"list-style": "none",
 							"padding-left": "10px",
@@ -115,6 +119,21 @@
 <script>
 	jQuery(document).ready(function() {
 		$('body').css('background', '#F5F5F5');
+	});
+	$(function() {
+		var controls = $(".disable");
+		controls.bind("paste", function() {
+			return false;
+		});
+		controls.bind("drop", function() {
+			return false;
+		});
+		controls.bind("cut", function() {
+			return false;
+		});
+		controls.bind("copy", function() {
+			return false;
+		});
 	});
 </script>
 {% endblock %}

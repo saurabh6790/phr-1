@@ -9,10 +9,10 @@
 				<!-- <li role="presentation" class="active"><a href="#patient" aria-controls="patient" role="tab" data-toggle="tab">Patient Login</a></li>
 				<li role="presentation"><a href="#provider" aria-controls="provider" role="tab" data-toggle="tab">Provider Login</a></li> -->
 				<li role="presentation" class="active" id="li-patient">
-					<a href="#patient" aria-controls="patient" role="tab">Patient Login</a>
+					<a href="#patient" aria-controls="patient" role="tab" data-toggle="tab">Patient Login</a>
 				</li>
 				<li role="presentation" id="li-provider">
-					<a href="#provider" aria-controls="provider" role="tab">Provider Login</a>
+					<a href="#provider" aria-controls="provider" role="tab" data-toggle="tab">Provider Login</a>
 				</li>
 			</ul>
 
@@ -356,22 +356,8 @@
 	function noBack() {
 		window.history.forward();
 	}
-	$(function() {
-		var controls = $(".disable");
-		controls.bind("paste", function() {
-			return false;
-		});
-		controls.bind("drop", function() {
-			return false;
-		});
-		controls.bind("cut", function() {
-			return false;
-		});
-		controls.bind("copy", function() {
-			return false;
-		});
-	});
 	$('.menu-toggler').attr("href").replace(/\//, '')
+	
 </script>
 <script src="assets/phr/js/login.js"></script>
 <script>
