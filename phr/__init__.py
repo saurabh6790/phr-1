@@ -967,6 +967,45 @@ def create_patient_prescription(data):
 		appointments.save(ignore_permissions=True)
 	return patient_prescription_id
 
+
+@frappe.whitelist(allow_guest=True)
+def create_dbook(data):
+	"""
+		1.Read data
+		2.Read Binary file content and Write to public files
+		3.Create D Book Record
+		Input:
+		{
+			"doctor_profile_id":"value"
+			"book_title":"value"
+			"book_description":"value"
+			"image_data":"binary image contents"
+		}
+	"""
+	data = json.loads(data)
+	d_book = frappe.new_doc("D Book")
+	d_book.update ( {
+		"doctor_profile_id" : data.get("doctor_profile_id"),
+		"book_title" : data.get("book_title"),
+		"book_description" : data.get("book_description")
+	})
+	d_book.insert(ignore_permissions=True)
+	d_book_id=d_book.name
+	import os
+	from frappe.utils import  get_files_path
+
+	file_path = "%(files_path)s/d-book/%(d_book_id)s"%{'files_path':get_files_path(),"d_book_id":d_book_id}
+	path = os.path.join(os.getcwd(), get_files_path()[2:], "d-book")
+	if not os.path.exists(os.path.join(get_files_path(),"d-book")):
+		path = os.path.join(os.getcwd(), get_files_path()[2:], "d-book")
+		frappe.create_folder(path)
+	with open("%s/%s"%(path,d_book_id), 'wb') as f:
+		f.write(base64.b64decode(data.get('image_data')))
+	file_url= "files/d-book/" + d_book_id + ""	 
+	d_book.book_image_url=file_url
+	d_book.save(ignore_permissions=True)
+	return d_book_id	
+
 @frappe.whitelist(allow_guest=True)
 def create_order_delivery_log(data):
 	"""
@@ -1034,6 +1073,7 @@ def assign_prescription_to_chemist(data):
 	"""
 	data = json.loads(data)
 	prescription_log = frappe.new_doc("Prescription Assignment Log")
+	print data
 	prescription_log.update ( {
 		"prescription_id" : data.get("prescription_id"),
 		"parent" : data.get("prescription_id"),
@@ -1046,6 +1086,8 @@ def assign_prescription_to_chemist(data):
 	patient_prescription= frappe.get_doc("Patient Prescriptions", data.get("prescription_id"))
 	patient_prescription.prescription_assignment_status="Assigned"
 	patient_prescription.save(ignore_permissions=True)
+	print prescription_log_id
+	return prescription_log_id
 
 @frappe.whitelist(allow_guest=True)
 def update_prescription_delivery_log(data):
@@ -1176,7 +1218,39 @@ def getNotDeliveredMyPrescriptionList(data):
 	"""
 	data = json.loads(data)
 	patient_id=data.get("patient_id")
-	return frappe.db.sql(""" select presc.name as prescription_id,user.contact as mobile_number,user.first_name,user.last_name,presc.prescription_image_url from `tabPatient Prescriptions` presc INNER JOIN tabUser user on presc.provider_id=user.profile_id where patient_id='%s' and prescription_assignment_status!='Completed' and provider_id<>'' """%(patient_id) , as_dict=1)
+	return frappe.db.sql(""" select presc.name as prescription_id,user.contact as mobile_number,user.first_name,user.last_name,presc.prescription_image_url from `tabPatient Prescriptions` presc INNER JOIN tabUser user on presc.provider_id=user.profile_id where patient_id='%s' and prescription_assignment_status!='Deliverd' and provider_id<>'' """%(patient_id) , as_dict=1)
+
+@frappe.whitelist(allow_guest=True)
+def getMyPrescriptionList(data):
+	"""
+		1.Accepts Patient ID
+		2.Accepts Status
+		2.Sends All Prescriotion List according to status
+		Input:
+		{
+			"patient_id":"value",
+			"status":"value"
+		}
+	"""
+	data = json.loads(data)
+	patient_id=data.get("patient_id")
+	status=data.get("status")
+	return frappe.db.sql(""" select pal.name as prescription_log_id,presc.name as prescription_id,user.contact as mobile_number,user.first_name,user.last_name,presc.prescription_image_url,pal.bill_image_url from `tabPatient Prescriptions` presc INNER JOIN tabUser user on presc.provider_id=user.profile_id INNER JOIN `tabPrescription Assignment Log` as pal on pal.prescription_id=presc.name where patient_id='%s' and delivery_status='%s' """%(patient_id,status) , as_dict=1)
+
+@frappe.whitelist(allow_guest=True)
+def getMyNotAssignedPrescriptionList(data):
+	"""
+		1.Accepts Patient ID
+		2.Sends All Prescriotion List Which is not assigned to chemist
+		Input:
+		{
+			"patient_id":"value",
+		}
+	"""
+	data = json.loads(data)
+	patient_id=data.get("patient_id")
+	return frappe.db.sql(""" select presc.name as prescription_id,user.contact as mobile_number,user.first_name,user.last_name,presc.prescription_image_url from `tabPatient Prescriptions` presc INNER JOIN tabUser user on presc.provider_id=user.profile_id where patient_id='%s' and prescription_assignment_status='Waiting For Chemist Assignment'  """%(patient_id) , as_dict=1)
+
 
 
 @frappe.whitelist(allow_guest=True)
@@ -1222,8 +1296,174 @@ def create_order_to_chemist_from_patient(data):
 	assign_prescription_to_chemist(json.dumps(logdata))
 	return patient_prescription_id
 	
- 
 
+@frappe.whitelist(allow_guest=True)
+def direct_order_from_patient_from_existig_prescription(data):
+	"""
+		1.Read data
+		2.Insert prescription Assignment Log
+		3. Update Ptient prescription
+		Input:
+		{
+			"prescription_id":"value"
+			"parent":"value"
+			"prescription_assigned_to_chemist":"value"
+			"chemist_accepted_flag":"value"
+			"delivery_status":"value"
+		}
+	"""
+	data = json.loads(data)
+	chemist=frappe.get_doc("Chemist",data.get("prescription_assigned_to_chemist"))
+	patient_prescription_id = data.get("prescription_id")
+ 	logdata={
+			"prescription_id":	data.get("prescription_id"),			
+			"parent":data.get("prescription_id"),
+			"prescription_assigned_to_chemist":chemist.profile_id,
+			"chemist_accepted_flag":"0",
+			"delivery_status":"Assigned",
+		}
+	prescription_log_id=assign_prescription_to_chemist(json.dumps(logdata))
+	frappe.db.commit()
+	return prescription_log_id	
+ 
+@frappe.whitelist(allow_guest=True)
+def getMyTodaysAppointments(data):
+	"""
+		1.Read data
+		2.gets list of my appointments of perticular date
+		Input:
+		{
+			"profile_id":"value"
+			"date":"value"
+		}
+	"""
+	data = json.loads(data)
+	profile_id = data.get('profile_id')
+	date = data.get('date')
+	return frappe.db.sql(""" select appt.provider_id,appt.name,user.contact as mobile_number,user.first_name,user.last_name,DATE_FORMAT(from_date_time,'%%d-%%b-%%Y') as appointment_date,DATE_FORMAT(from_date_time,'%%r') as appointment_time,appt.status from `tabAppointments` appt INNER JOIN tabUser user on appt.provider_id=user.profile_id where appt.profile_id='%s' and appt.from_date_time = '%s' """%(profile_id,date) , as_dict=1)
+
+@frappe.whitelist(allow_guest=True)
+def getMyAllAppointments(data):
+	"""
+		1.Read data
+		2.gets list of all my appointments
+		Input:
+		{
+			"profile_id":"value"
+		}
+	"""
+	data = json.loads(data)
+	profile_id = data.get('profile_id')
+	return frappe.db.sql(""" select appt.provider_id,appt.name,user.contact as mobile_number,concat(user.first_name,user.last_name) as provider_name,DATE_FORMAT(from_date_time,'%%d-%%b-%%Y') as appointment_date,DATE_FORMAT(from_date_time,'%%r') as appointment_time,appt.status,appt.reason from `tabAppointments` appt INNER JOIN tabUser user on appt.provider_id=user.profile_id where appt.profile_id='%s' """%(profile_id) , as_dict=1)	
+
+@frappe.whitelist(allow_guest=True)
+def getDbookList(data):
+	"""
+		returns all D book list
+		Input:
+		{
+			"profile_id":"value"
+		}
+	"""
+	data = json.loads(data)
+	profile_id = data.get('profile_id')
+	dbook_array = []	
+	d_likes=[]
+	for dbook in frappe.db.sql(""" select dbk.doctor_profile_id,concat(usr.first_name," ",usr.last_name) as doctor_name,dbk.book_title,dbk.name,dbk.book_image_url,dbk.book_description,dbk.like_count  from `tabD Book` as dbk INNER JOIN tabUser as usr on dbk.doctor_profile_id=usr.profile_id """, as_list=1):
+		dbook_data={"doctor_profile_id":dbook[0],"doctor_name":dbook[1],"book_title":dbook[2],"name":dbook[3],"book_image_url":dbook[4],"book_description":dbook[5],"like_count":dbook[6]}
+		dbook_array.append(dbook_data)
+		d_likes.append({"is_liked": "0","name": "","dbook_id": dbook[3]})
+	dbook_likes=frappe.db.sql(""" select  name,dbook_id,is_liked from `tabD Book Likes`  where profile_id='%s' """%(profile_id),as_dict=1)
+	if len(dbook_likes) == 0:
+		return {"dbook_list":dbook_array,"dbook_likes":d_likes}	
+	else: 	
+		return {"dbook_list":dbook_array,"dbook_likes":dbook_likes}	
+
+@frappe.whitelist(allow_guest=True)
+def likeDbook(data):
+	"""
+		1. Accepts dbook id 
+		2. increase like count
+		3. returns like count
+		Input:
+		{
+			"dbook_id":"value"
+			"profile_id":"value"
+		}
+	"""
+	data = json.loads(data)
+	dbook_id=data.get("dbook_id")
+	profile_id=data.get("profile_id")
+	dbook=frappe.get_doc("D Book", dbook_id)
+	cnt=dbook.like_count
+	profileLikes=frappe.db.sql(""" select is_liked from `tabD Book Likes` where dbook_id='%s' and profile_id='%s' """%(dbook_id,profile_id))
+	is_liked=0
+	if len(profileLikes)==0:
+		dlike=frappe.new_doc("D Book Likes")
+		dlike.update({
+				"dbook_id":dbook_id,
+				"parent":dbook_id,
+				"profile_id":profile_id,
+				"is_liked":1
+			})
+		dlike.insert(ignore_permissions=True)
+		cnt=int(cnt) + int(1)
+		dbook.like_count=cnt
+		dbook.save(ignore_permissions=True)
+		frappe.db.commit()
+		is_liked=1
+	else:
+		profileLikes=frappe.db.sql(""" select is_liked from `tabD Book Likes` where dbook_id='%s' and profile_id='%s' """%(dbook_id,profile_id))[0][0]
+		print profileLikes
+		if int(profileLikes) == int(0):
+			frappe.db.sql(""" update `tabD Book Likes` set is_liked=1 where dbook_id='%s' and profile_id='%s' """%(dbook_id,profile_id))
+			cnt=int(cnt) + int(1)
+			dbook.like_count=cnt
+			dbook.save(ignore_permissions=True)
+			is_liked=1
+		else:	
+			frappe.db.sql(""" update `tabD Book Likes` set is_liked=0 where dbook_id='%s' and profile_id='%s' """%(dbook_id,profile_id))
+			cnt=int(cnt) - int(1)
+			dbook.like_count=cnt
+			dbook.save(ignore_permissions=True)
+			is_liked=0
+	frappe.db.commit()
+	dbook_array = []	
+	d_likes=[]
+	for dbook in frappe.db.sql(""" select dbk.doctor_profile_id,concat(usr.first_name," ",usr.last_name) as doctor_name,dbk.book_title,dbk.name,dbk.book_image_url,dbk.book_description,dbk.like_count  from `tabD Book` as dbk INNER JOIN tabUser as usr on dbk.doctor_profile_id=usr.profile_id """, as_list=1):
+		dbook_data={"doctor_profile_id":dbook[0],"doctor_name":dbook[1],"book_title":dbook[2],"name":dbook[3],"book_image_url":dbook[4],"book_description":dbook[5],"like_count":dbook[6]}
+		dbook_array.append(dbook_data)
+		d_likes.append({"is_liked": "0","name": "","dbook_id": dbook[3]})
+	dbook_likes=frappe.db.sql(""" select  name,dbook_id,is_liked from `tabD Book Likes`  where profile_id='%s' """%(profile_id),as_dict=1)
+ 	if len(dbook_likes) == 0:
+		return {"dbook_list":dbook_array,"dbook_likes":d_likes}	
+	else: 	
+		return {"dbook_list":dbook_array,"dbook_likes":dbook_likes}
+	# print cnt
+	# return {"like_count":cnt,"is_liked":is_liked,"dbook_id":dbook_id}
+
+
+@frappe.whitelist(allow_guest=True)
+def patientAcceptOrRejectDelivery(data):
+	"""
+		1. Accepts Prescription Log Id
+		2. Accepets Or Rejects Delivery
+		Input:
+		{
+			"prescription_log_id":"value",
+			"prescription_id":"value"	,
+			"delivery_status":"value"	
+		}
+	"""
+	data = json.loads(data)
+	prescription_log_id=data.get("prescription_log_id")
+	prescription_id=data.get("prescription_id")
+	delivery_status=data.get("delivery_status")
+	frappe.db.sql(""" update `tabPrescription Assignment Log` set delivery_status='%s' where name='%s' """%(delivery_status,prescription_log_id))
+	prescription=frappe.get_doc("Patient Prescriptions",prescription_id)
+	prescription.prescription_assignment_status=delivery_status
+	prescription.save(ignore_permissions=True)
+	frappe.db.commit()
 
 # @frappe.whitelist(allow_guest=True)
 # def createChemist(data):

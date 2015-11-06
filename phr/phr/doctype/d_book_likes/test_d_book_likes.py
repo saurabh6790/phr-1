@@ -4,7 +4,7 @@
 import frappe
 import unittest
 
-test_records = frappe.get_test_records('Insurance Agency')
+test_records = frappe.get_test_records('D Book Likes')
 
-class TestInsuranceAgency(unittest.TestCase):
+class TestDBookLikes(unittest.TestCase):
 	pass
