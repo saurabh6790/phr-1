@@ -37,3 +37,10 @@ def direct_order_from_patient_from_existig_prescription(data):
 		}
 	assign_prescription_to_chemist(json.dumps(logdata))
 	return patient_prescription_id
+
+
+@frappe.whitelist(allow_guest=True)
+def getStockistOrderDetails(data):
+	data = json.loads(data)
+	order_id = data.get('order_id')
+	return frappe.db.sql(""" select ord.name,ord.order_image_url,chem.first_name,chem.last_name,chem.mobile_number,chem.email_address,chem.address,stockist_bill_image from `tabChemist Order` ord INNER JOIN `tabChemist` chem ON ord.chemist_id=chem.profile_id INNER JOIN `tabChemist Order Delivery Log` as orderLog on ord.name=orderLog.order_id AND ord.name='%s' """%(order_id) , as_dict=1)		
