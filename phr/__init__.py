@@ -214,7 +214,7 @@ def getPrescriptionsData(data):
 	data = json.loads(data)
 	chemist_id = data.get('chemist_id')
 	status = data.get('status')
-	return frappe.db.sql(""" select presc.name as prescription_id,prescLog.name as prescription_log_id,user.contact as mobile_number,user.first_name,user.last_name,user.location as address,items_selected,bill_image_url,prescription_image_url from `tabPatient Prescriptions` presc INNER JOIN `tabPrescription Assignment Log` prescLog ON prescLog.parent=presc.name INNER JOIN tabUser user on presc.patient_id=user.profile_id where delivery_status='%s' AND prescription_assigned_to_chemist='%s' """%(status,chemist_id) , as_dict=1)
+	return frappe.db.sql(""" select presc.name as prescription_id,prescLog.name as prescription_log_id,user.contact as mobile_number,user.first_name,user.last_name,user.location as address,items_selected,bill_image_url,prescription_image_url,items_selected from `tabPatient Prescriptions` presc INNER JOIN `tabPrescription Assignment Log` prescLog ON prescLog.parent=presc.name INNER JOIN tabUser user on presc.patient_id=user.profile_id where delivery_status='%s' AND prescription_assigned_to_chemist='%s' """%(status,chemist_id) , as_dict=1)
 
 @frappe.whitelist(allow_guest=True)
 def rejectPrescription(data):
@@ -230,7 +230,7 @@ def rejectPrescription(data):
 def getPrescriptionDetails(data):
 	data = json.loads(data)
 	prescription_log_id = data.get('prescription_log_id')
-	return frappe.db.sql(""" select presc.prescription_image_url,user.contact as mobile_number,user.first_name,user.last_name from `tabPatient Prescriptions` presc INNER JOIN `tabPrescription Assignment Log` prescLog ON prescLog.parent=presc.name INNER JOIN tabUser user on presc.patient_id=user.profile_id where prescLog.name='%s'  """%(prescription_log_id) , as_dict=1)
+	return frappe.db.sql(""" select presc.prescription_image_url,user.contact as mobile_number,user.first_name,user.last_name,items_selected from `tabPatient Prescriptions` presc INNER JOIN `tabPrescription Assignment Log` prescLog ON prescLog.parent=presc.name INNER JOIN tabUser user on presc.patient_id=user.profile_id where prescLog.name='%s'  """%(prescription_log_id) , as_dict=1)
 
 
 @frappe.whitelist(allow_guest=True)
@@ -1061,7 +1061,6 @@ def create_order_delivery_log(data):
 	order_log_id=order_log.name
 	image_data=data.get("image_data")
 	if image_data:
-
 		import os
 		from frappe.utils import  get_files_path
 
@@ -1094,9 +1093,13 @@ def assign_prescription_to_chemist(data):
 			"prescription_assigned_to_chemist":"value"
 			"chemist_accepted_flag":"value"
 			"delivery_status":"value"
+			"items_selected":"value"
 		}
 	"""
 	data = json.loads(data)
+	items_selected=""
+	if data.has_key("items_selected"):
+		items_selected=data.get("items_selected")
 	prescription_log = frappe.new_doc("Prescription Assignment Log")
 	print data
 	prescription_log.update ( {
@@ -1105,6 +1108,7 @@ def assign_prescription_to_chemist(data):
 		"prescription_assigned_to_chemist" : data.get("prescription_assigned_to_chemist"),
 		"chemist_accepted_flag" : data.get("chemist_accepted_flag"),
 		"delivery_status" : data.get("delivery_status"),
+		"items_selected":items_selected
 	})
 	prescription_log.insert(ignore_permissions=True)
 	prescription_log_id=prescription_log.name
@@ -1269,14 +1273,16 @@ def getMyPrescriptionList(data):
 	data = json.loads(data)
 	patient_id=data.get("patient_id")
 	status=data.get("status")
+
 	return frappe.db.sql(""" select pal.name as prescription_log_id,presc.name as prescription_id,
 				user.contact as mobile_number,user.first_name,user.last_name,
-				presc.prescription_image_url,pal.bill_image_url 
-				from `tabPatient Prescriptions` presc INNER JOIN tabUser user 
+				presc.prescription_image_url,pal.bill_image_url,prescription_assignment_status,prescription_note,concat(chem.first_name,' ',chem.last_name) as chemist ,
+				bill_image_url,items_selected
+				from `tabPatient Prescriptions` presc LEFT OUTER JOIN tabUser user 
 				on presc.provider_id=user.profile_id INNER JOIN `tabPrescription Assignment Log` as pal 
-				on pal.prescription_id=presc.name 
+				on pal.prescription_id=presc.name INNER JOIN `tabChemist` as chem on prescription_assigned_to_chemist=chem.profile_id
 				where patient_id='%s' and 
-				delivery_status='%s' """%(patient_id,status) , as_dict=1)
+				prescription_assignment_status in %s """%(patient_id,status) , as_dict=1)
 
 @frappe.whitelist(allow_guest=True)
 def getMyNotAssignedPrescriptionList(data):
@@ -1351,9 +1357,13 @@ def direct_order_from_patient_from_existig_prescription(data):
 			"prescription_assigned_to_chemist":"value"
 			"chemist_accepted_flag":"value"
 			"delivery_status":"value"
+			"items_selected":"value"
 		}
 	"""
 	data = json.loads(data)
+	items_selected="{}"
+	if data.has_key("items_selected"):
+		items_selected=data.get("items_selected")
 	chemist=frappe.get_doc("Chemist",data.get("prescription_assigned_to_chemist"))
 	patient_prescription_id = data.get("prescription_id")
  	logdata={
@@ -1364,6 +1374,7 @@ def direct_order_from_patient_from_existig_prescription(data):
 			"delivery_status":"Not Assigned",
 		}
 	prescription_log_id=assign_prescription_to_chemist(json.dumps(logdata))
+	frappe.db.sql(""" update `tabPrescription Assignment Log` set items_selected='%s' where name='%s' """%(items_selected,prescription_log_id))
 	frappe.db.commit()
 	return prescription_log_id	
  
@@ -1490,7 +1501,7 @@ def patientAcceptOrRejectDelivery(data):
 		1. Accepts Prescription Log Id
 		2. Accepets Or Rejects Delivery
 		Input:
-		{
+		{ 
 			"prescription_log_id":"value",
 			"prescription_id":"value"	,
 			"delivery_status":"value"	
