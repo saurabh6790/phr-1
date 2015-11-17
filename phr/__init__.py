@@ -1406,7 +1406,7 @@ def getMyAllAppointments(data):
 	"""
 	data = json.loads(data)
 	profile_id = data.get('profile_id')
-	return frappe.db.sql(""" select appt.provider_id,appt.name,user.contact as mobile_number,concat(user.first_name,user.last_name) as provider_name,DATE_FORMAT(from_date_time,'%%d-%%b-%%Y') as appointment_date,DATE_FORMAT(from_date_time,'%%r') as appointment_time,appt.status,appt.reason from `tabAppointments` appt INNER JOIN tabUser user on appt.provider_id=user.profile_id where appt.profile_id='%s' """%(profile_id) , as_dict=1)	
+	return frappe.db.sql(""" select appt.provider_id,appt.name,user.contact as mobile_number,concat(IFNULL(user.first_name,''),' ',IFNULL(user.last_name,'') as provider_name,DATE_FORMAT(from_date_time,'%%d-%%b-%%Y') as appointment_date,DATE_FORMAT(from_date_time,'%%r') as appointment_time,appt.status,appt.reason from `tabAppointments` appt INNER JOIN tabUser user on appt.provider_id=user.profile_id where appt.profile_id='%s' """%(profile_id) , as_dict=1)	
 
 @frappe.whitelist(allow_guest=True)
 def getDbookList(data):
