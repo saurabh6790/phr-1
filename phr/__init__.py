@@ -252,7 +252,18 @@ def getDoctorsAppointments(data):
 	data = json.loads(data)
 	provider_id = data.get('provider_id')
 	status = data.get('status')
-	return frappe.db.sql(""" select appt.profile_id as patient_id,appt.name,user.contact as mobile_number,user.first_name,user.last_name,DATE_FORMAT(from_date_time,'%%d-%%b-%%Y') as appointment_date,DATE_FORMAT(from_date_time,'%%r') as appointment_time from `tabAppointments` appt INNER JOIN tabUser user on appt.profile_id=user.profile_id where appt.provider_id='%s'  AND appt.status='%s' """%(provider_id,status) , as_dict=1)
+	return frappe.db.sql(""" select appt.profile_id as patient_id,appt.name,user.contact as mobile_number,user.first_name,user.last_name,DATE_FORMAT(from_date_time,'%%d-%%b-%%Y') as appointment_date,DATE_FORMAT(from_date_time,'%%r') as appointment_time,appt.reason from `tabAppointments` appt INNER JOIN tabUser user on appt.profile_id=user.profile_id where appt.provider_id='%s'  AND appt.status='%s' """%(provider_id,status) , as_dict=1)
+
+@frappe.whitelist(allow_guest=True)
+def setAcceptRejectDoctorsAppointment(data):
+	data = json.loads(data)
+	appointment_id = data.get('appointment_id')
+	status = data.get('status')
+	appointment=frappe.get_doc("Appointments", appointment_id)
+	appointment.status=status
+	appointment.save(ignore_permissions=True)
+	frappe.db.commit()
+	return {"status":"Appointment "+status}
 
 @frappe.whitelist(allow_guest=True)
 def getStockistOrderDetails(data):
@@ -265,7 +276,7 @@ def getListOfOrdersPlacedByChemist(data):
 	data = json.loads(data)
 	chemist_id = data.get('chemist_id')
 	order_status = data.get('order_status')
-	return frappe.db.sql(""" select ord.name,ord.order_image_url,stck.first_name,stck.last_name,ord.order_description,ord.expected_delivery_date,ord.order_status,ord.comments as rejection_reason from `tabChemist Order` ord INNER JOIN `tabStockist` stck ON ord.stockist_id=stck.stockist_id AND ord.chemist_id='%s' AND ord.order_status in %s """%(chemist_id,order_status) , as_dict=1)		
+	return frappe.db.sql(""" select ord.name,stck.mobile_number,stck.first_name,stck.last_name,DATE_FORMAT(ord.order_date,'%%d-%%b-%%Y') as order_date,order_description,DATE_FORMAT(expected_delivery_date,'%%d-%%b-%%Y') as  expected_delivery_date,mode_of_payment,order_image_url,ord.order_status,ord.comments as rejection_reason from `tabChemist Order` ord INNER JOIN `tabStockist` stck ON ord.stockist_id=stck.stockist_id AND ord.chemist_id='%s' AND ord.order_status in %s """%(chemist_id,order_status) , as_dict=1)		
 
 @frappe.whitelist(allow_guest=True)
 def getDetailsOfOrdersPlacedByChemist(data):
@@ -290,7 +301,77 @@ def setAcceptOrderByChemist(data):
 def getChemistDeliveryBoys(data):
 	data = json.loads(data)
 	chemist_id = data.get('chemist_id')
-	return frappe.db.sql(""" select team.name,team.first_name,team.last_name,team.last_name from `tabChemist Delivery Team` team INNER JOIN `tabChemist` chem ON chem.name=team.parent AND chem.profile_id='%s' """%(chemist_id) , as_dict=1)			
+	return frappe.db.sql(""" select DATE_FORMAT(team.date_of_birth,'%%d-%%m-%%Y') as date_of_birth,team.identity_proof_type,team.identity_proof_document_url,team.name,team.first_name,team.last_name,team.last_name,team.email_address,team.mobile_number,team.address_line_1,team.city from `tabChemist Delivery Team` team INNER JOIN `tabChemist` chem ON chem.name=team.parent AND chem.profile_id='%s' """%(chemist_id) , as_dict=1)			
+
+
+@frappe.whitelist(allow_guest=True)
+def addChemistDeliveryBoy(data):
+	data = json.loads(data)
+	chemist_id=data.get("chemist_id")
+	delivery_boy_parent=frappe.db.sql(""" select name from tabChemist where profile_id='%s' """%(chemist_id), as_list=1)[0][0]
+	delivery_boy=frappe.new_doc("Chemist Delivery Team")
+	delivery_boy.update({
+				"first_name":data.get("first_name"),
+				"last_name":data.get("last_name"),
+				"date_of_birth":data.get("date_of_birth"),
+				"address_line_1":data.get("address_line_1"),
+				"city":data.get("city"),
+				"mobile_number":data.get("mobile_number"),
+				"identity_proof_type":data.get("identity_proof_type"),
+				"parent":delivery_boy_parent
+		})
+	delivery_boy.insert(ignore_permissions=True)
+	delivery_boy_id=delivery_boy.name
+	import os
+	from frappe.utils import  get_files_path
+	if(data.has_key("image_data")):	
+		file_path = "%(files_path)s/dBoy-proof/%(delivery_boy_id)s"%{'files_path':get_files_path(),"delivery_boy_id":delivery_boy_id}
+		path = os.path.join(os.getcwd(), get_files_path()[2:], "dBoy-proof")
+		if not os.path.exists(os.path.join(get_files_path(),"dBoy-proof")):
+			path = os.path.join(os.getcwd(), get_files_path()[2:], "dBoy-proof")
+			frappe.create_folder(path)
+		with open("%s/%s"%(path,delivery_boy_id), 'wb') as f:
+			f.write(base64.b64decode(data.get('image_data')))
+		file_url= "files/dBoy-proof/" + delivery_boy_id + ""	 
+		print file_url
+		delivery_boy.identity_proof_document_url=file_url
+		delivery_boy.save(ignore_permissions=True)
+	frappe.db.commit()
+	return delivery_boy_id
+
+@frappe.whitelist(allow_guest=True)
+def updateChemistDeliveryBoy(data):
+	data = json.loads(data)
+	delivery_boy_id = data.get('name')
+	delivery_boy=frappe.get_doc("Chemist Delivery Team", delivery_boy_id)
+	delivery_boy.update({
+				"first_name":data.get("first_name"),
+				"last_name":data.get("last_name"),
+				"date_of_birth":data.get("date_of_birth"),
+				"address_line_1":data.get("address_line_1"),
+				"city":data.get("city"),
+				"mobile_number":data.get("mobile_number"),
+				"identity_proof_type":data.get("identity_proof_type"),
+		})
+	delivery_boy.save(ignore_permissions=True)
+	delivery_boy_id=delivery_boy.name
+	import os
+	from frappe.utils import  get_files_path
+
+	if(data.has_key("image_data")):	
+		file_path = "%(files_path)s/dBoy-proof/%(delivery_boy_id)s"%{'files_path':get_files_path(),"delivery_boy_id":delivery_boy_id}
+		path = os.path.join(os.getcwd(), get_files_path()[2:], "dBoy-proof")
+		if not os.path.exists(os.path.join(get_files_path(),"dBoy-proof")):
+			path = os.path.join(os.getcwd(), get_files_path()[2:], "dBoy-proof")
+			frappe.create_folder(path)
+		with open("%s/%s"%(path,delivery_boy_id), 'wb') as f:
+			f.write(base64.b64decode(data.get('image_data')))
+		file_url= "files/dBoy-proof/" + delivery_boy_id + ""	 
+		print file_url
+		delivery_boy.identity_proof_document_url=file_url
+		delivery_boy.save(ignore_permissions=True)
+	frappe.db.commit()
+	return delivery_boy_id	
 
 @frappe.whitelist(allow_guest=True)
 def getProfileVisitData(data):
@@ -1406,7 +1487,7 @@ def getMyAllAppointments(data):
 	"""
 	data = json.loads(data)
 	profile_id = data.get('profile_id')
-	return frappe.db.sql(""" select appt.provider_id,appt.name,user.contact as mobile_number,concat(IFNULL(user.first_name,''),' ',IFNULL(user.last_name,'')) as provider_name,DATE_FORMAT(from_date_time,'%%d-%%b-%%Y') as appointment_date,DATE_FORMAT(from_date_time,'%%r') as appointment_time,appt.status,appt.reason from `tabAppointments` appt INNER JOIN tabUser user on appt.provider_id=user.profile_id where appt.profile_id='%s' """%(profile_id) , as_dict=1)	
+	return frappe.db.sql(""" select appt.provider_id,appt.name,user.contact as mobile_number,concat(IFNULL(user.first_name,''),' ',IFNULL(user.last_name,'')) as provider_name,DATE_FORMAT(from_date_time,'%%d-%%b-%%Y') as appointment_date,DATE_FORMAT(from_date_time,'%%r') as appointment_time,appt.status,appt.reason,user.location from `tabAppointments` appt INNER JOIN tabUser user on appt.provider_id=user.profile_id where appt.profile_id='%s' """%(profile_id) , as_dict=1)	
 
 @frappe.whitelist(allow_guest=True)
 def getDbookList(data):
@@ -1622,8 +1703,6 @@ def getInsuranceQuotes(data):
 	tenure = data.get('tenure')
 	age = data.get('age')
 	sum_insured = data.get('sum_insured')
-
-	
 	return frappe.db.sql(""" select plan_name,insurance_company,tenure,min_age,max_age, sum_insured, premium from `tabInsurance Plans` where tenure='%s' AND sum_insured='%s' AND min_age <= '%s' AND max_age >= '%s' """%(tenure,sum_insured,age,age) , as_dict=1)
 
 @frappe.whitelist(allow_guest=True)
@@ -1634,8 +1713,8 @@ def getFamilyInsuranceQuotes(data):
 	eldest_age = data.get('eldest_age')
 	tenure = data.get('tenure')	
 	sum_insured = data.get('sum_insured')
-
 	return frappe.db.sql(""" select plan_name,insurance_company,tenure,eldest_min_age, eldest_age, sum_insured, premium from `tabInsurance Family Plans` where tenure='%s' AND sum_insured='%s' AND eldest_min_age <= '%s' AND eldest_age >= '%s' """%(tenure,sum_insured,eldest_age,eldest_age) , as_dict=1)	
+
 
 # @frappe.whitelist(allow_guest=True)
 # def createChemist(data):
