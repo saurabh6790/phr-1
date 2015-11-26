@@ -476,11 +476,6 @@ def get_event_data(data):
 	profile_id = data.get('profile_id')
 	
 	response=get_response(url, json.dumps({"profileId":data.get('profile_id'),"event_date_from":data.get('event_date_from'),"event_date_to":data.get('event_date_to')}), request_type)
-<<<<<<< HEAD
-	res_data = json.loads(response.text)
-=======
-	res_data = json.loads('{"message":[["1425279780000-964082","HepetitisC","18/02/2018","Cough ,Weakness ,headache",6,2,0,0,0],["1424754329307-454191","headache ak","02/12/2016","",0,0,0,0,0]]}')
->>>>>>> 5b3834b70da9ea90d24b59d26513d3cff9167024
 
 	url = "%s/phrdata/getprofilefilecount"%get_base_url()
 	response=get_response(url, json.dumps({"profile_id":data.get('profile_id')}), request_type)

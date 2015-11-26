@@ -55,7 +55,7 @@
  "is_submittable": 0, 
  "issingle": 0, 
  "istable": 0, 
- "modified": "2015-02-21 11:16:26.621760", 
+ "modified": "2015-11-26 16:48:36.608970", 
  "modified_by": "Administrator", 
  "module": "phr", 
  "name": "Specialization", 
@@ -79,6 +79,11 @@
    "set_user_permissions": 0, 
    "submit": 0, 
    "write": 1
+  }, 
+  {
+   "permlevel": 0, 
+   "read": 1, 
+   "role": "Guest"
   }
  ], 
  "read_only": 0, 

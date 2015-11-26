@@ -135,11 +135,7 @@
  "is_submittable": 0, 
  "issingle": 0, 
  "istable": 0, 
-<<<<<<< HEAD
- "modified": "2015-09-02 17:11:21.578044", 
-=======
  "modified": "2015-10-14 13:00:18.800102", 
->>>>>>> 5b3834b70da9ea90d24b59d26513d3cff9167024
  "modified_by": "Administrator", 
  "module": "phr", 
  "name": "Medication", 

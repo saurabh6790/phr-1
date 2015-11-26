@@ -82,8 +82,6 @@
    "permlevel": 0, 
    "precision": "", 
    "read_only": 1
-<<<<<<< HEAD
-=======
   }, 
   {
    "fieldname": "provider_id", 
@@ -102,7 +100,6 @@
    "permlevel": 0, 
    "precision": "", 
    "reqd": 1
->>>>>>> 5b3834b70da9ea90d24b59d26513d3cff9167024
   }
  ], 
  "hide_heading": 0, 
@@ -113,11 +110,7 @@
  "is_submittable": 0, 
  "issingle": 0, 
  "istable": 0, 
-<<<<<<< HEAD
- "modified": "2015-09-02 17:20:36.355468", 
-=======
  "modified": "2015-10-20 12:07:55.696010", 
->>>>>>> 5b3834b70da9ea90d24b59d26513d3cff9167024
  "modified_by": "Administrator", 
  "module": "phr", 
  "name": "Appointments", 

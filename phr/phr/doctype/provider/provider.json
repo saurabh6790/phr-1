@@ -59,6 +59,17 @@
    "precision": ""
   }, 
   {
+   "default": "0", 
+   "description": "It will show ratiings", 
+   "fieldname": "provider_rating", 
+   "fieldtype": "Select", 
+   "label": "Provider Rating", 
+   "options": "0\n1\n2\n3\n4\n5", 
+   "permlevel": 0, 
+   "precision": "", 
+   "read_only": 0
+  }, 
+  {
    "fieldname": "column_break_4", 
    "fieldtype": "Column Break", 
    "permlevel": 0, 
@@ -142,8 +153,22 @@
    "precision": ""
   }, 
   {
+   "fieldname": "degree", 
+   "fieldtype": "Small Text", 
+   "label": "Degree", 
+   "permlevel": 0, 
+   "precision": ""
+  }, 
+  {
    "fieldname": "column_break_12", 
    "fieldtype": "Column Break", 
+   "permlevel": 0, 
+   "precision": ""
+  }, 
+  {
+   "fieldname": "experience", 
+   "fieldtype": "Small Text", 
+   "label": "Experience", 
    "permlevel": 0, 
    "precision": ""
   }, 
@@ -431,17 +456,13 @@
    "label": "Middle Name", 
    "permlevel": 0, 
    "precision": ""
-<<<<<<< HEAD
-=======
   }, 
   {
-   "default": "0", 
-   "fieldname": "available_24_x_7", 
-   "fieldtype": "Data", 
-   "label": "Emergency", 
+   "fieldname": "services", 
+   "fieldtype": "Small Text", 
+   "label": "Services", 
    "permlevel": 0, 
    "precision": ""
->>>>>>> 5b3834b70da9ea90d24b59d26513d3cff9167024
   }
  ], 
  "hide_heading": 0, 
@@ -452,11 +473,7 @@
  "is_submittable": 0, 
  "issingle": 0, 
  "istable": 0, 
-<<<<<<< HEAD
- "modified": "2015-09-30 16:01:53.304262", 
-=======
- "modified": "2015-10-19 18:52:39.981373", 
->>>>>>> 5b3834b70da9ea90d24b59d26513d3cff9167024
+ "modified": "2015-11-26 18:34:42.648260", 
  "modified_by": "Administrator", 
  "module": "phr", 
  "name": "Provider", 
@@ -480,8 +497,6 @@
    "set_user_permissions": 0, 
    "submit": 0, 
    "write": 1
-<<<<<<< HEAD
-=======
   }, 
   {
    "create": 1, 
@@ -489,7 +504,6 @@
    "read": 1, 
    "role": "Guest", 
    "write": 1
->>>>>>> 5b3834b70da9ea90d24b59d26513d3cff9167024
   }
  ], 
  "read_only": 0, 

@@ -2,6 +2,7 @@
  "allow_copy": 0, 
  "allow_import": 0, 
  "allow_rename": 0, 
+ "autoname": "field:identity_proof_type", 
  "creation": "2015-10-14 13:21:11.708888", 
  "custom": 0, 
  "docstatus": 0, 
@@ -36,7 +37,7 @@
  "is_submittable": 0, 
  "issingle": 0, 
  "istable": 0, 
- "modified": "2015-10-14 13:21:11.708888", 
+ "modified": "2015-11-18 15:13:49.191002", 
  "modified_by": "Administrator", 
  "module": "phr", 
  "name": "Identity Proof Type", 
@@ -59,6 +60,13 @@
    "role": "All", 
    "set_user_permissions": 0, 
    "submit": 0, 
+   "write": 1
+  }, 
+  {
+   "create": 1, 
+   "permlevel": 0, 
+   "read": 1, 
+   "role": "Guest", 
    "write": 1
   }
  ], 

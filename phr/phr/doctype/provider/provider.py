@@ -118,3 +118,32 @@ class Provider(Document):
 			user = frappe.get_doc("User", self.email)
 			user.enabled = enabled
 			user.save()
+
+
+def get_provider_profile(data):
+	from frappe.utils import get_url
+	from phr.templates.pages.provider import get_address
+
+	profile_name = frappe.db.get_value("Provider", {"provider_id": data["provider_id"]}, "name")
+	profile = frappe.get_doc("Provider", profile_name)
+
+	ret_dict = {
+		"provider_info": {
+			"specialization": profile.specialization, 
+			"provider_category": profile.provider_category, 
+			"provider_name": profile.provider_name, 
+			"email": profile.email, 
+			"mobile_number": profile.mobile_number, 
+			"provider_image": "%s%s"% (get_url(), profile.provider_image), 
+			"gender": profile.gender, 
+			"provider_rating": profile.provider_rating,
+			"timing": profile.physical_consultation,
+			"services": profile.services,
+			"degree": profile.degree,
+			"experience": profile.experience,
+			"address": "%(address)s, %(address_2)s, %(city)s, %(state)s, %(country)s, %(pincode)s"%profile.as_dict()
+		},
+		"linked_address": get_address(profile.provider_id)
+	}
+
+	return ret_dict
