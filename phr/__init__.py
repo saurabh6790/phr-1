@@ -1,6 +1,6 @@
 import frappe
 import json
-from frappe.utils import cstr, get_site_path, get_url
+from frappe.utils import cstr, get_site_path, get_url, cint
 import base64
 import frappe
 from frappe import _
@@ -619,6 +619,14 @@ def getSecondaryAddrForProvider(data):
 
 	from templates.pages.provider import get_address
 	return get_address(data.get("provider_id"))
+
+@frappe.whitelist(allow_guest=True)
+def getProviderProfile(data):
+	import json
+	data = json.loads(data)
+
+	from phr.doctype.provider.provider import get_provider_profile
+	return get_provider_profile(data)
 
 """ Event/Visit Sharing """
 @frappe.whitelist(allow_guest=True)
@@ -1754,3 +1762,52 @@ def getFamilyInsuranceQuotes(data):
 
 # 	return encoded
 
+""" reviews and rating """
+@frappe.whitelist(allow_guest=True)
+def getProviderReview(data):
+	import json
+	import math
+	from templates.pages.phr_comments import get_reviews_page_count, get_reviews
+
+	data = json.loads(data)
+	data = update_provider_details(data)
+
+	toatal_pages = 0
+	if data["page_no"] == 1:
+		count = get_reviews_page_count(data)
+		toatal_pages = math.ceil(count/10.0)
+
+	data["lower_limit"] = (10 * cint(data["page_no"])) - 10
+	data["upper_limit"] = (10 * cint(data["page_no"]))
+
+	
+	return {"reviews": get_reviews(data), "toatal_pages": toatal_pages}
+
+def update_provider_details(data):
+	#get_provider record to fetch provider id and provider name
+	profile_name = frappe.db.get_value("Provider", {"provider_id": data["provider_id"]}, "name")
+	provider = frappe.get_doc("Provider", profile_name)
+
+	#update json
+	data["provider_id"] = provider.provider_id
+	data["provider_name"] = provider.provider_name
+
+	return data
+
+@frappe.whitelist(allow_guest=True)
+def addProviderReview(data):
+	"""
+	1. fetch provider obj
+	2. add phr comments
+	3. recalculate rating
+
+	"""
+	import json
+	from templates.pages.phr_comments import set_review
+
+	data = json.loads(data)
+	data = update_provider_details(data)
+	#call set review
+	set_review(data)
+
+	return "Thanks for review"
