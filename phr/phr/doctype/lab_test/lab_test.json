@@ -1,6 +1,6 @@
 {
  "allow_copy": 0, 
- "allow_import": 0, 
+ "allow_import": 1, 
  "allow_rename": 0, 
  "autoname": "field:test_name", 
  "creation": "2015-12-02 12:25:23.237344", 
@@ -93,7 +93,7 @@
  "is_submittable": 0, 
  "issingle": 0, 
  "istable": 0, 
- "modified": "2015-12-02 13:54:45.765388", 
+ "modified": "2015-12-02 16:00:07.531859", 
  "modified_by": "Administrator", 
  "module": "phr", 
  "name": "Lab Test", 
@@ -107,8 +107,8 @@
    "create": 1, 
    "delete": 1, 
    "email": 0, 
-   "export": 0, 
-   "import": 0, 
+   "export": 1, 
+   "import": 1, 
    "permlevel": 0, 
    "print": 0, 
    "read": 1, 
@@ -119,9 +119,11 @@
    "write": 1
   }, 
   {
+   "create": 0, 
    "permlevel": 0, 
    "read": 1, 
-   "role": "Guest"
+   "role": "Guest", 
+   "write": 0
   }
  ], 
  "read_only": 0, 
