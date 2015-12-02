@@ -4,7 +4,7 @@
 from __future__ import unicode_literals
 import frappe
 from frappe.model.document import Document
-from frappe.utils import cint
+from frappe.utils import cint, cstr
 from phr.templates.pages.form_generator import get_data_to_render
 from phr.templates.pages.utils import get_base_url
 from phr.templates.pages.login import get_barcode, notify_user
@@ -37,7 +37,27 @@ class Provider(Document):
 			raise Exception(e)
 
 	def on_update(self):
-		pass
+		self.add_primary_address()
+
+	def add_primary_address(self):
+		if not frappe.db.get_value("PHRAddress", 
+			{"provider_name": self.provider_name}, "is_primary_address"):
+			
+			frappe.get_doc({
+				"doctype": "PHRAddress",
+				"addr_line1": self.address or "",
+				"addr_line2": self.address_2 or "",
+				"city": self.city or "",
+				"state": self.state,
+				"country": self.country,
+				"pincode": self.pincode,
+				"provider": self.name,
+				"provider_name": self.provider_name,
+				"provider_id": self.provider_id,
+				"from_time": self.from_time,
+				"to_time": self.to_time,
+				"is_primary_address": 1
+			}).insert()
 
 	def create_user(self):
 		if self.exisitng_user():
@@ -137,11 +157,12 @@ def get_provider_profile(data):
 			"provider_image": "%s%s"% (get_url(), profile.provider_image), 
 			"gender": profile.gender, 
 			"provider_rating": profile.provider_rating,
-			"timing": profile.physical_consultation,
+			"timing": cstr(profile.from_time) + " - "+ cstr(profile.to_time),
 			"services": profile.services,
 			"degree": profile.degree,
 			"experience": profile.experience,
-			"address": "%(address)s, %(address_2)s, %(city)s, %(state)s, %(country)s, %(pincode)s"%profile.as_dict()
+			"address": "%(address)s, %(address_2)s, %(city)s, %(state)s,\
+				 %(country)s, %(pincode)s"%profile.as_dict()
 		},
 		"linked_address": get_address(profile.provider_id)
 	}
