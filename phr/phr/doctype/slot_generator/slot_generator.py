@@ -7,5 +7,5 @@ from frappe.model.document import Document
 
 class SlotGenerator(Document):
 	def generate_slot(self):
-		
+		pass
 		
