@@ -132,7 +132,7 @@
  "is_submittable": 0, 
  "issingle": 0, 
  "istable": 0, 
- "modified": "2015-12-02 12:33:00.725221", 
+ "modified": "2015-12-02 13:54:16.343632", 
  "modified_by": "Administrator", 
  "module": "phr", 
  "name": "Lab Package", 
@@ -156,6 +156,12 @@
    "set_user_permissions": 0, 
    "submit": 0, 
    "write": 1
+  }, 
+  {
+   "permlevel": 0, 
+   "read": 1, 
+   "role": "Guest", 
+   "write": 0
   }
  ], 
  "read_only": 0, 

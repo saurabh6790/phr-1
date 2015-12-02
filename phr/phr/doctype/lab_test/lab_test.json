@@ -93,7 +93,7 @@
  "is_submittable": 0, 
  "issingle": 0, 
  "istable": 0, 
- "modified": "2015-12-02 12:27:13.848305", 
+ "modified": "2015-12-02 13:54:45.765388", 
  "modified_by": "Administrator", 
  "module": "phr", 
  "name": "Lab Test", 
@@ -117,6 +117,11 @@
    "set_user_permissions": 0, 
    "submit": 0, 
    "write": 1
+  }, 
+  {
+   "permlevel": 0, 
+   "read": 1, 
+   "role": "Guest"
   }
  ], 
  "read_only": 0, 
