@@ -632,7 +632,16 @@ def get_conditions(filters):
 		cond.append('specialization like "%%%(specialization)s%%"'%filters)
 
 	if filters.get('provider_loc'):
-		cond.append('address like "%%%(provider_loc)s%%" or address_2 like "%%%(provider_loc)s%%" or city like "%%%(provider_loc)s%%" or state like "%%%(provider_loc)s%%"'%filters)
+		cond.append('address like "%%%(provider_loc)s%%" or address_2 like "%%%(provider_loc)s%%" \
+			or city like "%%%(provider_loc)s%%" or state like "%%%(provider_loc)s%%"'%filters)
+
+	if filters.get("test_name"):
+		cond.append("name in (select parent from `tabTest By Provider` \
+		 where test_name = '%(test_name)s')"%filters)
+
+	if filters.get("package_name"):
+		cond.append("name in (select parent from `tabPackage By Provider` \
+		 where package_name = '%(package_name)s')"%filters)
 
 	return ' and '.join(cond)
 

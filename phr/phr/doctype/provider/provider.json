@@ -240,21 +240,14 @@
   {
    "fieldname": "consultation", 
    "fieldtype": "Section Break", 
-   "label": "Consultation", 
+   "label": "Consultation Timing", 
    "permlevel": 0, 
    "precision": ""
   }, 
   {
-   "fieldname": "physical_consultation", 
-   "fieldtype": "Data", 
-   "label": "Physical Consultation Time", 
-   "permlevel": 0, 
-   "precision": ""
-  }, 
-  {
-   "fieldname": "consultation_fees_physical", 
-   "fieldtype": "Data", 
-   "label": "Consultation Fees(physical)", 
+   "fieldname": "from_time", 
+   "fieldtype": "Time", 
+   "label": "From Time", 
    "permlevel": 0, 
    "precision": ""
   }, 
@@ -265,16 +258,9 @@
    "precision": ""
   }, 
   {
-   "fieldname": "tele_consultation", 
-   "fieldtype": "Data", 
-   "label": "Tele consultation Time", 
-   "permlevel": 0, 
-   "precision": ""
-  }, 
-  {
-   "fieldname": "consultation_fees_tele", 
-   "fieldtype": "Data", 
-   "label": "Consultation Fees(Tele)", 
+   "fieldname": "to_time", 
+   "fieldtype": "Time", 
+   "label": "To Time", 
    "permlevel": 0, 
    "precision": ""
   }, 
@@ -458,9 +444,33 @@
    "precision": ""
   }, 
   {
-   "fieldname": "services", 
-   "fieldtype": "Small Text", 
-   "label": "Services", 
+   "fieldname": "packages_and_services", 
+   "fieldtype": "Section Break", 
+   "label": "Packages and Services", 
+   "permlevel": 0, 
+   "precision": ""
+  }, 
+  {
+   "fieldname": "cb", 
+   "fieldtype": "Data", 
+   "hidden": 1, 
+   "label": "cb", 
+   "permlevel": 0, 
+   "precision": ""
+  }, 
+  {
+   "fieldname": "test", 
+   "fieldtype": "Table", 
+   "label": "Test", 
+   "options": "Test By Provider", 
+   "permlevel": 0, 
+   "precision": ""
+  }, 
+  {
+   "fieldname": "packages", 
+   "fieldtype": "Table", 
+   "label": "Packages", 
+   "options": "Package By Provider", 
    "permlevel": 0, 
    "precision": ""
   }
@@ -473,7 +483,7 @@
  "is_submittable": 0, 
  "issingle": 0, 
  "istable": 0, 
- "modified": "2015-11-26 18:34:42.648260", 
+ "modified": "2015-12-02 12:48:52.722976", 
  "modified_by": "Administrator", 
  "module": "phr", 
  "name": "Provider", 
@@ -501,6 +511,7 @@
  ], 
  "read_only": 0, 
  "read_only_onload": 0, 
+ "search_fields": "provider_name, specialization", 
  "sort_field": "modified", 
  "sort_order": "DESC", 
  "title_field": "provider_name"

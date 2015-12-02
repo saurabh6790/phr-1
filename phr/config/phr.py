@@ -117,6 +117,16 @@ def get_data():
 					"type": "doctype",
 					"name": "Server Settings",
 					"description": _("Apache and Backup Settings"),
+				},
+				{
+					"type": "doctype",
+					"name": "Lab Test",
+					"description": _("Tests Master"),
+				},
+				{
+					"type": "doctype",
+					"name": "Lab Package",
+					"description": _("Package Master"),
 				}
 			]
 		},
