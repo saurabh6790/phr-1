@@ -631,11 +631,7 @@ def get_conditions(filters):
 
 	if filters.get('provider_loc'):
 		cond.append('(address like "%%%(provider_loc)s%%" or address_2 like "%%%(provider_loc)s%%" \
-<<<<<<< HEAD
-			or city like "%%%(provider_loc)s%%" or state like "%%%(provider_loc)s%%")'%filters)
-=======
 					or city like "%%%(provider_loc)s%%" or state like "%%%(provider_loc)s%%")'%filters)
->>>>>>> [appointment slot CRU]
 
 	if filters.get("test_name"):
 		cond.append("name in (select parent from `tabTest By Provider` \

@@ -7,7 +7,8 @@ import time
 import datetime
 from frappe.model.document import Document
 from time import mktime
-from frappe.utils import get_datetime, cstr, cint
+from frappe.utils import get_datetime, cstr, cint, getdate
+import json
 
 class SlotGenerator(Document):
 	def generate_slot(self):
@@ -77,13 +78,24 @@ def get_slots(condition):
 
 def book_appointment(data):
 	"""
-		data = {"slot_id": "Slot00000000007"}
+		data = {"slot_id": "Slot00000000007", "patient_name":"Saurabh", 
+			"patient_id": "1432046733565-328100", "complaint": "This is Test"}
 	"""
 	doc = frappe.get_doc("Appointment Slot", data.get("slot_id"))
-	doc.status = "Booked"
-	doc.save(ignore_permissions=True)
 
-	return "Appointment has been booked on date %s at time %s"%(doc.date, doc.time)
+	if not doc.status == "Booked":
+		doc.status = "Booked"
+		doc.patient_id = data.get("patient_id")
+		doc.patient_name = data.get("patient_name")
+		doc.save(ignore_permissions=True)
+
+		event = create_event(doc, data)
+		if event["returncode"] == 103:
+			return "Appointment has been booked on date %s at time %s"%(doc.date, doc.time)
+		else:
+			return event["message_summary"]
+	else:
+		return "Already Booked"
 
 def reopen_appointment(data):
 	"""
@@ -91,6 +103,18 @@ def reopen_appointment(data):
 	"""
 	doc = frappe.get_doc("Appointment Slot", data.get("slot_id"))
 	doc.status = "Open"
+	doc.patient_id = ""
+	doc.patient_name = ""
 	doc.save(ignore_permissions=True)
 
 	return "Appointment has been canceled for date %s at time %s"%(doc.date, doc.time)
+
+def create_event(doc, data):
+	from phr.templates.pages.event import create_update_event
+	data = {
+		"event_title": data.get('complaint'),
+		"profile_id": data.get('patient_id'),
+		"event_date": getdate(doc.date).strftime("%d/%m/%Y")
+	}
+
+	return create_update_event(json.dumps(data))
