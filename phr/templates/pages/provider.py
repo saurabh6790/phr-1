@@ -119,7 +119,7 @@ def create_addr(res, provider_id):
 
 @frappe.whitelist(allow_guest=True)
 def get_address(provider_id):
-	return frappe.db.sql("""select addr_line1, addr_line2, city, state, country, pincode, visiting_hours
+	return frappe.db.sql("""select name as location_id, addr_line1, addr_line2, city, state, country, pincode, visiting_hours
 					from tabPHRAddress
 					where provider_id = '%s' order by creation desc"""%(provider_id), as_dict=1)
 

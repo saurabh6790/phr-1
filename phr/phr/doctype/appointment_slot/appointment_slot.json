@@ -145,7 +145,7 @@
   {
    "allow_on_submit": 0, 
    "fieldname": "status", 
-   "fieldtype": "Data", 
+   "fieldtype": "Select", 
    "hidden": 0, 
    "ignore_user_permissions": 0, 
    "in_filter": 0, 
@@ -171,12 +171,6 @@
    "permlevel": 0, 
    "print_hide": 1, 
    "read_only": 1
-  }, 
-  {
-   "fieldname": "data_10", 
-   "fieldtype": "Data", 
-   "permlevel": 0, 
-   "precision": ""
   }
  ], 
  "hide_heading": 0, 
@@ -186,7 +180,7 @@
  "is_submittable": 1, 
  "issingle": 0, 
  "istable": 0, 
- "modified": "2015-12-02 09:02:16.422531", 
+ "modified": "2015-12-03 19:23:27.009450", 
  "modified_by": "Administrator", 
  "module": "phr", 
  "name": "Appointment Slot", 

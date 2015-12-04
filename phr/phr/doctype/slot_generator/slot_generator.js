@@ -24,7 +24,7 @@ initiate_slot_table = function(doc, cdt, cdn){
 
 	doc.slot_info = [];
 
-	for (var i=0; i<=date_diff; i++) {
+	for (var i=0; i<=1; i++) {
 		var row = frappe.model.add_child(doc, "Slot Details", "slot_info");
 		row.date = frappe.datetime.add_days(frappe.datetime.month_start(), i) 
 	}

@@ -1830,3 +1830,26 @@ def addProviderReview(data):
 	set_review(data)
 
 	return "Thanks for review"
+<<<<<<< HEAD
+=======
+
+@frappe.whitelist(allow_guest=True)
+def getAppointmentSlots(data):
+	from phr.doctype.slot_generator.slot_generator import get_slot
+	data = json.loads(data)
+	return get_slot(data)
+
+@frappe.whitelist(allow_guest=True)
+def bookAppointment(data):
+	from phr.doctype.slot_generator.slot_generator import book_appointment
+	data = json.loads(data)
+	return book_appointment(data)
+
+@frappe.whitelist(allow_guest=True)
+def cancelAppointment(data):
+	from phr.doctype.slot_generator.slot_generator import reopen_appointment
+	data = json.loads(data)
+	return reopen_appointment(data)
+
+	
+>>>>>>> [appointment slot CRU]
