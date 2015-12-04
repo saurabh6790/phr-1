@@ -271,6 +271,26 @@ def getStockistOrderDetails(data):
 	order_id = data.get('order_id')
 	return frappe.db.sql(""" select ord.name,ord.order_image_url,chem.first_name,chem.last_name,chem.mobile_number,chem.email_address,chem.address from `tabChemist Order` ord INNER JOIN `tabChemist` chem ON ord.chemist_id=chem.profile_id AND ord.name='%s' """%(order_id) , as_dict=1)	
 
+# Code by Sachin for Search Medical Store in List Format
+
+@frappe.whitelist(allow_guest=True)
+def searchMedicalStore(data=None):
+	from phr.doctype.medical_store import get_medical_stores
+	medical_stores_list = get_medical_stores(data)
+	if medical_stores_list:
+		return medical_stores_list
+	else:
+		return []
+# Code by Sachin for Search Medical Store Information / Details
+@frappe.whitelist(allow_guest=True)
+def getMedicalStoreProfile(data):
+	import json
+	data = json.loads(data)
+
+	from phr.doctype.medical_store import get_medical_stores_profile
+	# from phr.doctype.provider.provider import get_provider_profile
+	return get_medical_stores_profile(data)		
+
 @frappe.whitelist(allow_guest=True)
 def getListOfOrdersPlacedByChemist(data):
 	data = json.loads(data)
@@ -1520,68 +1540,67 @@ def getDbookList(data):
 	else: 	
 		return {"dbook_list":dbook_array,"dbook_likes":dbook_likes}	
 
-@frappe.whitelist(allow_guest=True)
-def likeDbook(data):
-	"""
-		1. Accepts dbook id 
-		2. increase like count
-		3. returns like count
-		Input:
-		{
-			"dbook_id":"value"
-			"profile_id":"value"
-		}
-	"""
-	data = json.loads(data)
-	dbook_id=data.get("dbook_id")
-	profile_id=data.get("profile_id")
-	dbook=frappe.get_doc("D Book", dbook_id)
-	cnt=dbook.like_count
-	profileLikes=frappe.db.sql(""" select is_liked from `tabD Book Likes` where dbook_id='%s' and profile_id='%s' """%(dbook_id,profile_id))
-	is_liked=0
-	if len(profileLikes)==0:
-		dlike=frappe.new_doc("D Book Likes")
-		dlike.update({
-				"dbook_id":dbook_id,
-				"parent":dbook_id,
-				"profile_id":profile_id,
-				"is_liked":1
-			})
-		dlike.insert(ignore_permissions=True)
-		cnt=int(cnt) + int(1)
-		dbook.like_count=cnt
-		dbook.save(ignore_permissions=True)
-		frappe.db.commit()
-		is_liked=1
-	else:
-		profileLikes=frappe.db.sql(""" select is_liked from `tabD Book Likes` where dbook_id='%s' and profile_id='%s' """%(dbook_id,profile_id))[0][0]
-		print profileLikes
-		if int(profileLikes) == int(0):
-			frappe.db.sql(""" update `tabD Book Likes` set is_liked=1 where dbook_id='%s' and profile_id='%s' """%(dbook_id,profile_id))
-			cnt=int(cnt) + int(1)
-			dbook.like_count=cnt
-			dbook.save(ignore_permissions=True)
-			is_liked=1
-		else:	
-			frappe.db.sql(""" update `tabD Book Likes` set is_liked=0 where dbook_id='%s' and profile_id='%s' """%(dbook_id,profile_id))
-			cnt=int(cnt) - int(1)
-			dbook.like_count=cnt
-			dbook.save(ignore_permissions=True)
-			is_liked=0
-	frappe.db.commit()
-	dbook_array = []	
-	d_likes=[]
-	for dbook in frappe.db.sql(""" select dbk.doctor_profile_id,concat(usr.first_name," ",usr.last_name) as doctor_name,dbk.book_title,dbk.name,dbk.book_image_url,dbk.book_description,dbk.like_count  from `tabD Book` as dbk INNER JOIN tabUser as usr on dbk.doctor_profile_id=usr.profile_id """, as_list=1):
-		dbook_data={"doctor_profile_id":dbook[0],"doctor_name":dbook[1],"book_title":dbook[2],"name":dbook[3],"book_image_url":dbook[4],"book_description":dbook[5],"like_count":dbook[6]}
-		dbook_array.append(dbook_data)
-		d_likes.append({"is_liked": "0","name": "","dbook_id": dbook[3]})
-	dbook_likes=frappe.db.sql(""" select  name,dbook_id,is_liked from `tabD Book Likes`  where profile_id='%s' """%(profile_id),as_dict=1)
- 	if len(dbook_likes) == 0:
-		return {"dbook_list":dbook_array,"dbook_likes":d_likes}	
-	else: 	
-		return {"dbook_list":dbook_array,"dbook_likes":dbook_likes}
-	# print cnt
-	# return {"like_count":cnt,"is_liked":is_liked,"dbook_id":dbook_id}
+# @frappe.whitelist(allow_guest=True)
+# def likeDbook(data):
+# 	"""
+# 		1. Accepts dbook id 
+# 		2. increase like count
+# 		3. returns like count
+# 		Input:
+# 		{
+# 			"dbook_id":"value"
+# 			"profile_id":"value"
+# 		}
+# 	"""
+# 	data = json.loads(data)
+# 	dbook_id=data.get("dbook_id")
+# 	profile_id=data.get("profile_id")
+# 	dbook=frappe.get_doc("D Book", dbook_id)
+# 	cnt=dbook.like_count
+# 	profileLikes=frappe.db.sql(""" select is_liked from `tabD Book Likes` where dbook_id='%s' and profile_id='%s' """%(dbook_id,profile_id))
+# 	is_liked=0
+# 	if len(profileLikes)==0:
+# 		dlike=frappe.new_doc("D Book Likes")
+# 		dlike.update({
+# 				"dbook_id":dbook_id,
+# 				"parent":dbook_id,
+# 				"profile_id":profile_id,
+# 				"is_liked":1
+# 			})
+# 		dlike.insert(ignore_permissions=True)
+# 		cnt=int(cnt) + int(1)
+# 		dbook.like_count=cnt
+# 		dbook.save(ignore_permissions=True)
+# 		frappe.db.commit()
+# 		is_liked=1
+# 	else:
+# 		profileLikes=frappe.db.sql(""" select is_liked from `tabD Book Likes` where dbook_id='%s' and profile_id='%s' """%(dbook_id,profile_id))[0][0]
+# 		print profileLikes
+# 		if int(profileLikes) == int(0):
+# 			frappe.db.sql(""" update `tabD Book Likes` set is_liked=1 where dbook_id='%s' and profile_id='%s' """%(dbook_id,profile_id))
+# 			cnt=int(cnt) + int(1)
+# 			dbook.like_count=cnt
+# 			dbook.save(ignore_permissions=True)
+# 			is_liked=1
+# 		else:	
+# 			frappe.db.sql(""" update `tabD Book Likes` set is_liked=0 where dbook_id='%s' and profile_id='%s' """%(dbook_id,profile_id))
+# 			cnt=int(cnt) - int(1)
+# 			dbook.like_count=cnt
+# 			dbook.save(ignore_permissions=True)
+# 			is_liked=0
+# 	frappe.db.commitsearchChemists	dbook_array = []	
+# 	d_likes=[]
+# 	for dbook in frappe.db.sql(""" select dbk.doctor_profile_id,concat(usr.first_name," ",usr.last_name) as doctor_name,dbk.book_title,dbk.name,dbk.book_image_url,dbk.book_description,dbk.like_count  from `tabD Book` as dbk INNER JOIN tabUser as usr on dbk.doctor_profile_id=usr.profile_id """, as_list=1):
+# 		dbook_data={"doctor_profile_id":dbook[0],"doctor_name":dbook[1],"book_title":dbook[2],"name":dbook[3],"book_image_url":dbook[4],"book_description":dbook[5],"like_count":dbook[6]}
+# 		dbook_array.append(dbook_data)
+# 		d_likes.append({"is_liked": "0","name": "","dbook_id": dbook[3]})
+# 	dbook_likes=frappe.db.sql(""" select  name,dbook_id,is_liked from `tabD Book Likes`  where profile_id='%s' """%(profile_id),as_dict=1)
+#  	if len(dbook_likes) == 0:
+# 		return {"dbook_list":dbook_array,"dbook_likes":d_likes}	
+# 	else: 	
+# 		return {"dbook_list":dbook_array,"dbook_likes":dbook_likes}
+# 	# print cnt
+# 	# return {"like_count":cnt,"is_liked":is_liked,"dbook_id":dbook_id}
 
 
 @frappe.whitelist(allow_guest=True)

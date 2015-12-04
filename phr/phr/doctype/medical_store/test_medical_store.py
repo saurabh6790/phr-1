@@ -4,7 +4,7 @@
 import frappe
 import unittest
 
-test_records = frappe.get_test_records('D Book')
+test_records = frappe.get_test_records('Medical Store')
 
-class TestDBook(unittest.TestCase):
+class TestMedicalStore(unittest.TestCase):
 	pass
