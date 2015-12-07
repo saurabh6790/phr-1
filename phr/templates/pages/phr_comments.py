@@ -54,21 +54,39 @@ def recalculate_rating(data):
 	#recalculate
 	#frappe.db.sql() to run sql query in frappe
 	for doc in frappe.db.sql("""select rating from `tabPHR Comment` 
-		where provider_id = '%s'"""%data["provider_id"], as_dict=1):
+		where %s """%get_conditions(data), as_dict=1):
 		total_reting += cint(doc["rating"])
 		total_reviews += 1
 
 	#get_doc return object of existing record
-	profile_name = frappe.db.get_value("Provider", {"provider_id": data["provider_id"]}, "name")
-	provider = frappe.get_doc("Provider", profile_name)
-	provider.provider_rating = cint(total_reting/total_reviews)
+	if data.get('provider_id'):
+		profile_name = frappe.db.get_value("Provider", {"provider_id": data["provider_id"]}, "name")
+		provider = frappe.get_doc("Provider", profile_name)
+		provider.provider_rating = cint(total_reting/total_reviews)
 
-	#ignore_permissions allows save to guest user
-	provider.save(ignore_permissions=True)
+		#ignore_permissions allows save to guest user
+		provider.save(ignore_permissions=True)
+
+	if data.get('store_name_id'):
+		medical_store = frappe.get_doc("Medical Store", data["store_name_id"])
+		medical_store.store_rating = cint(total_reting/total_reviews)
+
+		#ignore_permissions allows save to guest user
+		medical_store.save(ignore_permissions=True)
+
+def get_conditions(filters):
+	cond = []
+	if filters.get('provider_id'):
+		cond.append('provider_id = "%(provider_id)s"'%filters)
+
+	if filters.get('store_name_id'):
+		cond.append('store_name_id = "%(store_name_id)s"'%filters)
+
+	return ' and '.join(cond)
 
 def get_reviews_page_count(data):
 	count = frappe.db.sql("""select count(*) from `tabPHR Comment` 
-		where provider_id = '%s' """%data["provider_id"])
+		where %s """%get_conditions(data))
 
 	if count:
 		return count[0][0] 
@@ -77,10 +95,5 @@ def get_reviews_page_count(data):
 
 def get_reviews(data):
 	return frappe.db.sql("""select comment_body, rating from `tabPHR Comment` 
-		where provider_id = '%s' order by creation desc limit %s, %s"""%(data["provider_id"], data["lower_limit"], 
+		where %s order by creation desc limit %s, %s"""%(get_conditions(data), data["lower_limit"], 
 			data["upper_limit"]), as_dict=1)
-
-
-
-
-

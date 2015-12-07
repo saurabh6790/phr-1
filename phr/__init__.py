@@ -291,6 +291,27 @@ def getMedicalStoreProfile(data):
 	# from phr.doctype.provider.provider import get_provider_profile
 	return get_medical_stores_profile(data)		
 
+""" reviews and rating """
+@frappe.whitelist(allow_guest=True)
+def getMedicalStoreReview(data):
+	import json
+	import math
+	from templates.pages.phr_comments import get_reviews_page_count, get_reviews
+
+	data = json.loads(data)
+	data = update_provider_details(data)
+
+	toatal_pages = 0
+	if data["page_no"] == 1:
+		count = get_reviews_page_count(data)
+		toatal_pages = math.ceil(count/10.0)
+
+	data["lower_limit"] = (10 * cint(data["page_no"])) - 10
+	data["upper_limit"] = (10 * cint(data["page_no"]))
+
+	
+	return {"reviews": get_reviews(data), "toatal_pages": toatal_pages}
+
 @frappe.whitelist(allow_guest=True)
 def getListOfOrdersPlacedByChemist(data):
 	data = json.loads(data)
@@ -1789,8 +1810,12 @@ def getProviderReview(data):
 	from templates.pages.phr_comments import get_reviews_page_count, get_reviews
 
 	data = json.loads(data)
-	data = update_provider_details(data)
+	if data.get('provider_id'):
+		data = update_provider_details(data)
 
+	if data.get('store_name_id'):
+		data = update_medical_store_details(data)
+		
 	toatal_pages = 0
 	if data["page_no"] == 1:
 		count = get_reviews_page_count(data)
@@ -1798,7 +1823,6 @@ def getProviderReview(data):
 
 	data["lower_limit"] = (10 * cint(data["page_no"])) - 10
 	data["upper_limit"] = (10 * cint(data["page_no"]))
-
 	
 	return {"reviews": get_reviews(data), "toatal_pages": toatal_pages}
 
@@ -1813,6 +1837,17 @@ def update_provider_details(data):
 
 	return data
 
+def update_medical_store_details(data):
+	#get_provider record to fetch provider id and provider name
+
+	medical_store = frappe.get_doc("Medical Store", data["store_name_id"])
+
+	#update json
+	data["store_name_id"] = data["store_name_id"]
+	data["store_name"] = medical_store.store_name
+
+	return data	
+
 @frappe.whitelist(allow_guest=True)
 def addProviderReview(data):
 	"""
@@ -1826,6 +1861,24 @@ def addProviderReview(data):
 
 	data = json.loads(data)
 	data = update_provider_details(data)
+	#call set review
+	set_review(data)
+
+	return "Thanks for review"
+
+@frappe.whitelist(allow_guest=True)
+def addMedicalStoreReview(data):
+	"""
+	1. fetch MedicalStore obj
+	2. add phr comments
+	3. recalculate rating
+
+	"""
+	import json
+	from templates.pages.phr_comments import set_review
+
+	data = json.loads(data)
+	data = update_medical_store_details(data)
 	#call set review
 	set_review(data)
 

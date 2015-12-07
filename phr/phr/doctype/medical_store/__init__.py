@@ -36,7 +36,7 @@ def get_medical_stores_info(cond):
 
 
 def get_medical_stores_profile(data):
-
+	from frappe.utils import get_url
 	medical_store = frappe.get_doc("Medical Store", data["name"])
 
 	ret_dict = {
@@ -49,9 +49,11 @@ def get_medical_stores_profile(data):
 			"city": medical_store.city,
 			"state": medical_store.state,
 			"address": "%(address)s, %(city)s, %(state)s,\
-				 %(country)s, %(pin_code)s, %(locality)s"%medical_store.as_dict()
+				 %(country)s, %(pin_code)s, %(locality)s"%medical_store.as_dict(),
+			"store_image": "%s%s"% (get_url(), medical_store.store_image)
 		},
 		"delivery_team": medical_store.as_dict().get("delivery_team")
+
 	}
 
 	return ret_dict		

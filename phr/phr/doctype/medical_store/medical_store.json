@@ -276,6 +276,13 @@
    "set_only_once": 0
   }, 
   {
+   "fieldname": "store_image", 
+   "fieldtype": "Attach", 
+   "label": "Store Image", 
+   "permlevel": 0, 
+   "precision": ""
+  }, 
+  {
    "allow_on_submit": 0, 
    "fieldname": "owner_name", 
    "fieldtype": "Data", 
@@ -386,7 +393,7 @@
  "is_submittable": 0, 
  "issingle": 0, 
  "istable": 0, 
- "modified": "2015-12-02 19:52:50.847419", 
+ "modified": "2015-12-07 10:50:01.450966", 
  "modified_by": "Administrator", 
  "module": "phr", 
  "name": "Medical Store", 
